@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    #@meta("主页")
+    <script src="/assets/lib/xm-select.js"></script>
+</head>
+<body>
+
+<style>
+    .reportInputTable {
+        border: none;
+        border-bottom: 2px solid #D9D9D9;
+        background-color: #F2F2F2;
+        text-align: center;
+    }
+</style>
+
+
+<!--    内容div-->
+<div style="width: 1600px;height: 940px;box-shadow: 0 0 10px 3px rgba(102,122,128,0.54);margin-top: 30px;margin-bottom: 30px;
+                margin-left: 30px;border-radius: 20px 20px 20px 20px">
+    <div style="font-size: 18px;margin-left: 50px;position: relative;top: 20px">报告管理</div>
+    <input disabled="true" style="border:none;border-bottom:2px solid #c0c4cc;width: 1550px
+                ;margin-left: 50px;margin-top: 35px;" type="text"/>
+
+    <div style="margin-left: 50px;margin-top: 30px;">
+        <!-- 这里是报告选项表单-->
+        <div id="left" style="float:left ; width:50%; height:100%;">
+            <form action="" class="layui-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">所属项目</label>
+                    <div class="layui-input-block">
+                        <div class="layui-input-inline" style="width: 100%">
+                            <div id="projectlist" class="xm-select-project"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">设备类别</label>
+                    <div class="layui-input-block">
+                        <div id="selectlist" class="xm-select-project"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">设备sn码</label>
+                    <div class="layui-input-block">
+                        <div class="layui-input-inline" style="width: 100%">
+                            <div id="Devicelist" class="xm-select-project"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">数据时间</label>
+                        <div class="layui-input-block">
+                            <div class="layui-input-inline">
+                                <input class="layui-input" id="test5" placeholder="请选择日期范围" style="width: 665px"
+                                       lay-verify="required" type="text" lay-filer="date">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+<!--                        <button type="button" class="layui-btn layui-btn-normal" lay-filter="formDemo" lay-submit-->
+<!--                                id="sumbit">-->
+<!--                            立即提交-->
+<!--                        </button>-->
+                        <!--                        <button type="button" class="layui-btn layui-btn-normal" id="review" lay-submit>-->
+                        <!--                            预览-->
+                        <!--                        </button>-->
+                        <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+<!--                        <button type="button" class="layui-btn layui-btn-normal" id="allreport" >-->
+<!--                            项目下载-->
+<!--                        </button>-->
+                        <button type="button" class="layui-btn layui-btn-normal" id="testimage" >
+                            周报下载
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-normal" id="testmonth" >
+                            月报下载
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <div id="right" style="float:left ; width:50%; height:100%;display: none">
+            <div class="reportTable">
+                <div style="background-color:#E6E6E6;height: 62px;border-radius:20px 20px 0px 0px;">
+                    <span style="font-size: 20px">模板1</span>
+                </div>
+                <div style="background-color:#F2F2F2;height: 680px;border-radius: 0px 0px 20px 20px;">
+                    <form action="" class="layui-form" lay-filter="formTest">
+                        <div class="layui-form-item">
+                            <div style="margin-left: 35%">
+                                <input autocomplete="off" class="reportInputTable" disabled="true"
+                                       lay-verify="title" name="projectName" id="projectName"
+                                       type="text">
+                                <span style="font-size:18px ">监测报告单</span>
+                            </div>
+                            <!--                                填入选项-->
+                            <div style="margin-left: 9%">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">所属项目</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off"
+                                               name="projectName"
+                                               class="layui-input reportInputTable"
+                                               disabled="true" lay-verify="title"
+                                               type="text"
+                                               id="reportname">
+                                    </div>
+                                    <label class="layui-form-label">监测地点</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off"
+                                               name="reportplace"
+                                               class="layui-input reportInputTable"
+                                               disabled="true" lay-verify="title"
+                                               type="text"
+                                               id="reportplace">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">设备sn码</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off"
+                                               name="reportsn"
+                                               class="layui-input reportInputTable"
+                                               disabled="true" lay-verify="title"
+                                               type="text"
+                                               id="reportsn">
+                                    </div>
+                                    <label class="layui-form-label">监测时间</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off"
+                                               name="reporttime"
+                                               class="layui-input reportInputTable"
+                                               disabled="true" lay-verify="title"
+                                               type="text"
+                                               id="reporttime">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--                        表格显示-->
+                        <div style="margin-left: 59px">
+                            <span style="font-size: 14px">监测数据列表</span>
+                        </div>
+                        <div style="margin: auto;width: 650px">
+                            <table class="layui-hide" id="test"></table>
+                        </div>
+                    </form>
+                    <!--                            图表-->
+                    <div id="chart" style="height: 300px;width: 1000px;margin: auto;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    单个文件下载弹窗-->
+    <div id="singlefile" style="display: none">
+        <div style="margin-top: 30px"></div>
+        <div style="padding-left: 40%">
+            <button class="layui-btn layui-btn-normal" id="downloaddoc" style="margin-top: 20px;" >
+                <a id="downloaddoc2">下载</a>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- 多个文件下载弹窗-->
+    <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
+        <form class="layui-form" id="book" method="post" lay-filter="example">
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属项目</label>
+                <div class="layui-input-block">
+                    <div class="layui-input-inline" style="width: 100%">
+                        <div id="projectlist2" class="xm-select-project"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">数据时间</label>
+                    <div class="layui-input-block">
+                        <div class="layui-input-inline">
+                            <input class="layui-input" id="test6" placeholder="请选择日期范围" style="width: 375px"
+                                   lay-verify="required" type="text" lay-filer="date">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <!-- 周报下载弹窗-->
+    <div class="site-text" style="margin: 5%; display: none" id="monthlayer" target="test1234">
+        <form class="layui-form" id="currentmonth" method="post" lay-filter="example">
+            <div class="layui-inline">
+                <label class="layui-form-label">选择日期范围</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="test3" placeholder="yyyy-M">
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+
+
+    <div id="percent" class="layui-progress layui-progress-big" lay-showpercent="true" lay-filter="filedemo" style="display: none">
+        <div style="margin-top: 30px"></div>
+        <div>
+            <div class="layui-progress-bar layui-bg-red" lay-percent="0%"></div>
+        </div>
+        <div style="padding-left: 40%">
+            <button class="layui-btn layui-btn-normal" id="downloadzip" style="margin-top: 20px;" >
+                <a id="downloadzip2">下载</a>
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/node_modules/axios/dist/axios.min.js"></script>
+<script>
+    var projetid = "#(projetid)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'reportlist', 'drawtools']);
+
+
+</script>
+<style>
+    .layui-form-checked[lay-skin=primary] i {
+        border-color: #1E9FFF !important;
+        background-color: #1E9FFF !important;
+        color: #fff !important;
+        font-weight: bold;
+    }
+
+    .layui-form-radio > i:hover, .layui-form-radioed > i {
+        color: #597FC0 !important;
+    }
+
+    .layui-form-checkbox[lay-skin=primary]:hover i {
+        color: #597FC0 !important;
+        border-color: #1E9FFF !important;
+        color: #fff;
+    }
+
+    .layui-form-select dl dd.layui-this {
+        background-color: #1E9FFF !important;
+        color: #fff;
+    }
+
+    .layui-laydate .layui-this {
+        background-color: #1E9FFF !important;
+        color: #fff !important;
+    }
+
+    .layui-laydate-content td.laydate-selected {
+        background-color: #31e6ff;
+    !important;
+    }
+
+    .reportWord {
+        box-shadow: 0 0 10px 1px rgba(102, 122, 128, 0.54);
+    }
+
+    .reportInput {
+        height: 35px;
+        border: none;
+        border-bottom: 2px solid #D9D9D9;
+        background-color: #F2F2F2;
+        text-align: center;
+    }
+
+    .reportInputT {
+
+        border: none;
+        border-bottom: 2px solid #D9D9D9;
+        background-color: #F2F2F2;
+    }
+
+    .reportTable {
+        margin-left: 78px;
+        margin-right: 29px;
+        box-shadow: 0 0 10px 1px rgba(102, 122, 128, 0.54);
+        border-radius: 20px 20px 20px 20px
+    }
+</style>
+</html>

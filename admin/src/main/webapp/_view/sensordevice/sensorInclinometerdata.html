@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("加速度计")
+    <script src="/assets/lib/xm-select.js"></script>
+
+    <style type="text/css">
+        .layui-form-checked span, .layui-form-checked:hover span {
+            background-color:#FF5722;
+        }
+
+        .layui-form-checked i, .layui-form-checked:hover i {
+            color:#FF5722;
+        }
+        .layui-btn.onlinebtn{
+            background-color: #009688;
+            color: #FFFFFF;
+        }
+        .layui-btn.offlinebtn{
+            background-color: #ff0000;
+            color: #FFFFFF;
+        }
+        .layui-card-body.layui-layout-box{
+            width: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            /*border-style: solid;*/
+            background-color: #1e9fff;
+            /*!*border-image: url(/img/bg.png) 4 4 4 4 fill round;*!*/
+            /*border-image: url(/img/bg.png) 4 4 4 4 fill stretch;*/
+            box-sizing: border-box;
+            /*height: calc(100% - 42px);*/
+            height: 130px;
+        }
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction:row;
+            justify-content: space-between;
+            align-content: center;
+        }
+        .right-one-row{
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items:stretch;
+            flex-wrap:wrap;
+        }
+        .right-one-row .right-one-item{
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items:center;
+        }
+        .right-one-item .message{
+            height: 100%;
+            width: 100%;
+            flex-direction:column;
+            justify-content: center;
+            display: flex;
+            align-items:center;
+        }
+        .title{
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items:center;
+            justify-content:center;
+            color: #FFFFFF;
+        }
+        .data{
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items:center;
+            justify-content:center;
+            color: #000000;
+        }
+        .layadmin-carousel.history{
+            height: 400px !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card" style="height: 550px">
+                <div class="layui-card-header">数据图表</div>
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="historylogdate" placeholder=" - ">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload" lay-filter="LAY-history-search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-carousel layadmin-carousel history" data-anim="fade" lay-filter="LAY-index-history"
+                         style="width:100%;">
+                        <div carousel-item id="LAY-index-history">
+                            <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">表格数据</div>
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="logdate" placeholder=" - ">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload" lay-filter="LAY-app-contlist-search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="table-form" lay-filter="table-form"></table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+<script>
+    var projetid = "#(projid)";
+    var sensorSN = "#(sensorsn)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table','sensorInclinometerdata']);
+</script>
+</body>
+</html>

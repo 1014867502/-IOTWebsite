@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("主页")
+    <style>
+        .layadmin-shortcut li .layui-icon{
+            color: #FFFFFF;
+            background-color:#1E9FFF;
+        }
+        .layadmin-shortcut li:hover .layui-icon{
+            background-color: #93D1FF;
+        }
+        .layuiadmin-card-text .layui-text-center {
+            height: 20px !important;
+            line-height: 22px;
+            margin-bottom: 5px;
+        }
+        .layuiadmin-card-text .layui-text-top a {
+            line-height: 28px;
+            font-size: 24px;
+            vertical-align: baseline;
+        }
+        .layui-badge {
+            height: 28px;
+            line-height: 28px;
+        }
+        .layui-badge, .layui-badge-dot, .layui-badge-rim {
+            position: relative;
+            display: inline-block;
+            padding: 0 6px;
+            font-size: 20px;
+            text-align: center;
+            background-color: #FF5722;
+            color: #fff;
+            border-radius: 2px;
+            margin: 5px 20px 5px;
+        }
+        .layuiadmin-card-text {
+            background-color: #a0e3da;
+            border-radius: 10px;
+        }
+        .layadmin-add-tips{padding-top: 118px; text-align: center;}
+        .layadmin-add-tips .layui-icon[add]{display: inline-block; font-size: 290px; color: #1e9fff;}
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header" data-locale="web_dashboard_lnk">快捷方式</div>
+                <div class="layui-card-body">
+
+
+                    <div class="layui-row layui-col-space10">
+
+                        <div class="layui-col-xs12 layui-col-sm4">
+                            <div class="layuiadmin-card-text" >
+                                <div class="layadmin-add-tips">
+                                    <a href="/account/addgroup?type=0">
+                                        <i class="layui-icon layui-icon-add-circle" add ></i>
+                                        <cite data-locale="web_item_add_group" hidden>Add Group</cite>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                        #for(x : list)
+                        <div class="layui-col-xs12 layui-col-sm4">
+                            <div class="layuiadmin-card-text">
+                                <div class="layui-text-top">
+                                    <i class="layui-icon layui-icon-group" style="color: #1E9FFF"></i>
+                                    <a lay-href="/ntripgroup?groupadmin=#(x.groupadmin)">#(x.groupname)</a>
+                                    <span class="layui-badge layui-bg-blue ">Admin：#(x.groupadmin)</span>
+                                </div>
+                                <table class="layui-table" lay-even="" lay-skin="nob">
+                                    <colgroup>
+                                        <col width="150">
+                                        <col width="150">
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <td>Duetime</td>
+                                        <td>#(x.duetime)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CasterPort</td>
+                                        <td>#(x.casterport)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Basenumber</td>
+                                        <td>#(x.basenumber)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rovernumber</td>
+                                        <td>#(x.rovernumber)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Datakeepdays</td>
+                                        <td>#(x.datakeepdays)</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        #end
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index','dashboard']);
+</script>
+</body>
+</html>

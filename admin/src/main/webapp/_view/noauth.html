@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("角色管理")
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layadmin-tips">
+        <i class="layui-icon" face>&#xe664;</i>
+        <div class="layui-text" style="font-size: 20px;" data-locale="web_item_no_auth">
+            No authority
+        </div>
+    </div>
+</div>
+
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index']);
+</script>
+</body>
+</html>

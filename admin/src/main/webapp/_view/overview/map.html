@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    #@meta("主页")
+    <script src="/assets/lib/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <style type="text/css">
+        body {
+            padding: 0;
+        }
+
+        html,
+        body,
+        #map {
+            height: 100%;
+        }
+        #left-general {
+            z-index: 9999;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 30%;
+            height: 35%;
+        }
+        #left-divcelist {
+            z-index: 9999;
+            position: absolute;
+            top: calc(35% + 20px);
+            left: 10px;
+            width: 30%;
+            height: calc(65% - 30px);
+        }
+        #right-warn {
+            z-index: 9999;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30%;
+            height: 35%;
+        }
+        #right-warnmessage {
+            z-index: 9999;
+            position: absolute;
+            top: calc(35% + 20px);
+            right: 10px;
+            width: 30%;
+            height: calc(65% - 30px);
+        }
+        .card-box{
+            position: relative;
+            width: 100%;
+            /*margin: 50px auto;*/
+            height: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            border-style: solid;
+            border-color: transparent;
+            border-image: url(/img/bg.png) 4 4 4 4 fill round;
+            box-sizing: border-box;
+        }
+        .card-box .relative-div{
+            z-index: 9999;
+            position: relative;
+            top: 0%;
+            left: 0%;
+            width: 50%;
+            height: 100%;
+            /*padding: 10%;*/
+            /*border: 2px solid blue;*/
+            /*background: white;*/
+        }
+        .relative-div .layui-carousel{
+            width: 100%;
+            height: 100%;
+            background-color: transparent !important;
+        }
+        .relative-div .layadmin-carousel{
+            height: 100% !important;
+            width: 100%;
+            background-color: transparent !important;
+        }
+        .layui-carousel > *[carousel-item] > *{background-color: transparent;}
+
+        .flex {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            /*border: 2px dashed #000;*/
+            width: calc(100% - 20px);
+            padding: 3px;
+        }
+        .warn-title{
+            color: #32EBCA;
+            margin-bottom: 0px;
+            font-weight: normal;
+            font-size: 16px;
+        }
+        .item {
+            width: 15%;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            color: #34ECCB;
+            /*border: 1px solid green;*/
+            background: url(/img/num-bg.png) no-repeat 50% 0;
+            font-size: 16px;
+        }
+        .layui-card{
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /*  新加的 */
+            background-color: transparent !important;
+        }
+        .layui-card:hover{
+            overflow: auto; /*  新加的 */
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 10px 15px;
+            line-height: 24px;
+        }
+        ::-webkit-scrollbar{
+            width:4px;
+            background-color: #0e487c;
+        }
+        ::-webkit-scrollbar-thumb{
+            background-color: #4facfa;
+        }
+        .warning-box-list{
+            position:relative;
+            left:0;
+            top:0;
+            bottom:0;
+            z-index:999;
+            width:100%;
+            overflow-x:hidden
+        }
+        .warning-box-list-scroll{
+            position:relative;
+            width:100%;
+            height:100%;
+            overflow-x:hidden
+        }
+        .warning-box-list-scroll .layui-nav-tree{
+            width: 100%;
+            text-align: center;
+        }
+        .warning-box-body{
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /*  新加的 */
+            background-color: transparent !important;
+        }
+        .warning-box-body:hover{
+            overflow: auto; /*  新加的 */
+        }
+        .comp-monitor-warning-box-list {
+            /*overflow: hidden;*/
+            width: 100%;
+            height: 100%;
+            padding: 12px 0;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+        }
+        .comp-monitor-warning-box-list ul {
+            width: 100%;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .comp-monitor-warning-box-list .warning-active {
+            /*background: url(/img/warning-border.png) no-repeat 0 0;*/
+            background-size: 100% 100%;
+        }
+        .comp-monitor-warning-box-list .comp-monitor-warning-box-list-content {
+            color: #ffffff;
+            width: 100%;
+            padding-left: 8px;
+        }
+        .comp-monitor-warning-box-list .comp-monitor-warning-box-list-content-name {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 6px;
+        }
+        .comp-monitor-warning-box-list .comp-monitor-warning-box-list-content-info {
+            padding: 6px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .comp-monitor-warning-box-list li {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 16px;
+            margin: 0;
+            list-style: none;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            /* border-image: -webkit-linear-gradient(rgba(8,99,131,0),red,rgba(8,99,131,0)) 30 30; */
+            /* border-image: linear-gradient(green,red,green); */
+        }
+        .comp-monitor-warning-box-list li:focus{
+            background: url(/img/warning-item-active.png) no-repeat 0 0;
+            background-size: 100% 100%;
+            outline-style: none;
+        }
+        .comp-monitor-warning-box-list .warning-active {
+            /*background: url(/img/warning-item-active.png) no-repeat 0 0;*/
+            /*background-color: rgb(85, 139, 248);*/
+            background-size: 100% 100%;
+        }
+        /*向右*/
+        .triangle_border_right{
+            width:0;
+            height:0;
+            border-width:8px 0 8px 8px;
+            border-style:solid;
+            border-color:transparent transparent transparent rgba(123, 219, 248, 0.93);/*透明 透明 透明 灰*/
+            /*margin:40px auto;*/
+            left: -5px;
+            position:absolute;
+            display: none;
+        }
+        .comp-monitor-warning-box-list li img.warning-border {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            /* margin: 0 auto; */
+        }
+        .comp-monitor-warning-box-list .comp-monitor-warning-box-list-content-name .tooltip-content {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .comp-monitor-warning-box-list .comp-monitor-warning-box-list-content-info-content {
+            width: 100%;
+        }
+        .monitor-body{
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /*  新加的 */
+            background-color: transparent !important;
+            display: none;
+        }
+        .monitor-body:hover{
+            overflow: auto; /*  新加的 */
+        }
+        .monitor-body .popover-small {
+            height: 200px !important;
+        }
+        .monitor-body .warning-pop {
+            color: #fff;
+            width: 357px;
+            height: 300px !important;
+            background: url(/img/warning-pop.png) no-repeat 0 0;
+            background-size: 100% 100%;
+            overflow: hidden;
+        }
+        .monitor-body .warning-pop-header {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .monitor-body .warning-pop-header-box {
+            margin-top: 12px;
+            width: 274px;
+            height: 70px;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            background: rgba(0, 156, 255, 0.4);
+            border-radius: 4px;
+            color: #ffffff;
+        }
+        .monitor-body .warning-pop-header-box .scroll-box {
+            width: 100%;
+            height: 100%;
+            padding: 3px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+        .monitor-body .warning-pop-body {
+            padding: 12px;
+        }
+        .monitor-body .warning-pop-body-title {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+        .monitor-body .warning-pop-body-content-result {
+            padding: 8px;
+            padding-left: 16px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+        }
+        .layui-form-item {
+            margin-bottom: 0px !important;
+        }
+        .layui-input-block {
+            margin-left: 0px !important;
+        }
+        .layui-textarea {
+            min-height: 0px !important;
+            background-color: transparent;
+        }
+        .comp-monitor-device-group{
+            width: 100%;
+            height: 100%;
+            font-size: 14px;
+        }
+        .comp-monitor-device-group-header {
+            /*width: 100%;*/
+            /*position: absolute;*/
+            top: 0;
+            left: 0;
+            padding: 12px 12px 0 12px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+        }
+        .comp-monitor-device-group-header span {
+            display: inline-block;
+            margin-left: 8px;
+            color: #ffffff;
+        }
+        .comp-monitor-device-group-header .comp-monitor-device-group-header-search input {
+            width: 90%;
+            border: none;
+            background: transparent;
+            padding: 8px;
+            outline: none;
+            color: #00f0ff;
+        }
+        .comp-monitor-device-group-header .comp-monitor-device-group-header-title, .comp-monitor-device-group-header .comp-monitor-device-group-header-search {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+        .comp-monitor-device-group-header .comp-monitor-device-group-header-search {
+            width: 70%;
+            background: url(/img/input-bg.png) no-repeat 0 0;
+            background-size: 100% 100%;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            padding: 0 12px 0 0;
+        }
+        .comp-monitor-device-group-box{
+            position: relative;
+            height: calc(100% - 65px);
+            width: 100%;
+            margin-top: 12px;
+            overflow: hidden; /*  新加的 */
+            background-color: transparent !important;
+            display: flex;
+        }
+        .comp-monitor-device-group-box ul{
+            width: 100%;
+        }
+        .active-deviceId {
+            color: #00f0ff !important;
+            background: rgba(87, 161, 188, 0.2);
+        }
+        .comp-monitor-device-group-box .dev-active {
+            /*background: url(/img/warning-border.png) no-repeat 0 0;*/
+            background-size: 100% 100%;
+
+        }
+        .comp-monitor-device-group-box li {
+            padding: 8px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .comp-monitor-device-group-box li:focus{
+            background: url(/img/warning-item-active.png) no-repeat 0 0;
+            background-size: 100% 100%;
+            outline-style: none;
+        }
+        .comp-monitor-device-group-box:hover{
+            overflow: auto; /*  新加的 */
+        }
+        .comp-monitor-device-group .comp-monitor-device-group-box-item {
+            padding-right: 8px;
+            display: flex;
+            -webkit-box-align: center;
+            align-items: center;
+            margin-left: 20px;
+        }
+        .el-tag {
+            font-size: 12px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            border: 1px solid rgba(64,158,255,.2);
+        }
+        .el-tag--small {
+            height: 24px;
+            padding: 0 8px;
+            line-height: 22px;
+        }
+
+        .comp-monitor-device-group .comp-monitor-device-group-box-item .itemInfo {
+            white-space: normal;
+            word-break: break-all;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="monitor-body" id="warnlayer">
+    <div class="warning-pop popover-small">
+        <div class="warning-pop-header">
+            <div class="warning-pop-header-box">
+                <div class="scroll-box">
+                    <div>
+                        设备名称：污水处理 B-02
+                    </div>
+                    <div>
+                        报警内容：当前值：1，已低于您设置的2.0值
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="warning-pop-body">
+            <div class="warning-pop-body-title">
+                <span>报警处理</span>
+            </div>
+            <div class="warning-pop-body-content">
+<!--                <div class="warning-pop-body-content-result">-->
+<!--                    <span>处理结果：已恢复正常状态</span>-->
+<!--                </div>-->
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">报警处理</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="sex" value="男" title="确认" checked="">
+                            <input type="radio" name="sex" value="女" title="误报">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">处理描述</label>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <div class="layui-input-block">
+                            <textarea placeholder="请输入内容" class="layui-textarea" name="desc"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="text-align:center;margin-top: 3px;">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!---->
+    </div>
+</div>
+     <div id='map'></div>
+     <div id="left-general">
+         <div class="layui-row card-box">
+             <div class="layui-col-md6 relative-div">
+                 <div class="layui-card">
+                     <div class="layui-card-body">
+                         <div class="flex">
+                             <div class="warn-title">
+                                 设备总数
+                             </div>
+                         </div>
+                         <div class="flex">
+                             <div class="item">1</div>
+                             <div class="item">2</div>
+                             <div class="item">3</div>
+                             <div class="item">4</div>
+                         </div>
+                         <div class="flex">
+                             <div class="warn-title">
+                                 在线设备
+                             </div>
+                         </div>
+                         <div class="flex">
+                             <div class="item">1</div>
+                             <div class="item">2</div>
+                             <div class="item">3</div>
+                             <div class="item">4</div>
+                         </div>
+                         <div class="flex">
+                             <div class="warn-title">
+                                 离线设备
+                             </div>
+                         </div>
+                         <div class="flex">
+                             <div class="item">1</div>
+                             <div class="item">2</div>
+                             <div class="item">3</div>
+                             <div class="item">4</div>
+                         </div>
+                     </div>
+
+                 </div>
+             </div>
+             <div class="layui-col-md6 relative-div">
+                 <div class="layui-carousel layadmin-carousel" data-anim="fade" lay-filter="LAY-index-count">
+                     <div carousel-item id="LAY-index-count">
+                         <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div id="left-divcelist">
+         <div class="card-box">
+             <div class="comp-monitor-device-group">
+                 <div class="comp-monitor-device-group-header">
+                     <div class="comp-monitor-device-group-header-title">
+                         <img src="/img/title.png" alt=""> <span class="content">设备列表</span>
+                     </div>
+                     <div class="comp-monitor-device-group-header-search">
+                         <input type="text" placeholder="请输入SN或设备名称">
+                         <img src="/img/search.png" alt="">
+                     </div>
+                 </div>
+                 <div class="comp-monitor-device-group-box" id="group-box">
+                     <ul  id="dev-list">
+                         <li class="">
+                             <div class="comp-monitor-device-group-box-item">
+                                 <span class="el-tag el-tag--small" style="border-color: rgb(117, 181, 82); color: rgb(117, 181, 82); background-color: rgba(117, 181, 82, 0.2);">在线
+                                 </span>
+                                 <span class="itemInfo">1 号锅炉控制系统</span>
+                             </div>
+                         </li>
+                         <li class="">
+                             <div class="comp-monitor-device-group-box-item">
+                                 <span class="el-tag el-tag--small" style="border-color: rgb(117, 181, 82); color: rgb(117, 181, 82); background-color: rgba(117, 181, 82, 0.2);">在线
+                                 </span>
+                                 <span class="itemInfo">1 号锅炉控制系统</span>
+                             </div>
+                         </li>
+                         <li class="">
+                             <div class="comp-monitor-device-group-box-item">
+                                 <span class="el-tag el-tag--small" style="border-color: rgb(206, 22, 22); color: rgb(206, 22, 22); background-color: rgba(206, 22, 22, 0.2);">
+                                     报警
+                                 </span>
+                                 <span class="itemInfo">1 号锅炉控制系统</span>
+                             </div>
+                         </li>
+                         <li class="">
+                             <div class="comp-monitor-device-group-box-item">
+                                 <span class="el-tag el-tag--small" style="border-color: rgb(117, 181, 82); color: rgb(117, 181, 82); background-color: rgba(117, 181, 82, 0.2);">在线
+                                 </span>
+                                 <span class="itemInfo">1 号锅炉控制系统</span>
+                             </div>
+                         </li>
+                         <li class="">
+                             <div class="comp-monitor-device-group-box-item">
+                                 <span class="el-tag el-tag--small" style="border-color: rgb(117, 181, 82); color: rgb(117, 181, 82); background-color: rgba(117, 181, 82, 0.2);">在线
+                                 </span>
+                                 <span class="itemInfo">1 号锅炉控制系统</span>
+                             </div>
+                         </li>
+                         <li class="">
+                             <div class="comp-monitor-device-group-box-item">
+                                 <span class="el-tag el-tag--small" style="border-color: rgb(206, 22, 22); color: rgb(206, 22, 22); background-color: rgba(206, 22, 22, 0.2);">
+                                     报警
+                                 </span>
+                                 <span class="itemInfo">1 号锅炉控制系统</span>
+                             </div>
+                         </li>
+                         <li class="">
+                             <div class="comp-monitor-device-group-box-item">
+                                 <span class="el-tag el-tag--small" style="border-color: rgb(117, 181, 82); color: rgb(117, 181, 82); background-color: rgba(117, 181, 82, 0.2);">在线
+                                 </span>
+                                 <span class="itemInfo">1 号锅炉控制系统</span>
+                             </div>
+                         </li>
+                         <li class="">
+                             <div class="comp-monitor-device-group-box-item">
+                                 <span class="el-tag el-tag--small" style="border-color: rgb(117, 181, 82); color: rgb(117, 181, 82); background-color: rgba(117, 181, 82, 0.2);">在线
+                                 </span>
+                                 <span class="itemInfo">1 号锅炉控制系统</span>
+                             </div>
+                         </li>
+                         <li class="">
+                             <div class="comp-monitor-device-group-box-item">
+                                 <span class="el-tag el-tag--small" style="border-color: rgb(117, 181, 82); color: rgb(117, 181, 82); background-color: rgba(117, 181, 82, 0.2);">在线
+                                 </span>
+                                 <span class="itemInfo">1 号锅炉控制系统</span>
+                             </div>
+                         </li>
+                         <li class="">
+                             <div class="comp-monitor-device-group-box-item">
+                                 <span class="el-tag el-tag--small" style="border-color: rgb(117, 181, 82); color: rgb(117, 181, 82); background-color: rgba(117, 181, 82, 0.2);">在线
+                                 </span>
+                                 <span class="itemInfo">1 号锅炉控制系统</span>
+                             </div>
+                         </li>
+                         <li class="">
+                             <div class="comp-monitor-device-group-box-item">
+                                 <span class="el-tag el-tag--small" style="border-color: rgb(117, 181, 82); color: rgb(117, 181, 82); background-color: rgba(117, 181, 82, 0.2);">在线
+                                 </span>
+                                 <span class="itemInfo">1 号锅炉控制系统</span>
+                             </div>
+                         </li>
+                     </ul>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div id="right-warn">
+         <div class="layui-row card-box">
+             <div class="layui-col-md6 relative-div">
+                 <div class="layui-card">
+                     <div class="layui-card-body">
+                         <div class="flex">
+                             <div class="warn-title">
+                                 今日报警总数
+                             </div>
+                         </div>
+                         <div class="flex">
+                             <div class="item">1</div>
+                             <div class="item">2</div>
+                             <div class="item">3</div>
+                             <div class="item">4</div>
+                         </div>
+                         <div class="flex">
+                             <div class="warn-title">
+                                 今日已处理报警
+                             </div>
+                         </div>
+                         <div class="flex">
+                             <div class="item">1</div>
+                             <div class="item">2</div>
+                             <div class="item">3</div>
+                             <div class="item">4</div>
+                         </div>
+                         <div class="flex">
+                             <div class="warn-title">
+                                 今日未处理报警
+                             </div>
+                         </div>
+                         <div class="flex">
+                             <div class="item">1</div>
+                             <div class="item">2</div>
+                             <div class="item">3</div>
+                             <div class="item">4</div>
+                         </div>
+                     </div>
+
+                 </div>
+             </div>
+             <div class="layui-col-md6 relative-div">
+                 <div class="layui-carousel layadmin-carousel" data-anim="fade" lay-filter="LAY-index-warn">
+                     <div carousel-item id="LAY-index-warn">
+                         <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div id="right-warnmessage">
+         <div class="card-box">
+             <div class="warning-box-body">
+                 <div class="comp-monitor-warning-box-list">
+                     <div class="triangle_border_right" id="triangle"></div>
+                     <ul id="warnul">
+                     <span>
+
+                         <li class="warning-active" tabindex="0">
+
+                             <div class="comp-monitor-warning-box-list-icon">
+                                 <!----> <!---->
+                             </div>
+                             <div class="comp-monitor-warning-box-list-content">
+                                 <div class="comp-monitor-warning-box-list-content-name">
+                                     <div class="tooltip-content el-tooltip" tabindex="0">
+                                         设备：污水处理 B-01
+                                     </div>
+                                 </div>
+                                 <div class="comp-monitor-warning-box-list-content-info">
+                                     <div class="comp-monitor-warning-box-list-content-info-content">
+                                         <span> 内容：已恢复正常状态</span>
+                                     </div>
+                                 </div>
+
+                             </div>
+                             <img src="/img/warning-border.png" alt="" class="warning-border">
+                         </li>
+                     </span>
+                     <span>
+                         <li class="warning-active" tabindex="0">
+                             <div class="comp-monitor-warning-box-list-icon">
+                                 <!----> <!---->
+                             </div>
+                             <div class="comp-monitor-warning-box-list-content">
+                                 <div class="comp-monitor-warning-box-list-content-name">
+                                     <div class="tooltip-content el-tooltip" tabindex="0">
+                                         设备：污水处理 B-01
+                                     </div>
+                                 </div>
+                                 <div class="comp-monitor-warning-box-list-content-info">
+                                     <div class="comp-monitor-warning-box-list-content-info-content">
+                                         <span> 内容：已恢复正常状态</span>
+                                     </div>
+                                 </div>
+
+                             </div>
+                             <img src="/img/warning-border.png" alt="" class="warning-border">
+                         </li>
+                     </span>
+                     <span>
+                         <li class="warning-active" tabindex="0">
+                             <div class="comp-monitor-warning-box-list-icon">
+                                 <!----> <!---->
+                             </div>
+                             <div class="comp-monitor-warning-box-list-content">
+                                 <div class="comp-monitor-warning-box-list-content-name">
+                                     <div class="tooltip-content el-tooltip" tabindex="0">
+                                         设备：污水处理 B-01
+                                     </div>
+                                 </div>
+                                 <div class="comp-monitor-warning-box-list-content-info">
+                                     <div class="comp-monitor-warning-box-list-content-info-content">
+                                         <span> 内容：已恢复正常状态</span>
+                                     </div>
+                                 </div>
+
+                             </div>
+                             <img src="/img/warning-border.png" alt="" class="warning-border">
+                         </li>
+                     </span>
+                     <span>
+                         <li class="warning-active" tabindex="0">
+                             <div class="comp-monitor-warning-box-list-icon">
+                                 <!----> <!---->
+                             </div>
+                             <div class="comp-monitor-warning-box-list-content">
+                                 <div class="comp-monitor-warning-box-list-content-name">
+                                     <div class="tooltip-content el-tooltip" tabindex="0">
+                                         设备：污水处理 B-01
+                                     </div>
+                                 </div>
+                                 <div class="comp-monitor-warning-box-list-content-info">
+                                     <div class="comp-monitor-warning-box-list-content-info-content">
+                                         <span> 内容：已恢复正常状态</span>
+                                     </div>
+                                 </div>
+
+                             </div>
+                             <img src="/img/warning-border.png" alt="" class="warning-border">
+                         </li>
+                     </span>
+                     <span>
+                         <li class="warning-active" tabindex="0">
+                             <div class="comp-monitor-warning-box-list-icon">
+                                 <!----> <!---->
+                             </div>
+                             <div class="comp-monitor-warning-box-list-content">
+                                 <div class="comp-monitor-warning-box-list-content-name">
+                                     <div class="tooltip-content el-tooltip" tabindex="0">
+                                         设备：污水处理 B-01
+                                     </div>
+                                 </div>
+                                 <div class="comp-monitor-warning-box-list-content-info">
+                                     <div class="comp-monitor-warning-box-list-content-info-content">
+                                         <span> 内容：已恢复正常状态</span>
+                                     </div>
+                                 </div>
+
+                             </div>
+                             <img src="/img/warning-border.png" alt="" class="warning-border">
+                         </li>
+                     </span>
+                     <span>
+                         <li class="warning-active" tabindex="0">
+                             <div class="comp-monitor-warning-box-list-icon">
+                                 <!----> <!---->
+                             </div>
+                             <div class="comp-monitor-warning-box-list-content">
+                                 <div class="comp-monitor-warning-box-list-content-name">
+                                     <div class="tooltip-content el-tooltip" tabindex="0">
+                                         设备：污水处理 B-01
+                                     </div>
+                                 </div>
+                                 <div class="comp-monitor-warning-box-list-content-info">
+                                     <div class="comp-monitor-warning-box-list-content-info-content">
+                                         <span> 内容：已恢复正常状态</span>
+                                     </div>
+                                 </div>
+
+                             </div>
+                             <img src="/img/warning-border.png" alt="" class="warning-border">
+                         </li>
+                     </span>
+                     <span>
+                         <li class="warning-active" tabindex="0">
+                             <div class="comp-monitor-warning-box-list-icon">
+                                 <!----> <!---->
+                             </div>
+                             <div class="comp-monitor-warning-box-list-content">
+                                 <div class="comp-monitor-warning-box-list-content-name">
+                                     <div class="tooltip-content el-tooltip" tabindex="0">
+                                         设备：污水处理 B-01
+                                     </div>
+                                 </div>
+                                 <div class="comp-monitor-warning-box-list-content-info">
+                                     <div class="comp-monitor-warning-box-list-content-info-content">
+                                         <span> 内容：已恢复正常状态</span>
+                                     </div>
+                                 </div>
+
+                             </div>
+                             <img src="/img/warning-border.png" alt="" class="warning-border">
+                         </li>
+                     </span>
+                     <span>
+                         <li class="warning-active" tabindex="0">
+                             <div class="comp-monitor-warning-box-list-icon">
+                                 <!----> <!---->
+                             </div>
+                             <div class="comp-monitor-warning-box-list-content">
+                                 <div class="comp-monitor-warning-box-list-content-name">
+                                     <div class="tooltip-content el-tooltip" tabindex="0">
+                                         设备：污水处理 B-01
+                                     </div>
+                                 </div>
+                                 <div class="comp-monitor-warning-box-list-content-info">
+                                     <div class="comp-monitor-warning-box-list-content-info-content">
+                                         <span> 内容：已恢复正常状态</span>
+                                     </div>
+                                 </div>
+
+                             </div>
+                             <img src="/img/warning-border.png" alt="" class="warning-border">
+                         </li>
+                     </span>
+                     </ul>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <script src="/assets/lib/jquery-3.4.1.min.js"></script>
+     <script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+     <script src="/assets/lib/loadlanguage.js"></script>
+     <script src="/assets/layuiadmin/layui/layui.js"></script>
+     <script>
+         layui.config({
+             base: '/assets/layuiadmin/'
+         }).extend({
+             index: 'lib/index' //主入口模块
+         }).use(['index','overview'],function(){
+
+             //获取元素的纵坐标
+             function getTop(e){
+                 var offset=e.offsetTop;
+                 if(e.offsetParent!=null) offset+=getTop(e.offsetParent);
+                 return offset;
+             }
+             //获取元素的横坐标
+             function getLeft(e){
+                 var offset=e.offsetLeft;
+                 if(e.offsetParent!=null) offset+=getLeft(e.offsetParent);
+                 return offset;
+             }
+             var $ = layui.$
+                 ,layer = layui.layer;
+             // 事件代理方式
+
+             //设备列表事件
+             const devul = document.getElementById('dev-list');
+             var devlis = devul.querySelectorAll("li");
+             for(var i = 0; i < devlis.length; i++) {
+                 devlis[i].onclick = (function(i) {
+                     return function(){
+                         $(this).addClass("active-deviceId").siblings().removeClass();
+                     }
+                 })(i);
+             }
+
+             const ul = document.getElementById('warnul');
+             //const li = document.querySelectorAll('li');
+
+             // 闭包方式
+             var lis = ul.querySelectorAll("li");
+             for(var i = 0; i < lis.length; i++) {
+                 lis[i].onclick = (function(i) {
+                     return function(){
+                         //alert(`当前处于ul的第${i+1}条。`);
+                         var odiv=document.getElementById('right-warnmessage');
+                         var leftul = odiv.offsetLeft;
+                         var topul = odiv.offsetTop;
+                         var offsetHeightul  =  odiv.offsetHeight;
+                         // var offsetTop = lis[i].offsetTop;
+                         // var offsetHeightli  =  lis[i].offsetHeight;
+
+                         var offsetTop = lis[i].getBoundingClientRect().top;
+                         var offsetHeightli  =  lis[i].getBoundingClientRect().height;
+
+                         var leftoffset = getLeft(lis[i]);
+                         var topoffset = getTop(lis[i]);
+
+                         leftoffset = leftul;
+                         topoffset = offsetTop;
+
+                         var x;
+                         var y;
+                         if ((offsetHeightul-(offsetTop-topul))>300)
+                         {
+                             x = topoffset-150+offsetHeightli/2;
+                             y = leftoffset-357;
+                         }
+                         else{
+                             x = topoffset-(300-(offsetHeightul-(offsetTop-topul)));
+                             y = leftoffset-357;
+                         }
+
+                         //示范一个公告层
+                         layer.open({
+                             type: 1
+                             ,title: false //不显示标题栏
+                             ,closeBtn: false
+                             ,shadeClose: true
+                             //,area: '400px;'
+                             ,offset: [x+'px', y+'px']
+                             ,shade: 0.001
+                             ,skin: 'layui-layer-nobg layer_bg'
+                             ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                             //,btn: ['火速围观', '残忍拒绝']
+                             //,btnAlign: 'c'
+                             ,moveType: 1 //拖拽模式，0或者1
+                             ,content: $('#warnlayer')
+                             //,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">你知道吗？亲！<br>layer ≠ layui<br><br>layer只是作为Layui的一个弹层模块，由于其用户基数较大，所以常常会有人以为layui是layerui<br><br>layer虽然已被 Layui 收编为内置的弹层模块，但仍然会作为一个独立组件全力维护、升级。<br><br>我们此后的征途是星辰大海 ^_^</div>'
+                             ,success: function(layero){
+                                 var divObj=document.getElementById('triangle');
+                                 divObj.style.top = (offsetTop-topul)+offsetHeightli/2+'px';
+                                 divObj.style.display = 'inline';
+                             }
+                             ,end: function(){
+                                 var divObj=document.getElementById('triangle');
+                                 divObj.style.display = 'none';
+                             }
+                         });
+                     }
+                 })(i);
+             }
+         });
+
+     </script>
+</body>
+</html>

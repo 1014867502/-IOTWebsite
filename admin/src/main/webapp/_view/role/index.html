@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  #@meta("角色管理")
+</head>
+<body>
+
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header" data-locale="web_role_manage">角色管理</div>
+          <div class="layui-card-body">
+            <div class="layui-btn-group" style="margin-bottom: 10px;">
+              #permission("/role/add")
+              <button class="layui-btn layui-btn-sm" data-type="add" data-locale="web_item_add"><i class="layui-icon layui-icon-add-1"></i>创建角色</button>
+              #end
+            </div>
+            <table class="layui-hide" id="table-form" lay-filter="table-form"></table>
+            <script type="text/html" id="table-toolbar">
+              <div class="layui-btn-group">
+                #permission("/role/edit")
+                <button class="layui-btn layui-btn-xs" lay-event="edit"><i title="编辑角色" class="layui-icon layui-icon-edit"></i> </button>
+                #end
+                #permission("/role/delete")
+                <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i title="删除角色" class="layui-icon layui-icon-delete"></i> </button>
+                #end
+                #permission("/role/assignPermissions")
+                <button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="assignPermission"><i title="分配权限" class="layui-icon layui-icon-set"></i> </button>
+                #end
+              </div>
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/lib/jquery-3.4.1.min.js"></script>
+  <script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+  <script src="/assets/lib/loadlanguage.js"></script>
+  <script src="/assets/layuiadmin/layui/layui.js"></script>
+  <script>
+  layui.config({
+    base: '/assets/layuiadmin/'
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'role']);
+  </script>
+</body>
+</html>

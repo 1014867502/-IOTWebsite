@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("角色管理/分配权限")
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body" style="padding: 15px;">
+            <div class="layui-fluid layui-form" lay-filter="myForm">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-md6">
+                        <div class="layui-collapse" lay-accordion="">
+                            <div class="layui-colla-item">
+                                <h2 class="layui-colla-title"><label style="color: #CF1900">(#(account.userName))</label>
+                                    <label data-locale="web_user_function_authorization">用户功能授权</label></h2>
+                                <div class="layui-colla-content layui-show">
+                                    <table class="layui-table" lay-size="sm">
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox"
+                                                       lay-skin="switch" lay-text="ON|OFF"
+                                                       lay-filter="role-permission"
+                                                       data-account-id="#(account.id)"
+                                                       data-fun-id="1"
+                                                       #if(account.fun_rinex) checked #end>
+                                            </td>
+                                            <td data-locale="web_item_administrator">Administrator</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部按钮 -->
+    <div class="layui-form-item layui-layout-admin">
+        <div class="layui-input-block">
+            <div class="layui-footer" style="left: 0;">
+                <button class="layui-btn layui-btn-primary" id="returnBtn" lay-filter="returnBtn" data-locale="web_item_return">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/assets/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index','table','form'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,form = layui.form;
+
+        form.on('switch(role-permission)',function (obj) {
+            var state = obj.elem.checked ? true : false;
+            var data = {
+                accountId: $(this).data('accountId'),
+                funId: $(this).data('funId')
+            };
+            var url = state ? '/account/addFunction' : '/account/deleteFunction';
+            admin.req({
+                url:url,
+                data:data
+            })
+        });
+
+        $('#returnBtn').on('click', function () {
+            location.href = "/account";
+            return false;
+        })
+    });
+</script>
+</body>
+</html>

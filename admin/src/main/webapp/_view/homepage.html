@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("主页")
+    <script src="/assets/lib/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/style/layoutstyle.css">
+
+
+    <style>
+        .layui-row.divce-state {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        .layui-row.divce-state.ok .layui-progress-bar {
+            background-color: #00cca3;
+        }
+
+        .layui-row.divce-state.error .layui-progress-bar {
+            background-color: #cc0000;
+        }
+
+        .layui-row.divce-state.xyz .layui-progress {
+            background-color: transparent;
+        }
+
+        .layui-row.divce-offsetxyz {
+            height: 13px;
+        }
+
+
+        #left-one {
+            z-index: 9999;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: calc(25% - 10px);
+            height: 30%;
+            transition: all 1s;
+            -moz-transition: all 1s; /* Firefox 4 */
+            -webkit-transition: all 1s; /* Safari and Chrome */
+            -o-transition: all 1s; /* Opera */
+        }
+
+        #left-two {
+            z-index: 9999;
+            position: absolute;
+            top: calc(30% + 20px);
+            left: 10px;
+            width: calc(25% - 10px);
+            height: 30%;
+            transition: all 1s;
+            -moz-transition: all 1s; /* Firefox 4 */
+            -webkit-transition: all 1s; /* Safari and Chrome */
+            -o-transition: all 1s; /* Opera */
+        }
+
+        #left-three {
+            z-index: 9999;
+            position: absolute;
+            top: calc(60% + 30px);
+            left: 10px;
+            width: calc(25% - 10px);
+            height: calc(100% - 60% - 40px);
+            transition: all 1s;
+            -moz-transition: all 1s; /* Firefox 4 */
+            -webkit-transition: all 1s; /* Safari and Chrome */
+            -o-transition: all 1s; /* Opera */
+        }
+
+        #mid-one {
+            z-index: 9999;
+            position: absolute;
+            top: 10px;
+            left: calc(25% + 10px);
+            width: calc(50% - 20px);
+            height: 60%;
+            transition: all 1s;
+            -moz-transition: all 1s; /* Firefox 4 */
+            -webkit-transition: all 1s; /* Safari and Chrome */
+            -o-transition: all 1s; /* Opera */
+        }
+
+        #mid-two {
+            z-index: 9999;
+            position: absolute;
+            top: calc(60% + 20px);
+            left: calc(25% + 10px);
+            width: calc(50% - 20px);
+            height: calc(100% - 60% - 30px);
+            transition: all 1s;
+            -moz-transition: all 1s; /* Firefox 4 */
+            -webkit-transition: all 1s; /* Safari and Chrome */
+            -o-transition: all 1s; /* Opera */
+        }
+
+        .mid-two-title {
+            height: 38px;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            color: #FFFFFF;
+        }
+
+        .mid-two-echart {
+            height: calc(100% - 38px);
+            width: 100%;
+        }
+
+        /*********************************************************************/
+        #right-one {
+            z-index: 9999;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: calc(25% - 10px);
+            height: 30%;
+            transition: all 1s;
+            -moz-transition: all 1s; /* Firefox 4 */
+            -webkit-transition: all 1s; /* Safari and Chrome */
+            -o-transition: all 1s; /* Opera */
+        }
+
+        #right-two {
+            z-index: 9999;
+            position: absolute;
+            top: calc(30% + 20px);
+            right: 10px;
+            width: calc(25% - 10px);
+            height: 30%;
+            transition: all 1s;
+            -moz-transition: all 1s; /* Firefox 4 */
+            -webkit-transition: all 1s; /* Safari and Chrome */
+            -o-transition: all 1s; /* Opera */
+        }
+
+        #right-three {
+            z-index: 9999;
+            position: absolute;
+            top: calc(60% + 30px);
+            right: 10px;
+            width: calc(25% - 10px);
+            height: calc(100% - 60% - 40px);
+            transition: all 1s;
+            -moz-transition: all 1s; /* Firefox 4 */
+            -webkit-transition: all 1s; /* Safari and Chrome */
+            -o-transition: all 1s; /* Opera */
+        }
+
+        .layui-card-body.layui-layout-box {
+            width: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            border-style: solid;
+            border-color: transparent;
+            /*border-image: url(/img/bg.png) 4 4 4 4 fill round;*/
+            border-image: url(/img/bg.png) 4 4 4 4 fill stretch;
+            box-sizing: border-box;
+            height: calc(100% - 42px);
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-row .right-one-itemEx {
+            /*height: 50%;*/
+            width: 33%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00F7DE;
+        }
+
+        .data {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFFFF;
+        }
+
+        .layui-carousel {
+            background-color: transparent;
+            height: 100% !important;
+            weight: 100%;
+        }
+
+        .layui-carousel > *[carousel-item] > * {
+            background-color: transparent;
+        }
+
+        .layui-card-header.notice {
+            height: 30px;
+            line-height: 30px;
+            padding: 0 5px;
+            font-size: 12px;
+            padding-left: 45px;
+        }
+
+        .layui-card-header.notice i {
+            left: 15px;
+        }
+
+        .layui-card.notice {
+            margin-bottom: 10px;
+        }
+
+        .layui-card.notice .layui-card-body {
+            padding: 0px 15px;
+            color: #00FFFF;
+        }
+
+        .right-three-row {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        .right-three-row:hover {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .right-three-row .warnmessage {
+            height: 120px;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            /*display: flex;*/
+            align-items: center;
+            background-color: rgba(23, 77, 187, 0.25);
+            margin: 5px;
+        }
+
+        .warntitle {
+            height: 24px;
+            width: 100%;
+            margin-left: 15px;
+            line-height: 24px;
+            /*display: flex;*/
+            align-content: flex-start;
+            justify-content: stretch;
+            color: #00F7DE;
+        }
+
+        .normal {
+            color: #00F7DE;
+        }
+
+        .serious {
+            color: #e35f2a;
+        }
+
+        .danger {
+            color: #f70000;
+        }
+
+        .warndata {
+            height: 24px;
+            /*width: 100%;*/
+            margin-left: 25px;
+            line-height: 24px;
+            /*display: flex;*/
+            align-items: center;
+            justify-content: flex-start;
+            color: #ffffff;
+        }
+
+        .warntime {
+            height: 24px;
+            width: 100%;
+            margin-left: 25px;
+            line-height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            color: #ffffff;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        /*.leaflet-zoom-animated img {*/
+        /*    -webkit-filter: invert(1) grayscale(0) saturate(0.5) brightness(1.6) opacity(1) hue-rotate(3deg) sepia(1%) !important;*/
+        /*    !*-ms-filter: invert(1) grayscale(0) saturate(0.5) brightness(1.6) opacity(1) hue-rotate(334deg) sepia(0%) !important;*!*/
+        /*    !*-moz-filter: invert(1) grayscale(0) saturate(0.5) brightness(1.6) opacity(1) hue-rotate(334deg) sepia(0%) !important;*!*/
+        /*    !*filter: invert(1) grayscale(0) saturate(0.5) brightness(1.6) opacity(1) hue-rotate(334deg) sepia(0%) !important;*!*/
+        /*}*/
+        .leaflet-control-layers label {
+            color: #01AAED;
+        }
+
+        xm-select {
+            background-color: transparent !important;
+        }
+
+        xm-select > .xm-body {
+            background-color: rgba(23, 77, 187, 0.25);
+        }
+
+        xm-select > .xm-body .scroll-body::-webkit-scrollbar {
+            width: 4px;
+            height: 10px;
+        }
+
+        xm-select > .xm-body .scroll-body::-webkit-scrollbar-button:vertical {
+            display: none;
+        }
+
+        xm-select > .xm-body .scroll-body::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
+            background-color: #0e487c;
+        }
+
+        xm-select > .xm-body .scroll-body::-webkit-scrollbar-thumb {
+            border-radius: 0;
+            background-color: #4facfa;
+        }
+
+        /*xm-select > .xm-body .scroll-body::-webkit-scrollbar-thumb:vertical:hover{background-color: rgba(0,0,0,.35);}*/
+        /*xm-select > .xm-body .scroll-body::-webkit-scrollbar-thumb:vertical:active{background-color: rgba(0,0,0,.38);}*/
+        xm-select > .xm-body .xm-option-content {
+            color: #FFFFFF;
+            background-color: transparent !important;
+        }
+
+        xm-select > .xm-body .xm-option {
+            background-color: transparent !important;
+        }
+
+        xm-select > .xm-body .xm-option:hover {
+            background-color: rgba(18, 88, 232, 0.8) !important;
+        }
+
+        .layui-input, .layui-select, .layui-textarea {
+            background-color: transparent !important;
+            color: #ffFFFF;
+        }
+
+        .layui-carousel > [carousel-item]:before {
+            color: transparent !important;
+        }
+
+        xm-select > .xm-body .xm-toolbar .toolbar-tag {
+            color: #00F7DE;
+        }
+
+        .stationmarker {
+            display: flex;
+            display: -webkit-flex;
+            justify-content: center;
+            align-items: center;
+            color: #bd1a1a;
+            /*background-color: #01aaed;*/
+        }
+
+        .stationmarker span {
+            display: inline-block;
+            height: 24px;
+            width: 24px;
+            background: url('/assets/images/CORS_Active24.png') no-repeat center center;
+            margin-top: 3px;
+            margin-bottom: -20px;
+            font-size: 14px;
+            /*background-color: #a7db2f;*/
+
+        }
+
+        .layui-form-select dl {
+            background-color: transparent !important;
+        }
+
+        .layui-form-select dl dd:hover {
+            background-color: rgba(18, 88, 232, 0.8) !important;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="layui-body" id="LAY_app_body">
+    <div id="left-one">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                设备在线情况
+                <!--                <a class="layui-a-tips more-gnss" href="javascript:;">更多</a>-->
+            </div>
+            <div class="layui-card-body layui-layout-box">
+                <div class="layui-carousel" style="width: 100%;height: 100%">
+                    <div class="layui-row" id="devicecharts" style="height: 100%">
+                        <div class="layui-col-md6" style="height:100%">
+                            <div id="LAY-index-gnss-state" style="height: 100%"></div>
+                        </div>
+                        <div class="layui-col-md6" style="height: 100%">
+                            <div id="LAY-index-sensor-state" style="height: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--                    <div class="layui-row divce-state ok">-->
+            <!--                        <div class="layui-col-md4">-->
+            <!--                            <label>电量正常</label>-->
+            <!--                        </div>-->
+            <!--                        <div class="layui-col-md6">-->
+            <!--                            <div class="layui-progress layui-progress-big">-->
+            <!--                                <div id="nomalbatpercent" class="layui-progress-bar" lay-percent="40%"></div>-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                        <div class="layui-col-md2">-->
+            <!--                            <label id="nomalbatcount" style="padding-left: 2px">0</label>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                    <div class="layui-row divce-state error">-->
+            <!--                        <div class="layui-col-md4">-->
+            <!--                            <label>电量低</label>-->
+            <!--                        </div>-->
+            <!--                        <div class="layui-col-md6">-->
+            <!--                            <div class="layui-progress layui-progress-big">-->
+            <!--                                <div id="lowbatpercent" class="layui-progress-bar" lay-percent="0%"></div>-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                        <div class="layui-col-md2">-->
+            <!--                            <label id="lowbatcount" style="padding-left: 2px">0</label>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                    <div class="layui-row divce-state ok">-->
+            <!--                        <div class="layui-col-md4">-->
+            <!--                            <label>回传正常</label>-->
+            <!--                        </div>-->
+            <!--                        <div class="layui-col-md6">-->
+            <!--                            <div class="layui-progress layui-progress-big">-->
+            <!--                                <div id="okpercent" class="layui-progress-bar" lay-percent="0%"></div>-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                        <div class="layui-col-md2">-->
+            <!--                            <label id="okcount" style="padding-left: 2px">0</label>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                    <div class="layui-row divce-state error">-->
+            <!--                        <div class="layui-col-md4">-->
+            <!--                            <label>回传异常</label>-->
+            <!--                        </div>-->
+            <!--                        <div class="layui-col-md6">-->
+            <!--                            <div class="layui-progress layui-progress-big">-->
+            <!--                                <div id="errorpercent" class="layui-progress-bar" lay-percent="0%"></div>-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                        <div class="layui-col-md2">-->
+            <!--                            <label id="errorcount" style="padding-left: 2px">0</label>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+        </div>
+        <!--                <div class="layui-col-md6" style="height:100%">-->
+        <!--                    <div class="layui-carousel layadmin-carousel" data-anim="fade" lay-filter="LAY-index-count">-->
+        <!--                        <div carousel-item id="LAY-index-count">-->
+        <!--                            <div id="loadingbar"><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>-->
+        <!--                        </div>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+
+    </div>
+</div>
+</div>
+<div id="left-two">
+    <div class="layui-card">
+        <div class="layui-card-header">裂缝值变化监测
+            <!--                <a class="layui-a-tips more-sensor" href="javascript:">更多</a>-->
+        </div>
+        <div class="layui-card-body layui-layout-box">
+            <div class="card-body-scrollbar">
+                <div class="layui-carousel" id="test5" lay-filter="test5">
+                    <div class="right-one-row" id="sensorLFdata">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="left-three">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            地表位移监测
+            <!--                <a class="layui-a-tips more-gnss" href="javascript:">更多</a>-->
+        </div>
+        <div class="layui-card-body layui-layout-box">
+            <div class="card-body-scrollbar" style="overflow-x:hidden">
+                <div id="gnssoffset"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="mid-one">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            地图
+            <a href="javascript:;" class="layui-a-tips">
+                <img src="/img/whole-screen.png" alt="" id="wholescreen">
+                <img src="/img/screen-min.png" alt="" id="screenmin" style="display: none">
+            </a>
+        </div>
+        <div class="layui-card-body layui-layout-box">
+            <div id='map'></div>
+        </div>
+    </div>
+</div>
+<div id="mid-two">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            位移偏差
+            <a href="javascript:;" class="layui-a-tips">
+                <img src="/img/whole-screen.png" alt="" id="wholeechart">
+                <img src="/img/screen-min.png" alt="" id="minechart" style="display: none">
+            </a>
+        </div>
+        <div class="layui-card-body layui-layout-box">
+            <div class="mid-two-title">
+                <div>视图&nbsp&nbsp</div>
+                <div class="layui-input-inline">
+                    <form class="layui-form" action="" style="width: 130px">
+                        <select name="viewtype" id="viewtype" lay-filter="viewtype">
+                            <option value="1">触发</option>
+                            <option value="2">数值</option>
+                        </select>
+                    </form>
+                </div>
+                <span>&nbsp&nbsp&nbsp</span>
+                <div>设备&nbsp&nbsp</div>
+                <div id="gnssdevlist" class="xm-select-demo" style="width: 30%"></div>
+                <span>&nbsp&nbsp&nbsp</span>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="offsetlogdate" placeholder=" - ">
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="LAY-offset-select">查询</button>
+                </div>
+            </div>
+            <div class="mid-two-echart">
+                <div class="layui-carousel layadmin-carousel" data-anim="fade" lay-filter="LAY-index-offset-state"
+                     style="width:100%">
+                    <div carousel-item id="LAY-index-offset-state">
+                        <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="right-one">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            环境因子
+            <!--                <a class="layui-a-tips more-water" href="javascript:">更多</a>-->
+        </div>
+        <div class="layui-card-body layui-layout-box">
+            <div class="card-body-scrollbar flex-layout">
+                <div class="right-one-row">
+                    <div class="right-one-item">
+                        <img src="/img/ylj-wd.png">
+                    </div>
+                    <div class="right-one-item">
+                        <div class="message">
+                            <div class="data">
+                                温度
+                            </div>
+                            <div id="hj-wd" class="title">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-one-item">
+                        <img src="/img/ylj-dqyl.png">
+                    </div>
+                    <div class="right-one-item">
+                        <div class="message">
+                            <div class="data">
+                                大气压
+                            </div>
+                            <div id="hj-sw" class="title">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-one-item">
+                        <img src="/img/curstate_jyl.png">
+                    </div>
+                    <div class="right-one-item">
+                        <div class="message">
+                            <div class="data">
+                                降雨量
+                            </div>
+                            <div id="hj-jyl" class="title">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-one-item">
+                        <img src="/img/ylj-kqsd.png">
+                    </div>
+                    <div class="right-one-item">
+                        <div class="message">
+                            <div class="data">
+                                湿度
+                            </div>
+                            <div id="hj-trsd" class="title">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="right-two">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            泥位值监测
+            <!--                <a class="layui-a-tips more-sensor" href="javascript:">更多</a>-->
+        </div>
+        <div class="layui-card-body layui-layout-box">
+            <div class="card-body-scrollbar">
+                <div class="layui-carousel" id="test4" lay-filter="test5">
+                    <div class="right-one-row" id="sensorlastdata">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="right-three">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            实时预警信息
+            <a class="layui-a-tips more-warning" href="javascript:">更多</a>
+        </div>
+        <div class="layui-card-body layui-layout-box">
+            <div class="card-body-scrollbar">
+                <div class="layui-carousel" id="test3" lay-filter="test4">
+                    <div carousel-item="">
+                        <div id="warnpage1" class="right-three-row">
+                        </div>
+                        <!--                            <div id="warnpage2" class="right-three-row">-->
+                        <!--                            </div>-->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+
+    var projetid = parent.window.document.getElementsByName("homeiframe")[0].getAttribute('projetid');
+    var deviceid = 'XYT_GA03_3';
+
+    //跳转到GNSS管理列表
+    function gnssmore() {
+        top.location.href = "/manage";
+    }
+
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'homemap', 'homeechart', 'laydate', 'SensorType'], function () {
+        var $ = layui.$
+            , laydate = layui.laydate
+            , admin = layui.admin
+            , element = layui.element
+            , SensorType = layui.SensorType
+            , layer = layui.layer;
+
+        function getDay(day) {
+            function doHandleMonth(month) {
+                var m = month;
+                if (month.toString().length == 1) {
+                    m = "0" + month;
+                }
+                return m;
+            };
+            var today = new Date();
+            var targetday_milliseconds = today.getTime() + 1000 * 60 * 60 * 24 * day;
+            today.setTime(targetday_milliseconds); //注意，这行是关键代码
+            var tYear = today.getFullYear();
+            var tMonth = today.getMonth();
+            var tDate = today.getDate();
+            tMonth = doHandleMonth(tMonth + 1);
+            tDate = doHandleMonth(tDate);
+            return tYear + "-" + tMonth + "-" + tDate;
+        };
+
+        var initDate = getDay(-7) + " - " + getDay(0);
+        //日期范围
+        laydate.render({
+            elem: '#offsetlogdate'
+            , range: true
+            //,value: '2020-08-11 - 2020-08-20'
+            , value: initDate
+        });
+
+
+        //查询GNSS在线情况
+        admin.req({
+            url: '/manage/getprojectgnssstate?projid=' + projetid,
+            done: function (res) {
+                assignGnssState(res.data);
+                return false;
+            }
+        })
+
+        function assignGnssState(json) {
+
+            var okcount = json.stateok;
+            var errorcount = json.stateerror;
+            var onlinecount = json.stateonline;
+            var offlinecount = json.stateoffline;
+            var lowbatcount = json.lowbattery;
+            var nomalbatcount = json.nomalbattery;
+            var total = json.total;
+            $('#onlinepercent').attr('lay-percent', onlinecount * 100 / total + "%");
+            $('#onlinecount').text(onlinecount);
+            $('#offlinepercent').attr('lay-percent', offlinecount * 100 / total + "%");
+            $('#offlinecount').text(offlinecount);
+            $('#nomalbatpercent').attr('lay-percent', nomalbatcount * 100 / total + "%");
+            $('#nomalbatcount').text(nomalbatcount);
+            $('#lowbatpercent').attr('lay-percent', lowbatcount * 100 / total + "%");
+            $('#lowbatcount').text(lowbatcount);
+            $('#okpercent').attr('lay-percent', okcount * 100 / total + "%");
+            $('#okcount').text(okcount);
+            $('#errorpercent').attr('lay-percent', errorcount * 100 / total + "%");
+            $('#errorcount').text(errorcount);
+            element.init();
+        }
+
+        //查询报警信息
+
+        //GNSS的“更多” 跳转
+        $('.more-gnss').click(() => {
+            window.parent.location.replace('/manage#GNSS');
+        })
+
+        //雨量计的“更多” 跳转
+        $('.more-water').click(() => {
+            window.parent.location.href = '/manage#Weather'
+        })
+
+        //传感器的“更多” 跳转
+        $('.more-sensor').click(() => {
+            window.parent.location.href = '/manage#Sensor'
+        })
+
+        //实时预警信息“更多”跳转
+        $('.more-warning').click(() => {
+            window.parent.location.href = '/manage#Warning'
+        })
+
+        admin.req({
+            url: '/manage/getprojectwarnlog?projid=' + projetid,
+            done: function (res) {
+                assignWarnlog(res.data);
+                return false;
+            }
+        })
+
+        function assignWarnlog(json) {
+
+            for (var i = 0; i < json.length; i++) {
+                var item = json[i];
+
+                var titlecolor = "#00F7DE";
+                if (item.level > 2) {
+                    titlecolor = "#f60909";
+                }
+
+                var innerHTML = "<div class=\"warnmessage\">" +
+                    "<div class=\"warntitle\" style='color:" + titlecolor + "'>" +
+                    "<i class=\"layui-icon layui-icon-notice\"></i>" + item.level + "级预警" + " " + item.createtiontime +
+                    "</div><div class=\"warndata\">" + item.name + " " + item.content +
+                    "</div></div>";
+                $('#warnpage1').append(innerHTML);
+            }
+            // for (var i = 1; i < json.length; i++) {
+            //     var item = json[i];
+            //
+            //     var titlecolor = "#00F7DE";
+            //     if (item.level > 2) {
+            //         titlecolor = "#f60909";
+            //     }
+            //     var innerHTML = "<div class=\"warnmessage\">\n" +
+            //         "              <div class=\"warntitle\" style='color:" + titlecolor + "'>\n" +
+            //         "                <i class=\"layui-icon layui-icon-notice\"></i>\n" +
+            //         "                    " + item.level + " 级预警\n" +
+            //         "               </div>\n" +
+            //         "               <div class=\"warndata\">\n" +
+            //         "                   " + item.name + " " + item.content +
+            //         "               </div>\n" +
+            //         "               <div class=\"warntime\">\n" +
+            //         "                    " + item.createtiontime +
+            //         "                </div>\n" +
+            //         "             </div>";
+            //
+            //     $('#warnpage2').append(innerHTML);
+            // }
+        }
+
+        //获取token
+        var curtoken = "";
+        //var sensorSN="21597014113773";
+        var sensorSN = "21605514126714";
+        $.post('http://openapi.ecois.info/v3/token?appid=dndqW0oyGh2W1NpQ&secret=kBa04XfIUufk2gc99*r92cPL1EK_IMYc',
+            function (json) {
+                if (json.message == 'ok') {
+                    curtoken = json.token;
+                    //获取温度气象数据
+                    gettemperature();
+                }
+            });
+
+        //获取温度数据
+        function gettemperature() {
+            //设置请求头
+            var header = {'authorization': curtoken};
+            var url = 'http://openapi.ecois.info/v3/device/pluviometer/' + sensorSN + '/data/history';
+            $.ajax({
+                url: url,//接口
+                type: 'post',
+                headers: header,
+                success: function (res) {
+                    var arrData = [];
+                    if (res.message === 'ok') {
+                        var total = res.total;
+
+                        if (total == 0) {
+                            $('#hj-jyl').text("-" + "mm");
+                            $('#hj-wd').text("-" + "℃");
+                            $('#hj-trsd').text("-" + "%");
+                            $('#hj-sw').text("-" + "hPa");
+                        } else {
+                            $('#hj-jyl').text(res.datapoints.sensors[0].values[total - 1] + "mm");
+                            $('#hj-wd').text(res.datapoints.sensors[1].values[total - 1] + "℃");
+                            $('#hj-trsd').text(res.datapoints.sensors[3].values[total - 1] + "%");
+                            $('#hj-sw').text(res.datapoints.sensors[2].values[total - 1] + "hPa");
+                        }
+                    }
+                }
+            });
+        }
+
+        //获取传感器，最后一个数据
+        // admin.req({
+        //     url:'/manage/getsensorlast?projid='+projetid,
+        //     done:function (res) {
+        //         assignSensorlast(res.data);
+        //         return false;
+        //     }
+        // })
+        function assignSensorlast(json) {
+            for (var i = 0; i < json.length; i++) {
+                var item = json[i];
+
+                var innerHTML = "<div class=\"right-one-itemEx\">\n" +
+                    "              <div class=\"message\">\n" +
+                    "<img src='/assets/images/MudIcon.png' style='width: 56px' height='56px'/>" +
+                    "                <div class=\"data\">" + item.itemV + "</div>\n" +
+                    "               </div>\n" +
+                    "               <div class=\"title\">" + item.itemName + "</div>"
+                "             </div>";
+
+                $('#sensorlastdata').append(innerHTML);
+            }
+        }
+
+        //获取传感器数据
+        function getsensoracclerdata() {
+            $.ajax({
+                url: '/manage/getsensoraccleration?projectid=' + projetid + '&deviceid=' + deviceid,
+                headers: {
+                    "Content-Type": "application/json;charset:UTF-8"
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    $('#x-angel').text(data.data.xAngel + '°');
+                    $('#y-angel').text(data.data.yAngel + '°');
+                    $('#z-angel').text(data.data.zAngel + '°');
+                    $('#x-a').text(data.data.xA + 'mg');
+                    $('#y-a').text(data.data.yA + 'mg');
+                    $('#z-a').text(data.data.zA + 'mg');
+                }
+            })
+        }
+
+        //加载泥位计数据
+        admin.req({
+            url: '/manage/getNWData?projectid=' + projetid,
+            done: function (res) {
+                let html;
+                let style = "";
+                if (res.data.length > 0) {
+                    for (let i = 0; i < res.data.length; i++) {
+                        for (let item in SensorType) {
+                            if (res.data[i].type === SensorType[item]) {
+
+                                if (Math.abs(res.data[i].value) > 10) {
+                                    style = "#FF5454";
+                                } else {
+                                    style = "";
+                                }
+                                switch (item) {
+                                    case "MUD":
+                                        html = "<div class=\"right-one-itemEx\">" +
+                                            "<div class=\"message\">" +
+                                            "<div style='width: 100%;text-align: center;margin-top: 15px;'><img src='/assets/images/MudIcon.png' style='width: 45px;height=56px'/></div>" +
+                                            "<div id=\"x-angel\" class=\"data\">" +
+                                            res.data[i].name +
+                                            "</div>" +
+                                            "<div class=\"title\" style='color:" + style + "'>" +
+                                            res.data[i].value +
+                                            "（mm）</div>" +
+                                            "</div>" +
+                                            "</div>";
+                                        $('#sensorlastdata').append(html);
+                                        break;
+                                    case "CRACK":
+                                        html = "<div class=\"right-one-itemEx\">" +
+                                            "<div class=\"message\">" +
+                                            "<div style='width: 100%;text-align: center;margin-top: 15px;'><img src='/assets/images/CrackIcon.png' style='width: 45px;height=56px'/></div>" +
+                                            "<div id=\"x-angel\" class=\"data\">" +
+                                            res.data[i].name +
+                                            "</div>" +
+                                            "<div class=\"title\" style='color:" + style + "'>" +
+                                            res.data[i].value +
+                                            "（mm）</div>" +
+                                            "</div>" +
+                                            "</div>";
+                                        $('#sensorLFdata').append(html);
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+
+        //getsensoracclerdata();
+    });
+</script>
+</body>
+</html>

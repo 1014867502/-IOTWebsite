@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("设备编辑")
+    <style TYPE="text/css">
+        .layui-form .layui-form-label {
+            width: 180px !important;
+        }
+        .layui-form .layui-input-block {
+            margin-left: 180px !important;
+        }
+        .layui-form .layui-form-item .layui-input-inline {
+            margin-left: 0px !important;
+        }
+        .layui-form-pane .layui-form-label {
+            width: 180px !important;
+        }
+        .layui-form-pane .layui-input-block {
+            margin-left: 180px !important;
+        }
+        .layui-form-pane .layui-form-item[pane] .layui-input-inline {
+            margin-left: 180px !important;
+        }
+    </style>
+    <script type="text/javascript" src="/assets/lib/jquery-3.4.1.min.js">
+        // $("#selectEllipse").on("change",function(){
+        //     alert("当前选项是:"+this.value);
+        // });
+    </script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        #if(isAdd)
+        <div class="layui-card-header">设备管理 / #(isAdd ? "创建" : "修改")</div>
+        #else
+        <div class="layui-card-header">设备管理 / #(isAdd ? "创建" : "修改")</div>
+        #end
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form layui-form-pane" lay-filter="myForm">
+                <input type="hidden" name="sensor.projectid" value="#(sensor.projectid)" />
+                <div class="layui-row layui-col-space12">
+                    <div class="layui-collapse" lay-accordion="">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">基本信息</h2>
+                            <div class="layui-colla-content layui-show">
+                                <table class="layui-table" lay-size="sm">
+                                    <tbody>
+                                    <tr>
+                                        <td>传感器名称</td>
+                                        <td> <input required lay-verify="required" type="text" #(isAdd ? "":"readonly") name="sensor.name"  lay-verify="required" class="layui-input" value="#(sensor.name)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>传感器编号</td>
+                                        <td> <input required lay-verify="required" type="text" #(isAdd ? "":"readonly") name="sensor.devicenumber" class="layui-input" value="#(sensor.devicenumber)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>传感器串号</td>
+                                        <td> <input required lay-verify="required" type="text" #(isAdd ? "":"readonly") name="sensor.sn" class="layui-input" value="#(sensor.sn)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>传感器类型</td>
+                                        <td>
+                                            <select name="sensor.typeid"  id="typeid">
+                                                <option value="0">雨量计</option>
+                                                <option value="1">含水率计</option>
+                                                <option value="2">倾角计</option>
+                                                <option value="3">崩塌计</option>
+                                                <option value="4">泥位计</option>
+                                                <option value="5">裂缝计</option>
+                                                <option value="6">声光报警器</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>关联GNSS设备</td>
+                                        <td>
+                                            <select name="sensor.relationSn"  id="relationSn">
+                                                <option value="none" selected>无</option>
+                                                #for(x : gnsslist)
+                                                <option value="#(x.name)" #if(sensor.relationSn==x.name) selected  #end>#(x.name)</option>
+                                                #end
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>纬度</td>
+                                        <td> <input required lay-verify="required" type="text" name="sensor.lat" class="layui-input" value="#(sensor.lat)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>经度</td>
+                                        <td> <input required lay-verify="required" type="text" name="sensor.lon" class="layui-input" value="#(sensor.lon)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>高程</td>
+                                        <td> <input required lay-verify="required" type="text" name="sensor.height" class="layui-input" value="#(sensor.height)"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-collapse" lay-accordion="">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">读取参数</h2>
+                            <div class="layui-colla-content layui-show">
+                                <table class="layui-table" lay-size="sm">
+                                    <tbody>
+                                    <tr>
+                                        <td>读取间隔</td>
+                                        <td>
+                                            <select name="gnss.recordinterval"  lay-filter="recordinterval" id="recordinterval">
+                                                <option value="60">1分钟</option>
+                                                <option value="120">2分钟</option>
+                                                <option value="300">5分钟</option>
+                                                <option value="600">10分钟</option>
+                                                <option value="1800">30分钟</option>
+                                                <option value="3600">1小时</option>
+                                            </select>
+                                            <script type="text/javascript">
+                                                $("#recordinterval option[value='#(sensor.recordinterval)']").attr("selected",true);
+                                            </script>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>通讯方式</td>
+                                        <td>
+                                            <select name="sensor.communicationtype"  lay-filter="" id="communicationtype" >
+                                                <option value="0">TCP客户端</option>
+                                                <option value="1">TCP服务端</option>
+                                                <option value="2">串口</option>
+                                            </select>
+                                            <script type="text/javascript">
+                                                $("#communicationtype option[value='#(sensor.communicationtype)']").attr("selected",true);
+                                            </script>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>IP</td>
+                                        <td> <input required lay-verify="required" type="text" name="sensor.ip"  class="layui-input" value="#(sensor.ip)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>端口</td>
+                                        <td> <input required lay-verify="required" type="text" name="sensor.port" class="layui-input" value="#(sensor.port)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>监听端口</td>
+                                        <td> <input required lay-verify="required" type="text" name="sensor.listenport" class="layui-input" value="#(sensor.listenport)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>串口</td>
+                                        <td>
+                                            <select name="sensor.serialport"  lay-filter="" id="serialport" >
+                                                <option value="0">COM0</option>
+                                                <option value="1">COM1</option>
+                                                <option value="2">COM2</option>
+                                                <option value="3">COM3</option>
+                                                <option value="4">COM4</option>
+                                                <option value="5">COM5</option>
+                                                <option value="6">COM6</option>
+                                                <option value="7">COM7</option>
+                                                <option value="8">COM8</option>
+                                                <option value="9">COM9</option>
+                                                <option value="10">COM10</option>
+                                                <option value="11">COM11</option>
+                                                <option value="12">COM12</option>
+                                                <option value="13">COM13</option>
+                                                <option value="14">COM14</option>
+                                                <option value="15">COM15</option>
+                                                <option value="16">COM16</option>
+                                                <option value="17">COM17</option>
+                                                <option value="18">COM18</option>
+                                                <option value="19">COM19</option>
+                                            </select>
+                                            <script type="text/javascript">
+                                                $("#serialport option[value='#(sensor.serialport)']").attr("selected",true);
+                                            </script>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>波特率</td>
+                                        <td>
+                                            <select name="sensor.baud"  lay-filter="" id="baud" >
+                                                <option value="9600">9600</option>
+                                                <option value="19200">19200</option>
+                                                <option value="38400">38400</option>
+                                                <option value="57600">57600</option>
+                                                <option value="115200">115200</option>
+                                            </select>
+                                            <script type="text/javascript">
+                                                $("#baud option[value='#(sensor.baud)']").attr("selected",true);
+                                            </script>
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="submitBtn" data-locale="web_item_sumbit">立即提交</button>
+                            <button class="layui-btn layui-btn-primary" id="returnBtn" lay-filter="returnBtn" data-locale="web_item_return">返回</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/assets/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index','laydate','form'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,layer = layui.layer
+            ,laydate = layui.laydate
+            ,form = layui.form;
+
+        //日期
+        laydate.render({
+            elem: '#date'
+            ,lang: $.i18n.prop('web_date_lang')
+        });
+
+
+
+        //自定义验证
+        form.verify({
+            userName: function(value, item){ //value：表单的值、item：表单的DOM对象
+                if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)){
+                    //return '用户名不能有特殊字符';
+                    return $.i18n.prop('web_reg_username_special_char_tip');
+                }
+                if(/(^\_)|(\__)|(\_+$)/.test(value)){
+                    //return '用户名首尾不能出现下划线\'_\'';
+                    return $.i18n.prop('web_reg_username_underlined_tip');
+                }
+                if(/^\d+\d+\d$/.test(value)){
+                    //return '用户名不能全为数字';
+                    return $.i18n.prop('web_reg_username_tip');
+                }
+            }
+            ,number: function(value, item){ //value：表单的值、item：表单的DOM对象
+                if(/[^\d]/.test(value)){//替换非数字字符
+                    return $.i18n.prop('web_tip_only_enter_numbers');
+                }
+            }
+            //我们既支持上述函数式的方式，也支持下述数组的形式
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+            ,pass: [
+                /^[\S]{6,16}$/
+                ,$.i18n.prop('web_reg_psw_length_tip')//'密码必须6到16位，且不能出现空格'
+            ]
+
+            //确认密码
+            ,repass: function(value){
+                if(value !== $('#LAY_password').val()){
+                    //return '两次密码输入不一致';
+                    var msg = $.i18n.prop('web_reg_inconsistent_passwords');
+                    return layer.msg(msg);
+                }
+            }
+        });
+
+        /* 监听提交 */
+        form.on('submit(submitBtn)', function(obj){
+            admin.req({
+                url:'/sensordevice/#(isAdd ? "save" : "update")',
+                data:obj.field,
+                done:function (res) {
+                    layer.msg($.i18n.prop('web_item_completed'), {
+                        offset: '15px'
+                        ,icon: 1
+                        ,time: 1000
+                    }, function(){
+                        location.href = "/sensordevice";
+                    });
+                }
+            })
+            return false;
+        });
+        $('#returnBtn').on('click', function () {
+            let href="/sensordevice#"+"#(prooid)";
+
+            location.href = href;
+            return false;
+        })
+    });
+</script>
+</body>
+</html>

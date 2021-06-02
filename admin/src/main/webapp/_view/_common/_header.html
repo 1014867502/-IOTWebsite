@@ -1,0 +1,335 @@
+<ul class="layui-nav layui-layout-left" style="top:0px">
+    <li class="layui-nav-item" lay-unselect>
+        <a href="javascript:;">
+            <img src="/img/logo.png" height="48px"
+                 title="logo" alt="logo"/>
+        </a>
+    </li>
+    <li class="layui-nav-item" lay-unselect style="font-size: 32px">
+        地质灾害监测预警平台
+    </li>
+
+</ul>
+<ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+    #if(APP.name=='Cube-caster')
+    <li class="layui-nav-item layui-hide-xs"  lay-unselect
+        style="width: 150px;
+        background-image: url(/assets/images/logo-customer.png);
+        background-repeat: no-repeat;
+         background-size: 100% 100%;
+         -moz-background-size: 100% 100%;">
+    </li>
+    #end
+    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+        <form class="layui-form" action="" style="padding-top: 5px">
+            <div class="layui-form-item" id="projectselect">
+                <div class="layui-input-block" style="color: #0C0C0C">
+                    <select name="interest" lay-filter="projectname">
+                        #for(x : projetlist)
+                        <option value="#(x.projId)" #if(projetid==x.projId) selected  #end>#(x.name)</option>
+                        #end
+                    </select>
+                </div>
+            </div>
+        </form>
+    </li>
+    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+        <a href="/manage"/>
+            <i class="layui-icon layui-icon-app"></i>
+<!--            <dl class="layui-nav-child" style="background-color: transparent;top:50px;padding: 5px 0px 0px 0px;">-->
+<!--                <div class="secondmenu">-->
+<!--                    <div class="layui-row layui-col-space5">-->
+<!--                        <div class="layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <a href="/overview">-->
+<!--                                    <div class="layui-row">-->
+<!--                                        <div class="layui-col-md3">-->
+<!--                                            <img src="/img/weather_sun.png">-->
+<!--                                        </div>-->
+<!--                                        <div class="layui-col-md9 menuBoxtitle">-->
+<!--                                            <label>基本信息</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <a href="/manage">-->
+<!--                                    <div class="layui-row">-->
+<!--                                        <div class="layui-col-md3">-->
+<!--                                            <img src="/img/weather_sun.png">-->
+<!--                                        </div>-->
+<!--                                        <div class="layui-col-md9 menuBoxtitle">-->
+<!--                                            <label>水位监测</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <a href="/reportcharts/lc3d">-->
+<!--                                    <div class="layui-row">-->
+<!--                                        <div class="layui-col-md3">-->
+<!--                                            <img src="/img/weather_sun.png">-->
+<!--                                        </div>-->
+<!--                                        <div class="layui-col-md9 menuBoxtitle">-->
+<!--                                            <label>浸润线监测</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <a href="/homeindex">-->
+<!--                                    <div class="layui-row">-->
+<!--                                        <div class="layui-col-md3">-->
+<!--                                            <img src="/img/weather_sun.png">-->
+<!--                                        </div>-->
+<!--                                        <div class="layui-col-md9 menuBoxtitle">-->
+<!--                                            <label>位移监测</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <a href="javascrip;">-->
+<!--                                    <div class="layui-row">-->
+<!--                                        <div class="layui-col-md3">-->
+<!--                                            <img src="/img/weather_sun.png">-->
+<!--                                        </div>-->
+<!--                                        <div class="layui-col-md9 menuBoxtitle">-->
+<!--                                            <label>降雨量监测</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <a href="javascrip;">-->
+<!--                                    <div class="layui-row">-->
+<!--                                        <div class="layui-col-md3">-->
+<!--                                            <img src="/img/weather_sun.png">-->
+<!--                                        </div>-->
+<!--                                        <div class="layui-col-md9 menuBoxtitle">-->
+<!--                                            <label>干滩监测</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <a href="javascript:void(0);" id="onInSAR-id">-->
+<!--                                    <div class="layui-row">-->
+<!--                                        <div class="layui-col-md3">-->
+<!--                                            <img src="/img/weather_sun.png">-->
+<!--                                        </div>-->
+<!--                                        <div class="layui-col-md9 menuBoxtitle">-->
+<!--                                            <label>角反射器</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <a href="javascrip;">-->
+<!--                                    <div class="layui-row">-->
+<!--                                        <div class="layui-col-md3">-->
+<!--                                            <img src="/img/weather_sun.png">-->
+<!--                                        </div>-->
+<!--                                        <div class="layui-col-md9 menuBoxtitle">-->
+<!--                                            <label>渗压监测</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <a href="javascrip;">-->
+<!--                                    <div class="layui-row">-->
+<!--                                        <div class="layui-col-md3">-->
+<!--                                            <img src="/img/weather_sun.png">-->
+<!--                                        </div>-->
+<!--                                        <div class="layui-col-md9 menuBoxtitle">-->
+<!--                                            <label>安全预警</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <a href="javascrip;">-->
+<!--                                    <div class="layui-row">-->
+<!--                                        <div class="layui-col-md3">-->
+<!--                                            <img src="/img/weather_sun.png">-->
+<!--                                        </div>-->
+<!--                                        <div class="layui-col-md9 menuBoxtitle">-->
+<!--                                            <label>视频监测</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </dl>-->
+        </a>
+
+    </li>
+    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+        <a href="javascript:;" layadmin-event="fullscreen">
+            <i class="layui-icon layui-icon-screen-full"></i>
+        </a>
+    </li>
+<!--    <li class="layui-nav-item">-->
+<!--        <a href="javascript:;">产品</a>-->
+<!--        <dl class="layui-nav-child" style="background-color: transparent;top:50px;padding: 5px 0px 0px 0px;">-->
+<!--            <div class="secondmenu">-->
+<!--                <div class="layui-container">-->
+<!--                    <div class="layui-row layui-col-space10">-->
+<!--                        <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <div class="layui-col-xs6 layui-col-md12" style="padding: 10px">-->
+<!--                                    <div class="layui-col-md3">-->
+<!--                                        <img src="/img/weather_sun.png">-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-col-md9">-->
+<!--                                        <a href="javascript:;">水位监测</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <div class="layui-col-xs6 layui-col-md12" style="padding: 10px">-->
+<!--                                    <div class="layui-col-md3">-->
+<!--                                        <img src="/img/weather_sun.png">-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-col-md9">-->
+<!--                                        <a href="javascript:;">浸润线监测</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <div class="layui-col-xs6 layui-col-md12" style="padding: 10px">-->
+<!--                                    <div class="layui-col-md3">-->
+<!--                                        <img src="/img/weather_sun.png">-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-col-md9">-->
+<!--                                        <a href="javascript:;">位移监测</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <div class="layui-col-xs6 layui-col-md12" style="padding: 10px">-->
+<!--                                    <div class="layui-col-md3">-->
+<!--                                        <img src="/img/weather_sun.png">-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-col-md9">-->
+<!--                                        <a href="javascript:;">降雨量监测</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <div class="layui-col-xs6 layui-col-md12" style="padding: 10px">-->
+<!--                                    <div class="layui-col-md3">-->
+<!--                                        <img src="/img/weather_sun.png">-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-col-md9">-->
+<!--                                        <a href="javascript:;">干滩监测</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <div class="layui-col-xs6 layui-col-md12" style="padding: 10px">-->
+<!--                                    <div class="layui-col-md3">-->
+<!--                                        <img src="/img/weather_sun.png">-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-col-md9">-->
+<!--                                        <a href="javascript:;">基本信息</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <div class="layui-col-xs6 layui-col-md12" style="padding: 10px">-->
+<!--                                    <div class="layui-col-md3">-->
+<!--                                        <img src="/img/weather_sun.png">-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-col-md9">-->
+<!--                                        <a href="javascript:;">角反射器</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <div class="layui-col-xs6 layui-col-md12" style="padding: 10px">-->
+<!--                                    <div class="layui-col-md3">-->
+<!--                                        <img src="/img/weather_sun.png">-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-col-md9">-->
+<!--                                        <a href="javascript:;">渗压监测</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">-->
+<!--                            <div class="secondmenu menuBox">-->
+<!--                                <div class="layui-col-xs6 layui-col-md12" style="padding: 10px">-->
+<!--                                    <div class="layui-col-md3">-->
+<!--                                        <img src="/img/weather_sun.png">-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-col-md9">-->
+<!--                                        <a href="javascript:;">安全预警</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </dl>-->
+<!--    </li>-->
+    <li class="layui-nav-item" lay-unselect>
+        <a href="javascript:;">
+            <cite>#(loginAccount.nickName)</cite>
+        </a>
+        <dl class="layui-nav-child">
+            <!--
+            <dd><a lay-href="set/user/info.html">基本资料</a></dd>
+            -->
+            <dd><a lay-href="/password" data-locale="web_menu_setting_reset_psw">修改密码</a></dd>
+            <hr>
+            <dd layadmin-event="logout" style="text-align: center;"><a data-locale="web_header_logout">退出</a></dd>
+        </dl>
+    </li>
+
+    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+        <a href="javascript:;" layadmin-event=""><i class="layui-icon layui-icon-more-vertical"></i></a>
+    </li>
+    <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect>
+        <a href="javascript:;" layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
+    </li>
+</ul>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>

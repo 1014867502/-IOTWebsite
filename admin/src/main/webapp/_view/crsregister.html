@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("机器注册")
+    <style TYPE="text/css">
+        .layui-form .layui-form-label {
+            width: 180px !important;
+        }
+        .layui-form .layui-input-block {
+            margin-left: 180px !important;
+        }
+        .layui-form .layui-form-item .layui-input-inline {
+            margin-left: 0px !important;
+        }
+        .layui-form-pane .layui-form-label {
+            width: 180px !important;
+        }
+        .layui-form-pane .layui-input-block {
+            margin-left: 180px !important;
+        }
+        .layui-form-pane .layui-form-item[pane] .layui-input-inline {
+            margin-left: 0px !important;
+        }
+    </style>
+    <script type="text/javascript" src="/assets/lib/jquery-3.4.1.min.js">
+    </script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header" data-locale="web_login_reg">注册</div>
+                <div class="layui-card-body">
+                    <form class="layui-form layui-form-pane" lay-filter="myForm" autocomplete="on">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" data-locale="web_item_reg_code">Registration code</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="regcode"  id="regcode" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-layout-admin">
+                            <div class="layui-input-block">
+                                <div class="layui-footer" style="left: 0;">
+                                    <button class="layui-btn" lay-submit="" lay-filter="submitBtn" data-locale="web_item_ok">确定</button>
+                                    <button class="layui-btn layui-btn-primary" id="returnBtn" lay-filter="returnBtn" data-locale="web_item_return">返回</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index','form'],function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,form = layui.form;
+
+        $('#returnBtn').on('click', function () {
+            location.href = "/systemstate";
+            return false;
+        })
+
+        form.on('submit(submitBtn)', function(obj){
+            admin.req({
+                url:'/registercrs',
+                data:obj.field,
+                done:function (res) {
+                    location.href = "/systemstate";
+                }
+            })
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

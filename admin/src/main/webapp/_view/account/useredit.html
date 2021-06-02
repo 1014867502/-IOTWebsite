@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("账户管理 / "+(isAdd ? "创建" : "修改"))
+    <style TYPE="text/css">
+        .layui-form .layui-form-label {
+            width: 180px !important;
+        }
+        .layui-form .layui-input-block {
+            margin-left: 180px !important;
+        }
+        .layui-form .layui-form-item .layui-input-inline {
+            margin-left: 0px !important;
+        }
+        .layui-form-pane .layui-form-label {
+            width: 180px !important;
+        }
+        .layui-form-pane .layui-input-block {
+            margin-left: 180px !important;
+        }
+        .layui-form-pane .layui-form-item[pane] .layui-input-inline {
+            margin-left: 180px !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header" data-locale="web_item_edit">账户管理 / #(isAdd ? "创建" : "修改")</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form layui-form-pane" lay-filter="myForm">
+                <input type="hidden" name="account.id" value="#(account.id)" />
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-locale="web_item_username">Username</label>
+                    <div class="layui-input-block">
+                        <input type="text" readonly="readonly" name="account.userName" value="#(account.userName)" lay-verify="userName" lay-verType="tips" autocomplete="off" id="userName" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-locale="web_item_name">Name</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="account.name" value="#(account.name)" autocomplete="on"  class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-locale="web_item_surname">Surname</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="account.surname" value="#(account.surname)" autocomplete="on"  class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-locale="web_item_company">Company</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="account.company" value="#(account.company)" autocomplete="on"  class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-locale="web_item_email">Email</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="account.email" lay-verify="email" value="#(account.email)" autocomplete="on"  class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-locale="web_item_phone">Phone</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="account.phone" value="#(account.phone)" autocomplete="on"  class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" data-locale="web_item_address">Address</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="account.address" value="#(account.address)" autocomplete="on"  class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="submitBtn" data-locale="web_item_sumbit">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/assets/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,form = layui.form;
+
+        /* 监听提交 */
+        form.on('submit(submitBtn)', function(obj){
+            admin.req({
+                url:'/account/update',
+                data:obj.field,
+                done:function (res) {
+                    layer.msg($.i18n.prop('web_item_completed'), {
+                        offset: '15px'
+                        ,icon: 1
+                        ,time: 1000
+                    });
+                }
+            })
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

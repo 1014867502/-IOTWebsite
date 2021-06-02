@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  #@meta(APP.name)
+  <style>
+    .layui-body {
+         left: 0px;
+    }
+    .layui-layout-admin .layui-layout-left, .layadmin-pagetabs, .layui-layout-admin .layui-body, .layui-layout-admin .layui-footer {
+       left: 0px;
+       top:0px;
+    }
+    .layui-layout-admin.layui-header{
+      background-color: rgba(24, 24, 87, 0.79);
+    }
+  </style>
+</head>
+<body class="layui-layout-body">
+<div id="LAY_app">
+  <div class="layui-layout layui-layout-admin">
+    <div class="layui-header" style="background-color: #0e4670;">
+      <!-- 头部区域 -->
+      #include("./_common/_header.html")
+    </div>
+    <!-- 主体内容 -->
+    <div class="layui-body" id="LAY_app_body">
+      <div class="layadmin-tabsbody-item layui-show">
+        <iframe src="/dashboard" frameborder="0" class="layadmin-iframe"></iframe>
+      </div>
+    </div>
+    <!-- 辅助元素，一般用于移动设备下遮罩 -->
+    <div class="layadmin-body-shade" layadmin-event="shade"></div>
+  </div>
+</div>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '/assets/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index'],function(){
+
+      var $ = layui.$
+              ,layer = layui.layer;
+
+      function js_InSAR() {
+        layer.open({
+          type: 2,
+          area: ['1280px', '550px'],
+          fixed: false,
+          maxmin: true,
+          shadeClose: true,
+          content: '/reportcharts/InSAR'
+        });
+      }
+      $('#onInSAR-id').on('click', function(){
+        js_InSAR();
+      });
+
+
+    });
+
+</script>
+</body>
+</html>

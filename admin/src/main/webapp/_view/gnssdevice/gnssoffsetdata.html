@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("GNSS位移统计")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css" />
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style type="text/css">
+        .layui-form-checked span, .layui-form-checked:hover span {
+            background-color: #FF5722;
+        }
+
+        .layui-form-checked i, .layui-form-checked:hover i {
+            color: #FF5722;
+        }
+
+        .layui-btn.onlinebtn {
+            background-color: #009688;
+            color: #FFFFFF;
+        }
+
+        .layui-btn.offlinebtn {
+            background-color: #ff0000;
+            color: #FFFFFF;
+        }
+
+        .layui-card-body.layui-layout-box {
+            width: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            /*border-style: solid;*/
+            background-color: #1e9fff;
+            /*!*border-image: url(/img/bg.png) 4 4 4 4 fill round;*!*/
+            /*border-image: url(/img/bg.png) 4 4 4 4 fill stretch;*/
+            box-sizing: border-box;
+            /*height: calc(100% - 42px);*/
+            height: 130px;
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .data {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+        }
+
+        .layadmin-carousel.history {
+            height: 400px !important;
+        }
+    </style>
+</head>
+<body>
+
+<style>
+    .header-Data {
+        width: 100%;
+        justify-content: left;
+        display: flex;
+        align-items: stretch;
+    }
+
+    .header-Data-content {
+        height:300px;
+        width: 25%;
+        /*justify-content: center;*/
+        margin-right: 0.5%;
+        display: flex;
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        border: 2px solid #ffFFFF;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .header-Data-map {
+        height:363px;
+        width: 25%;
+        /*justify-content: center;*/
+        margin-right: 0.5%;
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        border: 2px solid #ffFFFF;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .header-Data-contentEx {
+        width: 50%;
+        /*justify-content: center;*/
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .body-content {
+        margin-bottom: 1%
+    }
+
+    #map {
+        height: 100%;
+        width: 100%;
+    }
+
+    .untreated{
+        background-color: #FF5722;
+    }
+    .treated{
+        background-color: #01AAED;
+    }
+</style>
+
+<!--//报警编辑弹窗-->
+<div class="site-text" style="margin: 5%; display: none" id="window"  target="test123">
+    <form class="layui-form" id="book" method="post" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">所在项目</label>
+            <div class="layui-input-block">
+                <input type="text" id="ID" name="name" lay-verify="title" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">报警等级</label>
+            <div class="layui-input-block">
+                <input type="text" id="level" name="level" lay-verify="title" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">报警内容</label>
+            <div class="layui-input-block">
+                <input type="text" id="contents" name="content" lay-verify="title" autocomplete="off"  class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">处理状态</label>
+            <div class="layui-input-block" >
+                <input id="stat1" type="radio" name="state" value="0" title="未处理">
+                <input id="stat2" type="radio" name="state" value="1" title="已处理">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系人</label>
+            <div class="layui-input-inline">
+                <div id="contactlist" class="xm-select-project"></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">报警方式</label>
+            <div class="layui-input-block">
+                <div class="seach-box">
+                    <input lay-skin="primary" name="" title="短信" value="1" type="checkbox" checked>
+                    <input lay-skin="primary" name="" title="邮箱" value="2" type="checkbox">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="header-Data">
+            <div class="header-Data-content" style="height: 363px">
+                <div class="layui-card" style="width: 100%">
+                    <div class="layui-card-header">设备信息</div>
+                    <div class="layui-card-body">
+                        <div style="width: 100%;height: 300px">
+                            <div class="body-content"><b>所属项目：</b><span id="projectname">项目1</span><br></div>
+                            <div class="body-content"><b>站点名称：</b><span id="stationname">书库监测点1</span><br></div>
+                            <div class="body-content"><b>设备sn码：</b><span id="sncode">MG134580321</span><br></div>
+<!--                            <div class="body-content"><b>监测内容：</b><span id="content">唯一变化</span><br></div>-->
+<!--                            <div class="body-content"><b>站点地址：</b><span id="address">深圳市</span><br></div>-->
+<!--                            <div class="body-content"><b>负责人：</b><span id="resman">张山</span><br></div>-->
+<!--                            <div class="body-content"><b>联系电话：</b><span id="tel">131246832165</span></div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="mid-one" class="header-Data-map">
+                <div class="layui-card-header">设备位置</div>
+                <div class="layui-card-body" style="height: 315px">
+                    <div id='map' style="height: 300px"></div>
+                </div>
+            </div>
+            <div class="header-Data-contentEx">
+                <div class="layui-card-header">设备报警信息</div>
+                <div id="testchart" style="height: 220px;width: 100%" lay-filter="LAY-warn-count">
+                </div>
+                <table class="layui-hide" id="table-warning" lay-filter="table-form"></table>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">数据图表</div>
+                <!--                <div class="layui-form layui-card-header layuiadmin-card-header-auto">-->
+                <!--                    <div class="layui-form-item">-->
+                <!--                        <div class="layui-inline">-->
+                <!--                            <label class="layui-form-label">日期</label>-->
+                <!--                            <div class="layui-input-inline">-->
+                <!--                                <input type="text" class="layui-input" id="historylogdate" placeholder=" - ">-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                        <div class="layui-inline">-->
+                <!--                            <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload" lay-filter="LAY-history-search">-->
+                <!--                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>-->
+                <!--                            </button>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <div class="layui-card-body">
+                    <div class="layui-carousel layadmin-carousel history" data-anim="fade"
+                         lay-filter="LAY-index-offset-state"
+                         style="width:100%;">
+                        <div carousel-item id="LAY-index-offset-state">
+                            <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">#(gnssSN)表格数据</div>
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="logdate" placeholder=" - ">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
+                                    lay-filter="LAY-app-contlist-search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="table-form" lay-filter="table-form"></table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script type="text/html" id="table-online-state">
+    {{ d.state === 1 ? '<button class="layui-btn layui-btn-sm treated">已处理</button>'
+    : '<button class="layui-btn layui-btn-sm untreated">未处理</button>' }}
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+    var gnssSN = "#(gnssSN)";
+    var projId = "#(projid)";
+    var stationname = "#(stationname)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'gnssoffsetdata']);
+</script>
+</body>
+</html>

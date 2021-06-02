@@ -1,0 +1,125 @@
+/*.layui-icon{*/
+    /*color: #FFFFFF;*/
+/*}*/
+.layui-btn{
+    background-color: #01AAED;
+}
+/*
+弹出菜单导航样式
+*/
+/***********************************************************************************************************/
+.secondmenu{
+    position: relative;
+    /*width: calc(-250px + 100vw);*/
+    width:calc(-350px + 100vw);
+    background-color: #0e4670;
+}
+.secondmenu.menuBox{
+    background-color: rgba(209, 217, 241, 0.51);
+    height: 60px;
+    width: 100%;
+    text-align: center;
+    cursor:pointer;
+}
+.secondmenu.menuBox img{
+    height: 100%;
+    margin: 5px;
+}
+.secondmenu.menuBox a{
+    color: #ffffff !important;
+    font-size: 20px;
+    line-height: 40px;
+    text-align:center;
+}
+.menuBoxtitle{
+    height: 60px;
+    padding-top: 10px;
+    text-align: left;
+    padding-left: 10px;
+    cursor:pointer;
+}
+.secondmenu.menuBox label{
+    color: #ffffff !important;
+    font-size: 20px;
+    line-height: 40px;
+    height: 60px;
+}
+.secondmenu.menuBox a:hover {
+    background-color: rgba(69, 102, 222, 0.59) !important;
+    text-decoration:none;
+}
+.header{
+    background-color: #393D49;
+    width: 100%;
+    height: 60px;
+}
+.header .logo{
+    width: 200px;
+    height: 60px;
+    float: left;
+    text-align: center;
+}
+.header .logo a{
+    font-size: 50px;
+    color: #FFF;
+    line-height: 60px;
+}
+
+.header .nav{
+    float: left;
+    /* 默认居左，可调整为居右模式 */
+    /* float: right;  */
+}
+.mobile-icon{
+    display: none;
+}
+
+/* 演示元素 */
+.main{
+    margin-top: 20px;
+    width: 100%;
+}
+.demoBox{
+    background-color: #2E2D3C;
+    text-align: center;
+    height: 100px;
+    width: 100%;
+    color: #874a4a;
+    font-size: 30px;
+    line-height: 100px;
+}
+@media screen and (max-width: 1024px) {
+    .header .logo{
+        text-align: left;
+    }
+    .header .nav{
+        display: none;
+        width: 100%;
+        position: absolute;
+        z-index: 99;
+        top: 61px; /* 如果需要缝隙，可将值调至61px */
+        margin-left: -15px;
+    }
+    .layui-nav{
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .header .nav li{
+        width: 100%;
+        text-align: center;
+    }
+    .mobile-icon{
+        display: block;
+        color: #FFF;
+        font-size: 30px;
+        float: right;
+        margin-top: 15px;
+    }
+    .layui-nav .layui-this:after,
+    .layui-nav-bar,
+    .layui-nav-tree .layui-nav-itemed:after {
+        height: 1px;
+        background-color: #5FB878;
+    }
+}
+/***********************************************************************************************************/
