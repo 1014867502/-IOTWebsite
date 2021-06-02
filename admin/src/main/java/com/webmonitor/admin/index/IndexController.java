@@ -52,7 +52,7 @@ public class IndexController extends BaseController {
 //                }
 //            }
 //        }
-        render("home.html");
+        render("homepage.html");
     }
 
     @Remark("仪表盘页")
@@ -73,6 +73,8 @@ public class IndexController extends BaseController {
     public void homeindex(){
         render("home.html");
     }
+
+    //主页
     public void homepage(){
         render("homepage.html");
     }

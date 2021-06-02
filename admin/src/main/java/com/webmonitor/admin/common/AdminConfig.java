@@ -31,6 +31,7 @@ import com.webmonitor.admin.directive.StoreSelectDirective;
 import com.webmonitor.admin.directive.TableBadgeDirective;
 import com.webmonitor.admin.directive.TableLabelDirective;
 import com.webmonitor.admin.index.IndexController;
+import com.webmonitor.admin.manage.ManagerController;
 import com.webmonitor.admin.overview.OverviewController;
 
 import com.webmonitor.core.config.JfinalCoreConfig;
@@ -80,10 +81,10 @@ public class AdminConfig extends JfinalCoreConfig {
         me.setBaseViewPath("/_view");
         me.add("/", IndexController.class);
         me.add("/overview", OverviewController.class);
+        me.add("/manage", ManagerController.class);
         //me.add("/account", AccountController.class);
         //me.add("/role", RoleController.class);
         //me.add("/permission", PermissionController.class);
-
         //业务路由
     }
 
