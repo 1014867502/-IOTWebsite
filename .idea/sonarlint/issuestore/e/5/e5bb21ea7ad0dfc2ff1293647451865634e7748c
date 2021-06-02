@@ -1,0 +1,19 @@
+
+JWeb:PageWithoutTitleCheck"Add a <title> tag to this page.(Õ¶¯M8³Ü˜É˜/
+a	Web:S5254"@Add "lang" and/or "xml:lang" attributes to this "<html>" element(œ÷Ãûÿÿÿÿ8³Ü˜É˜/
+QWeb:AvoidCommentedOutCodeCheckÓ"Remove this commented out code.(Êˆ ¤8•“©¶œ/
+QWeb:AvoidCommentedOutCodeCheckÔ"Remove this commented out code.(°¢ùÀ8•“©¶œ/
+VWeb:AvoidCommentedOutCodeCheckÕ"Remove this commented out code.(°°²ùÿÿÿÿ8•“©¶œ/
+VWeb:AvoidCommentedOutCodeCheckÖ"Remove this commented out code.(ÙûÇÕúÿÿÿÿ8•“©¶œ/
+VWeb:AvoidCommentedOutCodeCheck×"Remove this commented out code.(İµ”îüÿÿÿÿ8•“©¶œ/
+VWeb:AvoidCommentedOutCodeCheckØ"Remove this commented out code.(Î‚¦„şÿÿÿÿ8•“©¶œ/
+VWeb:AvoidCommentedOutCodeCheckÙ"Remove this commented out code.(°®ú®ÿÿÿÿÿ8•“©¶œ/
+VWeb:AvoidCommentedOutCodeCheckÚ"Remove this commented out code.(¹§û¬ùÿÿÿÿ8•“©¶œ/
+PWeb:AvoidCommentedOutCodeCheckÛ"Remove this commented out code.(“ïà18•“©¶œ/
+VWeb:AvoidCommentedOutCodeCheckÜ"Remove this commented out code.(ƒµÇ›øÿÿÿÿ8•“©¶œ/
+KWeb:BoldAndItalicTagsCheckì"Replace this <i> tag by <em>.(ªşİˆ8•“©¶œ/
+PWeb:BoldAndItalicTagsCheckŒ"Replace this <i> tag by <em>.(ãš×Óşÿÿÿÿ8•“©¶œ/
+UWeb:TableWithoutCaptionCheck" Add a description to this table.(ÎşñŸıÿÿÿÿ8•“©¶œ/
+G	Web:S5256"%Add "<th>" headers to this "<table>".(ÎşñŸıÿÿÿÿ8•“©¶œ/
+PWeb:TableWithoutCaptionCheck•" Add a description to this table.(Ä­¾Ä8•“©¶œ/
+B	Web:S5256•"%Add "<th>" headers to this "<table>".(Ä­¾Ä8•“©¶œ/

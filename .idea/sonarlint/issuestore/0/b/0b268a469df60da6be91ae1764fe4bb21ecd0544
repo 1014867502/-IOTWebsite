@@ -1,0 +1,13 @@
+
+Ysquid:UselessImportCheck"7Remove this unused import 'java.text.SimpleDateFormat'.(ú¡ÙÛ
+Wsquid:UselessImportCheck"5Remove this unused import 'java.text.ParseException'.(ñ®ï•
+vsquid:S4144"\Update this method so that its implementation is not identical to "addFunction" on line 136.(Ñ·‹Úøÿÿÿÿ
+Asquid:S1172",Remove this unused method parameter "funId".(üÄ·š
+Fsquid:S1172",Remove this unused method parameter "funId".(Ñ·‹Úøÿÿÿÿ
+Lsquid:S1172"2Remove this unused method parameter "accountname".(¾ÌÚùÿÿÿÿ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(ã…ê×üÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(Ú°à¬
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(˜ûÅÑşÿÿÿÿ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(ºñÜ†ÿÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(Ú°à¬
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(˜ûÅÑşÿÿÿÿ

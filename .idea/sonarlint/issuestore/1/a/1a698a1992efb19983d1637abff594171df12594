@@ -1,0 +1,39 @@
+
+b
+java:S1192ã"KDefine a constant instead of duplicating this literal "yyyy-MM-dd" 3 times.(¤Ã
+J
+java:S10662"/Merge this if statement with the enclosing one.(½ŒÁ¾ùÿÿÿÿ
+\	java:S112å"FDefine and throw a dedicated exception instead of using a generic one.(õËÏ
+l	java:S117Ø"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(šø“úıÿÿÿÿ
+s
+java:S1488ä"\Immediately return this expression instead of assigning it to the temporary variable "week".(Ü÷ØÅ
+v
+java:S1149ö"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰
+v
+java:S1149•"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(˜åü
+U
+java:S1118":Add a private constructor to hide the implicit public one.(ïÅ¼•ıÿÿÿÿ
+\
+java:S1126m"AReplace this if-then-else statement by a single return statement.(û£¸ÿÿÿÿÿ
+T	java:S106ì"9Replace this use of System.out or System.err by a logger.(´ˆ¶šşÿÿÿÿ
+X
+java:S1126µ"AReplace this if-then-else statement by a single return statement.(´ÒÀö
+c	java:S100Å"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¶Ø’
+O
+java:S1854à"8Remove this useless assignment to local variable "jday".(öä‹Â
+T
+java:S1197Ø"8Move the array designator from the variable to the type.(šø“úıÿÿÿÿ
+\
+java:S1124•"EReorder the modifiers to comply with the Java Language Specification.(™šØ
+\
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(÷úôÿ
+E
+java:S1481Ù")Remove this unused "jday" local variable.(Ã¤¯©ıÿÿÿÿ
+R	java:S125ı"<This block of commented-out lines of code should be removed.(†€éˆ
+W	java:S125Ö"<This block of commented-out lines of code should be removed.(ÎÅÔäùÿÿÿÿ
+R	java:S125ã"<This block of commented-out lines of code should be removed.(Ñ¦°
+R	java:S125ë"<This block of commented-out lines of code should be removed.(ŒÙµ•
+R	java:S125î"<This block of commented-out lines of code should be removed.(¸çµ
+R	java:S125ñ"<This block of commented-out lines of code should be removed.(Àş³Î
+W	java:S125ö"<This block of commented-out lines of code should be removed.(å¸ÿŸÿÿÿÿÿ
+R	java:S125ş"<This block of commented-out lines of code should be removed.(œ£é¶

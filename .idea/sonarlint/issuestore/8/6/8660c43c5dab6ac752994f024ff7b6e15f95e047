@@ -1,0 +1,18 @@
+
+{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(½Ë”ìşÿÿÿÿ8©ïº˜/
+Q
+java:S3740"/Provide the parametrized type for this generic.(ˆ¸Ú÷úÿÿÿÿ8©ïº˜/
+q
+java:S1104"OMake msg a static final constant or non-public and provide accessors if needed.(úÉï½ıÿÿÿÿ8©ïº˜/
+{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(½Ë”ìşÿÿÿÿ8©ïº˜/
+v
+java:S2293J"YReplace the type specification in this constructor call with the diamond operator ("<>").(˜í«÷8ªïº˜/
+r
+java:S1104"PMake data a static final constant or non-public and provide accessors if needed.(¥Š†Ìúÿÿÿÿ8©ïº˜/
+U	java:S106+"9Replace this use of System.out or System.err by a logger.(ã©8ªïº˜/
+m
+java:S1104"PMake code a static final constant or non-public and provide accessors if needed.(¿Ûİè8©ïº˜/
+{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(½Ë”ìşÿÿÿÿ8ªïº˜/
+e	java:S119"IRename this generic name to match the regular expression '^[A-Z][0-9]?$'.(ŒÔ•Ä8©ïº˜/
+{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(½Ë”ìşÿÿÿÿ8©ïº˜/
+j	java:S119I"IRename this generic name to match the regular expression '^[A-Z][0-9]?$'.(µòÆ²ûÿÿÿÿ8ªïº˜/
