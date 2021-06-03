@@ -7,55 +7,28 @@
         <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu"
             style="margin-top: 20px">
             <li data-name="business-menu" class="layui-nav-item">
-                <a href="/index" data-i18n-tips="" lay-tips="监测大屏" lay-direction="2">
+                <a lay-href="/manage/dashboard" data-i18n-tips="" lay-tips="监测大屏" lay-direction="2">
                     <img src="/assets/images/icon_home.png">
                     <cite style="font-size: 18px">首页</cite>
                 </a>
             </li>
             <li data-name="business-menu" class="layui-nav-item">
-                <a href="javascript:;" data-i18n-tips="" lay-tips="项目管理" lay-direction="2">
+                <a lay-href="/manage/devicemanage" data-i18n-tips="" lay-tips="项目管理" lay-direction="2">
                     <img src="/assets/images/icon_device_manage.png">
                     <cite style="font-size: 18px">设备管理</cite>
                 </a>
-                <dl class="layui-nav-child">
-                    <dd data-name="member-course-theme">
-                        <a lay-href="/manage/dashboard">项目总概</a>
-                    </dd>
-                    <dd data-name="member-course-theme">
-                        <!--                    <a lay-href="/manage/dashboardprojectlist">项目列表</a>-->
-                        <a lay-href="/project">项目列表</a>
-                    </dd>
-                </dl>
             </li>
             <li data-name="business-menu" class="layui-nav-item">
                 <a href="javascript:;" data-i18n-tips="" lay-tips="站点管理" lay-direction="2">
                     <img src="/assets/images/icon_remote.png">
                     <cite style="font-size: 18px">远程服务</cite>
                 </a>
-                <dl class="layui-nav-child">
-                    <dd data-name="member-course-theme">
-                        <a lay-href="/gnssdevice">Gnss列表</a>
-                    </dd>
-                    <dd data-name="member-course-theme">
-                        <a lay-href="/sensordevice">传感器列表</a>
-                    </dd>
-                </dl>
             </li>
             <li data-name="business-menu" class="layui-nav-item">
                 <a href="javascript:;" data-i18n-tips="" lay-tips="预警管理" lay-direction="2">
                     <img src="/assets/images/icon_user_manage.png">
                     <cite style="font-size: 18px">用户管理</cite>
                 </a>
-                <dl class="layui-nav-child">
-                    <dd data-name="member-course-theme">
-                        <a lay-href="/manage/warninghome">报警通知</a>
-                    </dd>
-                </dl>
-                <dl class="layui-nav-child">
-                    <dd data-name="member-course-theme">
-                        <a lay-href="/manage/warningbroadcast">报警广播</a>
-                    </dd>
-                </dl>
             </li>
         </ul>
     </div>

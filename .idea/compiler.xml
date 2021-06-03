@@ -13,7 +13,7 @@
     <bytecodeTargetLevel>
       <module name="admin" target="1.8" />
       <module name="core" target="1.8" />
-      <module name="monitorweb" target="1.8" />
+      <module name="IOTWebsite" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

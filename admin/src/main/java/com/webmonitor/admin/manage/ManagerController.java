@@ -5,19 +5,20 @@ import com.webmonitor.admin.index.IndexService;
 import com.webmonitor.core.util.Tools;
 
 public class ManagerController extends BaseController {
+
     public void dashboard() {
         String projetid = getCookie(IndexService.me.accessProjectId);
         setAttr("projetid", projetid);
         render("dashboard.html");
     }
 
-    //报警广播管理页面
-    public void warningbroadcast() {
-        String projetid = getCookie(IndexService.me.accessProjectId);
-        if (Tools.isEmpty(projetid))
-            projetid = "";
-        setAttr("projetid", projetid);
-        render("warningbroadcast.html");
+    //设备管理页面
+    public void devicemanage() {
+//        String projetid = getCookie(IndexService.me.accessProjectId);
+//        if (Tools.isEmpty(projetid))
+//            projetid = "";
+//        setAttr("projetid", projetid);
+        render("devicemanage.html");
     }
 
     //预警日志管理页面
@@ -26,7 +27,7 @@ public class ManagerController extends BaseController {
         if (Tools.isEmpty(projetid))
             projetid = "";
         setAttr("projetid", projetid);
-        render("warninglist.html");
+        render("devicemanage.html");
     }
 
     //雨量计的网页

@@ -1,49 +1,44 @@
 
-X	java:S125"<This block of commented-out lines of code should be removed.(ˆ‰‘È8úÃß˜/
-{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(’ìì¸øÿÿÿÿ8úÃß˜/
-8
-java:S3626*"Remove this redundant jump.(ûÁİ…8úÃß˜/
-[
-java:S1128">Remove this unused import 'com.webmonitor.core.model.Project'.(»×8úÃß˜/
-R
-java:S2209S"5Change this instance-reference to a static reference.(ÿà–¤8úÃß˜/
-U
-java:S1854("8Remove this useless assignment to local variable "body".(üü 8úÃß˜/
-R
-java:S2209f"5Change this instance-reference to a static reference.(©¼Ğ8úÃß˜/
+^	java:S125”"<This block of commented-out lines of code should be removed.(ø¶Çøÿÿÿÿ8úÃß˜/
 _
-java:S1858·"A"encrypt" returns a string, there's no need to call "toString()".(¨÷ÅÄ8úÃß˜/
-^	java:S125³"<This block of commented-out lines of code should be removed.(ø¶Çøÿÿÿÿ8úÃß˜/
-]	java:S125e"<This block of commented-out lines of code should be removed.(õî¬úıÿÿÿÿ8úÃß˜/
+java:S1858˜"A"encrypt" returns a string, there's no need to call "toString()".(¨÷ÅÄ8½óôÜœ/
 H
-java:S1181Ë"%Catch Exception instead of Throwable.(‡˜ÚÚøÿÿÿÿ8úÃß˜/
-g
-java:S1192"IDefine a constant instead of duplicating this literal "password" 3 times.(†·õ8úÃß˜/
-W	java:S1258"<This block of commented-out lines of code should be removed.(–ïİC8úÃß˜/
-c
-java:S1128	"FRemove this unused import 'com.webmonitor.admin.manage.ManageService'.(„îÙû8úÃß˜/
-{
-java:S1192‘"XDefine a constant instead of duplicating this literal "_monitor_login_username" 3 times.(öĞÎ©üÿÿÿÿ8úÃß˜/
-X	java:S125R"<This block of commented-out lines of code should be removed.(®Ï¦¤8úÃß˜/
-_
-java:S1128"BRemove this unused import 'javax.servlet.http.HttpServletRequest'.(ø©¹…8úÃß˜/
-Y	java:S125‹"<This block of commented-out lines of code should be removed.(à¡çŸ8úÃß˜/
+java:S1181 "%Catch Exception instead of Throwable.(‡˜ÚÚøÿÿÿÿ8úÃß˜/
+{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(’ìì¸øÿÿÿÿ8úÃß˜/
 k
-java:S1192L"IDefine a constant instead of duplicating this literal "projetid" 3 times.(ÄˆŠÑÿÿÿÿÿ8úÃß˜/
-`
-java:S1155I">Use isEmpty() to check whether the collection is empty or not.(†½âüÿÿÿÿ8úÃß˜/
+java:S1128
+"NRemove this unused import 'com.webmonitor.core.model.userbase.BaseProjectmap'.(ƒ®ÇŠ8Ñı¥Õœ/
+[
+java:S1854C"9Remove this useless assignment to local variable "useid".(£ï¿üşÿÿÿÿ8Ñı¥Õœ/
+]	java:S125D"<This block of commented-out lines of code should be removed.(õî¬úıÿÿÿÿ8úÃß˜/
+L
+java:S1481."*Remove this unused "useid" local variable.(£ï¿üşÿÿÿÿ8Ñı¥Õœ/
+L
+java:S1481C"*Remove this unused "useid" local variable.(£ï¿üşÿÿÿÿ8Ñı¥Õœ/
+X	java:S125"<This block of commented-out lines of code should be removed.(ˆ‰‘È8úÃß˜/
+f
+java:S1192b"IDefine a constant instead of duplicating this literal "password" 3 times.(†·õ8úÃß˜/
+8
+java:S3626%"Remove this redundant jump.(ûÁİ…8úÃß˜/
+H
+java:S1481-"+Remove this unused "projId" local variable.(Ş¨êš8úÃß˜/
+H
+java:S1181¬"%Catch Exception instead of Throwable.(‡˜ÚÚøÿÿÿÿ8úÃß˜/
+X	java:S125<"<This block of commented-out lines of code should be removed.(®Ï¦¤8úÃß˜/
+X	java:S125l"<This block of commented-out lines of code should be removed.(à¡çŸ8úÃß˜/
 R
-java:S2209J"5Change this instance-reference to a static reference.(†®ÜÇ8úÃß˜/
-K	java:S108œ")Either remove or fill this block of code.(¬Àáªøÿÿÿÿ8úÃß˜/
-H
-java:S14812"+Remove this unused "projId" local variable.(Ş¨êš8úÃß˜/
-g
-java:S1192M"JDefine a constant instead of duplicating this literal "home.html" 3 times.(Û¸Æ…8úÃß˜/
-H
-java:S1181¿"%Catch Exception instead of Throwable.(‡˜ÚÚøÿÿÿÿ8úÃß˜/
-H
-java:S1181ƒ"%Catch Exception instead of Throwable.(‡˜ÚÚøÿÿÿÿ8úÃß˜/
+java:S2209E"5Change this instance-reference to a static reference.(©¼Ğ8½óôÜœ/
+z
+java:S1192r"XDefine a constant instead of duplicating this literal "_monitor_login_username" 3 times.(öĞÎ©üÿÿÿÿ8úÃß˜/
+W	java:S1250"<This block of commented-out lines of code should be removed.(–ïİC8úÃß˜/
+R
+java:S2209="5Change this instance-reference to a static reference.(ÿà–¤8½óôÜœ/
+U
+java:S1854#"8Remove this useless assignment to local variable "body".(üü 8úÃß˜/
 F
-java:S1481(")Remove this unused "body" local variable.(üü 8úÃß˜/
-R
-java:S2209G"5Change this instance-reference to a static reference.(ÿà–¤8úÃß˜/
+java:S1481#")Remove this unused "body" local variable.(üü 8úÃß˜/
+J	java:S108}")Either remove or fill this block of code.(¬Àáªøÿÿÿÿ8úÃß˜/
+[
+java:S1854."9Remove this useless assignment to local variable "useid".(£ï¿üşÿÿÿÿ8Ñı¥Õœ/
+G
+java:S1181d"%Catch Exception instead of Throwable.(‡˜ÚÚøÿÿÿÿ8úÃß˜/
