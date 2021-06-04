@@ -1,8 +1,6 @@
 
 h
 8admin/src/main/webapp/assets/layuiadmin/lib/echarts_2.js,a\d\adae1d5dfa3b057e74bf830b56ee14e9385be97b
-b
-2admin/src/main/webapp/_view/manage/reportlist.html,a\8\a8ec2a22d0c0e2d4b411d7353dd278bae04f5d82
 A
 package-lock.json,f\a\fa288d1472d29beccb489a676f68739ad365fc47
 7
@@ -25,10 +23,6 @@ Y
 )admin/src/main/webapp/_view/homepage.html,0\8\08df9071dbc93896e85b98d9cdca86656f9316f5
 x
 Hcore/src/main/java/com/webmonitor/core/model/userbase/BaseDevicemap.java,f\5\f5daa3c2b8f43453a07591b260c9b3f2eca02aa1
-h
-8admin/src/main/webapp/_view/manage/warningbroadcast.html,a\8\a83cbe418a0e23bd342a2a3d8ddb0b237b79d83f
-c
-3admin/src/main/webapp/_view/manage/warninglist.html,0\8\08818d9dc2361bde610dc717311eb2b517367561
 o
 ?admin/src/main/java/com/webmonitor/admin/gen/GeneratorDemo.java,e\0\e0b591d8d0e8715bab3bf79229fd292ba6199b04
 m
@@ -95,3 +89,17 @@ Fadmin/src/main/java/com/webmonitor/admin/manage/ManagerController.java,4\b\4b2
 0admin/src/main/webapp/_view/_common/_header.html,9\9\99913367f9cedd2fab4b130a181dfff0af4028b0
 ^
 .admin/src/main/webapp/_view/_common/_menu.html,d\f\df59f2004531797f686d19c24eb0a1f53a85ee41
+i
+9admin/src/main/webapp/assets/layuiadmin/modules/common.js,8\7\874f091d806b4a9290585cfae1c81f87e023b40d
+j
+:admin/src/main/webapp/assets/layuiadmin/modules/leaflet.js,0\6\06fcf93474c36ec6832deb6636db24364e829f35
+h
+8admin/src/main/webapp/assets/layuiadmin/modules/login.js,0\6\06084168f1801fcf328594bc7873762c0d5cd44e
+O
+admin/src/main/webapp/test.html,2\b\2b0d09d7b615cd8c10d5c619d2541aaffbff0910
+d
+4admin/src/main/webapp/_view/manage/devicemanage.html,d\1\d13a454fbe94a0eeaad03f1b9104641999ada7fa
+i
+9admin/src/main/webapp/assets/layuiadmin/modules/drawer.js,1\a\1a3d6328ff6384b00a5b94d27807b23e70f4c3c9
+o
+?admin/src/main/webapp/assets/layuiadmin/modules/devicemanage.js,d\a\da45612d99fd0a2ee438e965805e71ecc2fe96b8

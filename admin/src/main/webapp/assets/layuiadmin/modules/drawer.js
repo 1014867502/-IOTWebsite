@@ -136,7 +136,6 @@ layui.define(['jquery','layer'],function (exports) {
             ,anim:-1
             ,shade: 0.8
             ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
-            ,btn: ['提交', '取消']
             ,btnAlign: 'c'
             ,isOutAnim:false
             ,moveType: 1 //拖拽模式，0或者1
