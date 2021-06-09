@@ -79,17 +79,11 @@
 </style>
 
 <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
-    <form class="layui-form" action="">
+    <form class="layui-form" id="devicedata" method="post" lay-filter="example">
         <div class="layui-form-item">
             <label class="layui-form-label">设备编号</label>
             <div class="layui-input-block">
                 <input style="width: 70%" type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button id="sumbit" class="layui-btn" lay-submit lay-filter="formDemo1">立即提交</button>
-                <button id="reset" type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
@@ -101,7 +95,7 @@
             <div class="layui-card">
                 <div class="layui-card-header">设备列表</div>
             </div>
-            <div class="layui-card" style="display: flex ;smargin: auto;">
+            <div class="layui-card" style="display: flex ;margin: auto;">
                     <ul style="display: flex ;margin: auto;">
                         <li class="little">
                             <div>设备数量</div>
@@ -132,8 +126,8 @@
                         <!--                        </div>-->
                         <div class="layui-inline">
                             <select id="stats" name="stats" lay-verify="" lay-filter="stats">
-                                <option value="1">已处理</option>
-                                <option value="0">未处理</option>
+                                <option value="1">在线</option>
+                                <option value="0">离线</option>
                                 <option value="2">全部</option>
                             </select>
                         </div>
@@ -152,6 +146,18 @@
             <div class="layui-card">
                 <div class="layui-card-body">
                     <table class="layui-hide" id="table-form" lay-filter="table-form"></table>
+
+                    <script type="text/html" id="table-online-state">
+                        {{ d.state == 1 ? '<button class="layui-btn layui-btn-sm treated">在线</button>'
+                        : '<button class="layui-btn layui-btn-sm untreated">离线</button>' }}
+                    </script>
+                    <script type="text/html" id="table-toolbar">
+                        <!--                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">设备详情</a>-->
+
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="echarts">设备数据</a>
+                        <!--                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">编辑</a>-->
+                        <!--                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>-->
+                    </script>
                 </div>
             </div>
         </div>
@@ -163,12 +169,6 @@
 <script src="/assets/lib/loadlanguage.js"></script>
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
-<script type="text/html" id="table-online-state">
-    {{ d.state === 1 ? '
-    <button class="layui-btn layui-btn-sm treated">已处理</button>'
-    : '
-    <button class="layui-btn layui-btn-sm untreated">未处理</button>' }}
-</script>
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>

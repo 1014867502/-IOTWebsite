@@ -22,6 +22,7 @@ import com.webmonitor.admin.common.assistThread.TimerClearFileThread;
 import com.webmonitor.admin.common.interceptor.LoginSessionInterceptor;
 import com.webmonitor.admin.common.kit.APP;
 import com.webmonitor.admin.auth.AuthKit;
+import com.webmonitor.admin.devicelist.DeviceController;
 import com.webmonitor.admin.directive.LabelDirective;
 import com.webmonitor.admin.directive.PermissionDirective;
 import com.webmonitor.admin.directive.RadioDirective;
@@ -82,6 +83,7 @@ public class AdminConfig extends JfinalCoreConfig {
         me.add("/", IndexController.class);
         me.add("/overview", OverviewController.class);
         me.add("/manage", ManagerController.class);
+        me.add("/device", DeviceController.class);
         //me.add("/account", AccountController.class);
         //me.add("/role", RoleController.class);
         //me.add("/permission", PermissionController.class);

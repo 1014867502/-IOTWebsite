@@ -1,10 +1,19 @@
-<ul class="layui-nav layui-layout-left" style="top:0px">
+<ul class="layui-nav layui-layout-left" style="top:0px;background-color: #1E9FFF">
+    <li class="layui-nav-item" lay-unselect>
+        <a href="javascript:;">
+            <img src="/img/logo.png" height="48px"
+                 title="logo" alt="logo"/>
+        </a>
+    </li>
+    <li class="layui-nav-item" lay-unselect style="font-size: 32px">
+        设备管理平台
+    </li>
 </ul>
 <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
     #if(APP.name=='Cube-caster')
     <li class="layui-nav-item layui-hide-xs"  lay-unselect
         style="width: 150px;
-        background-image: url(/assets/images/logo-customer.png);
+        background-image: url(/assets/images/logo_customer.png);
         background-repeat: no-repeat;
          background-size: 100% 100%;
          -moz-background-size: 100% 100%;">

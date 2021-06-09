@@ -6,10 +6,10 @@ import com.webmonitor.core.util.Tools;
 
 public class ManagerController extends BaseController {
 
-    public void dashboard() {
+    public void selectproject() {
         String projetid = getCookie(IndexService.me.accessProjectId);
         setAttr("projetid", projetid);
-        render("dashboard.html");
+        render("selectproject.html");
     }
 
     //设备管理页面
@@ -29,8 +29,6 @@ public class ManagerController extends BaseController {
         setAttr("projetid", projetid);
         render("devicemanage.html");
     }
-
-    //雨量计的网页
     public void waterdevicehome() {
         render("sensordata.html");
     }

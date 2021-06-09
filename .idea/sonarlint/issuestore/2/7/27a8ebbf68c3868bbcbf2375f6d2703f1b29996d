@@ -1,3 +1,5 @@
 
-1squid:S1643"Use a StringBuilder instead.(‚çä
-Nsquid:S2864"4Iterate over the "entrySet" instead of the "keySet".(²ìÉıÿÿÿÿ
+9
+java:S1643'"Use a StringBuilder instead.(‚çä8›¼³®/
+V
+java:S2864!"4Iterate over the "entrySet" instead of the "keySet".(²ìÉıÿÿÿÿ8›¼³®/

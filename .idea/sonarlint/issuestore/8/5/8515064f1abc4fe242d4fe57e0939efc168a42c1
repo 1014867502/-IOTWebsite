@@ -1,30 +1,30 @@
 
-QWeb:AvoidCommentedOutCodeCheckã"Remove this commented out code.(‹ü­½8—±à”/
-MWeb:TableWithoutCaptionCheckq" Add a description to this table.(Ÿ•ÎŠıÿÿÿÿ
-G	Web:S5256—"%Add "<th>" headers to this "<table>".(¾ëÕ×şÿÿÿÿ8—±à”/
-QWeb:AvoidCommentedOutCodeCheckÖ"Remove this commented out code.(‹ü­½8—±à”/
-QWeb:AvoidCommentedOutCodeCheckİ"Remove this commented out code.(‹ü­½8—±à”/
-QWeb:AvoidCommentedOutCodeCheckß"Remove this commented out code.(‹ü­½8—±à”/
-VWeb:AvoidCommentedOutCodeCheckÚ"Remove this commented out code.(û²ùªÿÿÿÿÿ8—±à”/
-VWeb:AvoidCommentedOutCodeCheckÙ"Remove this commented out code.(ä‘à¦ùÿÿÿÿ8—±à”/
-VWeb:AvoidCommentedOutCodeCheckÓ"Remove this commented out code.(‡©œÿıÿÿÿÿ8—±à”/
-?	Web:S5256q"%Add "<th>" headers to this "<table>".(Ÿ•ÎŠıÿÿÿÿ
-QWeb:AvoidCommentedOutCodeCheck×"Remove this commented out code.(ãµ†ë8—±à”/
-VWeb:AvoidCommentedOutCodeCheckØ"Remove this commented out code.(½ƒÂşÿÿÿÿ8—±à”/
-QWeb:AvoidCommentedOutCodeChecká"Remove this commented out code.(‹ü­½8—±à”/
-VWeb:AvoidCommentedOutCodeCheckÔ"Remove this commented out code.(Ú’¼¼ıÿÿÿÿ8—±à”/
-QWeb:AvoidCommentedOutCodeCheckÜ"Remove this commented out code.(´£Ûê8—±à”/
-K	Web:S1827™")Remove this deprecated "width" attribute.(Ñçìøÿÿÿÿ8—±à”/
-PWeb:AvoidCommentedOutCodeCheckÛ"Remove this commented out code.(ÚÕ±=8—±à”/
-D	Web:S1827š")Remove this deprecated "width" attribute.(Ñçìøÿÿÿÿ
-Z	Web:S5254"@Add "lang" and/or "xml:lang" attributes to this "<html>" element(œ÷Ãûÿÿÿÿ
-QWeb:AvoidCommentedOutCodeCheckÒ"Remove this commented out code.(ÃÔŠ8—±à”/
-QWeb:AvoidCommentedOutCodeCheckŞ"Remove this commented out code.(‹ü­½8—±à”/
-CWeb:PageWithoutTitleCheck"Add a <title> tag to this page.(Õ¶¯M
-UWeb:TableWithoutCaptionCheck—" Add a description to this table.(¾ëÕ×şÿÿÿÿ8—±à”/
-QWeb:AvoidCommentedOutCodeCheckà"Remove this commented out code.(‹ü­½8—±à”/
 J	Web:S1827t")Remove this deprecated "width" attribute.(Ñçìøÿÿÿÿ8—±à”/
+Z	Web:S5254"@Add "lang" and/or "xml:lang" attributes to this "<html>" element(œ÷Ãûÿÿÿÿ
+VWeb:AvoidCommentedOutCodeCheckÚ"Remove this commented out code.(û²ùªÿÿÿÿÿ8—±à”/
+VWeb:AvoidCommentedOutCodeCheckÓ"Remove this commented out code.(‡©œÿıÿÿÿÿ8—±à”/
 C	Web:S1827s")Remove this deprecated "width" attribute.(Ñçìøÿÿÿÿ
+PWeb:AvoidCommentedOutCodeCheckÛ"Remove this commented out code.(ÚÕ±=8—±à”/
+QWeb:AvoidCommentedOutCodeCheckŞ"Remove this commented out code.(‹ü­½8—±à”/
+QWeb:AvoidCommentedOutCodeCheckã"Remove this commented out code.(‹ü­½8—±à”/
+D	Web:S1827š")Remove this deprecated "width" attribute.(Ñçìøÿÿÿÿ
+QWeb:AvoidCommentedOutCodeCheckß"Remove this commented out code.(‹ü­½8—±à”/
+VWeb:AvoidCommentedOutCodeCheckØ"Remove this commented out code.(½ƒÂşÿÿÿÿ8—±à”/
+?	Web:S5256q"%Add "<th>" headers to this "<table>".(Ÿ•ÎŠıÿÿÿÿ
+CWeb:PageWithoutTitleCheck"Add a <title> tag to this page.(Õ¶¯M
+G	Web:S5256—"%Add "<th>" headers to this "<table>".(¾ëÕ×şÿÿÿÿ8—±à”/
 DWeb:BoldAndItalicTagsCheckÊ"Replace this <i> tag by <em>.(ªşİˆ
-QWeb:AvoidCommentedOutCodeCheckâ"Remove this commented out code.(‹ü­½8—±à”/
+QWeb:AvoidCommentedOutCodeCheckà"Remove this commented out code.(‹ü­½8—±à”/
+QWeb:AvoidCommentedOutCodeCheckÜ"Remove this commented out code.(´£Ûê8—±à”/
+QWeb:AvoidCommentedOutCodeChecká"Remove this commented out code.(‹ü­½8—±à”/
+K	Web:S1827™")Remove this deprecated "width" attribute.(Ñçìøÿÿÿÿ8—±à”/
+QWeb:AvoidCommentedOutCodeCheckÒ"Remove this commented out code.(ÃÔŠ8—±à”/
+MWeb:TableWithoutCaptionCheckq" Add a description to this table.(Ÿ•ÎŠıÿÿÿÿ
 DWeb:BoldAndItalicTagsCheckî"Replace this <i> tag by <em>.(ªşİˆ
+VWeb:AvoidCommentedOutCodeCheckÔ"Remove this commented out code.(Ú’¼¼ıÿÿÿÿ8—±à”/
+UWeb:TableWithoutCaptionCheck—" Add a description to this table.(¾ëÕ×şÿÿÿÿ8—±à”/
+QWeb:AvoidCommentedOutCodeCheck×"Remove this commented out code.(ãµ†ë8—±à”/
+VWeb:AvoidCommentedOutCodeCheckÙ"Remove this commented out code.(ä‘à¦ùÿÿÿÿ8—±à”/
+QWeb:AvoidCommentedOutCodeCheckİ"Remove this commented out code.(‹ü­½8—±à”/
+QWeb:AvoidCommentedOutCodeCheckÖ"Remove this commented out code.(‹ü­½8—±à”/
+QWeb:AvoidCommentedOutCodeCheckâ"Remove this commented out code.(‹ü­½8—±à”/

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("后台主页")
+    <script src="/assets/lib/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <script src="/assets/lib/xm-select.js"></script>
+    <style>
+        .layadmin-shortcut li .layui-icon {
+            color: #FFFFFF;
+            background-color: #1E9FFF;
+        }
+
+        .layadmin-shortcut li:hover .layui-icon {
+            background-color: #93D1FF;
+        }
+
+        .card-body-scrollbar {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /*  新加的 */
+            background-color: transparent !important;
+        }
+
+        .card-body-scrollbar:hover {
+            overflow: auto; /*  新加的 */
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00F7DE;
+        }
+
+        .data {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            color: #bd1a1a;
+        }
+
+        .divce-offsetxyz {
+            height: 13px;
+        }
+
+        .g_bar {
+            display: inline-block;
+            position: relative;
+            height: 10px;
+            border: 1 px solid  #ccc;
+            border-left: 0;
+        }
+
+        .g_bar.xcor {
+            background: #ea4f4f
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        .devicemarker {
+            display: flex;
+            display: -webkit-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: #bd1a1a;
+        }
+
+        .devicemarker span {
+            display: inline-block;
+            height: 32px;
+            width: 100%;
+            background: url('/assets/images/CORS_Active32.png') no-repeat center center;
+            margin-top: 3px;
+            margin-bottom: -20px;
+
+        }
+
+        body {
+            min-width: 1000px;
+        }
+
+        .little {
+            text-align: center;
+            width: 200px;
+            /*margin-left: 10%;*/
+            line-height: 40px;
+            margin: auto;
+        }
+
+        .projects {
+            height: 100px;
+            width: 100%;
+            display: flex;
+        }
+
+        .projectname {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .projects:hover .projectname {
+            color: #00f0ff;
+            /*box-shadow: 10px 10px 5px #888888;*/
+        }
+
+        .cardbody {
+            transition: bottom .2s linear 0s;
+            bottom: 0px;
+        }
+
+        .cardbody:hover {
+            box-shadow: 2px 1px 10px #cbc8c8;
+            position: relative;
+            bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-fluid">
+    <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
+        <div style="width:1000px">
+            <div class="layui-card" style="display: flex">
+                <ul style="display: flex ;margin: auto;">
+                    <li class="little">
+                        <div>项目数量</div>
+                        <div style="font-size: 20px">156</div>
+                    </li>
+                </ul>
+                <div style="margin: auto">
+                    <div style="margin: auto;display: flex">
+                        <button type="button" class="layui-btn" id="add_device"><img
+                                src="/assets/images/icon_add_device_28.png"/>添加项目
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="cardbody">
+                    <div class="layui-card-body">
+                        <div class="projects">
+                            <div style="margin: auto;">
+                                <div class="projectname">项目名称</div>
+                                <div style="display: flex;justify-content: space-between;margin-top: 10px;color: #00f0ff">
+                                    <span>编辑</span>
+                                    <span>删除</span>
+                                </div>
+                            </div>
+                            <div style="display: flex;margin: auto;">
+                                <ul style="display: flex ;margin: auto;">
+                                    <li class="little">
+                                        <div>项目ID</div>
+                                        <div style="font-size: 20px">156</div>
+                                    </li>
+                                    <li class="little">
+                                        <div>设备数量</div>
+                                        <div style="font-size: 20px">156</div>
+                                    </li>
+                                    <li class="little">
+                                        <div>创建时间</div>
+                                        <div>15641687463167</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="cardbody">
+                    <div class="layui-card-body">
+                        <div class="projects">
+                            <div style="margin: auto;">
+                                <div class="projectname">项目名称</div>
+                                <div style="display: flex;justify-content: space-between;margin-top: 10px;color: #00f0ff">
+                                    <span>编辑</span>
+                                    <span>删除</span>
+                                </div>
+                            </div>
+                            <div style="display: flex;margin: auto;">
+                                <ul style="display: flex ;margin: auto;">
+                                    <li class="little">
+                                        <div>项目ID</div>
+                                        <div style="font-size: 20px">156</div>
+                                    </li>
+                                    <li class="little">
+                                        <div>设备数量</div>
+                                        <div style="font-size: 20px">156</div>
+                                    </li>
+                                    <li class="little">
+                                        <div>创建时间</div>
+                                        <div>15641687463167</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    var projetid = "#(projetid)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index']);
+</script>
+</body>
+</html>

@@ -16,7 +16,9 @@ import javax.sql.DataSource;
  */
 public class GeneratorDemo {
 
-	private static String[] excludedTable = {"sys_account_login_log","sports_coach_achievement"};
+	private static String[] excludedTable = {"sys_account_login_log","sports_coach_achievement",""};
+
+
 	
 	public static DataSource getDataSource() {
 		StartInit.initConfig(JfinalCoreConfig.getProps());
@@ -41,9 +43,12 @@ public class GeneratorDemo {
 		// 设置数据库方言
 		gernerator.setDialect(new MysqlDialect());
 
+		gernerator.setMetaBuilder(new _MetaBuilder(getDataSource()));
+
 		// 添加不需要生成的表名
 		for (String table : excludedTable) {
 			gernerator.addExcludedTable(table.trim());
+
 		}
 
 		// 设置是否在 Model 中生成 dao 对象
