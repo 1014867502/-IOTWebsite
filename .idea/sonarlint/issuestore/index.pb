@@ -133,3 +133,15 @@ e
 5admin/src/main/webapp/_view/manage/selectproject.html,c\8\c80d2ad0d4f2bf4f64934ccda6ec2525da31060c
 p
 @admin/src/main/webapp/assets/layuiadmin/modules/selectproject.js,9\4\94ab267afaa833df7fce8dcaf5eeb79e54d50d73
+b
+2admin/src/main/webapp/_view/manage/devicelist.html,4\c\4c9bda6f3d4da6d4ce74fd291efc7f31a88e18b6
+v
+Fcore/src/main/java/com/webmonitor/core/model/base/BaseMachineData.java,1\8\1803e3d5190be92e8719a93a214e4c01d780da82
+m
+=core/src/main/java/com/webmonitor/core/model/MachineData.java,2\e\2ed761bee48ba77db1a319e4be1071cc145635e1
+h
+8admin/src/main/webapp/_view/devicelist/devicemanage.html,3\2\320712229881cf296665c27b18f5f9026ba21439
+g
+7admin/src/main/webapp/assets/layuiadmin/style/admin.css,c\1\c13c54591a22f3655111a877556c27c7f7d68d13
+c
+3admin/src/main/webapp/_view/devicelist/setting.html,d\3\d3bec0ed516300e571b9740cc9ff6a5edb5544fa

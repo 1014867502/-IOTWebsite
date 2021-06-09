@@ -83,7 +83,7 @@ public class AdminConfig extends JfinalCoreConfig {
         me.add("/", IndexController.class);
         me.add("/overview", OverviewController.class);
         me.add("/manage", ManagerController.class);
-        me.add("/device", DeviceController.class);
+        me.add("/devicelist", DeviceController.class);
         //me.add("/account", AccountController.class);
         //me.add("/role", RoleController.class);
         //me.add("/permission", PermissionController.class);

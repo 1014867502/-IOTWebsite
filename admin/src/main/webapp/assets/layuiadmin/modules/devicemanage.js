@@ -50,7 +50,7 @@ layui.define(['form','drawer','form'], function (exports) {
             , title: 'logdata'
             , height:'full-200'
             , totalRow: true
-            , url: '/device/getDeviceList'
+            , url: '/devicelist/getDeviceList'
             , where: {'projectid': 1, 'sn': snreal, 'state': stats}
             , cols: [[
                 {field: 'id', title: "序号", align: 'center'}
@@ -88,7 +88,7 @@ layui.define(['form','drawer','form'], function (exports) {
             , title: 'logdata'
             , totalRow: true
             , height:'full-200'
-            , url: '/device/getDeviceList'
+            , url: '/devicelist/getDeviceList'
             , where: {'projectid':1,'state': stats}
             , cols: [[
                 {field: 'id', title: "序号", align: 'center'}
@@ -114,6 +114,28 @@ layui.define(['form','drawer','form'], function (exports) {
         });
     }
 
+    //每行记录的按钮事件
+    table.on('tool(table-form)', function (obj) {
+        var data = obj.data;
+        if (obj.event === 'echarts') {
+            location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
+        }else if(obj.event === 'edit'){
+            debugger
+            location.href = '/devicelist/setting?sn='+data.serial;
+        } else if (obj.event === 'delete') {
+            layer.confirm($.i18n.prop('web_confirm_delete'), function(index){
+                admin.req({
+                    url:'/gnssdevice/delete?projid='+proId+'&sn='+data.name,
+                    data:{id:data.id},
+                    done:function (res) {
+                        location.href = "/gnssdevice";
+                        return false;
+                    }
+                })
+            });
+        }
+
+    });
 
     exports('devicemanage',{})
 });

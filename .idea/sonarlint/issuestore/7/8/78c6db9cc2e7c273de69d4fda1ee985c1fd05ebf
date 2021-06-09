@@ -1,44 +1,44 @@
 
-X	java:S125"<This block of commented-out lines of code should be removed.(ˆ‰‘È8úÃß˜/
-R
-java:S2209="5Change this instance-reference to a static reference.(ÿà–¤8½óôÜœ/
-R
-java:S2209E"5Change this instance-reference to a static reference.(©¼Ğ8½óôÜœ/
-G
-java:S1181d"%Catch Exception instead of Throwable.(‡˜ÚÚøÿÿÿÿ8úÃß˜/
-L
-java:S1481C"*Remove this unused "useid" local variable.(£ï¿üşÿÿÿÿ8Ñı¥Õœ/
-8
-java:S3626%"Remove this redundant jump.(ûÁİ…8úÃß˜/
-^	java:S125”"<This block of commented-out lines of code should be removed.(ø¶Çøÿÿÿÿ8úÃß˜/
-H
-java:S1481-"+Remove this unused "projId" local variable.(Ş¨êš8úÃß˜/
-_
-java:S1858˜"A"encrypt" returns a string, there's no need to call "toString()".(¨÷ÅÄ8½óôÜœ/
-H
-java:S1181¬"%Catch Exception instead of Throwable.(‡˜ÚÚøÿÿÿÿ8úÃß˜/
-X	java:S125l"<This block of commented-out lines of code should be removed.(à¡çŸ8úÃß˜/
-L
-java:S1481."*Remove this unused "useid" local variable.(£ï¿üşÿÿÿÿ8Ñı¥Õœ/
-f
-java:S1192b"IDefine a constant instead of duplicating this literal "password" 3 times.(†·õ8úÃß˜/
 z
 java:S1192r"XDefine a constant instead of duplicating this literal "_monitor_login_username" 3 times.(öĞÎ©üÿÿÿÿ8úÃß˜/
 [
-java:S1854C"9Remove this useless assignment to local variable "useid".(£ï¿üşÿÿÿÿ8Ñı¥Õœ/
-]	java:S125D"<This block of commented-out lines of code should be removed.(õî¬úıÿÿÿÿ8úÃß˜/
-U
-java:S1854#"8Remove this useless assignment to local variable "body".(üü 8úÃß˜/
-[
 java:S1854."9Remove this useless assignment to local variable "useid".(£ï¿üşÿÿÿÿ8Ñı¥Õœ/
-W	java:S1250"<This block of commented-out lines of code should be removed.(–ïİC8úÃß˜/
+8
+java:S3626%"Remove this redundant jump.(ûÁİ…8úÃß˜/
 k
 java:S1128
 "NRemove this unused import 'com.webmonitor.core.model.userbase.BaseProjectmap'.(ƒ®ÇŠ8Ñı¥Õœ/
-{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(’ìì¸øÿÿÿÿ8úÃß˜/
-J	java:S108}")Either remove or fill this block of code.(¬Àáªøÿÿÿÿ8úÃß˜/
+[
+java:S1854C"9Remove this useless assignment to local variable "useid".(£ï¿üşÿÿÿÿ8Ñı¥Õœ/
+R
+java:S2209="5Change this instance-reference to a static reference.(ÿà–¤8½óôÜœ/
+G
+java:S1181d"%Catch Exception instead of Throwable.(‡˜ÚÚøÿÿÿÿ8úÃß˜/
 F
 java:S1481#")Remove this unused "body" local variable.(üü 8úÃß˜/
+R
+java:S2209E"5Change this instance-reference to a static reference.(©¼Ğ8½óôÜœ/
+X	java:S125"<This block of commented-out lines of code should be removed.(ˆ‰‘È8úÃß˜/
+X	java:S125l"<This block of commented-out lines of code should be removed.(à¡çŸ8úÃß˜/
+]	java:S125D"<This block of commented-out lines of code should be removed.(õî¬úıÿÿÿÿ8úÃß˜/
+^	java:S125”"<This block of commented-out lines of code should be removed.(ø¶Çøÿÿÿÿ8úÃß˜/
+L
+java:S1481."*Remove this unused "useid" local variable.(£ï¿üşÿÿÿÿ8Ñı¥Õœ/
+L
+java:S1481C"*Remove this unused "useid" local variable.(£ï¿üşÿÿÿÿ8Ñı¥Õœ/
 X	java:S125<"<This block of commented-out lines of code should be removed.(®Ï¦¤8úÃß˜/
+_
+java:S1858˜"A"encrypt" returns a string, there's no need to call "toString()".(¨÷ÅÄ8½óôÜœ/
+{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(’ìì¸øÿÿÿÿ8úÃß˜/
+W	java:S1250"<This block of commented-out lines of code should be removed.(–ïİC8úÃß˜/
 H
 java:S1181 "%Catch Exception instead of Throwable.(‡˜ÚÚøÿÿÿÿ8úÃß˜/
+H
+java:S1181¬"%Catch Exception instead of Throwable.(‡˜ÚÚøÿÿÿÿ8úÃß˜/
+U
+java:S1854#"8Remove this useless assignment to local variable "body".(üü 8úÃß˜/
+J	java:S108}")Either remove or fill this block of code.(¬Àáªøÿÿÿÿ8úÃß˜/
+f
+java:S1192b"IDefine a constant instead of duplicating this literal "password" 3 times.(†·õ8úÃß˜/
+H
+java:S1481-"+Remove this unused "projId" local variable.(Ş¨êš8úÃß˜/
