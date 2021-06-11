@@ -1,0 +1,24 @@
+package com.webmonitor.core.idal;
+
+import com.jfinal.plugin.activerecord.Page;
+import com.webmonitor.core.model.GroupsData;
+import com.webmonitor.core.model.userbase.BaseProjects;
+
+import java.util.List;
+
+/**这个是针对groups_data表的接口**/
+
+public interface IProject {
+    /**获取所有项目**/
+    List<BaseProjects> getAllProjects();
+    /**根据项目id获取项目**/
+    BaseProjects getProjectById(String projectid);
+    /**根据项目归属公司查询**/
+    List<BaseProjects> getProjectsByComId(String id);
+
+    /**获取所有项目的分页**/
+    Page<Object> getProjectsPageData(int pageno, int limit);
+
+    /**获取相关公司所有项目的分页**/
+    Page<Object> getProjectsByComIdPageData(String comid,int pageno, int limit);
+}

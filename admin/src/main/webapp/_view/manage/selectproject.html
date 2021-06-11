@@ -64,64 +64,6 @@
             align-items: center;
         }
 
-        .title {
-            height: 50%;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #00F7DE;
-        }
-
-        .data {
-            height: 50%;
-            width: 100%;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            color: #bd1a1a;
-        }
-
-        .divce-offsetxyz {
-            height: 13px;
-        }
-
-        .g_bar {
-            display: inline-block;
-            position: relative;
-            height: 10px;
-            border: 1 px solid  #ccc;
-            border-left: 0;
-        }
-
-        .g_bar.xcor {
-            background: #ea4f4f
-        }
-
-        #map {
-            height: 100%;
-            width: 100%;
-        }
-
-        .devicemarker {
-            display: flex;
-            display: -webkit-flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            color: #bd1a1a;
-        }
-
-        .devicemarker span {
-            display: inline-block;
-            height: 32px;
-            width: 100%;
-            background: url('/assets/images/CORS_Active32.png') no-repeat center center;
-            margin-top: 3px;
-            margin-bottom: -20px;
-
-        }
-
         body {
             min-width: 1000px;
         }
@@ -163,9 +105,21 @@
     </style>
 </head>
 <body>
+
+<div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
+    <form class="layui-form" id="devicedata" method="post" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备编号</label>
+            <div class="layui-input-block">
+                <input style="width: 70%" type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="layui-fluid">
     <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
-        <div style="width:1000px">
+        <div style="width:1000px" id="list">
             <div class="layui-card" style="display: flex">
                 <ul style="display: flex ;margin: auto;">
                     <li class="little">
@@ -181,71 +135,9 @@
                     </div>
                 </div>
             </div>
-
-            <div class="layui-card">
-                <div class="cardbody">
-                    <div class="layui-card-body">
-                        <div class="projects">
-                            <div style="margin: auto;">
-                                <div class="projectname">项目名称</div>
-                                <div style="display: flex;justify-content: space-between;margin-top: 10px;color: #00f0ff">
-                                    <span>编辑</span>
-                                    <span>删除</span>
-                                </div>
-                            </div>
-                            <div style="display: flex;margin: auto;">
-                                <ul style="display: flex ;margin: auto;">
-                                    <li class="little">
-                                        <div>项目ID</div>
-                                        <div style="font-size: 20px">156</div>
-                                    </li>
-                                    <li class="little">
-                                        <div>设备数量</div>
-                                        <div style="font-size: 20px">156</div>
-                                    </li>
-                                    <li class="little">
-                                        <div>创建时间</div>
-                                        <div>15641687463167</div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-card">
-                <div class="cardbody">
-                    <div class="layui-card-body">
-                        <div class="projects">
-                            <div style="margin: auto;">
-                                <div class="projectname">项目名称</div>
-                                <div style="display: flex;justify-content: space-between;margin-top: 10px;color: #00f0ff">
-                                    <span>编辑</span>
-                                    <span>删除</span>
-                                </div>
-                            </div>
-                            <div style="display: flex;margin: auto;">
-                                <ul style="display: flex ;margin: auto;">
-                                    <li class="little">
-                                        <div>项目ID</div>
-                                        <div style="font-size: 20px">156</div>
-                                    </li>
-                                    <li class="little">
-                                        <div>设备数量</div>
-                                        <div style="font-size: 20px">156</div>
-                                    </li>
-                                    <li class="little">
-                                        <div>创建时间</div>
-                                        <div>15641687463167</div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
+    <div><div style="text-align: center;" id="demo7"></div></div>
 </div>
 </div>
 
@@ -254,12 +146,12 @@
 <script src="/assets/lib/loadlanguage.js"></script>
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script>
-    var projetid = "#(projetid)";
+    var userid = parent.window.document.getElementsByName("homeiframe")[0].getAttribute('userid');
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index']);
+    }).use(['index','selectproject','drawer']);
 </script>
 </body>
 </html>

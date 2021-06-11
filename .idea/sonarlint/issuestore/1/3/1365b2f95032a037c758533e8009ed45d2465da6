@@ -1,27 +1,27 @@
 
+F
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ
+Q	java:S125B"<This block of commented-out lines of code should be removed.(²¶¿Î
+D
+java:S1125{")Remove the literal "false" boolean value.(òØäÄûÿÿÿÿ
+t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(×ò½Úÿÿÿÿÿ
+Q	java:S125"<This block of commented-out lines of code should be removed.(é®¼ž
+Q	java:S125%"<This block of commented-out lines of code should be removed.(èäÍ‹
+š
+java:S1130"Remove the declaration of thrown exception 'com.webmonitor.core.util.exception.BusinessException' which is a runtime exception.(èö¹ÿÿÿÿÿ
+\
+java:S21841"FCast one of the operands of this multiplication operation to a "long".(ƒÈ›ÿ
+E
+java:S3740D"/Provide the parametrized type for this generic.(ÿÎ™Ä
+E
+java:S3740D"/Provide the parametrized type for this generic.(ÿÎ™Ä
+k
+java:S1192@"UUse already-defined constant 'accessTokenName' instead of duplicating its value here.(ì¬ÍÛ
+b	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(Ð¿à™
+F
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ
+I
+java:S1172".Remove this unused method parameter "loginIp".(èö¹ÿÿÿÿÿ
 t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(­Ö§ôýÿÿÿÿ
 ?
 java:S1125-")Remove the literal "false" boolean value.(±âÝÁ
-t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(×ò½Úÿÿÿÿÿ
-Q	java:S125%"<This block of commented-out lines of code should be removed.(èäÍ‹
-F
-java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ
-F
-java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ
-E
-java:S3740D"/Provide the parametrized type for this generic.(ÿÎ™Ä
-Q	java:S125B"<This block of commented-out lines of code should be removed.(²¶¿Î
-k
-java:S1192@"UUse already-defined constant 'accessTokenName' instead of duplicating its value here.(ì¬ÍÛ
-\
-java:S21841"FCast one of the operands of this multiplication operation to a "long".(ƒÈ›ÿ
-b	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(Ð¿à™
-I
-java:S1172".Remove this unused method parameter "loginIp".(èö¹ÿÿÿÿÿ
-š
-java:S1130"Remove the declaration of thrown exception 'com.webmonitor.core.util.exception.BusinessException' which is a runtime exception.(èö¹ÿÿÿÿÿ
-E
-java:S3740D"/Provide the parametrized type for this generic.(ÿÎ™Ä
-D
-java:S1125{")Remove the literal "false" boolean value.(òØäÄûÿÿÿÿ
-Q	java:S125"<This block of commented-out lines of code should be removed.(é®¼ž

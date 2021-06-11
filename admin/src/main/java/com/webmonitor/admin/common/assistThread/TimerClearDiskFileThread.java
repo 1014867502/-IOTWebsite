@@ -18,27 +18,22 @@ public class TimerClearDiskFileThread extends Thread {
         System.out.println("Clear thread start.");
 
         while(true) {
-
             if (isInterrupted()) {
                 break;
             }
-
             try {
                 Thread.sleep(1000*60*60*24);
             } catch (InterruptedException e) {
                 //e.printStackTrace();
                 break;
             }
-
             if (isStartClear())
             {
                 clearRawDir();
                 clearRinexDir();
                 System.out.println("Start clear dir and file.");
             }
-
         }
-
         System.out.println("Clear thread exit.");
     }
 

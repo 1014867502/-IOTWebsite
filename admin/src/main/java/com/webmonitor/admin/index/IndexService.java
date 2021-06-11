@@ -8,6 +8,8 @@ import com.jfinal.plugin.ehcache.CacheKit;
 import com.webmonitor.admin.common.kit.I18nKit;
 import com.webmonitor.core.model.Account;
 import com.webmonitor.core.model.Session;
+import com.webmonitor.core.util.MD5Utils;
+import com.webmonitor.core.util.Tools;
 import com.webmonitor.core.util.exception.BusinessException;
 import com.webmonitor.core.vo.Result;
 
@@ -21,24 +23,26 @@ public class IndexService {
     //保存accessToken的 cookie 名称
     public static final String accessTokenName = "accessToken";
     //保存该问项目的cookie
-    public static final String accessProjectId = "accessProjectId";
+    public static final String accessUserId = "accessUserId";
 
     //返回return给，遇到异常报错
     public Result<HashMap<String, String>> login(String userName, String password, String loginIp) throws BusinessException {
         //userName = userName.toLowerCase().trim();
         userName = userName.trim();
         password = password.trim();
-        Account loginAccount = Account.dao.findFirst("select * from sys_account where userName=?", userName);
+        Account loginAccount = getGeoAccount(userName);
         if (loginAccount == null) {
             String tip = I18nKit.getI18nStr("error_usernamepassword_incorrect");
             throw new BusinessException(tip);
         }
-        if (loginAccount.isStatusLockId()) {
-            String tip = I18nKit.getI18nStr("error_account_locked");
-            throw new BusinessException(tip);
-        }
-        String salt = loginAccount.getSalt();
-        String hashedPass = HashKit.sha256(salt + password);
+//        if (loginAccount.isStatusLockId()) {
+//            String tip = I18nKit.getI18nStr("error_account_locked");
+//            throw new BusinessException(tip);
+//        }
+//        String salt = loginAccount.getSalt();
+//        String hashedPass = HashKit.sha256(salt + password);
+
+        String hashedPass = MD5Utils.md5(password)+"0";
         if (loginAccount.getPassword().equals(hashedPass) == false) {
             String tip = I18nKit.getI18nStr("error_usernamepassword_incorrect");
             throw new BusinessException(tip);
@@ -51,6 +55,7 @@ public class IndexService {
         String accessToken = StrKit.getRandomUUID();
         session.setAccessToken(accessToken);
         session.setAccountId(loginAccount.getId());
+        session.setUserId(userName);
         session.setExpireAt(expireAt);
         if (!session.save()) {
             String tip = I18nKit.getI18nStr("error_save_session_fail");
@@ -59,7 +64,7 @@ public class IndexService {
         loginAccount.removeSensitiveInfo(); // 移除 password 与 salt 属性值
         loginAccount.put("accessToken", accessToken);   // 保存一份 accessToken 到 loginAccount 备用
         CacheKit.put(loginAccountCacheName, accessToken, loginAccount);
-        createLoginLog(loginAccount.getId(), loginIp);
+        //createLoginLog(loginAccount.getId(), loginIp);
         Result<HashMap<String, String>> result = Result.newOne();
         HashMap map = new HashMap();
         map.put("accessToken", accessToken);
@@ -92,7 +97,7 @@ public class IndexService {
             return null;
         }
 
-        Account loginAccount = Index_GeoService.me.getGeoAccount(session.getUserId());
+        Account loginAccount = IndexService.me.getGeoAccount(session.getUserId());
         //Account loginAccount = Account.dao.findById(session.getAccountId());
         // 找到 loginAccount 并且 是正常状态 才允许登录
         if (loginAccount != null /*&& loginAccount.isStatusOk()*/) {
@@ -130,5 +135,19 @@ public class IndexService {
         account.setPassword(hashedNewPass);
         account.update();
         return new Result<String>().success("ok");
+    }
+
+    public Account getGeoAccount(String userid){
+        String sql = "SELECT * from staff_data where uAccountNum='"+userid+"'";
+        Record record = Db.findFirst(sql);
+        if (!Tools.isEmpty(record)){
+            Account account = new Account();
+            account.setUserName(userid);
+            account.setNickName(userid);
+            account.setID(0);
+            account.setPassword(record.getStr("uPassword"));
+            return  account;
+        }
+        return null;
     }
 }

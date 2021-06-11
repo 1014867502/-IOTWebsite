@@ -6,8 +6,12 @@ import com.jfinal.kit.HttpKit;
 import com.jfinal.log.Log;
 import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.common.kit.I18nKit;
+import com.webmonitor.core.bll.ProjectService;
+import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.config.annotation.Remark;
-import com.webmonitor.core.model.userbase.BaseProjectmap;
+import com.webmonitor.core.dal.RoleType;
+import com.webmonitor.core.model.GroupsData;
+import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.util.*;
 import com.webmonitor.core.util.exception.BusinessException;
 import com.webmonitor.core.util.exception.ExceptionUtil;
@@ -42,23 +46,23 @@ public class IndexController extends BaseController {
             redirect("/toLogin");
             return;
         }
-        String projId = "";
         String useid=getLoginAccount().getUserName();
-        //测试账号，只允许指定项目
-//        if (getLoginAccount().getUserName().equals("test")){
-//            for (int i=list.size()-1;i>=0;i--){
-//                if (!list.get(i).getName().equals("惠东马朝路泥石流监测")){
-//                    list.remove(i);
-//                }
-//            }
+        StaffData currentuser= StaffService.me.getStaffByName(useid);
+        setCookie(IndexService.me.accessUserId,currentuser.getId().toString(),24*60*60,true);
+        setAttr("userid", currentuser.getId());
+//        String projetid = getCookie(IndexService.me.accessProjectId);
+//        if (Tools.isEmpty(projetid)){
+//            projetid = list.size()>0?list.get(0).getProjId():"";
+//            setCookie(IndexService.me.accessProjectId,list.get(0).getProjId(),24*60*60,true);
 //        }
-        render("homepage.html");
+//        setAttr("projetid", projetid);
+        render("home.html");
     }
 
     @Remark("仪表盘页")
     public void dashboard() {
         //render("dashboard.html");
-        String projetid = getCookie(IndexService.me.accessProjectId);
+        String projetid = getCookie(IndexService.me.accessUserId);
         setAttr("projetid", projetid);
         render("dashboardmain.html");
     }
@@ -66,7 +70,7 @@ public class IndexController extends BaseController {
         String  projId = getPara("projid");
         String useid=getLoginAccount().getUserName();
         //setAttr("projetid", list.size()>0?list.get(0).getName():"");
-        setCookie(IndexService.me.accessProjectId,projId,24*60*60,true);
+        setCookie(IndexService.me.accessUserId,projId,24*60*60,true);
         setAttr("projetid", projId);
         render("home.html");
     }
@@ -123,7 +127,6 @@ public class IndexController extends BaseController {
                 setAttr("remember", remember);
             }
         } catch (Exception e) {}
-
         render("login.html");
     }
 
@@ -146,7 +149,7 @@ public class IndexController extends BaseController {
             String loginIp = IpKit.getRealIp(getRequest());
             boolean remember = Tools.isTrue(getPara("remember"));
             //result = srv.login(username, password, loginIp);
-            result = Index_GeoService.me.login(username, password, loginIp);
+            result = IndexService.me.login(username, password, loginIp);
             if (remember) {
                 String content = String.format("%s###%s###%s",username, password, remember);
                 String cookieContent = DesKit.encrypt(content, aesTextKey).toString();

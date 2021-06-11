@@ -141,15 +141,20 @@
             color: #00f0ff;
             bottom: 2px;
         }
+        .little:hover .icon{
+            color: #00f0ff;
+        }
         .icon {
             display: inline-block;
+            width: 32px; height: 32px;
             overflow: hidden;
         }
-
-        .little:hover  .icon{
+        .icon > .icon{
             position: relative;
-            -webkit-filter: drop-shadow(20px 0);
-            filter: drop-shadow(20px 0);
+            left: -32px;
+            border-right: 32px solid transparent;
+            -webkit-filter: drop-shadow(32px 0);
+            filter: drop-shadow(32px 0);
         }
     </style>
 </head>
@@ -158,25 +163,25 @@
     <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
         <div style="width:100%">
             <div class="layui-card" style="display: flex">
-                <ul style="display: flex ;margin: auto;">
+                <ul style="display: flex ;margin: auto;height: 100px">
                     <li class="little">
-                        <img class="icon" src="/assets/images/deviceinform_black.png"/>
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i class="icon" style="background: url(/assets/images/deviceinform_black.png) no-repeat center;"></i></i></div>
                         <div>设备信息</div>
                     </li>
                     <li class="little">
-                       <img src="/assets/images/testsetting_black.png"/>
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i class="icon" style="background: url(/assets/images/testsetting_black.png) no-repeat center;"></i></i></div>
                         <div>测站设置</div>
                     </li>
                     <li class="little">
-                        <img src="/assets/images/netsetting_black.png"/>
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i class="icon" style="background: url(/assets/images/netsetting_black.png) no-repeat center;"></i></i></div>
                         <div>网络设置</div>
                     </li>
                     <li class="little">
-                        <img src="/assets/images/datadownload_black.png"/>
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i class="icon" style="background: url(/assets/images/datadownload_black.png) no-repeat center;"></i></i></div>
                         <div>数据下载</div>
                     </li>
                     <li class="little">
-                        <img src="/assets/images/othersetting_black.png"/>
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i class="icon" style="background: url(/assets/images/othersetting_black.png) no-repeat center;"></i></i></div>
                         <div>其他设置</div>
                     </li>
                 </ul>

@@ -25,7 +25,7 @@
         <!-- 主体内容 -->
         <div class="layui-body" id="LAY_app_body">
             <div class="layadmin-tabsbody-item layui-show">
-                <iframe src="/manage/selectproject" frameborder="0" class="layadmin-iframe" projetid="#(projetid)" name="homeiframe" ></iframe>
+                <iframe src="/manage/selectproject" frameborder="0" class="layadmin-iframe" userid="#(userid)" name="homeiframe" ></iframe>
             </div>
         </div>
         <!-- 辅助元素，一般用于移动设备下遮罩 -->
@@ -37,7 +37,8 @@
 <script src="/assets/lib/loadlanguage.js"></script>
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script>
-    //var projetid = "#(projetid)";
+    var userid = "#(userid)";
+    debugger
     layui.config({
         base: '/assets/layuiadmin/' //静态资源所在路径
     }).extend({
