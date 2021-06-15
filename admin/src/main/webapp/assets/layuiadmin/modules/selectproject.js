@@ -1,16 +1,19 @@
-layui.define(['form', 'drawer', 'form','laypage'], function (exports) {
+layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports) {
     var $ = layui.$
         , setter = layui.setter
         , admin = layui.admin
         , form = layui.form
         , drawer = layui.drawer
-        ,laypage=layui.laypage;
+        ,laypage=layui.laypage
+        ,usertools=layui.usertools;
 
     var projectlist;
+    var identity="";
 
     laypage.render({
         elem: 'demo7'
-        ,count: 100
+        ,count: datacount
+        ,limit:10
         ,layout: ['prev', 'page', 'next','skip']
         ,theme: '#1E9FFF'
         ,jump: function(obj){
@@ -19,9 +22,50 @@ layui.define(['form', 'drawer', 'form','laypage'], function (exports) {
         }
     });
 
-    $("#add_device").click(function () {
+
+    getProjectCount();
+
+    /**针对管理员进行创建项目**/
+    function admincreateproject(){
+        let projectlist=getAllProjects();
+        let arrData=[];
+        for (var i = 0; i < projectlist.length; i++) {
+            var item = projectlist[i];
+            var jsonStr = {};
+            jsonStr.name = item.agentName;
+            jsonStr.value = item.agentNumber;
+            arrData.push(jsonStr);
+        }
         drawer.render({
-            title: 'test',  //标题
+            title: '添加项目',  //标题
+            offset: 'r',    //r:抽屉在右边、l:抽屉在左边
+            width: "600px", //r、l抽屉可以设置宽度
+            content: $("#windowadmin"),
+            btn: ['<i class="layui-icon">&#xe615;</i>提交', '重置'],
+            success: function (layero, index) {
+                var demo2 = xmSelect.render({
+                    el: '#demo2',
+                    radio: true,
+                    clickClose: true,
+                    data:arrData
+                });
+                $("#reset").click();
+            },
+            btn1: function (index, layero) {
+                let data = form.val("example");
+                debugger;
+            },
+            btn2: function (index, layero) {
+                layer.close(index);
+                return false;
+            }
+        });
+    }
+
+    /**针对普通用户和公司管理员**/
+    function usercreateproject(){
+        drawer.render({
+            title: '添加项目',  //标题
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
             width: "600px", //r、l抽屉可以设置宽度
             content: $("#window"),
@@ -31,19 +75,47 @@ layui.define(['form', 'drawer', 'form','laypage'], function (exports) {
             },
             btn1: function (index, layero) {
                 let data = form.val("example");
+                debugger;
             },
             btn2: function (index, layero) {
                 layer.close(index);
                 return false;
             }
         });
+    }
+
+    $("#add_device").click(function () {
+        debugger
+        switch(identity){
+            case "user":
+                usercreateproject();
+                break;
+            case "admin":
+                admincreateproject();
+        }
     })
 
     $(".projects").mouseover(function () {
 
     })
 
+    /**获取项目数量信息**/
+    function getProjectCount() {
+        $.ajax({
+            url:'/manage/getprojectcount',
+            type: 'GET',
+            success: function (data) {
+                debugger
+                let projectcount=data.data;
+                $("#projectcount").html("<span>"+projectcount+"</span>");
+                debugger
+                identity=judgeidentity();
+            }
+        })
+    }
 
+
+    //根据页码获取分页信息
     function getUserProjects(no) {
         $.ajax({
             url: '/manage/getuserproject',
@@ -53,7 +125,11 @@ layui.define(['form', 'drawer', 'form','laypage'], function (exports) {
             type: 'GET',
             success: function (data) {
                 debugger
-                projectlist = data.data.list;
+                var thisNode=document.getElementById("list2");
+                if(thisNode.childNodes.length>0){
+                    thisNode.innerHTML = "";
+                }
+                projectlist = data.data.list[0];
                 showProjects(projectlist);
             }
         });
@@ -70,7 +146,7 @@ layui.define(['form', 'drawer', 'form','laypage'], function (exports) {
                 "                            <div style=\"margin: auto;\">\n" +
                 "                                <div class=\"projectname\">" + item.progroupname + "</div>\n" +
                 "                                <div style=\"display: flex;justify-content: space-between;margin-top: 10px;color: #00f0ff\">\n" +
-                "                                    <span>编辑</span>\n" +
+                "                                    <span><a style='color: #00f0ff' href='/homepage?progroupid="+item.progroupid+"' target=\"_parent\">编辑</a></span>\n" +
                 "                                    <span>删除</span>\n" +
                 "                                </div>\n" +
                 "                            </div>\n" +
@@ -94,8 +170,36 @@ layui.define(['form', 'drawer', 'form','laypage'], function (exports) {
                 "                    </div>\n" +
                 "                </div>\n" +
                 "            </div>"
-            $('#list').append(innerHTML);
+            $('#list2').append(innerHTML);
         }
+    }
+
+    function getAllProjects(){
+        let companys=[];
+        $.ajax({
+            url:'/manage/getallproject',
+            type:'get',
+            async:false,
+            success:function(data){
+                companys=data.data;
+            }
+        });
+        return companys;
+    }
+
+
+    function judgeidentity(){
+        let identity="";
+        $.ajax({
+            url:'/manage/judgeidentity',
+            async:false,
+            type:'get',
+            success:function(data){
+                debugger
+                identity=data.data;
+            }
+        });
+        return identity;
     }
 
     exports('selectproject', {})

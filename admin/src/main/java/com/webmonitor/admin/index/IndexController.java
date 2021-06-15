@@ -70,7 +70,7 @@ public class IndexController extends BaseController {
         String  projId = getPara("projid");
         String useid=getLoginAccount().getUserName();
         //setAttr("projetid", list.size()>0?list.get(0).getName():"");
-        setCookie(IndexService.me.accessUserId,projId,24*60*60,true);
+        setCookie(IndexService.me.accessProId,projId,24*60*60,true);
         setAttr("projetid", projId);
         render("home.html");
     }
@@ -80,6 +80,9 @@ public class IndexController extends BaseController {
 
     //主页
     public void homepage(){
+        String  projId = getPara("progroupid");
+        setCookie(IndexService.me.accessProId,projId,24*60*60,true);
+        setAttr("projetid", projId);
         render("homepage.html");
     }
 

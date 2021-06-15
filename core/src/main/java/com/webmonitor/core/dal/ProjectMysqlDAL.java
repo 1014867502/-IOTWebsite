@@ -116,4 +116,23 @@ public class ProjectMysqlDAL implements IProject {
         }
         return new Page<Object>(Collections.singletonList(list),page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
     }
+
+    /**获取用户项目数量**/
+    @Override
+    public int getProjectCountById(String type,String comid) {
+        int count = 0;
+        Record record=new Record();
+        String sql="";
+        switch (type){
+            case "compangy":
+                sql="select count(*) from groups_data where agentNumber="+comid;
+                break;
+            case "admin":
+                sql="select count(*) from groups_data";
+                break;
+        }
+        record=Db.findFirst(sql);
+        count=record.getInt("count(*)");
+        return count;
+    }
 }

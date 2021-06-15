@@ -117,6 +117,21 @@
     </form>
 </div>
 
+<div class="site-text" style="margin: 5%; display: none" id="windowadmin" target="test123">
+    <form class="layui-form" id="devicedataadmin" method="post" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备编号</label>
+            <div class="layui-input-block">
+                <input style="width: 70%" type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: flex">
+            <label class="layui-form-label">选择公司</label>
+            <div id="demo2" class="xm-select-demo" style="width: 300px"></div>
+        </div>
+    </form>
+</div>
+
 <div class="layui-fluid">
     <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
         <div style="width:1000px" id="list">
@@ -124,7 +139,7 @@
                 <ul style="display: flex ;margin: auto;">
                     <li class="little">
                         <div>项目数量</div>
-                        <div style="font-size: 20px">156</div>
+                        <div id="projectcount" style="font-size: 20px"></div>
                     </li>
                 </ul>
                 <div style="margin: auto">
@@ -137,6 +152,11 @@
             </div>
         </div>
     </div>
+    <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
+        <div style="width:1000px;margin-top: 20px;" id="list2">
+
+        </div>
+    </div>
     <div><div style="text-align: center;" id="demo7"></div></div>
 </div>
 </div>
@@ -147,6 +167,9 @@
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script>
     var userid = parent.window.document.getElementsByName("homeiframe")[0].getAttribute('userid');
+    var datacount="#(pagecount)";
+    var identity="#(identity)";
+    debugger
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

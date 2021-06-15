@@ -2,6 +2,7 @@ package com.webmonitor.admin.devicelist;
 
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
+import com.webmonitor.admin.index.IndexService;
 import com.webmonitor.core.bll.AgentDataService;
 import com.webmonitor.core.model.AgentDataDao;
 import com.webmonitor.core.model.MachineData;
@@ -18,6 +19,8 @@ public class DeviceController  extends BaseController {
 
     /**设备管理页面**/
     public void devicemanage(){
+        String proid=getCookie(IndexService.me.accessProId);
+        setAttr("projetid",proid);
         render("devicemanage.html");
     }
 
@@ -57,4 +60,6 @@ public class DeviceController  extends BaseController {
         }
         renderJson(result);
     }
+
+    /**获取当前项目的**/
 }

@@ -1,11 +1,14 @@
 package com.webmonitor.admin.manage;
 
+import com.jfinal.i18n.Res;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
+import com.webmonitor.admin.company.CompanyService;
 import com.webmonitor.admin.index.IndexService;
 import com.webmonitor.core.bll.ProjectService;
 import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.dal.RoleType;
+import com.webmonitor.core.model.AgentTable;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.userbase.BaseProjects;
 import com.webmonitor.core.util.Tools;
@@ -124,20 +127,97 @@ public class ManagerController extends BaseController {
             switch (role) {
                 case users:
                     String[] projects = authority.split("@");
-                    for (int i = 0; i < projects.length; i++) {
+                    for (int i = no-1; i < projects.length; i++) {
                         BaseProjects baseProjects = ProjectService.me.getProjectById(projects[i]);
                         list.add(baseProjects);
                     }
+                    setAttr("pagecount", projects.length);
+                    setAttr("identity", "user");
                     Page<Object> page = new Page<Object>(Collections.singletonList(list), Integer.parseInt(pageno), pagesize, (projects.length / pagesize) + 1, projects.length);
                     result.success(page);
                     break;
                 case superadmin:
+                    setAttr("identity", "admin");
                     result.success(ProjectService.me.getAllProjectPageData(no, pagesize));
                     break;
                 case companyadmin:
+                    setAttr("identity", "user");
                     result.success(ProjectService.me.getProjectByComIdPageData(currentuser.getAgentNumber(), no, pagesize));
                     break;
             }
+            renderJson(result);
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+    }
+
+    /**获取用户项目数量**/
+    public void getprojectcount(){
+        Result result=Result.newOne();
+        try {
+            int count=0;
+            String userid = getCookie(IndexService.me.accessUserId);
+            StaffData currentuser = StaffService.me.getStaffById(userid);
+            String authority = currentuser.getGroupAssemble();
+            setCookie(IndexService.me.accessUserId, currentuser.getId().toString(), 24 * 60 * 60, true);
+            int roletype = currentuser.getIRoleType();
+            RoleType role = RoleType.getIndex(roletype);
+            switch (role) {
+                case users:
+                    String[] projects = authority.split("@");
+                    count=projects.length;
+                    break;
+                case superadmin:
+                    count=ProjectService.me.getProjectCountByRight("admin","");
+                    break;
+                case companyadmin:
+                    count=ProjectService.me.getProjectCountByRight("company",currentuser.getAgentNumber());
+                    break;
+            }
+           result.success(count);
+            renderJson(result);
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+
+    }
+
+    /**获取所有项目**/
+    public void getallproject(){
+        Result<List<AgentTable>> result=Result.newOne();
+        try{
+            List<AgentTable> agentTables= CompanyService.me.getAllCompany();
+            result.success(agentTables);
+            renderJson(result);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result, e);
+        }
+
+
+    }
+
+    /**判断用户权限身份**/
+    public void judgeidentity(){
+        Result result=Result.newOne();
+        try {
+            String identity="";
+            String userid = getCookie(IndexService.me.accessUserId);
+            StaffData currentuser = StaffService.me.getStaffById(userid);
+            setCookie(IndexService.me.accessUserId, currentuser.getId().toString(), 24 * 60 * 60, true);
+            int roletype = currentuser.getIRoleType();
+            RoleType role = RoleType.getIndex(roletype);
+            switch (role) {
+                case users:
+                    identity="user";
+                    break;
+                case superadmin:
+                    identity="admin";
+                    break;
+                case companyadmin:
+                    identity="user";
+                    break;
+            }
+            result.success(identity);
             renderJson(result);
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);

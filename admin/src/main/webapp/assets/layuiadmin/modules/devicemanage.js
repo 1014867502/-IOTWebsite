@@ -51,7 +51,7 @@ layui.define(['form','drawer','form'], function (exports) {
             , height:'full-200'
             , totalRow: true
             , url: '/devicelist/getDeviceList'
-            , where: {'projectid': 1, 'sn': snreal, 'state': stats}
+            , where: {'projectid': projectid, 'sn': snreal, 'state': stats}
             , cols: [[
                 {field: 'id', title: "序号", align: 'center'}
                 , {field: 'serial', title: "设备sn号", align: 'center'}

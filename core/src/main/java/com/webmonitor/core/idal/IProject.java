@@ -21,4 +21,7 @@ public interface IProject {
 
     /**获取相关公司所有项目的分页**/
     Page<Object> getProjectsByComIdPageData(String comid,int pageno, int limit);
+
+    /**获取用户项目数量,通过判断是否管理员**/
+    int getProjectCountById(String type,String comid);
 }

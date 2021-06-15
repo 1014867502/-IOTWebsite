@@ -38,4 +38,9 @@ public class ProjectService {
     public Page<Object> getProjectByComIdPageData(String comid,int pageno, int limit){
         return dal.getProjectsByComIdPageData(comid,pageno,limit);
     }
+
+    /**根据用户身份返回项目数量**/
+    public int getProjectCountByRight(String type,String comid){
+        return dal.getProjectCountById(type,comid);
+    }
 }

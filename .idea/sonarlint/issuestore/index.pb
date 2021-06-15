@@ -165,3 +165,9 @@ l
 <core/src/main/java/com/webmonitor/core/bll/StaffService.java,9\b\9bf918efd557f0f21354e319c25763c84eec8d9a
 q
 Acore/src/main/java/com/webmonitor/core/dal/StaffDataMysqlDAL.java,9\f\9f13f8843462eccd2a515d69ed1f8bbf83109d8a
+l
+<core/src/main/java/com/webmonitor/core/model/GroupsData.java,d\9\d9e69ec56c12f6f7b88057b829824d9a11520d6f
+w
+Gcore/src/main/java/com/webmonitor/core/model/userbase/BaseProjects.java,3\2\32a17f6f868f53c200546040b38df46a0bb241c6
+u
+Ecore/src/main/java/com/webmonitor/core/model/base/BaseGroupsData.java,b\b\bba295a8da133eaec7bb79c9aef661f30d9a3681
