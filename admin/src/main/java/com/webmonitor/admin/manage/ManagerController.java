@@ -9,6 +9,7 @@ import com.webmonitor.core.bll.ProjectService;
 import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.AgentTable;
+import com.webmonitor.core.model.ProDevCount;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.userbase.BaseProjects;
 import com.webmonitor.core.util.Tools;
@@ -222,5 +223,36 @@ public class ManagerController extends BaseController {
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
         }
+    }
+
+    /**删除项目**/
+    public void deleteproject(){
+        Result result=Result.newOne();
+        String id=getPara("projectid");
+        ProjectService.me.deleteProjectByid(id);
+        renderJson(result.success("ok"));
+    }
+
+    public void editproject(){
+        String id=getPara("projectid");
+        String comid=getPara("comid");
+        String name=getPara("projectname");
+        ProjectService.me.editProjectByid(id,comid,name);
+    }
+
+    public void addproject(){
+        Result result=Result.newOne();
+        String comid=getPara("comid");
+        String name=getPara("projectname");
+        String userid=getPara("userid");
+        ProjectService.me.addProject(userid,comid,name);
+        renderJson(result.success("ok"));
+    }
+
+    public void getProDevCount(){
+        Result result=Result.newOne();
+        String projectid=getPara("projetid");
+        ProDevCount proDevCount=ProjectService.me.getProDevCountById(projectid);
+        renderJson(result.success(proDevCount));
     }
 }

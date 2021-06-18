@@ -6,11 +6,8 @@ import com.jfinal.kit.HttpKit;
 import com.jfinal.log.Log;
 import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.common.kit.I18nKit;
-import com.webmonitor.core.bll.ProjectService;
 import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.config.annotation.Remark;
-import com.webmonitor.core.dal.RoleType;
-import com.webmonitor.core.model.GroupsData;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.util.*;
 import com.webmonitor.core.util.exception.BusinessException;
@@ -66,6 +63,13 @@ public class IndexController extends BaseController {
         setAttr("projetid", projetid);
         render("dashboardmain.html");
     }
+
+    public void projectindex(){
+
+
+        render("projectindex.html");
+    }
+
     public void projecthome(){
         String  projId = getPara("projid");
         String useid=getLoginAccount().getUserName();

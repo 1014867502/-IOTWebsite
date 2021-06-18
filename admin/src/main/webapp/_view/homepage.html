@@ -52,7 +52,7 @@
         <!-- 主体内容 -->
         <div class="layui-body" id="LAY_app_body">
             <div class="layadmin-tabsbody-item layui-show">
-                <iframe src="/manage/dashboard" frameborder="0" class="layadmin-iframe"></iframe>
+                <iframe src="/projectindex" frameborder="0" class="layadmin-iframe" projetid="#(projetid)" name="homepageiframe"></iframe>
             </div>
         </div>
         <!-- 辅助元素，一般用于移动设备下遮罩 -->
@@ -64,32 +64,7 @@
 <script src="/assets/lib/loadlanguage.js"></script>
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script>
-    function tooDestinationMenu(name) {
-        var el = document.createElement("a")
-            , path;
-        switch (name) {
-            case 'GNSS':
-                path="/manage/gnssdevicehome";
-                break;
-            case "Weather":
-                //path = "/manage/waterdevicehome#21597014113773";
-                path = "/manage/sensordevicehome";
-                break;
-            case 'Sensor':
-                path = "/manage/sensordevicehome";
-                break;
-            case "Warning":
-                var s=name.substr(6);
-                path= "/manage/warninghome#"+name;
-                break;
-            default:
-                path = "/";
-        }
-        el.setAttribute("lay-href", path);
-        document.body.append(el);
-        el.click();
-        setTimeout(() => el.remove());
-    }
+    var projectid="#(projetid)";
 
     layui.config({
         base: '/assets/layuiadmin/' //静态资源所在路径

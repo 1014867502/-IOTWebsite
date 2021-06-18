@@ -114,6 +114,11 @@
                 <input style="width: 70%" type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
+        <div class="layui-form-item" style="visibility: hidden">
+            <div class="layui-input-block">
+                <button id="btn1" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -169,6 +174,7 @@
     var userid = parent.window.document.getElementsByName("homeiframe")[0].getAttribute('userid');
     var datacount="#(pagecount)";
     var identity="#(identity)";
+    var projetid="#(projetid)";
     debugger
     layui.config({
         base: '/assets/layuiadmin/'

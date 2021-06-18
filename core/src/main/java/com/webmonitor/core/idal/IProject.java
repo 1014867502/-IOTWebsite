@@ -1,7 +1,6 @@
 package com.webmonitor.core.idal;
 
 import com.jfinal.plugin.activerecord.Page;
-import com.webmonitor.core.model.GroupsData;
 import com.webmonitor.core.model.userbase.BaseProjects;
 
 import java.util.List;
@@ -24,4 +23,19 @@ public interface IProject {
 
     /**获取用户项目数量,通过判断是否管理员**/
     int getProjectCountById(String type,String comid);
+
+    void addProject(String userid,String comid,String projectname);
+
+    void deleteProject(String Projectid);
+
+    void editproject(String projectid,String comid,String projctname);
+
+    /**获取项目里设备的数目**/
+    int getProDevCountById(String projectid);
+
+    /**获取项目里在线设备的数目**/
+    int getProDevOnCountById(String projectid);
+
+    /**获取项目里离线设备的数目**/
+    int getProDevOutCountById(String projectid);
 }

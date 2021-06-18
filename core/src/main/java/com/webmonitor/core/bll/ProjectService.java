@@ -4,7 +4,8 @@ package com.webmonitor.core.bll;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.core.dal.ProjectMysqlDAL;
 import com.webmonitor.core.idal.IProject;
-import com.webmonitor.core.model.GroupsData;
+import com.webmonitor.core.model.ProDevCount;
+import com.webmonitor.core.model.ProjectsData;
 import com.webmonitor.core.model.userbase.BaseProjects;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 public class ProjectService {
     public static final ProjectService me=new ProjectService();
     private static IProject dal=new ProjectMysqlDAL();
+
 
     /**获取所有项目**/
     public List<BaseProjects> getAllProjects(){
@@ -42,5 +44,25 @@ public class ProjectService {
     /**根据用户身份返回项目数量**/
     public int getProjectCountByRight(String type,String comid){
         return dal.getProjectCountById(type,comid);
+    }
+
+    public void deleteProjectByid(String projectid){
+        dal.deleteProject(projectid);
+    }
+
+    public void editProjectByid(String projectid,String comid,String projectname){
+        dal.editproject(projectid,comid,projectname);
+    }
+
+    public void addProject(String userid,String comid,String projectname){
+        dal.addProject(userid,comid,projectname);
+    }
+
+    public ProDevCount getProDevCountById(String projectid){
+        ProDevCount proDevCount=new ProDevCount();
+        proDevCount.setSum(dal.getProDevCountById(projectid));
+        proDevCount.setOncount(dal.getProDevOnCountById(projectid));
+        proDevCount.setOutcount(dal.getProDevOutCountById(projectid));
+        return proDevCount;
     }
 }

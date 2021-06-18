@@ -6,10 +6,12 @@ import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.core.idal.IAgentData;
 import com.webmonitor.core.model.AgentData;
 import com.webmonitor.core.model.AgentDataDao;
-import com.webmonitor.core.model.userbase.BaseWarnLogmap;
-import com.webmonitor.core.util.Tools;
+import com.webmonitor.core.model.StaffData;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AgentDateMysqlDAL implements IAgentData {
@@ -55,6 +57,39 @@ public class AgentDateMysqlDAL implements IAgentData {
             rslist.add(map);
         }
         return new Page<AgentDataDao>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+    }
+
+    @Override
+    public void editDevice(String sn, String machinename) {
+        Record device = Db.findFirst("select * from agent_data where serial=" +sn);
+        device.set("serial", sn).set("machineName", machinename);
+        Db.update("agent_data", device);
+    }
+
+    @Override
+    public void addDevice(String sn, String comid, String state,String machinename) {
+        Date date=new Date();
+        DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+        String time=format.format(date);
+        Record device=new Record().set("serial",sn).set("machine",machinename).set("state",Integer.parseInt(state))
+                .set("agentNumber",comid).set("createTime",time);
+        Db.save("groups_data",device);
+    }
+
+    @Override
+    public void deleteDevice(String sn) {
+        Record device=new Record().set("serial",sn);
+        Db.delete("agent_data",device);
+    }
+
+    @Override
+    public boolean isExitsn(String sn) {
+        StaffData staffData=StaffData.dao.findFirst("select * from agent_data where serial='"+sn+"'");
+        if(staffData!=null){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**查询当前项目的所有设备（分页）**/

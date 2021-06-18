@@ -8,6 +8,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
         ,usertools=layui.usertools;
 
     var projectlist;
+    var projectcount;
     var identity="";
 
     laypage.render({
@@ -21,6 +22,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             getUserProjects(obj.curr);
         }
     });
+
 
 
     getProjectCount();
@@ -74,7 +76,25 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 $("#reset").click();
             },
             btn1: function (index, layero) {
+                form.on('submit(formDemo)', function(data){
+                    debugger
+                    $.ajax({
+                        url:'/manage/addproject',
+                        data:{
+                            comid:projetid,
+                            projectname:data.field.title,
+                            userid:userid
+                        },
+                        async:false,
+                        success:function () {
+                            getUserProjects(1);
+                            getProjectCount();
+                        }
+                    })
+                    layer.close(index);
+                });
                 let data = form.val("example");
+                $("#btn1").click();
                 debugger;
             },
             btn2: function (index, layero) {
@@ -84,6 +104,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
         });
     }
 
+    /**添加项目**/
     $("#add_device").click(function () {
         debugger
         switch(identity){
@@ -94,6 +115,8 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 admincreateproject();
         }
     })
+
+
 
     $(".projects").mouseover(function () {
 
@@ -106,7 +129,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             type: 'GET',
             success: function (data) {
                 debugger
-                let projectcount=data.data;
+                projectcount=data.data;
                 $("#projectcount").html("<span>"+projectcount+"</span>");
                 debugger
                 identity=judgeidentity();
@@ -145,9 +168,9 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 "                        <div class=\"projects\">\n" +
                 "                            <div style=\"margin: auto;\">\n" +
                 "                                <div class=\"projectname\">" + item.progroupname + "</div>\n" +
-                "                                <div style=\"display: flex;justify-content: space-between;margin-top: 10px;color: #00f0ff\">\n" +
-                "                                    <span><a style='color: #00f0ff' href='/homepage?progroupid="+item.progroupid+"' target=\"_parent\">编辑</a></span>\n" +
-                "                                    <span>删除</span>\n" +
+                "                                <div style=\"display: flex;justify-content: space-between;margin-top: 10px;color: #00f0ff;width: 150px\">\n" +
+                "                                    <span><a style='color: #00f0ff' href='/homepage?progroupid="+item.projectid+"' target=\"_parent\">编辑</a></span>\n" +
+                "                                    <span class='delete' id='"+item.projectid+"'>删除</span>\n" +
                 "                                </div>\n" +
                 "                            </div>\n" +
                 "                            <div style=\"display: flex;margin: auto;\">\n" +
@@ -171,7 +194,29 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 "                </div>\n" +
                 "            </div>"
             $('#list2').append(innerHTML);
+
         }
+        $(".delete").click(function () {
+            let val=$(this).attr("id");
+            layer.open({
+                type: 1
+                ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                ,id: 'layerDemo' //防止重复弹出
+                ,content: '<div style="padding: 20px 100px;">是否删除</div>'
+                ,btn: ['确定','取消']
+                ,btnAlign: 'c' //按钮居中
+                ,shade: 0 //不显示遮罩
+                ,yes: function(){
+                    layer.closeAll();
+                },btn1: function (index, layero) {
+                    deletproject(val);
+                },
+                btn2: function (index, layero) {
+                    layer.close(index);
+                    return false;
+                }
+            });
+        })
     }
 
     function getAllProjects(){
@@ -200,6 +245,32 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             }
         });
         return identity;
+    }
+
+    /**删除项目**/
+    function deletproject(projectid){
+        $.ajax({
+            url:"/manage/deleteproject",
+            data:{
+                projectid:projectid
+            },
+            async:false,
+            success:function(data){
+                getProjectCount();
+                laypage.render({
+                    elem: 'demo7'
+                    ,count:projectcount
+                    ,limit:10
+                    ,layout: ['prev', 'page', 'next','skip']
+                    ,theme: '#1E9FFF'
+                    ,jump: function(obj){
+                        debugger
+                        getUserProjects(obj.curr);
+                    }
+                });
+            }
+        })
+
     }
 
     exports('selectproject', {})

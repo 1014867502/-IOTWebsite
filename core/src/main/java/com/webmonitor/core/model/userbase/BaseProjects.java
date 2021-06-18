@@ -5,7 +5,7 @@ import java.util.Date;
 /**这个是连表查询过的项目实体类**/
 public class BaseProjects {
     private String id;
-    private String progroupid;
+    private String projectid;
     private String progroupname;
     private int devicenum;
     private Date createtime;
@@ -27,12 +27,12 @@ public class BaseProjects {
         this.id = id;
     }
 
-    public String getProgroupid() {
-        return progroupid;
+    public String getProjectid() {
+        return projectid;
     }
 
-    public void setProgroupid(String progroupid) {
-        this.progroupid = progroupid;
+    public void setProjectid(String projectid) {
+        this.projectid = projectid;
     }
 
     public String getProgroupname() {

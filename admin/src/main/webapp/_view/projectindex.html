@@ -4,12 +4,11 @@
     #@meta("GNSS位移统计")
     <script src="/assets/lib/xm-select.js"></script>
     <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
-    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css" />
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
     <script src="/assets/lib/leaflet/leaflet.js"></script>
     <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
     <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
     <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
-    <script src="/assets/lib/xm-select.js"></script>
     <style type="text/css">
         .layui-form-checked span, .layui-form-checked:hover span {
             background-color: #FF5722;
@@ -109,7 +108,7 @@
     }
 
     .header-Data-content {
-        height:300px;
+        height: 300px;
         width: 25%;
         /*justify-content: center;*/
         margin-right: 0.5%;
@@ -123,7 +122,7 @@
     }
 
     .header-Data-map {
-        height:363px;
+        height: 363px;
         width: 25%;
         /*justify-content: center;*/
         margin-right: 0.5%;
@@ -154,37 +153,68 @@
         width: 100%;
     }
 
-    .untreated{
+    .untreated {
         background-color: #FF5722;
     }
-    .treated{
+
+    .treated {
         background-color: #01AAED;
+    }
+
+    body {
+        min-width: 1000px;
+    }
+
+    .projectname {
+        font-size: 25px;
+        font-weight: bold;
+    }
+
+    .little {
+        text-align: center;
+        width: 200px;
+        /*margin-left: 10%;*/
+        line-height: 40px;
+        margin: auto;
+    }
+
+    .indexcard {
+        width: 480px;
+        margin-left: 8px;
+        padding-right: 8px;
+        height: 180px;
+        background-color: #fffefe;
+        box-shadow: 0 0 6px -1px #9F9F9F;
     }
 </style>
 
-<div class="site-text" style="margin: 5%; display: none" id="window"  target="test123">
+<!--//报警编辑弹窗-->
+<div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
     <form class="layui-form" id="book" method="post" lay-filter="example">
         <div class="layui-form-item">
             <label class="layui-form-label">所在项目</label>
             <div class="layui-input-block">
-                <input type="text" id="ID" name="name" lay-verify="title" autocomplete="off" class="layui-input" disabled>
+                <input type="text" id="ID" name="name" lay-verify="title" autocomplete="off" class="layui-input"
+                       disabled>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">报警等级</label>
             <div class="layui-input-block">
-                <input type="text" id="level" name="level" lay-verify="title" autocomplete="off" class="layui-input" disabled>
+                <input type="text" id="level" name="level" lay-verify="title" autocomplete="off" class="layui-input"
+                       disabled>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">报警内容</label>
             <div class="layui-input-block">
-                <input type="text" id="content" name="content" lay-verify="title" autocomplete="off"  class="layui-input" disabled>
+                <input type="text" id="contents" name="content" lay-verify="title" autocomplete="off"
+                       class="layui-input" disabled>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">处理状态</label>
-            <div class="layui-input-block" >
+            <div class="layui-input-block">
                 <input id="stat1" type="radio" name="state" value="0" title="未处理">
                 <input id="stat2" type="radio" name="state" value="1" title="已处理">
             </div>
@@ -208,84 +238,73 @@
 </div>
 
 <div class="layui-fluid">
-    <div>jsdfnlknvxjvsidjfpsf</div>
     <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-card"
+             style="height: auto;background-color: #f8f8f8;box-shadow: 0 0 6px 3px #c9c9c9;display: flex">
+            <div style="margin: auto;">
+                <div class="projectname">测试项目</div>
+                <div style="display: flex;justify-content:space-between;margin-top: 10px;color: #00f0ff;width: 150px">
+                    <span><a style='color: #00f0ff' href='' target="_parent">编辑</a></span>
+                    <span class='delete'>详情</span>
+                </div>
+            </div>
+            <div style="display: flex;margin: auto;">
+                <ul style="display: flex ;margin: auto;">
+                    <li class="little">
+                        <div>所属公司</div>
+                        <div style="font-size: 20px">是否计算机佛</div>
+                    </li>
+                    <li class="little">
+                        <div>设备数量</div>
+                        <div style="font-size: 20px">15</div>
+                    </li>
+                    <li class="little">
+                        <div>创建时间</div>
+                        <div>123153513</div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
         <div class="header-Data">
-            <div class="header-Data-content" style="height: 363px">
-                <div class="layui-card" style="width: 100%">
-                    <div class="layui-card-header">设备信息</div>
-                    <div class="layui-card-body">
-                        <div style="width: 100%;height: 300px">
-                            <div class="body-content"><b>所属项目：</b><span id="projectname">项目1</span><br></div>
-                            <div class="body-content"><b>站点名称：</b><span id="stationname">书库监测点1</span><br></div>
-                            <div class="body-content"><b>设备sn码：</b><span id="sncode">MG134580321</span><br></div>
-                            <div class="body-content"><b>监测内容：</b><span id="contents">唯一变化</span><br></div>
-                            <div class="body-content"><b>站点地址：</b><span id="address">深圳市</span><br></div>
-                            <div class="body-content"><b>负责人：</b><span id="resman">张山</span><br></div>
-                            <div class="body-content"><b>联系电话：</b><span id="tel">131246832165</span></div>
-                        </div>
-                    </div>
+            <div style="display: flex;max-width: 1440px;margin-left: auto;margin-right: auto;">
+                <div class="indexcard">
                 </div>
-            </div>s
-            <div id="mid-one" class="header-Data-map">
-                <div class="layui-card-header">设备位置</div>
-                <div class="layui-card-body" style="height: 315px">
-                    <div id='map' style="height: 300px"></div>
-                </div>
-            </div>
-            <div class="header-Data-contentEx">
-                <div class="layui-card-header">设备报警信息</div>
+                <div class="indexcard">
 
-                <table class="layui-hide" id="table-warning" lay-filter="table-form"></table>
+                </div>
+                <div class="indexcard">
+
+                </div>
             </div>
+
         </div>
         <div class="layui-col-md12">
             <div class="layui-card">
-                <div class="layui-card-header">数据图表</div>
-                <!--                <div class="layui-form layui-card-header layuiadmin-card-header-auto">-->
-                <!--                    <div class="layui-form-item">-->
-                <!--                        <div class="layui-inline">-->
-                <!--                            <label class="layui-form-label">日期</label>-->
-                <!--                            <div class="layui-input-inline">-->
-                <!--                                <input type="text" class="layui-input" id="historylogdate" placeholder=" - ">-->
-                <!--                            </div>-->
-                <!--                        </div>-->
-                <!--                        <div class="layui-inline">-->
-                <!--                            <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload" lay-filter="LAY-history-search">-->
-                <!--                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>-->
-                <!--                            </button>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-                <div class="layui-card-body">
-                    <div class="layui-carousel layadmin-carousel history" data-anim="fade"
-                         lay-filter="LAY-index-offset-state"
-                         style="width:100%;">
-                        <div carousel-item id="LAY-index-offset-state">
-                            <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <div class="layui-col-md12">
-            <div class="layui-card">
-                <div class="layui-card-header">#(gnssSN)表格数据</div>
-                <div class="layui-form layui-card-header layuiadmin-card-header-auto">
-                    <div class="layui-form-item">
+                <div class="layui-card-header">设备表格</div>
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                    <div class="layui-form-item" style="margin: auto">
                         <div class="layui-inline">
-                            <label class="layui-form-label">日期</label>
-                            <div class="layui-input-inline">
-                                <input type="text" class="layui-input" id="logdate" placeholder=" - ">
-                            </div>
+                            <select id="stats" name="stats" lay-verify="" lay-filter="stats">
+                                <option value="1">在线</option>
+                                <option value="0">离线</option>
+                                <option value="2">全部</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <input type="text" class="layui-input" name="SN" id="SN" placeholder=" 请输入设备sn号 " dis>
                         </div>
                         <div class="layui-inline">
                             <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
-                                    lay-filter="LAY-app-contlist-search">
-                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                                    id="datasumbit" lay-filter="LAY-app-contlist-search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
                             </button>
                         </div>
+                    </div>
+                    <div style="margin: auto;display: flex">
+                        <button type="button" class="layui-btn">批量导出工具</button>
+                        <button type="button" class="layui-btn">批量导入</button>
+                        <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>添加设备</button>
                     </div>
                 </div>
                 <div class="layui-card-body">
@@ -302,8 +321,10 @@
 <script src="/assets/lib/loadlanguage.js"></script>
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script type="text/html" id="table-online-state">
-    {{ d.state === 1 ? '<button class="layui-btn layui-btn-sm treated">已处理</button>'
-    : '<button class="layui-btn layui-btn-sm untreated">未处理</button>' }}
+    {{ d.state === 1 ? '
+    <button class="layui-btn layui-btn-sm treated">已处理</button>'
+    : '
+    <button class="layui-btn layui-btn-sm untreated">未处理</button>' }}
 </script>
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -312,13 +333,13 @@
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
 
 <script>
-    var gnssSN = "#(gnssSN)";
-    var projId = "#(projid)";
+    var projId = parent.window.document.getElementsByName("homepageiframe")[0].getAttribute('projetid');
+    var projetname = "#(projetname)";
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'table', 'gnssoffsetdata']);
+    }).use(['index', 'table', 'projectindex']);
 </script>
 </body>
 </html>
