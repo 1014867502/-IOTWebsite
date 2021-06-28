@@ -4,9 +4,9 @@ import com.jfinal.i18n.Res;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.company.CompanyService;
+import com.webmonitor.admin.devicelist.DeviceListService;
 import com.webmonitor.admin.index.IndexService;
-import com.webmonitor.core.bll.ProjectService;
-import com.webmonitor.core.bll.StaffService;
+import com.webmonitor.core.bll.*;
 import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.AgentTable;
 import com.webmonitor.core.model.ProDevCount;
@@ -34,16 +34,16 @@ public class ManagerController extends BaseController {
 //        if (Tools.isEmpty(projetid))
 //            projetid = "";
 //        setAttr("projetid", projetid);
-        render("devicemanage.html");
+        render("selectproject.html");
     }
 
-    //预警日志管理页面
-    public void warninghome() {
+    //供应商管理页面
+    public void companymanage() {
         String projetid = getCookie(IndexService.me.accessUserId);
         if (Tools.isEmpty(projetid))
             projetid = "";
         setAttr("projetid", projetid);
-        render("devicemanage.html");
+        render("selectproject.html");
     }
 
     public void waterdevicehome() {
@@ -126,7 +126,7 @@ public class ManagerController extends BaseController {
             int roletype = currentuser.getIRoleType();
             RoleType role = RoleType.getIndex(roletype);
             switch (role) {
-                case users:
+                case user:
                     String[] projects = authority.split("@");
                     for (int i = no-1; i < projects.length; i++) {
                         BaseProjects baseProjects = ProjectService.me.getProjectById(projects[i]);
@@ -154,6 +154,7 @@ public class ManagerController extends BaseController {
 
     /**获取用户项目数量**/
     public void getprojectcount(){
+
         Result result=Result.newOne();
         try {
             int count=0;
@@ -164,7 +165,7 @@ public class ManagerController extends BaseController {
             int roletype = currentuser.getIRoleType();
             RoleType role = RoleType.getIndex(roletype);
             switch (role) {
-                case users:
+                case user:
                     String[] projects = authority.split("@");
                     count=projects.length;
                     break;
@@ -208,7 +209,7 @@ public class ManagerController extends BaseController {
             int roletype = currentuser.getIRoleType();
             RoleType role = RoleType.getIndex(roletype);
             switch (role) {
-                case users:
+                case user:
                     identity="user";
                     break;
                 case superadmin:
@@ -223,6 +224,20 @@ public class ManagerController extends BaseController {
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
         }
+    }
+
+    public void getDetailProject(){
+        Result result=Result.newOne();
+        String projectid=getPara("projectid");
+        try {
+            BaseProjects baseProjects = ProjectService.me.getProjectById(projectid);
+            result.success(baseProjects);
+            renderJson(result);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+
+
     }
 
     /**删除项目**/
@@ -251,8 +266,70 @@ public class ManagerController extends BaseController {
 
     public void getProDevCount(){
         Result result=Result.newOne();
-        String projectid=getPara("projetid");
-        ProDevCount proDevCount=ProjectService.me.getProDevCountById(projectid);
+        ProDevCount proDevCount=new ProDevCount();
+        String id=getPara("userid");
+        StaffData staffData=StaffService.me.getStaffByName(id);
+        String role=RoleType.getString(staffData.getIRoleType());
+        switch(role){
+            case "superadmin":
+                proDevCount=AdminService.me.getDevCount();
+                break;
+            case "companyadmin":
+                proDevCount= CompanyAdminService.me.getDevCount(staffData.getAgentNumber());
+                break;
+            case "user":
+                proDevCount= ConsumerService.me.getDevCount(staffData.getGroupAssemble().split("@"));
+                break;
+        }
         renderJson(result.success(proDevCount));
+    }
+
+
+    /**根据角色获取公司列表**/
+    public void getCompanyListByRole(){
+        Result<List<AgentTable>> result=Result.newOne();
+        String id=getPara("userid");
+        StaffData staffData=StaffService.me.getStaffByName(id);
+        String role=RoleType.getString(staffData.getIRoleType());
+        List<AgentTable> agentTables=new ArrayList<>();
+        switch(role){
+            case "superadmin":
+                agentTables=AdminService.me.getCompanyList();
+                break;
+            case "companyadmin":
+               agentTables=CompanyService.me.getAllCompany();
+                break;
+            case "user":
+               agentTables=ConsumerService.me.getCompanyListById(id);
+                break;
+        }
+        renderJson(result.success(agentTables));
+    }
+
+
+    /**获取所有公司的分页信息**/
+    public void getAllCompanyPage(){
+        Result<Page<AgentTable>> result=Result.newOne();
+        int pageno = getParaToInt("pageno", 1);
+        int limit = getParaToInt("limit", 20);
+        try{
+            Page<AgentTable> page= CompanyService.me.getAllCompanys(pageno,limit);
+            result.success(page);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**获取公司的数目**/
+    public void getAllCompanyList(){
+        Result<List<AgentTable>> result=Result.newOne();
+        try{
+            List<AgentTable> list=CompanyService.me.getAllCompany();
+            result.success(list);
+        }catch(Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
     }
 }

@@ -22,6 +22,7 @@ import com.webmonitor.admin.common.assistThread.TimerClearFileThread;
 import com.webmonitor.admin.common.interceptor.LoginSessionInterceptor;
 import com.webmonitor.admin.common.kit.APP;
 import com.webmonitor.admin.auth.AuthKit;
+import com.webmonitor.admin.company.CompanyController;
 import com.webmonitor.admin.devicelist.DeviceController;
 import com.webmonitor.admin.directive.LabelDirective;
 import com.webmonitor.admin.directive.PermissionDirective;
@@ -35,6 +36,7 @@ import com.webmonitor.admin.index.IndexController;
 import com.webmonitor.admin.manage.ManagerController;
 import com.webmonitor.admin.overview.OverviewController;
 
+import com.webmonitor.admin.role.RoleController;
 import com.webmonitor.core.config.JfinalCoreConfig;
 import com.webmonitor.core.config.kit.StartInit;
 import com.webmonitor.core.model._MappingKit;
@@ -85,7 +87,8 @@ public class AdminConfig extends JfinalCoreConfig {
         me.add("/manage", ManagerController.class);
         me.add("/devicelist", DeviceController.class);
         //me.add("/account", AccountController.class);
-        //me.add("/role", RoleController.class);
+        me.add("/role", RoleController.class);
+        me.add("/company", CompanyController.class);
         //me.add("/permission", PermissionController.class);
         //业务路由
     }

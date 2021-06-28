@@ -8,6 +8,7 @@ import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.common.kit.I18nKit;
 import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.config.annotation.Remark;
+import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.util.*;
 import com.webmonitor.core.util.exception.BusinessException;
@@ -46,14 +47,15 @@ public class IndexController extends BaseController {
         String useid=getLoginAccount().getUserName();
         StaffData currentuser= StaffService.me.getStaffByName(useid);
         setCookie(IndexService.me.accessUserId,currentuser.getId().toString(),24*60*60,true);
-        setAttr("userid", currentuser.getId());
+        setAttr("userid", currentuser.getUAccountNum());
+        String s= RoleType.getString(currentuser.getIRoleType());
 //        String projetid = getCookie(IndexService.me.accessProjectId);
 //        if (Tools.isEmpty(projetid)){
 //            projetid = list.size()>0?list.get(0).getProjId():"";
 //            setCookie(IndexService.me.accessProjectId,list.get(0).getProjId(),24*60*60,true);
 //        }
 //        setAttr("projetid", projetid);
-        render("home.html");
+        render("homepage.html");
     }
 
     @Remark("仪表盘页")
@@ -65,8 +67,6 @@ public class IndexController extends BaseController {
     }
 
     public void projectindex(){
-
-
         render("projectindex.html");
     }
 

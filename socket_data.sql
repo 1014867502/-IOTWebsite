@@ -11,7 +11,7 @@
  Target Server Version : 50724
  File Encoding         : 65001
 
- Date: 11/06/2021 17:56:15
+ Date: 25/06/2021 17:49:21
 */
 
 SET NAMES utf8mb4;
@@ -30,17 +30,18 @@ CREATE TABLE `agent_data`  (
   `date` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '日期',
   `proGroupId` int(32) NULL DEFAULT NULL COMMENT '项目分组id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of agent_data
 -- ----------------------------
-INSERT INTO `agent_data` VALUES (1, '00001', 'MS20210519', '0', '备用机器01', '2021-05-19', 1);
-INSERT INTO `agent_data` VALUES (2, '00001', 'MS20210518', '0', '备用机器02', '2021-05-18', 2);
-INSERT INTO `agent_data` VALUES (3, '00002', 'MS20210517', '1', NULL, NULL, NULL);
-INSERT INTO `agent_data` VALUES (4, '00002', 'MS20210516', '0', NULL, NULL, NULL);
-INSERT INTO `agent_data` VALUES (5, '00001', 'MS10640041007', '1', '测试机器', '2021-03-15', 1);
-INSERT INTO `agent_data` VALUES (6, '00001', 'TR12020020286', '0', '备用机器03', '2021-05-25', 2);
+INSERT INTO `agent_data` VALUES (1, '1', 'MS20210519', '0', '备用机器01', '2021-05-19', 1);
+INSERT INTO `agent_data` VALUES (2, '1', 'MS20210518', '0', '备用机器02', '2021-05-18', 2);
+INSERT INTO `agent_data` VALUES (3, '1', 'MS20210517', '1', NULL, NULL, 1);
+INSERT INTO `agent_data` VALUES (4, '2', 'MS20210516', '0', NULL, NULL, NULL);
+INSERT INTO `agent_data` VALUES (5, '1', 'MS10640041007', '1', '测试机器', '2021-03-15', 1);
+INSERT INTO `agent_data` VALUES (6, '1', 'TR12020020286', '0', '备用机器03', '2021-05-25', 2);
+INSERT INTO `agent_data` VALUES (7, '3', 'test', '0', '测试机器4', '2021-06-25', 3);
 
 -- ----------------------------
 -- Table structure for agent_table
@@ -51,13 +52,14 @@ CREATE TABLE `agent_table`  (
   `agentNumber` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '代理商编号',
   `agentName` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '代理商名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of agent_table
 -- ----------------------------
-INSERT INTO `agent_table` VALUES (1, '00001', '哈哈有限公司');
-INSERT INTO `agent_table` VALUES (2, '00002', '呵呵科技公司');
+INSERT INTO `agent_table` VALUES (1, '1', '哈限公司');
+INSERT INTO `agent_table` VALUES (2, '2', '呵呵科技公司');
+INSERT INTO `agent_table` VALUES (3, '3', '测试公司3');
 
 -- ----------------------------
 -- Table structure for cache_order
@@ -74,25 +76,6 @@ CREATE TABLE `cache_order`  (
 -- ----------------------------
 -- Records of cache_order
 -- ----------------------------
-
--- ----------------------------
--- Table structure for groups_data
--- ----------------------------
-DROP TABLE IF EXISTS `groups_data`;
-CREATE TABLE `groups_data`  (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `proGroupId` int(32) NULL DEFAULT NULL COMMENT '项目分组id',
-  `proGroupName` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '项目名称',
-  `agentNumber` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所属代理商编号',
-  `createTime` date NULL DEFAULT NULL,
-  PRIMARY KEY (`Id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of groups_data
--- ----------------------------
-INSERT INTO `groups_data` VALUES (1, 1, '广东项目分组', '00001', '2021-01-02');
-INSERT INTO `groups_data` VALUES (2, 2, '广西项目分组', '00002', '2021-02-14');
 
 -- ----------------------------
 -- Table structure for machine_data
@@ -219,6 +202,26 @@ CREATE TABLE `machine_data`  (
 INSERT INTO `machine_data` VALUES (223, 'MS10640041007', 'M3II', NULL, NULL, '2.08', '3.0.20210518', NULL, '79', '15.275', '27016528|29970656', NULL, '网络', '+8', '1', '2', 'MS07', '0', '4', '192.168.21.200', '9993', '192.168.4.10', '9991', NULL, 'GEOPOS', '38400', '', '0', '', '0', '60000', '1', '1', '0', NULL, '', '47|12|12|20', '1', '6|7|8', '-9600', '', '0.5', '1', '440000125628|MS10649101010', 'ghiot.cigem.cn', '1883', 'f552f9de134e43808edf|f6e9865a7f7bfbe073f7', '1', NULL, '2', '3', '123', '5ea5373f826c67041c53732e_864388040512828', '456', '0433', '1', '147', '258', '369', '123456789', 'CLIENT', 'miniWIFI', 'geo110310', '1', NULL, '', '', '', '', '1', '0', ' 33 dBm', 'M3', '12345678', NULL, '0432', NULL, '0%', '1', 'CMNET', 'ctnet@mycdma.cn', 'vnet.mobi', 'NTRIP', '47.107.86.207', '6070', 'RTCM30', 'M5|pass', '5', '1', 'WGS84|6378137|298.257223563', 'WGS84|6378137|298.257223563', '1|01|02|03|04|05|06|07', '1|5|6|7|8|0|0', '1|3.0|0.9996|10|20|30|6.0|2.0|0.123|0.456', NULL, '1', '-2332838.3151', '5383250.0930', '2493557.7768', '0.000000000', '0.000000000', '0.00000', '1', '39.108.76.11', '8590', '0', NULL, NULL, NULL, '1', 1);
 
 -- ----------------------------
+-- Table structure for projects_data
+-- ----------------------------
+DROP TABLE IF EXISTS `projects_data`;
+CREATE TABLE `projects_data`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `proGroupId` int(32) NULL DEFAULT NULL COMMENT '项目分组id',
+  `proGroupName` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '项目名称',
+  `agentNumber` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所属代理商编号',
+  `createTime` date NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of projects_data
+-- ----------------------------
+INSERT INTO `projects_data` VALUES (1, 1, '广东项目分组', '1', '2021-01-02');
+INSERT INTO `projects_data` VALUES (2, 2, '广西项目分组', '2', '2021-02-14');
+INSERT INTO `projects_data` VALUES (12, 3, 'test', '1', '2021-06-18');
+
+-- ----------------------------
 -- Table structure for staff_data
 -- ----------------------------
 DROP TABLE IF EXISTS `staff_data`;
@@ -238,9 +241,9 @@ CREATE TABLE `staff_data`  (
 -- ----------------------------
 -- Records of staff_data
 -- ----------------------------
-INSERT INTO `staff_data` VALUES (1, '00001', 'admin', '21232f297a57a5a743894a0e4a801fc30', '张三丰', '采购部', 0, 0, '1@2');
-INSERT INTO `staff_data` VALUES (2, '00002', '456789', '456789', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `staff_data` VALUES (3, '00001', '55555', '55555', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `staff_data` VALUES (1, '00001', 'admin', '21232f297a57a5a743894a0e4a801fc30', '张三丰', '采购部', 2, 0, '1@2@3');
+INSERT INTO `staff_data` VALUES (2, '00002', '1234', '21232f297a57a5a743894a0e4a801fc30', NULL, NULL, 1, NULL, NULL);
+INSERT INTO `staff_data` VALUES (3, '00001', '456', '21232f297a57a5a743894a0e4a801fc30', NULL, NULL, 0, NULL, '3');
 
 -- ----------------------------
 -- Table structure for sys_account
@@ -296,6 +299,7 @@ INSERT INTO `sys_session` VALUES ('0b23960935aa4f30847f7be70277b5ce', 0, 1614762
 INSERT INTO `sys_session` VALUES ('0c9e2f134bc1447fbade808d7db2deed', 0, 1607687707417, 'admin');
 INSERT INTO `sys_session` VALUES ('0df290e823c948599e3f3d2e1d2e4ed9', 0, 1607834185088, 'admin');
 INSERT INTO `sys_session` VALUES ('0e7536c2b8374cc1af19ce7ac03ce3c8', 0, 1607832976663, 'admin');
+INSERT INTO `sys_session` VALUES ('0f13f9b7bc2a4ea3976a3e83ee48a96f', 0, 1624348358334, 'admin');
 INSERT INTO `sys_session` VALUES ('0fb05a42086841ee96fb0e6c393359d2', 0, 1607761630559, 'admin');
 INSERT INTO `sys_session` VALUES ('103fc5c7ce9740c497a3d4277dd767c7', 0, 1607916572498, 'admin');
 INSERT INTO `sys_session` VALUES ('113886bad18646d3b69e512635470f42', 0, 1607832976581, 'admin');
@@ -306,9 +310,11 @@ INSERT INTO `sys_session` VALUES ('159b478e3ec346d392928ff2cddd7eb4', 0, 1607685
 INSERT INTO `sys_session` VALUES ('15defb0ea9514341a67b2e4fa79924ac', 0, 1608715515843, 'admin');
 INSERT INTO `sys_session` VALUES ('16c508cba5c946709fad0b8b2ad00983', 0, 1614586958293, 'admin');
 INSERT INTO `sys_session` VALUES ('16fb8704a741405ca6262b5197e4f4bc', 0, 1608002924850, 'admin');
+INSERT INTO `sys_session` VALUES ('175deaa20fbe4894845d26a64725303b', 0, 1623743081883, 'admin');
 INSERT INTO `sys_session` VALUES ('1893a28998db41109d5c9b02668ea975', 0, 1614163579853, 'admin');
 INSERT INTO `sys_session` VALUES ('1a5efe374e034b55a509cb36e7d43811', 0, 1610939474723, 'admin');
 INSERT INTO `sys_session` VALUES ('1ac0e1cec5a145fbb13957b618231f87', 0, 1611048857762, 'admin');
+INSERT INTO `sys_session` VALUES ('1af32b8f5c2d43c9b7f74ccda8dc69f7', 0, 1623988570732, 'admin');
 INSERT INTO `sys_session` VALUES ('1b92771282e6438ea79269e0e941cb71', 0, 1614327707387, 'geo');
 INSERT INTO `sys_session` VALUES ('1b9f54eb631848a684dd611b8a33ecae', 0, 1612436317460, 'admin');
 INSERT INTO `sys_session` VALUES ('1ba1dd6a80824194a3bf2b5a82a1acc3', 0, 1609828622624, 'admin');
@@ -322,11 +328,14 @@ INSERT INTO `sys_session` VALUES ('1d103751dc6b4fe3926250791ff85551', 0, 1615450
 INSERT INTO `sys_session` VALUES ('1da7355b9ad94858b6d25daf3a48b94f', 0, 1608173876009, 'admin');
 INSERT INTO `sys_session` VALUES ('24055719f7c0403cab2524044fbe8158', 0, 1613634469098, 'admin');
 INSERT INTO `sys_session` VALUES ('24540a4ddd144af58b1a9b355a09efe1', 0, 1607685607355, 'admin');
+INSERT INTO `sys_session` VALUES ('254cf7269fe84205a298f1f278efe47e', 0, 1624250540485, 'admin');
+INSERT INTO `sys_session` VALUES ('257b920abe224c659b8e941f54d6e862', 0, 1624355749467, 'admin');
 INSERT INTO `sys_session` VALUES ('25a598472a794395b60eba0e45e6d374', 0, 1612436158789, 'admin');
 INSERT INTO `sys_session` VALUES ('262cb5865d46424582a17a1e428a7410', 0, 1608806120709, 'admin');
 INSERT INTO `sys_session` VALUES ('267ae333c43a4ee2a47be301588398f9', 0, 1607755940562, 'admin');
 INSERT INTO `sys_session` VALUES ('2853854438734e29825ce0865a14f436', 0, 1609308933268, 'admin');
 INSERT INTO `sys_session` VALUES ('28580e10e3424667a10e881735115830', 0, 1607854865419, 'admin');
+INSERT INTO `sys_session` VALUES ('288811ef6dfb42fc9809ee10e60b6dcc', 0, 1624614627799, 'admin');
 INSERT INTO `sys_session` VALUES ('28abcb8ad54a45be91eb09932e0584aa', 0, 1607745595059, 'admin');
 INSERT INTO `sys_session` VALUES ('28f692d2431247188f54c04ae410bbaa', 0, 1609151074143, 'admin');
 INSERT INTO `sys_session` VALUES ('2a06987dd7584142bf5a04c45d9a59f1', 0, 1614659458064, 'admin');
@@ -336,6 +345,7 @@ INSERT INTO `sys_session` VALUES ('2be80fdc88534efd947bdabf862589db', 0, 1609308
 INSERT INTO `sys_session` VALUES ('2c3a152ef4614310bd14b88c3e5b25ba', 0, 1608691554223, 'admin');
 INSERT INTO `sys_session` VALUES ('2c46f070fc604f6d8de43e71df64e7bd', 0, 1607831789574, 'admin');
 INSERT INTO `sys_session` VALUES ('2d75aa422bbc42d3a0f761fc478cedc6', 0, 1614312457852, 'geo');
+INSERT INTO `sys_session` VALUES ('2d9aa672df2c4dffb46beb785263add0', 0, 1623831156971, 'admin');
 INSERT INTO `sys_session` VALUES ('2d9df14508fd40b8b31a012bf1338f89', 0, 1612804493042, 'test');
 INSERT INTO `sys_session` VALUES ('2dc2a1290e0e49e6a45670d159a88a50', 0, 1609993839093, 'admin');
 INSERT INTO `sys_session` VALUES ('2ddf6c887db240018dbb46e647a19cbe', 0, 1623148297984, 'admin');
@@ -359,31 +369,37 @@ INSERT INTO `sys_session` VALUES ('3dbcbccfe96e426c93f91f561c21a3d1', 0, 1608714
 INSERT INTO `sys_session` VALUES ('3e681777c71241dcbfd7e0d284ea1497', 0, 1623036452911, 'admin');
 INSERT INTO `sys_session` VALUES ('3eb93c65060941dc9546d8cfb2b0481a', 0, 1609149884015, 'admin');
 INSERT INTO `sys_session` VALUES ('41be56c6c3a944b7813b3a64481fa313', 0, 1612154590045, 'admin');
+INSERT INTO `sys_session` VALUES ('4324405bb36b47c1951fa004a9a53f34', 0, 1623724566160, 'admin');
 INSERT INTO `sys_session` VALUES ('439aa839d3be47c2a202defd6b5f5ac2', 0, 1607854865365, 'admin');
 INSERT INTO `sys_session` VALUES ('43b5d0e397974624ae9c852631279553', 0, 1610362276448, 'admin');
 INSERT INTO `sys_session` VALUES ('43fde1c2d0cc4035a4fb77b10f4298ef', 0, 1607840005864, 'admin');
 INSERT INTO `sys_session` VALUES ('460208617dfb497ca56264a779e40b57', 0, 1611046766488, 'admin');
 INSERT INTO `sys_session` VALUES ('46aabcd7143e4d3c9b275697c3f93020', 0, 1607923533119, 'admin');
+INSERT INTO `sys_session` VALUES ('46bc0d27ac944cc285ab904c9234e6e0', 0, 1624615563598, '456');
 INSERT INTO `sys_session` VALUES ('46c7e3007e0142c89643416b672d3533', 0, 1612492250100, 'test');
 INSERT INTO `sys_session` VALUES ('47ed87840de745c19728ccc4c94256a3', 0, 1609732594986, 'admin');
 INSERT INTO `sys_session` VALUES ('49864749a62543c3ad12d293aae0ff31', 0, 1611660637068, 'admin');
 INSERT INTO `sys_session` VALUES ('4aa4a07690a0450ea103241265f06e22', 0, 1623325788997, 'admin');
 INSERT INTO `sys_session` VALUES ('4b1aab7ff8664f1cbd2fb64ea70e3e3a', 0, 1623316885584, 'admin');
+INSERT INTO `sys_session` VALUES ('4b7e1cb600e549ed934ef685164d30e7', 0, 1624592242009, '456');
 INSERT INTO `sys_session` VALUES ('4f34c937a41548a4a68f572a17f853f9', 0, 1614141110406, 'geo');
 INSERT INTO `sys_session` VALUES ('4f8d30357fe54d4bae69a971f8e927a8', 0, 1608811879199, 'admin');
 INSERT INTO `sys_session` VALUES ('50f6c565f82e4760bc6027d3a3a14075', 0, 1610961339657, 'admin');
 INSERT INTO `sys_session` VALUES ('51393eb86b8e4be288e032efac4eb1fe', 0, 1614228145654, 'admin');
 INSERT INTO `sys_session` VALUES ('513a0051d84a4aa8a2acf4698e0c12fc', 0, 1612804402042, 'test');
 INSERT INTO `sys_session` VALUES ('5166fe73ece641aa9e66327aa7866d50', 0, 1608714132124, 'admin');
+INSERT INTO `sys_session` VALUES ('5179f7bbd5bf4d78b824ee4fb2eb8261', 0, 1623921595631, 'admin');
 INSERT INTO `sys_session` VALUES ('520e3711c5b44cc1b0c7335c7de4881f', 0, 1607915602216, 'admin');
 INSERT INTO `sys_session` VALUES ('525ad6b0bc854fa2937cbc461af55753', 0, 1609409043237, 'admin');
 INSERT INTO `sys_session` VALUES ('535b2fbb0bca41e581dd070f727053b8', 0, 1623139172354, 'admin');
 INSERT INTO `sys_session` VALUES ('559785ef59314935bdb578a0ad116984', 0, 1614311115652, 'admin');
+INSERT INTO `sys_session` VALUES ('55d812e8d809490ea90967bcefa33415', 0, 1624596522902, '1234');
 INSERT INTO `sys_session` VALUES ('5696c5da1c6a41f4acc46d2d899d93bf', 0, 1608176513351, 'admin');
 INSERT INTO `sys_session` VALUES ('5804653a00f2470192fb5cbbc87d6943', 0, 1611660262696, 'admin');
 INSERT INTO `sys_session` VALUES ('5840e4823d754f2fa3956708c49a9ea8', 0, 1612581535821, 'admin');
 INSERT INTO `sys_session` VALUES ('58c4484629bb4d7e8c2555557ccea314', 0, 1608868051187, 'admin');
 INSERT INTO `sys_session` VALUES ('5967da9ea57b41c9a5d36fca19620801', 0, 1610351196981, 'admin');
+INSERT INTO `sys_session` VALUES ('5a064518e471485b803b3acf6501106e', 0, 1624588989764, 'admin');
 INSERT INTO `sys_session` VALUES ('5a5ddb86b4a64b94b90afb641104af02', 0, 1615546259160, 'admin');
 INSERT INTO `sys_session` VALUES ('5a8562a05ffa4c29b2b742b5a3caba41', 0, 1614166565755, 'admin');
 INSERT INTO `sys_session` VALUES ('5b83445ed2e34f3192b73b92cd990423', 0, 1609834354481, 'admin');
@@ -400,6 +416,7 @@ INSERT INTO `sys_session` VALUES ('60551c1e5c454f488fa77ced5a14e812', 0, 1611293
 INSERT INTO `sys_session` VALUES ('6068b87a80c84a5fa66b99f7b5d1d3bb', 0, 1607831789655, 'admin');
 INSERT INTO `sys_session` VALUES ('610eb2f07ebe48a6bdb76200086e3764', 0, 1614136193023, 'admin');
 INSERT INTO `sys_session` VALUES ('6233266de08441f183bdb59422293574', 0, 1611216389121, 'admin');
+INSERT INTO `sys_session` VALUES ('62dc4dec76704c2b9295f83fd7550f76', 0, 1623751618279, 'admin');
 INSERT INTO `sys_session` VALUES ('63671b39c27f4ed59ac5625e5ed1671d', 0, 1608788180149, 'admin');
 INSERT INTO `sys_session` VALUES ('6392bbc8c68a45f4abb0b6038e6f3525', 0, 1609921134833, 'admin');
 INSERT INTO `sys_session` VALUES ('63c2f2a6a57c4103acd346fef6abe6e2', 0, 1613789890111, 'admin');
@@ -430,12 +447,15 @@ INSERT INTO `sys_session` VALUES ('76c56e2b4821479a9e764fe5d9e21284', 0, 1608699
 INSERT INTO `sys_session` VALUES ('772875f0a7d8479b89618575582635bb', 0, 1610700816418, 'admin');
 INSERT INTO `sys_session` VALUES ('77f2edf7dbea4a298c4cdc5e2634cf39', 0, 1609987909661, 'admin');
 INSERT INTO `sys_session` VALUES ('79f506a63fca4255af885fd423b8a6d6', 0, 1608709181581, 'admin');
+INSERT INTO `sys_session` VALUES ('7a0a249599334a9783a419988dfa68b6', 0, 1624337134854, 'admin');
 INSERT INTO `sys_session` VALUES ('7a90524eb31640b28b234eb3a9a8121d', 0, 1608709768908, 'admin');
+INSERT INTO `sys_session` VALUES ('7c9a5dbdf846494293d66e7c84c14d82', 0, 1624271199524, 'admin');
 INSERT INTO `sys_session` VALUES ('7c9ab707b1fc459f8c8acaabc719cb48', 0, 1608714277842, 'admin');
 INSERT INTO `sys_session` VALUES ('7e419829ed8b4900a844170c2ec12075', 0, 1615863515496, 'admin');
 INSERT INTO `sys_session` VALUES ('7e441065fbbf430a9ae961e710d7743a', 0, 1613988704959, 'admin');
 INSERT INTO `sys_session` VALUES ('7fc23a36fd6b40e1842d2830eef3c100', 0, 1615545506306, 'admin');
 INSERT INTO `sys_session` VALUES ('80815ae3e52c40a8ab7ba4f32ac9c192', 0, 1612493429622, 'test');
+INSERT INTO `sys_session` VALUES ('809fd1ed1d83474aa9659bc75197002e', 0, 1624436315575, 'admin');
 INSERT INTO `sys_session` VALUES ('80a37208392045b7a9a499d12e6bf6c9', 0, 1611112377984, 'admin');
 INSERT INTO `sys_session` VALUES ('80c9779298724447acfede18f6e88fd3', 0, 1607837857376, 'admin');
 INSERT INTO `sys_session` VALUES ('81070fcd3bc945a297b1af54fa4252b0', 0, 1616402492099, 'admin');
@@ -457,11 +477,13 @@ INSERT INTO `sys_session` VALUES ('8b0d6a6e80c24c588c69c6c42d279c01', 0, 1612411
 INSERT INTO `sys_session` VALUES ('8bb38be1f2f545e5bb60dc0f33f430b4', 0, 1612581885975, 'admin');
 INSERT INTO `sys_session` VALUES ('8bee2e883fe44a0d8711333b71b7fc26', 0, 1607854865321, 'admin');
 INSERT INTO `sys_session` VALUES ('8e5fb4f819434039a30ff9e49b69af11', 0, 1610092557062, 'admin');
+INSERT INTO `sys_session` VALUES ('8f339e4ea6874615aa4e92f14aa1edf1', 0, 1624425373135, 'admin');
 INSERT INTO `sys_session` VALUES ('90363f3c1f9548528f64518e516c0f4e', 0, 1609841080241, 'admin');
 INSERT INTO `sys_session` VALUES ('9119cdae5c9d4d75a48053490bf2c232', 0, 1608700179558, 'admin');
 INSERT INTO `sys_session` VALUES ('91d0bb42f60e4093baec2c86db1454c7', 0, 1607833912955, 'admin');
 INSERT INTO `sys_session` VALUES ('91ebbec5249e43489d45e081fdc8bc20', 0, 1608605321148, 'admin');
 INSERT INTO `sys_session` VALUES ('92ef4a43ec6e4fbbbc47db6eaffb1452', 0, 1611066228097, 'admin');
+INSERT INTO `sys_session` VALUES ('9342842158f6400b84d69df20de9d5f3', 0, 1624434498261, 'admin');
 INSERT INTO `sys_session` VALUES ('934e7bbe0b4c44d8b4fb45b260052ecc', 0, 1607843308833, 'admin');
 INSERT INTO `sys_session` VALUES ('93b00e96495f451cb9ecd93bc0cad2d9', 0, 1616148249880, 'admin');
 INSERT INTO `sys_session` VALUES ('93c2b7b2ac2f4214bf8f1a8f62d5c9cc', 0, 1608865562650, 'admin');
@@ -489,7 +511,9 @@ INSERT INTO `sys_session` VALUES ('a4586c8ee0f84ee3b76b93dc22ad7576', 0, 1615535
 INSERT INTO `sys_session` VALUES ('a49b1411198a4682addfaa342877d323', 0, 1609902834088, 'admin');
 INSERT INTO `sys_session` VALUES ('a510a09041504e62b3a2ad286f461e6e', 0, 1612803994839, 'admin');
 INSERT INTO `sys_session` VALUES ('a6bba8b7f06c4bff8e86477df873b7ae', 0, 1610353097044, 'admin');
+INSERT INTO `sys_session` VALUES ('a755f8009cac445793cc67d50619cfd4', 0, 1624592981933, '1234');
 INSERT INTO `sys_session` VALUES ('a860491d163d491580f04001fbf0c646', 0, 1609386491599, 'admin');
+INSERT INTO `sys_session` VALUES ('a8b312e59517488db12a0e1f6db2a04f', 0, 1624615381561, '1234');
 INSERT INTO `sys_session` VALUES ('a9feb75f007e4cd4958c6243b5d7839b', 0, 1607831136681, 'admin');
 INSERT INTO `sys_session` VALUES ('aa9e3f73c1554de1b27c043c3eff4a00', 0, 1623314745802, 'admin');
 INSERT INTO `sys_session` VALUES ('ab6d079db51e48be919b4a04f3d2d858', 0, 1607834469838, 'admin');
@@ -502,6 +526,7 @@ INSERT INTO `sys_session` VALUES ('af2eaa5e44324e61bdf2c2ad67a436e5', 0, 1607681
 INSERT INTO `sys_session` VALUES ('affdc566730642a593cf46f89c5ab246', 0, 1608701119516, 'admin');
 INSERT INTO `sys_session` VALUES ('afff9f61418d4dc9a694c844d0bac3d9', 0, 1607844213428, 'admin');
 INSERT INTO `sys_session` VALUES ('b016eb6f96074e9292762ec0d4fea1e5', 0, 1623065140345, 'admin');
+INSERT INTO `sys_session` VALUES ('b0ced7d898204f188faebba866dfa7ee', 0, 1624011237149, 'admin');
 INSERT INTO `sys_session` VALUES ('b114ae99c3644e8eb079576e44876fed', 0, 1623129788081, 'admin');
 INSERT INTO `sys_session` VALUES ('b131e65588cd4ba294edfb6849d0678e', 0, 1615448993396, 'geo');
 INSERT INTO `sys_session` VALUES ('b258e25c23d4409196697e93d34a3bf4', 0, 1607745604872, 'admin');
@@ -510,12 +535,15 @@ INSERT INTO `sys_session` VALUES ('b3a6a9f714c64531b653891f38305eac', 0, 1607828
 INSERT INTO `sys_session` VALUES ('b3b544c85d9442d5a9f7f53d37b04477', 0, 1615778112581, 'admin');
 INSERT INTO `sys_session` VALUES ('b42d268563ec428d82e6f6b77eb790c3', 0, 1611776140068, 'admin');
 INSERT INTO `sys_session` VALUES ('b4a5bab584f6475fbd204dc3966b4ef3', 0, 1612936006174, 'admin');
+INSERT INTO `sys_session` VALUES ('b4de9e27d1a54ba6aae72375587ece34', 0, 1624003599577, 'admin');
 INSERT INTO `sys_session` VALUES ('b5480597771b4f2da3cf5a1b2265206a', 0, 1607843156774, 'admin');
 INSERT INTO `sys_session` VALUES ('b5b503ec00c14520b59400eec3c91470', 0, 1607844549946, 'admin');
+INSERT INTO `sys_session` VALUES ('b67e968e7ef5486c86ba6999c6605db0', 0, 1623842433621, 'admin');
 INSERT INTO `sys_session` VALUES ('b9ec348f08884415b60d68b0053470ab', 0, 1608699505115, 'admin');
 INSERT INTO `sys_session` VALUES ('ba566d195d3e478489edf490adf356a1', 0, 1613817727259, 'admin');
 INSERT INTO `sys_session` VALUES ('bb385aaa608547ab879b266fe3019891', 0, 1609819851548, 'admin');
 INSERT INTO `sys_session` VALUES ('bbd08d81ff5e497c991e2173ceb89758', 0, 1607922622340, 'admin');
+INSERT INTO `sys_session` VALUES ('bc0146679f9e45fd8517e94c087ee842', 0, 1624533478009, 'admin');
 INSERT INTO `sys_session` VALUES ('bc37af839bc142ab90e802d677a072b9', 0, 1622775560480, 'admin');
 INSERT INTO `sys_session` VALUES ('bc60825dc8c44914acb4b431131f243a', 0, 1607869673120, 'admin');
 INSERT INTO `sys_session` VALUES ('bc7e6af6b6d444688cc715ce43a1807b', 0, 1608778607825, 'admin');
@@ -525,15 +553,19 @@ INSERT INTO `sys_session` VALUES ('be633fb04f854375b99c74bd91f520f6', 0, 1609747
 INSERT INTO `sys_session` VALUES ('bee2130795a5496e9d8a2823e2c8e88e', 0, 1614078087056, 'admin');
 INSERT INTO `sys_session` VALUES ('bf7083ebfd784aab9783e1d7cf121858', 0, 1623150440592, 'admin');
 INSERT INTO `sys_session` VALUES ('bfa31547fd9a47cba6d304dd72210219', 0, 1623382588152, 'admin');
+INSERT INTO `sys_session` VALUES ('c0cb6afe595c467698c630cf89df3e5c', 0, 1623727326329, 'admin');
 INSERT INTO `sys_session` VALUES ('c1124d88d122426d876b5edc637f2590', 0, 1613809067449, 'admin');
 INSERT INTO `sys_session` VALUES ('c2dccea8a9a844e9a593d86d66a5d750', 0, 1623292781035, 'admin');
 INSERT INTO `sys_session` VALUES ('c62d2116eb784585a67a68ad862312a7', 0, 1607842976942, 'admin');
 INSERT INTO `sys_session` VALUES ('c65610e2c4ca4f2dbabd10469189b2f4', 0, 1607834293660, 'admin');
+INSERT INTO `sys_session` VALUES ('c72550d22c8247e9b16a03dda439429d', 0, 1624599190496, 'admin');
+INSERT INTO `sys_session` VALUES ('c7fbd90de46541c099fcfa6cda0cedd1', 0, 1624443647656, 'admin');
 INSERT INTO `sys_session` VALUES ('c899203c6f354deebaf87a51410af3a1', 0, 1607867697828, 'admin');
 INSERT INTO `sys_session` VALUES ('c94f6755d38940abb49bd8c43af00f51', 0, 1612520602053, 'admin');
 INSERT INTO `sys_session` VALUES ('c951908b3a8643f4b43d0a9048ef102e', 0, 1608712056991, 'admin');
 INSERT INTO `sys_session` VALUES ('c96e1f36e369464e8a006b021a49db56', 0, 1612582311066, 'admin');
 INSERT INTO `sys_session` VALUES ('c9ca2213c14944fab29643523c379d64', 0, 1614586947974, 'admin');
+INSERT INTO `sys_session` VALUES ('ca884d27809844578d32541456a336b1', 0, 1624329922714, 'admin');
 INSERT INTO `sys_session` VALUES ('cbb139d713c34d3b917d8750d3c9b088', 0, 1607839759053, 'admin');
 INSERT INTO `sys_session` VALUES ('cbd98bd235de4d719ac3c9f8a7892976', 0, 1614675370232, 'admin');
 INSERT INTO `sys_session` VALUES ('ccb2719b55ef49c1b72f8570910d03c9', 0, 1612349036885, 'admin');
@@ -552,6 +584,7 @@ INSERT INTO `sys_session` VALUES ('d37c83d912ea457caf82f7f51435f49c', 0, 1614152
 INSERT INTO `sys_session` VALUES ('d454c7d6a36d432eb918328316b6a315', 0, 1608803428105, 'admin');
 INSERT INTO `sys_session` VALUES ('d495a15adae647e4858a3d5c82c9805e', 0, 1608886791170, 'admin');
 INSERT INTO `sys_session` VALUES ('d5d39ca0dbe14432b7175b6e1ec16f91', 0, 1607869058197, 'admin');
+INSERT INTO `sys_session` VALUES ('d60112c95ecc465a956523a08c0fbf65', 0, 1624263388698, 'admin');
 INSERT INTO `sys_session` VALUES ('d61fbf21c1464918885860013fc70370', 0, 1608290069920, 'admin');
 INSERT INTO `sys_session` VALUES ('d6449f60a23a4f9bba36b72c8c3720b3', 0, 1610342345020, 'admin');
 INSERT INTO `sys_session` VALUES ('d6616c89ad6c4d01841c50e13180d4a5', 0, 1614051819463, 'admin');
@@ -591,11 +624,13 @@ INSERT INTO `sys_session` VALUES ('ea554aade4c549b895949865e0e41ca7', 0, 1610961
 INSERT INTO `sys_session` VALUES ('ea8847dde10840d28df5a0b110813a52', 0, 1607505715349, 'admin');
 INSERT INTO `sys_session` VALUES ('eae2fe4303584cd08e0d14eadde9e5c2', 0, 1616124500371, 'admin');
 INSERT INTO `sys_session` VALUES ('eb3c9b941e6a4ea7a242a948de483658', 0, 1612413041898, 'admin');
+INSERT INTO `sys_session` VALUES ('eb5ffed81be44beca850c3f48e93a5f6', 0, 1624593102453, '456');
 INSERT INTO `sys_session` VALUES ('ec0a5d32e4bd4cd686ceb56442ac06c2', 0, 1614710285963, 'admin');
 INSERT INTO `sys_session` VALUES ('ec0c50235ad948bd8c25c73a389a0967', 0, 1615547130335, 'admin');
 INSERT INTO `sys_session` VALUES ('ec897500767847a7afe22e662ce7a258', 0, 1616131739566, 'admin');
 INSERT INTO `sys_session` VALUES ('ecd8e250c80440c8bf27bfb1103e1bf7', 0, 1615871049220, 'admin');
 INSERT INTO `sys_session` VALUES ('ecfdb88a875f402d8f0630bbbf53e79c', 0, 1614135906098, 'admin');
+INSERT INTO `sys_session` VALUES ('ed9207179b094413ac3963073b5a1870', 0, 1623904730214, 'admin');
 INSERT INTO `sys_session` VALUES ('edfb47f84f9a4417a9ce7791fa8c3c3e', 0, 1623210690588, 'admin');
 INSERT INTO `sys_session` VALUES ('ee02798c4ded499684aa1b816a6e7547', 0, 1607852674447, 'admin');
 INSERT INTO `sys_session` VALUES ('ee42d9b7ec944d359608e5c9a5688a40', 0, 1613807365605, 'admin');
@@ -604,6 +639,7 @@ INSERT INTO `sys_session` VALUES ('f00d3b827dd849af82318a9df3c928d1', 0, 1613623
 INSERT INTO `sys_session` VALUES ('f06e30120e55499282f0ad38719f4da8', 0, 1607768216696, 'admin');
 INSERT INTO `sys_session` VALUES ('f0f816f46769451eb0d48bf153002bdc', 0, 1615362219148, 'admin');
 INSERT INTO `sys_session` VALUES ('f16352bdc0de46f1912874d37040e055', 0, 1613636673491, 'test');
+INSERT INTO `sys_session` VALUES ('f19599a54524485b9e7ed5049d9c06ea', 0, 1623995793666, 'admin');
 INSERT INTO `sys_session` VALUES ('f20205251ef241d1821e2f4d1e280c01', 0, 1612942361633, 'admin');
 INSERT INTO `sys_session` VALUES ('f239f20a6bf0450dba15a2d7cadc6cdb', 0, 1609988026754, 'admin');
 INSERT INTO `sys_session` VALUES ('f303c69a7d194cc184ad74bd9c8d978e', 0, 1607845340325, 'admin');
@@ -688,5 +724,20 @@ INSERT INTO `take_note` VALUES (7, 'MS10640041007', '双周期解算设置', 'DE
 INSERT INTO `take_note` VALUES (16, 'MS10640041007', '设置时区设置', 'DEVICE.TIMEZONE', 1, '2021-06-03 09:40:38', '@GNSS,SET,DEVICE.TIMEZONE,+8,OK*AF');
 INSERT INTO `take_note` VALUES (17, 'MS10640041007', 'IMU触发RTK紧急模式设置', 'DEVICE.IMU_WARN', 1, '2021-05-31 18:09:20', '@GNSS,SET,DEVICE.IMU_WARN,2,OK*18');
 INSERT INTO `take_note` VALUES (18, 'MS10640041007', '短信唤醒设置', 'DEVICE.SMS_WAKEUP', 1, '2021-06-02 15:29:54', '@GNSS,SET,DEVICE.SMS_WAKEUP,1,OK*DC');
+
+-- ----------------------------
+-- Table structure for template_data
+-- ----------------------------
+DROP TABLE IF EXISTS `template_data`;
+CREATE TABLE `template_data`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `templateid` varchar(168) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `projectid` int(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of template_data
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

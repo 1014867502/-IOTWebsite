@@ -223,7 +223,7 @@ public class Tools {
     public static Date toDate(String str) {
         try {
             if (str == null || "".equals(str.trim()))
-                return null;
+                return new Date();
             return new SimpleDateFormat("yyyy-MM-dd").parse(str.trim());
         } catch (Exception e) {
             throw new RuntimeException("Can not parse the parameter \"" + str + "\" to Date value.");

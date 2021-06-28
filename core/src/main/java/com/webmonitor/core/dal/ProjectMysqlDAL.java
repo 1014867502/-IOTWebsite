@@ -52,6 +52,7 @@ public class ProjectMysqlDAL implements IProject {
         baseProjects.setAgentname(record.getStr("agentName"));
         baseProjects.setProjectid(record.getStr("proGroupId"));
         baseProjects.setProgroupname(record.getStr("proGroupName"));
+        baseProjects.setAgentnumber(record.getStr("agentNumber"));
         sql="select count(*) from agent_data where proGroupId="+projectid;
         record=Db.findFirst(sql);
         baseProjects.setDevicenum(record.getInt("count(*)"));

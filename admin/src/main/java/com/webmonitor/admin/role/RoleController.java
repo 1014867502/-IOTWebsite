@@ -4,9 +4,12 @@ import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.auth.AuthService;
 import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.permission.PermissionService;
+import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.config.annotation.Remark;
+import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.Permission;
 import com.webmonitor.core.model.Role;
+import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import com.webmonitor.core.vo.Result;
 
@@ -116,5 +119,16 @@ public class RoleController extends BaseController {
             ExceptionUtil.handleThrowable(result, e);
         }
         renderJson(result);
+    }
+
+/**-----------------------------------------------------------------------**/
+    /**根据用户id获取用户的权限身份**/
+    public void getauthorById(){
+        Result result=Result.newOne();
+        String id=getLoginAccount().getUserName();
+        StaffData currentuser= StaffService.me.getStaffByName(id);
+        result.success(RoleType.getString(currentuser.getIRoleType()));
+        renderJson(result);
+
     }
 }

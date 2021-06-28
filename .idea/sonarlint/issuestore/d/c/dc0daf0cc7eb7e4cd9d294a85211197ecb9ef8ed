@@ -1,7 +1,9 @@
 
+p
+java:S2293Р"YReplace the type specification in this constructor call with the diamond operator ("<>").(цЂ„З
 П
 java:S1319П"sThe return type of this method should be an interface such as "Map" rather than the implementation "LinkedHashMap".(µќеЅ€€€€€
 p
 java:S2293Ц"YReplace the type specification in this constructor call with the diamond operator ("<>").(дІєЬ
-p
-java:S2293Р"YReplace the type specification in this constructor call with the diamond operator ("<>").(цЂ„З
+q
+java:S3824Ф"NReplace this "Map.get()" and condition with a call to "Map.computeIfAbsent()".(гІҐ°ь€€€€8нціі£/

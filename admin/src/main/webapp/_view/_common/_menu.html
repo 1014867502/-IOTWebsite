@@ -3,34 +3,40 @@
         <img src="/assets/images/IOTlogo.png">
         <div>设备管理平台</div>
     </div>
-    <div >
+    <div>
         <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu"
             style="margin-top: 20px">
             <li data-name="business-menu" class="layui-nav-item">
                 <a lay-href="/projectindex" data-i18n-tips="" lay-tips="监测大屏" lay-direction="2">
                     <img src="/assets/images/icon_home.png">
-                    <cite style="font-size: 18px">首页</cite>
+                    <cite style="font-size: 18px" id="indexpage">首页</cite>
                 </a>
             </li>
-            <li data-name="business-menu" class="layui-nav-item">
+            <li data-name="business-menu" class="layui-nav-item" id="devicemanage" style="display: block">
                 <a lay-href="/devicelist/devicemanage" data-i18n-tips="" lay-tips="项目管理" lay-direction="2">
                     <img src="/assets/images/icon_device_manage.png">
-                    <cite style="font-size: 18px">设备管理</cite>
+                    <cite style="font-size: 18px" id="devicemange1">设备管理</cite>
+                </a>
+            </li>
+            <li data-name="business-menu" class="layui-nav-item" id="companymanage"  style="display: block">
+                <a lay-href="/manage/companymanage" data-i18n-tips="" lay-tips="项目管理" lay-direction="2">
+                    <img src="/assets/images/icon_device_manage.png">
+                    <cite style="font-size: 18px" >供应商管理</cite>
+                </a>
+            </li>
+            <li data-name="business-menu" class="layui-nav-item" id="projectmanage"  style="display: block">
+                <a lay-href="/devicelist/devicemanage" data-i18n-tips="" lay-tips="项目管理" lay-direction="2">
+                    <img src="/assets/images/icon_device_manage.png">
+                    <cite style="font-size: 18px" >项目管理</cite>
                 </a>
             </li>
             <li data-name="business-menu" class="layui-nav-item">
                 <a lay-href="/manage/devicemanage" data-i18n-tips="" lay-tips="项目管理" lay-direction="2">
                     <img src="/assets/images/icon_device_manage.png">
-                    <cite style="font-size: 18px">群组管理</cite>
+                    <cite style="font-size: 18px" id="modelmanage">数据模板管理</cite>
                 </a>
             </li>
-            <li data-name="business-menu" class="layui-nav-item">
-                <a href="javascript:;" data-i18n-tips="" lay-tips="站点管理" lay-direction="2">
-                    <img src="/assets/images/icon_remote.png">
-                    <cite style="font-size: 18px">远程服务</cite>
-                </a>
-            </li>
-            <li data-name="business-menu" class="layui-nav-item">
+            <li data-name="business-menu" class="layui-nav-item" id="usermanage">
                 <a href="javascript:;" data-i18n-tips="" lay-tips="预警管理" lay-direction="2">
                     <img src="/assets/images/icon_user_manage.png">
                     <cite style="font-size: 18px">用户管理</cite>

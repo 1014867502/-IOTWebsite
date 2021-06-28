@@ -13,7 +13,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
 
     laypage.render({
         elem: 'demo7'
-        ,count: datacount
+        ,count: projectcount
         ,limit:10
         ,layout: ['prev', 'page', 'next','skip']
         ,theme: '#1E9FFF'
@@ -125,11 +125,12 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     /**获取项目数量信息**/
     function getProjectCount() {
         $.ajax({
-            url:'/manage/getprojectcount',
+            url:'/manage/getAllCompanyList',
             type: 'GET',
+            async:false,
             success: function (data) {
                 debugger
-                projectcount=data.data;
+                projectcount=data.data.length;
                 $("#projectcount").html("<span>"+projectcount+"</span>");
                 debugger
                 identity=judgeidentity();
@@ -141,7 +142,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     //根据页码获取分页信息
     function getUserProjects(no) {
         $.ajax({
-            url: '/manage/getuserproject',
+            url: '/manage/getAllCompanyPage',
             data:{
               pageno:no
             },
@@ -152,7 +153,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 if(thisNode.childNodes.length>0){
                     thisNode.innerHTML = "";
                 }
-                projectlist = data.data.list[0];
+                projectlist = data.data.list;
                 showProjects(projectlist);
             }
         });
@@ -167,28 +168,28 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 "                    <div class=\"layui-card-body\">\n" +
                 "                        <div class=\"projects\">\n" +
                 "                            <div style=\"margin: auto;\">\n" +
-                "                                <div class=\"projectname\">" + item.progroupname + "</div>\n" +
+                "                                <div class=\"projectname\">" + item.agentName + "</div>\n" +
                 "                                <div style=\"display: flex;justify-content: space-between;margin-top: 10px;color: #00f0ff;width: 150px\">\n" +
-                "                                    <span><a style='color: #00f0ff' href='/homepage?progroupid="+item.projectid+"' target=\"_parent\">编辑</a></span>\n" +
-                "                                    <span class='delete' id='"+item.projectid+"'>删除</span>\n" +
+                "                                    <span><a style='color: #00f0ff' href='/Company/CompanyDetail?progroupid="+item.agentNumber+"' target=\"_parent\">编辑</a></span>\n" +
+                "                                    <span class='delete' id='"+item.agentNumber+"'>删除</span>\n" +
                 "                                </div>\n" +
                 "                            </div>\n" +
-                "                            <div style=\"display: flex;margin: auto;\">\n" +
-                "                                <ul style=\"display: flex ;margin: auto;\">\n" +
-                "                                    <li class=\"little\">\n" +
-                "                                        <div>所属公司</div>\n" +
-                "                                        <div style=\"font-size: 20px\">" + item.agentname + "</div>\n" +
-                "                                    </li>\n" +
-                "                                    <li class=\"little\">\n" +
-                "                                        <div>设备数量</div>\n" +
-                "                                        <div style=\"font-size: 20px\">" + item.devicenum + "</div>\n" +
-                "                                    </li>\n" +
-                "                                    <li class=\"little\">\n" +
-                "                                        <div>创建时间</div>\n" +
-                "                                        <div>" + item.createtime + "</div>\n" +
-                "                                    </li>\n" +
-                "                                </ul>\n" +
-                "                            </div>\n" +
+                // "                            <div style=\"display: flex;margin: auto;\">\n" +
+                // "                                <ul style=\"display: flex ;margin: auto;\">\n" +
+                // "                                    <li class=\"little\">\n" +
+                // "                                        <div>公司名称</div>\n" +
+                // "                                        <div style=\"font-size: 20px\">" + item.agentname + "</div>\n" +
+                // "                                    </li>\n" +
+                // "                                    <li class=\"little\">\n" +
+                // "                                        <div>设备数量</div>\n" +
+                // "                                        <div style=\"font-size: 20px\">" + item.devicenum + "</div>\n" +
+                // "                                    </li>\n" +
+                // "                                    <li class=\"little\">\n" +
+                // "                                        <div>创建时间</div>\n" +
+                // "                                        <div>" + item.createtime + "</div>\n" +
+                // "                                    </li>\n" +
+                // "                                </ul>\n" +
+                // "                            </div>\n" +
                 "                        </div>\n" +
                 "                    </div>\n" +
                 "                </div>\n" +

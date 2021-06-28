@@ -179,6 +179,7 @@
     }
 
     .indexcard {
+        display: flex;
         width: 480px;
         margin-left: 8px;
         padding-right: 8px;
@@ -186,98 +187,120 @@
         background-color: #fffefe;
         box-shadow: 0 0 6px -1px #9F9F9F;
     }
+    .devicecard {
+        width: 50%;
+        text-align: center;
+        margin: auto;
+    }
+    .layui-form-checked[lay-skin=primary] i {
+        border-color: #1e9fff !important;
+        background-color: #1e9fff;
+        color: #fff;
+    }
+    .layui-laypage .layui-laypage-curr .layui-laypage-em {
+         position: absolute;
+         left: -1px;
+         top: -1px;
+         padding: 1px;
+         width: 100%;
+         height: 100%;
+         background-color: #1e9fff;
+     }
 </style>
 
-<!--//报警编辑弹窗-->
+<!--//关联设备弹窗-->
 <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
-    <form class="layui-form" id="book" method="post" lay-filter="example">
-        <div class="layui-form-item">
-            <label class="layui-form-label">所在项目</label>
-            <div class="layui-input-block">
-                <input type="text" id="ID" name="name" lay-verify="title" autocomplete="off" class="layui-input"
-                       disabled>
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+        <div class="layui-form-item" style="margin: auto">
+            <div class="layui-inline" style="width: 160px">
+                <select id="stats2" name="stats" lay-verify="" lay-filter="stats">
+                    <option value="2">全部</option>
+                    <option value="0">设备ID</option>
+                    <option value="1">设备名称</option>
+                </select>
+            </div>
+            <div class="layui-inline">
+                <input type="text" class="layui-input" name="SN" id="SN2" placeholder=" 请输入设备sn号 " dis>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
+                        id="datasumbit2" lay-filter="LAY-app-contlist-search">
+                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
+                </button>
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">报警等级</label>
-            <div class="layui-input-block">
-                <input type="text" id="level" name="level" lay-verify="title" autocomplete="off" class="layui-input"
-                       disabled>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">报警内容</label>
-            <div class="layui-input-block">
-                <input type="text" id="contents" name="content" lay-verify="title" autocomplete="off"
-                       class="layui-input" disabled>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">处理状态</label>
-            <div class="layui-input-block">
-                <input id="stat1" type="radio" name="state" value="0" title="未处理">
-                <input id="stat2" type="radio" name="state" value="1" title="已处理">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">联系人</label>
-            <div class="layui-input-inline">
-                <div id="contactlist" class="xm-select-project"></div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">报警方式</label>
-            <div class="layui-input-block">
-                <div class="seach-box">
-                    <input lay-skin="primary" name="" title="短信" value="1" type="checkbox" checked>
-                    <input lay-skin="primary" name="" title="邮箱" value="2" type="checkbox">
-                </div>
-            </div>
-        </div>
-    </form>
+    </div>
+    <div class="layui-card-body">
+        <table class="layui-hide" name='table3' id='table3' lay-filter='table3'></table>
+    </div>
 </div>
+
+<script type="text/html" id="statusdemo">
+    <button class="layui-btn layui-btn-primary layui-btn-xs" style="background-color: #f19038;color: #F1F1F1">未关联</button>
+</script>
+
+
 
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
-        <div class="layui-col-md12 layui-card"
-             style="height: auto;background-color: #f8f8f8;box-shadow: 0 0 6px 3px #c9c9c9;display: flex">
-            <div style="margin: auto;">
-                <div class="projectname">测试项目</div>
-                <div style="display: flex;justify-content:space-between;margin-top: 10px;color: #00f0ff;width: 150px">
-                    <span><a style='color: #00f0ff' href='' target="_parent">编辑</a></span>
-                    <span class='delete'>详情</span>
-                </div>
-            </div>
-            <div style="display: flex;margin: auto;">
-                <ul style="display: flex ;margin: auto;">
-                    <li class="little">
-                        <div>所属公司</div>
-                        <div style="font-size: 20px">是否计算机佛</div>
-                    </li>
-                    <li class="little">
-                        <div>设备数量</div>
-                        <div style="font-size: 20px">15</div>
-                    </li>
-                    <li class="little">
-                        <div>创建时间</div>
-                        <div>123153513</div>
-                    </li>
+<!--        <div class="layui-col-md12 layui-card" id="projectheader"-->
+<!--             style="height: auto;background-color: #f8f8f8;box-shadow: 0 0 6px 3px #c9c9c9;display: flex">-->
+<!--            <div style="margin: auto;">-->
+<!--                <div class="projectname" id="projectname"></div>-->
+<!--                <div style="display: flex;justify-content:space-between;margin-top: 10px;color: #00f0ff;width: 150px">-->
+<!--                    <span><a style='color: #00f0ff' href='' target="_parent">编辑</a></span>-->
+<!--                    <span class='delete'>详情</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div style="display: flex;margin: auto;">-->
+<!--                <ul style="display: flex ;margin: auto;">-->
+<!--                    <li class="little">-->
+<!--                        <div>所属公司</div>-->
+<!--                        <div style="font-size: 20px" id="comname"></div>-->
+<!--                    </li>-->
+<!--                    <li class="little">-->
+<!--                        <div>设备数量</div>-->
+<!--                        <div id="devicenum" style="font-size: 20px"></div>-->
+<!--                    </li>-->
+<!--                    <li class="little">-->
+<!--                        <div>创建时间</div>-->
+<!--                        <div id="createtime"></div>-->
+<!--                    </li>-->
 
-                </ul>
-            </div>
-        </div>
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="header-Data">
             <div style="display: flex;max-width: 1440px;margin-left: auto;margin-right: auto;">
                 <div class="indexcard">
+                    <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
+                        <img width="55px" src="/assets/images/icon_devicesum.png"/>
+                        <div style="font-size: 18px;margin-top: 10px">项目设备总数</div>
+                    </div>
+                    <div class="devicecard" id="sumnum" style="font-size: 20px;">
+
+                    </div>
                 </div>
                 <div class="indexcard">
+                    <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
+                        <img width="55px" src="/assets/images/icon_deviceonline.png">
+                        <div style="font-size: 18px;margin-top: 10px">项目设备在线数</div>
+                    </div>
+                    <div class="devicecard" id="onlinenum" style="font-size: 20px;">
+
+                    </div>
 
                 </div>
                 <div class="indexcard">
+                    <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
+                        <img width="55px" src="/assets/images/icon_deviceout.png">
+                        <div style="font-size: 18px;margin-top: 10px">项目设备离线数</div>
+                    </div>
+                    <div class="devicecard" id="outnum" style="font-size: 20px;">
 
+                    </div>
                 </div>
             </div>
-
         </div>
         <div class="layui-col-md12">
             <div class="layui-card">
@@ -285,14 +308,16 @@
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
                     <div class="layui-form-item" style="margin: auto">
                         <div class="layui-inline">
+                            <div id="companylist" class="xm-select-project" style="width: 200px;"></div>
+                        </div>
+                        <div class="layui-inline">
                             <select id="stats" name="stats" lay-verify="" lay-filter="stats">
                                 <option value="1">在线</option>
                                 <option value="0">离线</option>
-                                <option value="2">全部</option>
                             </select>
                         </div>
                         <div class="layui-inline">
-                            <input type="text" class="layui-input" name="SN" id="SN" placeholder=" 请输入设备sn号 " dis>
+                            <input type="text" class="layui-input" name="SN" id="SN" placeholder=" 请输入设备sn号 ">
                         </div>
                         <div class="layui-inline">
                             <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
@@ -300,17 +325,24 @@
                                 <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
                             </button>
                         </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
+                                    id="selectall" lay-filter="LAY-app-contlist-search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询全部</i>
+                            </button>
+                        </div>
                     </div>
                     <div style="margin: auto;display: flex">
-                        <button type="button" class="layui-btn">批量导出工具</button>
-                        <button type="button" class="layui-btn">批量导入</button>
-                        <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>添加设备</button>
+                        <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>关联设备</button>
                     </div>
                 </div>
                 <div class="layui-card-body">
-                    <table class="layui-hide" id="table-form" lay-filter="table-form"></table>
+                    <table class="layui-hide" id="table-form" lay-filter="table-from"></table>
+                    <script type="text/html" id="barDemo">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                    </script>
                 </div>
-
             </div>
         </div>
     </div>
@@ -321,20 +353,17 @@
 <script src="/assets/lib/loadlanguage.js"></script>
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script type="text/html" id="table-online-state">
-    {{ d.state === 1 ? '
-    <button class="layui-btn layui-btn-sm treated">已处理</button>'
+    {{ d.state == 1 ? '
+    <button class="layui-btn layui-btn-sm treated">在线</button>'
     : '
-    <button class="layui-btn layui-btn-sm untreated">未处理</button>' }}
+    <button class="layui-btn layui-btn-sm untreated">离线</button>' }}
 </script>
-<script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-</script>
+
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
 
 <script>
-    var projId = parent.window.document.getElementsByName("homepageiframe")[0].getAttribute('projetid');
-    var projetname = "#(projetname)";
+    var userid = parent.window.document.getElementsByName("homepageiframe")[0].getAttribute('userid');
+    var type="#(type)";
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

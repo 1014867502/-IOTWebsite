@@ -5,8 +5,10 @@ import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.admin.common.kit.I18nKit;
+import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.model.Permission;
 import com.webmonitor.core.model.Role;
+import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.util.exception.BusinessException;
 import com.webmonitor.core.vo.Result;
 
@@ -18,14 +20,6 @@ import java.util.List;
 
 public class RoleService {
     public static final RoleService me = new RoleService();
-
-    public List<Role> getAllRoles(boolean showSuper) {
-        String condition = "";
-        if (!showSuper) {
-            condition = " where id != 1 ";
-        }
-        return Role.dao.find("select * from sys_role "+condition+"  order by id asc");
-    }
 
     public Page<Role> paginate(int pageNo, int limit, boolean showSuper) {
         String condition = "";
@@ -156,4 +150,8 @@ public class RoleService {
 
         return ret;
     }
+
+    /**--------------------------------------------------------------------------------**/
+
+
 }

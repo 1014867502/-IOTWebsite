@@ -10,6 +10,15 @@ public class BaseProjects {
     private int devicenum;
     private Date createtime;
     private String agentname;
+    private String agentnumber;
+
+    public String getAgentnumber() {
+        return agentnumber;
+    }
+
+    public void setAgentnumber(String agentnumber) {
+        this.agentnumber = agentnumber;
+    }
 
     public String getAgentname() {
         return agentname;

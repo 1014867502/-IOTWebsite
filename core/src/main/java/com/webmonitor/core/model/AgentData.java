@@ -4,11 +4,38 @@ import java.util.Date;
 
 /**设备表**/
 public class AgentData {
+    private int id;
     private String agentNumber;
     private String serial;
     private int state;
-    private String machinname;
-    private Date daytime;
+    private String machineName;
+    private Date date;
+    private String agentname;
+    private int progroupid;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getProgroupid() {
+        return progroupid;
+    }
+
+    public void setProgroupid(int progroupid) {
+        this.progroupid = progroupid;
+    }
+
+    public String getAgentname() {
+        return agentname;
+    }
+
+    public void setAgentname(String agentname) {
+        this.agentname = agentname;
+    }
 
     public String getAgentNumber() {
         return agentNumber;
@@ -34,20 +61,20 @@ public class AgentData {
         this.state = state;
     }
 
-    public String getMachinname() {
-        return machinname;
+    public String getMachineName() {
+        return machineName;
     }
 
-    public void setMachinname(String machinname) {
-        this.machinname = machinname;
+    public void setMachineName(String machineName) {
+        this.machineName = machineName;
     }
 
 
-    public Date getDaytime() {
-        return daytime;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDaytime(Date daytime) {
-        this.daytime = daytime;
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
