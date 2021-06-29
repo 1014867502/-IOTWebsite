@@ -36,6 +36,7 @@ import com.webmonitor.admin.index.IndexController;
 import com.webmonitor.admin.manage.ManagerController;
 import com.webmonitor.admin.overview.OverviewController;
 
+import com.webmonitor.admin.projects.ProjectController;
 import com.webmonitor.admin.role.RoleController;
 import com.webmonitor.core.config.JfinalCoreConfig;
 import com.webmonitor.core.config.kit.StartInit;
@@ -89,6 +90,7 @@ public class AdminConfig extends JfinalCoreConfig {
         //me.add("/account", AccountController.class);
         me.add("/role", RoleController.class);
         me.add("/company", CompanyController.class);
+        me.add("/project", ProjectController.class);
         //me.add("/permission", PermissionController.class);
         //业务路由
     }

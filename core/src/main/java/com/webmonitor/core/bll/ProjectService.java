@@ -4,6 +4,7 @@ package com.webmonitor.core.bll;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.core.dal.ProjectMysqlDAL;
 import com.webmonitor.core.idal.IProject;
+import com.webmonitor.core.model.AgentData;
 import com.webmonitor.core.model.ProDevCount;
 import com.webmonitor.core.model.ProjectsData;
 import com.webmonitor.core.model.userbase.BaseProjects;
@@ -36,6 +37,11 @@ public class ProjectService {
     }
 
 
+    /**根据用户id获取对应的项目**/
+    public Page<Object> getProjectsById(String userid,int pageno,int limit){
+        return dal.getProjectsById(userid,pageno,limit);
+    }
+
     /**根据公司编号分页获取项目**/
     public Page<Object> getProjectByComIdPageData(String comid,int pageno, int limit){
         return dal.getProjectsByComIdPageData(comid,pageno,limit);
@@ -58,6 +64,8 @@ public class ProjectService {
         dal.addProject(userid,comid,projectname);
     }
 
+
+    /**根据项目id查找对应项目设备情况**/
     public ProDevCount getProDevCountById(String projectid){
         ProDevCount proDevCount=new ProDevCount();
         proDevCount.setSum(dal.getProDevCountById(projectid));
@@ -65,4 +73,6 @@ public class ProjectService {
         proDevCount.setOutcount(dal.getProDevOutCountById(projectid));
         return proDevCount;
     }
+
+
 }

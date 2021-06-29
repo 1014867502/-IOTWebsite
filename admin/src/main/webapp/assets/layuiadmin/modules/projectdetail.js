@@ -24,15 +24,13 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         $.ajax({
             url:'/manage/getDetailProject',
             data:{
-                projectid:agentnum
+                projectid:progroupid
             },
             async:false,
             success:function (data) {
                 debugger
                 let item=data.data;
-                agentNumber=item.agentnumber;
-                agentName=item.agentname;
-                $("#comname").html(item.agentname);
+                $("#comname").html(item.progroupname);
                 $("#createtime").html(item.createtime);
             }
         })
@@ -40,9 +38,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     function getDeviceCounts(){
         $.ajax({
-            url:"/company/getCompanyCount",
+            url:"/project/getProDevByGroupId",
             data:{
-                agentNumber:agentnum
+                progroupid:progroupid
             },
             async:false,
             success:function (data) {
@@ -182,8 +180,8 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , title: 'logdata'
             , totalRow: true
             , height:'full-200'
-            , url: '/company/getAllDeviceByComid'
-            , where: {'agentnum':agentnum}
+            , url: '/project/getAllDeviceByGroupid'
+            , where: {'progroupid':progroupid}
             , cols: [[
                 {field: 'id', title: "序号", align: 'center'}
                 , {field: 'serial', title: "设备sn号", align: 'center'}
@@ -320,9 +318,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     /**获取当前角色的公司列表**/
     function getCompanyListByRole(){
         $.ajax({
-            url:'/company/getCompanyById',
+            url:'/company/getCompanyListByGroupId',
             data:{
-                agentNumber:agentnum
+              projectid:progroupid
             },
             async:false,
             success:function(data){
@@ -331,15 +329,23 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         })
     }
 
-    /**渲染公司列表**/
-    function assignCompanyList(){
+    function assignCompanyList(json){
         debugger
         var arrData = [];
-        var jsonStr = {};
-        jsonStr.name = agentName;
-        jsonStr.value = agentNumber;
-        jsonStr.selected = true;
-        arrData.push(jsonStr);
+        if (json == null) {
+            arrData = [];
+        } else {
+            for (var i = 0; i < json.length; i++) {
+                var item = json[i];
+                var jsonStr = {};
+                jsonStr.name = item.agentName;
+                jsonStr.value = item.agentNumber;
+                if (i == 0) {
+                    jsonStr.selected = true;
+                }
+                arrData.push(jsonStr);
+            }
+        }
         Devicelist = xmSelect.render({
             el: '#companylist',
             radio: true,
@@ -362,5 +368,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     }
 
 
-    exports('CompanyDetail', {})
+
+    exports('projectdetail', {})
 });

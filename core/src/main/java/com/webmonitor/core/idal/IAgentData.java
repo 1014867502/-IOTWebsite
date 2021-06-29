@@ -18,7 +18,10 @@ public interface IAgentData {
     Page<AgentData> searchDeviceByParam(String content,String agentname,String[] projectid,String state,int pageno,int limit);
 
     /**获取设备表所有数据通过公司id**/
-    Page<AgentData> getAllDeviceByCid(String Companyid,int pageno,int limit);
+    Page<AgentData> getAllDeviceByComid(String Companyid,int pageno,int limit);
+
+    /**查询当前项目旗下的所有设备（分页）**/
+    public Page<AgentData> getAllDeviceByGroupid(String Groupid,int pageno,int limit);
 
     /**不同权限查询设备表内数据**/
     Page<AgentDataDao> getDeviceByParams(int pageno, int limit,String userid);

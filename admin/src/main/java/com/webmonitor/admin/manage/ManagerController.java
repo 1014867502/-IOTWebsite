@@ -22,10 +22,16 @@ import java.util.List;
 
 public class ManagerController extends BaseController {
 
-    public void selectproject() {
+    public void selectcompany() {
         String projetid = getCookie(IndexService.me.accessUserId);
         setAttr("projetid", projetid);
-        render("selectproject.html");
+        render("selectcompany.html");
+    }
+
+    public void selectprojects(){
+        String projetid = getCookie(IndexService.me.accessUserId);
+        setAttr("projetid", projetid);
+        render("selectprojects.html");
     }
 
     //设备管理页面
@@ -34,7 +40,7 @@ public class ManagerController extends BaseController {
 //        if (Tools.isEmpty(projetid))
 //            projetid = "";
 //        setAttr("projetid", projetid);
-        render("selectproject.html");
+        render("selectcompany.html");
     }
 
     //供应商管理页面
@@ -43,7 +49,7 @@ public class ManagerController extends BaseController {
         if (Tools.isEmpty(projetid))
             projetid = "";
         setAttr("projetid", projetid);
-        render("selectproject.html");
+        render("selectcompany.html");
     }
 
     public void waterdevicehome() {
@@ -154,7 +160,6 @@ public class ManagerController extends BaseController {
 
     /**获取用户项目数量**/
     public void getprojectcount(){
-
         Result result=Result.newOne();
         try {
             int count=0;

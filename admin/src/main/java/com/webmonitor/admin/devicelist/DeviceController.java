@@ -30,6 +30,8 @@ public class DeviceController  extends BaseController {
         render("devicemanage.html");
     }
 
+    /****/
+
     public void searchlist(){
         render("setting.html");
     }

@@ -1,20 +1,14 @@
 package com.webmonitor.admin.devicelist;
 
 import com.jfinal.plugin.activerecord.Page;
-import com.webmonitor.admin.index.IndexService;
-import com.webmonitor.core.dal.AgentDateMysqlDAL;
-import com.webmonitor.core.dal.AgentTableMysqlDAL;
-import com.webmonitor.core.idal.IAgent;
+import com.webmonitor.core.dal.AgentDataMysqlDAL;
 import com.webmonitor.core.idal.IAgentData;
 import com.webmonitor.core.model.AgentData;
 import com.webmonitor.core.model.AgentDataDao;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DeviceListService {
     public static final DeviceListService me = new DeviceListService();
-    private static IAgentData dal=new AgentDateMysqlDAL();
+    private static IAgentData dal=new AgentDataMysqlDAL();
 
     /**查找所有设备**/
     public Page<AgentData> getAllDevice(int pageno,int limit){
@@ -42,4 +36,12 @@ public class DeviceListService {
         dal.deleteDeviceByGroupid(sn);
     }
 
+    /**根据公司id查找对应的设备**/
+    public Page<AgentData> getDeviceByComid(String comid,int pageno,int limit){
+       return dal.getAllDeviceByComid(comid,pageno,limit);
+    }
+
+    public Page<AgentData> getAllDeviceByGroupid(String Groupid,int pageno,int limit){
+        return dal.getAllDeviceByComid(Groupid, pageno, limit);
+    }
 }

@@ -243,23 +243,23 @@
 
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
-                <div class="layui-col-md12 layui-card" id="projectheader"
-                     style="height: auto;background-color: #f8f8f8;box-shadow: 0 0 6px 3px #c9c9c9;display: flex">
-                    <div style="display: flex;margin: auto;">
-                        <ul style="display: flex ;margin: auto;">
-                            <li class="little">
-                                <div>公司名称</div>
-                                <div style="font-size: 20px" id="comname"></div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+        <div class="layui-col-md12 layui-card" id="projectheader"
+             style="height: auto;background-color: #f8f8f8;box-shadow: 0 0 6px 3px #c9c9c9;display: flex">
+            <div style="display: flex;margin: auto;">
+                <ul style="display: flex ;margin: auto;">
+                    <li class="little">
+                        <div>项目名称</div>
+                        <div style="font-size: 20px" id="comname"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="header-Data">
             <div style="display: flex;max-width: 1440px;margin-left: auto;margin-right: auto;">
                 <div class="indexcard">
                     <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
                         <img width="55px" src="/assets/images/icon_devicesum.png"/>
-                        <div style="font-size: 18px;margin-top: 10px">公司设备总数</div>
+                        <div style="font-size: 18px;margin-top: 10px">项目设备总数</div>
                     </div>
                     <div class="devicecard" id="sumnum" style="font-size: 20px;">
 
@@ -268,7 +268,7 @@
                 <div class="indexcard">
                     <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
                         <img width="55px" src="/assets/images/icon_deviceonline.png">
-                        <div style="font-size: 18px;margin-top: 10px">公司设备在线数</div>
+                        <div style="font-size: 18px;margin-top: 10px">项目设备在线数</div>
                     </div>
                     <div class="devicecard" id="onlinenum" style="font-size: 20px;">
 
@@ -278,7 +278,7 @@
                 <div class="indexcard">
                     <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
                         <img width="55px" src="/assets/images/icon_deviceout.png">
-                        <div style="font-size: 18px;margin-top: 10px">公司设备离线数</div>
+                        <div style="font-size: 18px;margin-top: 10px">项目设备离线数</div>
                     </div>
                     <div class="devicecard" id="outnum" style="font-size: 20px;">
 
@@ -340,13 +340,13 @@
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
 
 <script>
-    var agentnum="#(agentNum)";
+    var progroupid="#(progroupid)";
     debugger
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'table', 'CompanyDetail']);
+    }).use(['index', 'table', 'projectdetail']);
 </script>
 </body>
 </html>

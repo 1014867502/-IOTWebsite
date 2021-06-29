@@ -1,7 +1,7 @@
 package com.webmonitor.core.bll;
 
 import com.jfinal.plugin.activerecord.Page;
-import com.webmonitor.core.dal.AgentDateMysqlDAL;
+import com.webmonitor.core.dal.AgentDataMysqlDAL;
 import com.webmonitor.core.idal.IAgentData;
 import com.webmonitor.core.model.AgentData;
 import com.webmonitor.core.model.AgentDataDao;
@@ -9,7 +9,7 @@ import com.webmonitor.core.model.ProDevCount;
 
 public class AgentDataService {
     public static final AgentDataService me=new AgentDataService();
-    private static IAgentData dal=new AgentDateMysqlDAL();
+    private static IAgentData dal=new AgentDataMysqlDAL();
 
     /**条件查询所有设备**/
     public Page<AgentData> searchDeviceByParam(String agentnum,String content,String[] projectid,String state,int pageno,int limit){

@@ -11,4 +11,9 @@ public interface IAgent {
     List<AgentTable> getAllcompanys();
 
     Page<AgentTable> getAllcompanyPages(int pageno,int limit);
+
+    AgentTable getAgentTableById(String comid);
+
+    /**根据项目id获取公司列表**/
+    List<AgentTable> getCompanyByGroupid(String Groupid);
 }

@@ -125,12 +125,12 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     /**获取项目数量信息**/
     function getProjectCount() {
         $.ajax({
-            url:'/manage/getprojectcount',
+            url:'/manage/getAllCompanyList',
             type: 'GET',
             async:false,
             success: function (data) {
                 debugger
-                projectcount=data.data;
+                projectcount=data.data.length;
                 $("#projectcount").html("<span>"+projectcount+"</span>");
                 debugger
                 identity=judgeidentity();
@@ -142,9 +142,9 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     //根据页码获取分页信息
     function getUserProjects(no) {
         $.ajax({
-            url: '/project/getProjectsById',
+            url: '/manage/getAllCompanyPage',
             data:{
-              pageno:no
+                pageno:no
             },
             type: 'GET',
             success: function (data) {
@@ -160,19 +160,18 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     }
 
     function showProjects(data) {
-        let real=data[0];
-        for (let i = 0; i < real.length; i++) {
-            let item = real[i];
+        for (let i = 0; i < data.length; i++) {
+            let item = data[i];
             debugger
             var innerHTML = "     <div class=\"layui-card\">\n" +
                 "                <div class=\"cardbody\">\n" +
                 "                    <div class=\"layui-card-body\">\n" +
                 "                        <div class=\"projects\">\n" +
                 "                            <div style=\"margin: auto;\">\n" +
-                "                                <div class=\"projectname\">" + item.progroupname+ "</div>\n" +
+                "                                <div class=\"projectname\">" + item.agentName + "</div>\n" +
                 "                                <div style=\"display: flex;justify-content: space-between;margin-top: 10px;color: #00f0ff;width: 150px\">\n" +
-                "                                    <span><a style='color: #00f0ff' href='/project/projectdetail?progroupid="+item.projectid+"'>编辑</a></span>\n" +
-                "                                    <span class='delete' id='"+item.progroupname+"'>删除</span>\n" +
+                "                                    <span><a style='color: #00f0ff' href='/company/CompanyDetail?agentNumber="+item.agentNumber+"'>编辑</a></span>\n" +
+                "                                    <span class='delete' id='"+item.agentNumber+"'>删除</span>\n" +
                 "                                </div>\n" +
                 "                            </div>\n" +
                 // "                            <div style=\"display: flex;margin: auto;\">\n" +

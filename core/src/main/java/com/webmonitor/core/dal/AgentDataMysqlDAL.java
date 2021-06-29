@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AgentDateMysqlDAL implements IAgentData {
+public class AgentDataMysqlDAL implements IAgentData {
 
     public Page<AgentData> getAllDevice(int pageno,int limit){
         String sql=" from agent_data a left join agent_table b on a.agentNumber=b.agentNumber ";
@@ -78,18 +78,51 @@ public class AgentDateMysqlDAL implements IAgentData {
 
     /**根据公司id获取公司旗下所有设备**/
     @Override
-    public Page<AgentData> getAllDeviceByCid(String Companyid,int pageno,int limit) {
-        String sql="  from agent_data a left join projects_data b on a.proGroupId=b.proGroupId "+Companyid;
+    public Page<AgentData> getAllDeviceByComid(String Companyid,int pageno,int limit) {
+        String sql="  from agent_data a left join projects_data b on a.proGroupId=b.proGroupId where a.agentNumber="+Companyid;
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.proGroupName ",sql);
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
             AgentData map = new AgentData();
-            map.setState(record.getInt("state"));
+            String state1=record.getStr("state");
+            int state=Integer.parseInt(state1);
+            map.setState(state);
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setDate(record.getDate("date"));
-            map.setProgroupid(record.getInt("proGroupId"));
+            map.setDate(Tools.toDate(record.getStr("date")));
+            if(record.getInt("proGroupId")==null){
+                map.setProgroupid(-1);
+            }else{
+                map.setProgroupid(record.getInt("proGroupId"));
+            }
+            map.setSerial(record.getStr("serial"));
+            map.setMachineName(record.getStr("machineName"));
+            map.setAgentname(record.getStr("agentName"));
+            rslist.add(map);
+        }
+        return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+    }
+
+    /**查询当前项目旗下的所有设备（分页）**/
+    public Page<AgentData> getAllDeviceByGroupid(String Groupid,int pageno,int limit) {
+        String sql="  from agent_data a left join projects_data b on a.proGroupId=b.proGroupId where a.proGroupId="+Groupid;
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.proGroupName ",sql);
+        List<Record> recordList = page.getList();
+        List<AgentData> rslist = new ArrayList<>();
+        for (Record record : recordList) {
+            AgentData map = new AgentData();
+            String state1=record.getStr("state");
+            int state=Integer.parseInt(state1);
+            map.setState(state);
+            map.setId(record.getInt("id"));
+            map.setAgentNumber(record.getStr("agentNumber"));
+            map.setDate(Tools.toDate(record.getStr("date")));
+            if(record.getInt("proGroupId")==null){
+                map.setProgroupid(-1);
+            }else{
+                map.setProgroupid(record.getInt("proGroupId"));
+            }
             map.setSerial(record.getStr("serial"));
             map.setMachineName(record.getStr("machineName"));
             map.setAgentname(record.getStr("agentName"));
@@ -281,7 +314,7 @@ public class AgentDateMysqlDAL implements IAgentData {
     }
 
 
-    /**查询当前项目的所有设备（分页）**/
+
 
 
 }

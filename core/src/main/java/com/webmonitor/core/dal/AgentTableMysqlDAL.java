@@ -38,4 +38,61 @@ public class AgentTableMysqlDAL implements IAgent {
         }
         return new Page<AgentTable>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
     }
+
+    @Override
+    public AgentTable getAgentTableById(String comid) {
+        AgentTable agentTable=new AgentTable();
+        try{
+           agentTable=AgentTable.dao.findFirst("select * from agent_data where agentNumber="+comid);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return agentTable;
+    }
+
+    /**根据项目id获取公司列表**/
+    @Override
+    public List<AgentTable> getCompanyByGroupid(String Groupid) {
+        List<AgentTable> agentTables=new ArrayList<>();
+        String sql = "SELECT distinct c.*  from agent_data a ,projects_data b, agent_table c where a.proGroupId=b.proGroupId and c.agentNumber=a.agentNumber " +
+                        "and ( a.proGroupId="  + Groupid + ")";
+        List<Record> records=Db.find(sql);
+        for (Record record : records) {
+            AgentTable agentTable=new AgentTable();
+            agentTable.setId(record.getInt("id"));
+            agentTable.setAgentNumber(record.getStr("agentNumber"));
+            agentTable.setAgentName(record.getStr("agentName"));
+            agentTables.add(agentTable);
+        }
+        return agentTables;
+    }
+
+//    /**根据项目id获取公司列表**/
+//    @Override
+//    public List<AgentTable> getCompanyByGroupid(String Groupid) {
+//        List<AgentTable> agentTables=new ArrayList<>();
+//        String sql1="";
+//        String[] strings=Groupid.split("@");
+//        if(strings.length>0){
+//            sql1=" a.proGroupId="+strings[0];
+//            if(strings.length>1) {
+//                for (int i = 1; i < strings.length; i++) {
+//                    sql1 = sql1 + " OR a.proGroupId=" + strings[i];
+//                }
+//                String sql = "SELECT distinct c.*  from agent_data a ,projects_data b, agent_table c where a.proGroupId=b.proGroupId and c.agentNumber=a.agentNumber " +
+//                        "and (" + sql1 + ")";
+//                List<Record> records=Db.find(sql);
+//                for (Record record : records) {
+//                    AgentTable agentTable=new AgentTable();
+//                    agentTable.setId(record.getInt("id"));
+//                    agentTable.setAgentNumber(record.getStr("agentNumber"));
+//                    agentTable.setAgentName(record.getStr("agentName"));
+//                    agentTables.add(agentTable);
+//                }
+//
+//            }
+//        }
+//        return agentTables;
+//    }
+
 }

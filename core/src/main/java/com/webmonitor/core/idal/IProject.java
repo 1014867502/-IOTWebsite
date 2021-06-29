@@ -38,4 +38,7 @@ public interface IProject {
 
     /**获取项目里离线设备的数目**/
     int getProDevOutCountById(String projectid);
+
+    /**根据用户id获取对应的项目列表**/
+    Page<Object> getProjectsById(String userid,int pageno,int limit);
 }

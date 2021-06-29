@@ -7,6 +7,7 @@ import com.webmonitor.core.dal.ProjectMysqlDAL;
 import com.webmonitor.core.idal.IAgent;
 import com.webmonitor.core.idal.IProject;
 import com.webmonitor.core.model.AgentTable;
+import com.webmonitor.core.model.ProDevCount;
 
 import java.util.List;
 
@@ -22,5 +23,16 @@ public class CompanyService {
     /**获取所有公司**/
     public Page<AgentTable> getAllCompanys(int pageno,int limit){
         return dal.getAllcompanyPages(pageno, limit);
+    }
+
+    /**根据id查找公司**/
+    public AgentTable getAgentById(String comid){
+        return dal.getAgentTableById(comid);
+    }
+
+
+    /**根据项目id查找公司列表**/
+    public List<AgentTable> getAgentTableByProgroupid(String author){
+        return dal.getCompanyByGroupid(author);
     }
 }

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("后台主页")
+    <script src="/assets/lib/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <script src="/assets/lib/xm-select.js"></script>
+    <style>
+        .layadmin-shortcut li .layui-icon {
+            color: #FFFFFF;
+            background-color: #1E9FFF;
+        }
+
+        .layadmin-shortcut li:hover .layui-icon {
+            background-color: #93D1FF;
+        }
+
+        .card-body-scrollbar {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /*  新加的 */
+            background-color: transparent !important;
+        }
+
+        .card-body-scrollbar:hover {
+            overflow: auto; /*  新加的 */
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        body {
+            min-width: 1000px;
+        }
+
+        .little {
+            text-align: center;
+            width: 200px;
+            /*margin-left: 10%;*/
+            line-height: 40px;
+            margin: auto;
+        }
+
+        .projects {
+            height: 100px;
+            width: 100%;
+            display: flex;
+        }
+
+        .projectname {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .projects:hover .projectname {
+            color: #00f0ff;
+            /*box-shadow: 10px 10px 5px #888888;*/
+        }
+
+        .cardbody {
+            transition: bottom .2s linear 0s;
+            bottom: 0px;
+        }
+
+        .cardbody:hover {
+            box-shadow: 2px 1px 10px #cbc8c8;
+            position: relative;
+            bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
+    <form class="layui-form" id="devicedata" method="post" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备编号</label>
+            <div class="layui-input-block">
+                <input style="width: 70%" type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="visibility: hidden">
+            <div class="layui-input-block">
+                <button id="btn1" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="site-text" style="margin: 5%; display: none" id="windowadmin" target="test123">
+    <form class="layui-form" id="devicedataadmin" method="post" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备编号</label>
+            <div class="layui-input-block">
+                <input style="width: 70%" type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: flex">
+            <label class="layui-form-label">选择公司</label>
+            <div id="demo2" class="xm-select-demo" style="width: 300px"></div>
+        </div>
+    </form>
+</div>
+
+<div class="layui-fluid">
+    <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
+        <div style="width:1000px" id="list">
+            <div class="layui-card" style="display: flex">
+                <ul style="display: flex ;margin: auto;">
+                    <li class="little">
+                        <div>供销商数量</div>
+                        <div id="companycount" style="font-size: 20px"></div>
+                    </li>
+                </ul>
+                <div style="margin: auto">
+                    <div style="margin: auto;display: flex">
+                        <button type="button" class="layui-btn" id="add_device"><img
+                                src="/assets/images/icon_add_device_28.png"/>添加项目
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
+        <div style="width:1000px;margin-top: 20px;" id="list2">
+
+        </div>
+    </div>
+    <div><div style="text-align: center;" id="demo7"></div></div>
+</div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    var progroupid="(#progroupid)";
+    debugger
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index','selectproject','drawer']);
+</script>
+</body>
+</html>

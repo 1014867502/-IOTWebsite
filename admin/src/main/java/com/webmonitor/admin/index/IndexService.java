@@ -26,10 +26,10 @@ public class IndexService {
     public static final String accessUserId = "accessUserId";
 
     //保存该问项目的cookie
-    public static final String accessProId = "accessUserId";
+    public static final String accessProId = "accessProjectId";
 
     //返回return给，遇到异常报错
-    public Result<HashMap<String, String>> login(String userName, String password, String loginIp) throws BusinessException {
+    public Result<HashMap<String, String>> login(String  userName, String password, String loginIp) throws BusinessException {
         //userName = userName.toLowerCase().trim();
         userName = userName.trim();
         password = password.trim();

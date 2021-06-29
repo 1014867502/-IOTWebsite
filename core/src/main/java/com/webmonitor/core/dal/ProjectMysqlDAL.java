@@ -7,6 +7,7 @@ import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.idal.IProject;
 
 import com.webmonitor.core.model.ProjectsData;
+import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.userbase.BaseProjects;
 
 import java.text.DateFormat;
@@ -195,5 +196,17 @@ public class ProjectMysqlDAL implements IProject {
         Record count=Db.findFirst("select count(*) from projects_data a,agent_data b where a.proGroupId=b.proGroupId and b.state=0 and a.proGroupId="+projectid);
         int sum=count.getInt("count(*)");
         return sum;
+    }
+
+    /**根据用户id获取项目**/
+    public Page<Object> getProjectsById(String userid,int pageno,int limit){
+        StaffData staffData=staffService.getStaffByName(userid);
+        List<BaseProjects> projectsData=new ArrayList<>();
+        String[] author=staffData.getGroupAssemble().split("@");
+        for(int i=0;i<author.length;i++){
+            BaseProjects projectsData1=getProjectById(author[i]);
+            projectsData.add(projectsData1);
+        }
+        return new Page<Object>(Collections.singletonList(projectsData),pageno,limit,(author.length/limit)+1 , author.length);
     }
 }
