@@ -6,13 +6,10 @@ import com.webmonitor.core.model.userbase.LonLat;
 
 import java.io.File;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -546,6 +543,38 @@ public class Tools {
         ret += (20.0 * Math.sin(x * Math.PI) + 40.0 * Math.sin(x / 3.0 * Math.PI)) * 2.0 / 3.0;
         ret += (150.0 * Math.sin(x / 12.0 * Math.PI) + 300.0 * Math.sin(x / 30.0 * Math.PI)) * 2.0 / 3.0;
         return ret;
+    }
+
+
+    public static List<String> getListData(Object user1,Object user2){
+        List<String> list = new ArrayList<>();
+        Field[] fs = user1.getClass().getDeclaredFields();
+        for (Field f : fs) {
+            f.setAccessible(true);
+            Object v1 = null;
+            Object v2 = null;
+            try {
+                v1 = f.get(user1);
+                v2 = f.get(user2);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (!equals(v1, v2)&&v2!=null) {
+                //两个对象相同属性不相同值的数据加入map中
+               list.add(f.getName());
+            }
+        }
+        return list;
+    }
+
+    public static boolean equals(Object obj1, Object obj2) {
+        if (obj1 == obj2) {
+            return true;
+        }
+        if (obj1 == null || obj2 == null) {
+            return false;
+        }
+        return obj1.equals(obj2);
     }
 
 }

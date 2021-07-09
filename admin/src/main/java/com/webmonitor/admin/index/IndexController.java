@@ -48,7 +48,7 @@ public class IndexController extends BaseController {
         StaffData currentuser= StaffService.me.getStaffByName(useid);
         setCookie(IndexService.me.accessUserId,currentuser.getId().toString(),24*60*60,true);
         setAttr("userid", currentuser.getUAccountNum());
-        String s= RoleType.getString(currentuser.getIRoleType());
+
 //        String projetid = getCookie(IndexService.me.accessProjectId);
 //        if (Tools.isEmpty(projetid)){
 //            projetid = list.size()>0?list.get(0).getProjId():"";

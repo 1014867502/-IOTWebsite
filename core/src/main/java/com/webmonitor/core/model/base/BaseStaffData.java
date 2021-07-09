@@ -65,12 +65,12 @@ public abstract class BaseStaffData<M extends BaseStaffData<M>> extends Model<M>
 		return getInt("iRoleType");
 	}
 
-	public void setIAccountType(java.lang.Integer iAccountType) {
+	public void setIAccountType(java.lang.String iAccountType) {
 		set("iAccountType", iAccountType);
 	}
 	
-	public java.lang.Integer getIAccountType() {
-		return getInt("iAccountType");
+	public java.lang.String getIAccountType() {
+		return getStr("iAccountType");
 	}
 
 	public void setGroupAssemble(java.lang.String groupAssemble) {

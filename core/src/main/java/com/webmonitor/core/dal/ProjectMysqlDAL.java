@@ -185,7 +185,7 @@ public class ProjectMysqlDAL implements IProject {
     /**获取项目里在线设备的数目**/
     @Override
     public int getProDevOnCountById(String projectid) {
-        Record count=Db.findFirst("select count(*) from projects_data a,agent_data b where a.proGroupId=b.proGroupId and b.state=1 and a.proGroupId="+projectid);
+        Record count=Db.findFirst("select count(*) from projects_data a,agent_data b where a.proGroupId=b.proGroupId and b.onlineState=1 and a.proGroupId="+projectid);
         int sum=count.getInt("count(*)");
         return sum;
     }
@@ -193,7 +193,7 @@ public class ProjectMysqlDAL implements IProject {
     /**获取项目里离线设备的数目**/
     @Override
     public int getProDevOutCountById(String projectid) {
-        Record count=Db.findFirst("select count(*) from projects_data a,agent_data b where a.proGroupId=b.proGroupId and b.state=0 and a.proGroupId="+projectid);
+        Record count=Db.findFirst("select count(*) from projects_data a,agent_data b where a.proGroupId=b.proGroupId and b.onlineState=0 and a.proGroupId="+projectid);
         int sum=count.getInt("count(*)");
         return sum;
     }

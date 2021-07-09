@@ -11,6 +11,6 @@ public class _MetaBuilder extends MetaBuilder {
     }
 
     protected boolean isSkipTable(String tableName){
-        return !tableName.startsWith("projects_data");
+        return !tableName.startsWith("cache_order");
     }
 }

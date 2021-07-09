@@ -294,9 +294,9 @@ public class ManagerController extends BaseController {
     public void getCompanyListByRole(){
         Result<List<AgentTable>> result=Result.newOne();
         String id=getPara("userid");
+                List<AgentTable> agentTables=new ArrayList<>();
         StaffData staffData=StaffService.me.getStaffByName(id);
         String role=RoleType.getString(staffData.getIRoleType());
-        List<AgentTable> agentTables=new ArrayList<>();
         switch(role){
             case "superadmin":
                 agentTables=AdminService.me.getCompanyList();

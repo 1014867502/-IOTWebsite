@@ -25,20 +25,20 @@ public abstract class BaseAgentData<M extends BaseAgentData<M>> extends Model<M>
 		return getStr("agentNumber");
 	}
 
-	public void setSerial(java.lang.String serial) {
-		set("serial", serial);
+	public void setMachineSerial(java.lang.String machineSerial) {
+		set("machineSerial", machineSerial);
 	}
 	
-	public java.lang.String getSerial() {
-		return getStr("serial");
+	public java.lang.String getMachineSerial() {
+		return getStr("machineSerial");
 	}
 
-	public void setState(java.lang.String state) {
-		set("state", state);
+	public void setOnlineState(java.lang.String onlineState) {
+		set("onlineState", onlineState);
 	}
 	
-	public java.lang.String getState() {
-		return getStr("state");
+	public java.lang.String getOnlineState() {
+		return getStr("onlineState");
 	}
 
 	public void setMachineName(java.lang.String machineName) {
@@ -49,16 +49,16 @@ public abstract class BaseAgentData<M extends BaseAgentData<M>> extends Model<M>
 		return getStr("machineName");
 	}
 
-	public void setDate(java.lang.String date) {
-		set("date", date);
+	public void setCreateTime(java.lang.String createTime) {
+		set("createTime", createTime);
 	}
 	
-	public java.lang.String getDate() {
-		return getStr("date");
+	public java.lang.String getCreateTime() {
+		return getStr("createTime");
 	}
 
 	public void setProGroupId(java.lang.Integer ProGroupId) {
-		set("proGroupId", ProGroupId);
+		set("ProGroupId", ProGroupId);
 	}
 	
 	public java.lang.Integer getProGroupId() {

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("GNSS位移统计")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style type="text/css">
+        .layui-form-checked span, .layui-form-checked:hover span {
+            background-color: #FF5722;
+        }
+
+        .layui-form-checked i, .layui-form-checked:hover i {
+            color: #FF5722;
+        }
+
+        .layui-btn.onlinebtn {
+            background-color: #009688;
+            color: #FFFFFF;
+        }
+
+        .layui-btn.offlinebtn {
+            background-color: #ff0000;
+            color: #FFFFFF;
+        }
+
+        .layui-card-body.layui-layout-box {
+            width: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            /*border-style: solid;*/
+            background-color: #1e9fff;
+            /*!*border-image: url(/img/bg.png) 4 4 4 4 fill round;*!*/
+            /*border-image: url(/img/bg.png) 4 4 4 4 fill stretch;*/
+            box-sizing: border-box;
+            /*height: calc(100% - 42px);*/
+            height: 130px;
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .data {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+        }
+
+        .layadmin-carousel.history {
+            height: 400px !important;
+        }
+    </style>
+</head>
+<style>
+    .fastinput {
+        width: 400px;
+    }
+
+    .btn_primary {
+        border-color: #1e9fff;
+        background-color: #F1F1F1;
+        color: #1e9fff;
+
+    }
+
+    .btn_primary:hover {
+        background-color: #1e9fff;
+        color: #F1F1F1;
+    }
+
+    .layui-form-radio > i:hover, .layui-form-radioed > i {
+        color: #1e9fff;
+    }
+
+
+    .layui-form-select dl dd.layui-this {
+        background-color: #1e9fff;
+        color: #fff;
+    }
+
+    .layui-this{
+        color: #F1F1F1!important;
+        background-color:#1e9fff;
+    }
+</style>
+<body>
+<div class="layui-fluid">
+    <div class="layui-tab">
+        <ul class="layui-tab-title" style="color: #1e9fff;background-color: #FFF;">
+            <li class="layui-this">解算设置</li>
+            <li>坐标系统</li>t
+            <li>平台对接</li>
+            <li>辅助功能</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <iframe id="iframe_compute" src="" frameborder="0"  onload="this.height=iframe_compute.document.body.scrollHeight"
+                        width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>
+            </div>
+            <div class="layui-tab-item">
+                <iframe id="iframe_mark" src="/devicelist/fastsetting" frameborder="0" machinesn="#(machinedata)" name="iframe_a" onload="this.height=iframe_a.document.body.scrollHeight"
+                        width="100%" scrolling="no" frameborder="0" style="height: 1200px"></iframe>
+            </div>
+            <div class="layui-tab-item">
+                <iframe id="iframe_platform" src="/devicelist/fastsetting" frameborder="0" machinesn="#(machinedata)" name="iframe_a" onload="this.height=iframe_a.document.body.scrollHeight"
+                        width="100%" scrolling="no" frameborder="0" style="height: 1200px"></iframe>
+            </div>
+            <div class="layui-tab-item">
+                <iframe id="iframe_" src="/devicelist/fastsetting" frameborder="0" machinesn="#(machinedata)" name="iframe_a" onload="this.height=iframe_a.document.body.scrollHeight"
+                        width="100%" scrolling="no" frameborder="0" style="height: 1200px"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+    var agentnum = "#(agentNum)";
+    var machinesn="#(machinedata)";
+
+    src();
+    function src() {
+        document.getElementById("iframe_compute").src="/devicelist/stationcompute?machinesn="+machinesn;
+    }
+
+    debugger
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table','element']);
+</script>
+</body>
+</html>

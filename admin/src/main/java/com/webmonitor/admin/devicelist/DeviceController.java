@@ -1,8 +1,7 @@
 package com.webmonitor.admin.devicelist;
 
-import com.alibaba.fastjson.JSONArray;
+
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
@@ -11,14 +10,14 @@ import com.webmonitor.core.bll.AgentDataService;
 import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.*;
-import com.webmonitor.core.model.base.BaseAgentData;
+import com.webmonitor.core.util.OrderConstants;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import com.webmonitor.core.vo.Result;
-import org.apache.log4j.jmx.Agent;
 
-import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
+
 
 /**控制与设备数据相关操作**/
 public class DeviceController  extends BaseController {
@@ -30,6 +29,24 @@ public class DeviceController  extends BaseController {
         render("devicemanage.html");
     }
 
+    /**快速设置**/
+    public void fastsetting(){
+        render("fastsetting.html");
+    }
+
+    /**站点设置**/
+    public void stationsetting(){
+        String machinesn=getPara("machinedata");
+        setAttr("machinedata",machinesn);
+        render("stationsetting.html");
+    }
+
+    /**站点 解算设置**/
+    public void stationcompute(){
+        String machinesn=getPara("machinesn");
+        setAttr("machinesn",machinesn);
+        render("station_compute.html");
+    }
     /****/
 
     public void searchlist(){
@@ -42,10 +59,7 @@ public class DeviceController  extends BaseController {
         Result result=Result.newOne();
         try {
             String sn = getPara("sn");
-            String sql="select * from machine_data where serial="+sn;
-            MachineData machineData= Optional.ofNullable(MachineData.dao.findFirst(sql))
-                    .orElseGet(MachineData::new);
-            setAttr("machinedata",machineData);
+            setAttr("machinedata",sn);
             render("setting.html");
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result,e);
@@ -74,13 +88,13 @@ public class DeviceController  extends BaseController {
         String userid = getCookie(IndexService.me.accessUserId);
         StaffData currentuser = StaffService.me.getStaffById(userid);
         String authority = currentuser.getGroupAssemble();
-        int roletype = currentuser.getIRoleType();
-        RoleType role = RoleType.getIndex(roletype);
-        switch (role){
-            case user:type=1;break;
-            case companyadmin:type=1;break;
-            case superadmin:type=0;break;
-        }
+//        int roletype = currentuser.getIRoleType();
+//        RoleType role = RoleType.getIndex(roletype);
+//        switch (role){
+//            case user:type=1;break;
+//            case companyadmin:type=1;break;
+//            case superadmin:type=0;break;
+//        }
         Result<Page<AgentDataDao>> result=Result.newOne();
         int pageno = getParaToInt("page", 1);
         int limit = getParaToInt("limit", 20);
@@ -90,6 +104,17 @@ public class DeviceController  extends BaseController {
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }
+        renderJson(result);
+    }
+
+    /**获取单个设备的详情**/
+    public void getDeviceSetting(){
+        String sn=getPara("machineSerial");
+        Result result=Result.newOne();
+        String sql="select * from machine_data where machineSerial='"+sn+"'";
+        MachineData machineData= Optional.ofNullable(MachineData.dao.findFirst(sql))
+                .orElseGet(MachineData::new);
+        result.success(machineData);
         renderJson(result);
     }
 
@@ -113,7 +138,7 @@ public class DeviceController  extends BaseController {
         int pageno = getParaToInt("page", 1);
         int limit = getParaToInt("limit", 20);
         try{
-            Page<AgentDataDao> agentDataDaos=DeviceListService.me.searchOutDevByParam(agentnum,content,pageno,limit,type,roles);
+            Page<AgentDataDao> agentDataDaos=DeviceListService.me.searchOutDevByParam(agentnum,content,pageno,limit,type,roles);//
             result.success(agentDataDaos);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -131,7 +156,7 @@ public class DeviceController  extends BaseController {
         Gson gson = new Gson();
         List<AgentTabll> agentDataDao= gson.fromJson(json, new TypeToken<List<AgentTabll>>(){}.getType());
         for(int i=0;i<agentDataDao.size();i++){
-            DeviceListService.me.insertDeviceById(projectid,agentDataDao.get(i).getSerial());
+            DeviceListService.me.insertDeviceById(projectid,agentDataDao.get(i).getMachineSerial());
         }
         renderJson(result.success("success"));
     }
@@ -173,4 +198,21 @@ public class DeviceController  extends BaseController {
         }
         renderJson(result);
     }
+
+    /**更改设备配置**/
+    public void editSetting(){
+        Result result=Result.newOne();
+        Gson gson = new Gson();
+        String json=getPara("setting");
+        String machine=getPara("machinesn");
+        MachineInfoEntity agentDataDao= gson.fromJson(json, new TypeToken<MachineInfoEntity>(){}.getType());
+        boolean test=DeviceListService.checkObjAllFieldsIsNull(machine,agentDataDao);
+        if(test){
+            renderJson(result.success("修改成功"));
+        }else{
+            renderJson(result.error("修改失败"));
+        }
+
+    }
+
 }

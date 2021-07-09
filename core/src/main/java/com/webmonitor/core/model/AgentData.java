@@ -6,10 +6,10 @@ import java.util.Date;
 public class AgentData {
     private int id;
     private String agentNumber;
-    private String serial;
-    private int state;
+    private String machineSerial;
+    private int onlineState;
     private String machineName;
-    private Date date;
+    private Date createTime;
     private String agentname;
     private int progroupid;
 
@@ -45,20 +45,20 @@ public class AgentData {
         this.agentNumber = agentNumber;
     }
 
-    public String getSerial() {
-        return serial;
+    public String getMachineSerial() {
+        return machineSerial;
     }
 
-    public void setSerial(String serial) {
-        this.serial = serial;
+    public void setMachineSerial(String machineSerial) {
+        this.machineSerial = machineSerial;
     }
 
-    public int getState() {
-        return state;
+    public int getOnlineState() {
+        return onlineState;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setOnlineState(int onlineState) {
+        this.onlineState = onlineState;
     }
 
     public String getMachineName() {
@@ -70,11 +70,11 @@ public class AgentData {
     }
 
 
-    public Date getDate() {
-        return date;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

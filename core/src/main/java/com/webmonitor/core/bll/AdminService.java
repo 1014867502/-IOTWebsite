@@ -38,7 +38,7 @@ public class AdminService {
                 if(!content.isEmpty()&&content!=null){
                     String sn1 = "%" + content + "%";
                     sql = " from agent_data" +
-                            " where proGroupId is null and serial like '" + sn1 + "'";
+                            " where proGroupId is null and machineSerial like '" + sn1 + "'";
                 }else{
                     sql=" from agent_data where proGroupId is null";
                 }

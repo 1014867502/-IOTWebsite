@@ -26,11 +26,11 @@ public class AgentDataMysqlDAL implements IAgentData {
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
             AgentData map = new AgentData();
-            map.setState(record.getInt("state"));
+            map.setOnlineState(record.getInt("onlineState"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setDate(record.getDate("date"));
+            map.setCreateTime(record.getDate("createTime"));
             map.setProgroupid(record.getInt("proGroupId"));
-            map.setSerial(record.getStr("serial"));
+            map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
             map.setAgentname(record.getStr("agentName"));
             rslist.add(map);
@@ -39,13 +39,13 @@ public class AgentDataMysqlDAL implements IAgentData {
     }
 
     public Page<AgentData> searchDeviceByParam(String content,String agentname,String[] projectid,String state,int pageno,int limit){
-        String sql=" from agent_data where state="+state;
+        String sql=" from agent_data where onlineState="+state;
         String test="";
         if(content!=null&&!content.isEmpty()){
-            sql=sql+" and serial like %"+content+"% ";
+            sql=sql+" and machineSerial like %"+content+"% ";
         }else if(!agentname.isEmpty()){
             sql=sql+" and agentName='"+agentname+"' ";
-        }else if(projectid.length > 0){
+        }else if(projectid.length > 0&&(!projectid[0].equals("all"))){
             if(projectid.length>1){
                 test=" and (proGroupid="+projectid[0];
                 for(int k=0;k<projectid.length;k++){
@@ -62,13 +62,17 @@ public class AgentDataMysqlDAL implements IAgentData {
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
             AgentData map = new AgentData();
-            int state1=Integer.parseInt(record.getStr("state"));
-            map.setState(state1);
+            int state1=Integer.parseInt(record.getStr("onlineState"));
+            map.setOnlineState(state1);
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setDate(Tools.toDate(record.getStr("date")));
-            map.setProgroupid(record.getInt("proGroupId"));
-            map.setSerial(record.getStr("serial"));
+            map.setCreateTime(Tools.toDate(record.getStr("createTime")));
+            if(record.getInt("proGroupId")==null){
+                map.setProgroupid(-1);
+            }else{
+                map.setProgroupid(record.getInt("proGroupId"));
+            }
+            map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
             map.setAgentname(record.getStr("agentName"));
             rslist.add(map);
@@ -85,18 +89,18 @@ public class AgentDataMysqlDAL implements IAgentData {
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
             AgentData map = new AgentData();
-            String state1=record.getStr("state");
+            String state1=record.getStr("onlineState");
             int state=Integer.parseInt(state1);
-            map.setState(state);
+            map.setOnlineState(state);
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setDate(Tools.toDate(record.getStr("date")));
+            map.setCreateTime(Tools.toDate(record.getStr("createTime")));
             if(record.getInt("proGroupId")==null){
                 map.setProgroupid(-1);
             }else{
                 map.setProgroupid(record.getInt("proGroupId"));
             }
-            map.setSerial(record.getStr("serial"));
+            map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
             map.setAgentname(record.getStr("agentName"));
             rslist.add(map);
@@ -112,18 +116,18 @@ public class AgentDataMysqlDAL implements IAgentData {
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
             AgentData map = new AgentData();
-            String state1=record.getStr("state");
+            String state1=record.getStr("onlineState");
             int state=Integer.parseInt(state1);
-            map.setState(state);
+            map.setOnlineState(state);
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setDate(Tools.toDate(record.getStr("date")));
+            map.setCreateTime(Tools.toDate(record.getStr("createTime")));
             if(record.getInt("proGroupId")==null){
                 map.setProgroupid(-1);
             }else{
                 map.setProgroupid(record.getInt("proGroupId"));
             }
-            map.setSerial(record.getStr("serial"));
+            map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
             map.setAgentname(record.getStr("agentName"));
             rslist.add(map);
@@ -154,12 +158,12 @@ public class AgentDataMysqlDAL implements IAgentData {
         List<AgentDataDao> rslist = new ArrayList<>();
         for (Record record : recordList) {
             AgentDataDao map = new AgentDataDao();
-            map.setState(record.getStr("state"));
+            map.setOnlineState(record.getStr("onlineState"));
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setDate(record.getStr("date"));
+            map.setCreateTime(record.getStr("createTime"));
             map.setProGroupId(record.getInt("proGroupId"));
-            map.setSerial(record.getStr("serial"));
+            map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
             rslist.add(map);
         }
@@ -181,12 +185,12 @@ public class AgentDataMysqlDAL implements IAgentData {
             List<AgentDataDao> rslist = new ArrayList<>();
             for (Record record : recordList) {
                 AgentDataDao map = new AgentDataDao();
-                map.setState(record.getStr("state"));
+                map.setOnlineState(record.getStr("onlineState"));
                 map.setId(record.getInt("id"));
                 map.setAgentNumber(record.getStr("agentNumber"));
-                map.setDate(record.getStr("date"));
+                map.setCreateTime(record.getStr("createTime"));
                 map.setProGroupId(record.getInt("proGroupId"));
-                map.setSerial(record.getStr("serial"));
+                map.setMachineSerial(record.getStr("machineSerial"));
                 map.setMachineName(record.getStr("machineName"));
                 rslist.add(map);
             }
@@ -213,12 +217,12 @@ public class AgentDataMysqlDAL implements IAgentData {
         List<AgentDataDao> rslist = new ArrayList<>();
         for (Record record : recordList) {
             AgentDataDao map = new AgentDataDao();
-            map.setState(record.getStr("state"));
+            map.setOnlineState(record.getStr("onlineState"));
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setDate(record.getStr("date"));
+            map.setCreateTime(record.getStr("createTime"));
             map.setProGroupId(record.getInt("proGroupId"));
-            map.setSerial(record.getStr("serial"));
+            map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
             rslist.add(map);
         }
@@ -227,18 +231,18 @@ public class AgentDataMysqlDAL implements IAgentData {
 
     @Override
     public void deleteDeviceByGroupid(String sn) {
-        Db.update("update agent_data set proGroupId = null where serial=?",sn);
+        Db.update("update agent_data set proGroupId = null where machineSerial=?",sn);
     }
 
     @Override
     public void insertDeviceById(String projectid, String sn) {
-        Db.update("update agent_data set proGroupId = ? where serial=?",projectid,sn);
+        Db.update("update agent_data set proGroupId = ? where machineSerial=?",projectid,sn);
     }
 
     @Override
     public void editDevice(String sn, String machinename) {
-        Record device = Db.findFirst("select * from agent_data where serial=" +sn);
-        device.set("serial", sn).set("machineName", machinename);
+        Record device = Db.findFirst("select * from agent_data where machineSerial=" +sn);
+        device.set("machineSerial", sn).set("machineName", machinename);
         Db.update("agent_data", device);
     }
 
@@ -247,20 +251,20 @@ public class AgentDataMysqlDAL implements IAgentData {
         Date date=new Date();
         DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
         String time=format.format(date);
-        Record device=new Record().set("serial",sn).set("machine",machinename).set("state",Integer.parseInt(state))
+        Record device=new Record().set("machineSerial",sn).set("machine",machinename).set("onlineState",Integer.parseInt(state))
                 .set("agentNumber",comid).set("createTime",time);
         Db.save("groups_data",device);
     }
 
     @Override
     public void deleteDevice(String sn) {
-        Record device=new Record().set("serial",sn);
+        Record device=new Record().set("machineSerial",sn);
         Db.delete("agent_data",device);
     }
 
     @Override
     public boolean isExitsn(String sn) {
-        StaffData staffData=StaffData.dao.findFirst("select * from agent_data where serial='"+sn+"'");
+        StaffData staffData=StaffData.dao.findFirst("select * from agent_data where machineSerial='"+sn+"'");
         if(staffData!=null){
             return true;
         }else{
@@ -274,9 +278,9 @@ public class AgentDataMysqlDAL implements IAgentData {
         Record record=new Record();
         record=Db.findFirst("select count(*) from agent_data");
         proDevCount.setSum(record.getInt("count(*)"));
-        record=Db.findFirst("select count(*) from agent_data where state=0");
+        record=Db.findFirst("select count(*) from agent_data where onlineState=0");
         proDevCount.setOutcount(record.getInt("count(*)"));
-        record=Db.findFirst("select count(*) from agent_data where state=1");
+        record=Db.findFirst("select count(*) from agent_data where onlineState=1");
         proDevCount.setOncount(record.getInt("count(*)"));
         return proDevCount;
     }
@@ -288,9 +292,9 @@ public class AgentDataMysqlDAL implements IAgentData {
         Record record=new Record();
         record=Db.findFirst("select count(*) from agent_data where agentNumber="+comid);
         proDevCount.setSum(record.getInt("count(*)"));
-        record=Db.findFirst("select count(*) from agent_data where state=0 and agentNumber="+comid);
+        record=Db.findFirst("select count(*) from agent_data where onlineState=0 and agentNumber="+comid);
         proDevCount.setOutcount(record.getInt("count(*)"));
-        record=Db.findFirst("select count(*) from agent_data where state=1 and agentNumber="+comid);
+        record=Db.findFirst("select count(*) from agent_data where onlineState=1 and agentNumber="+comid);
         proDevCount.setOncount(record.getInt("count(*)"));
         return proDevCount;
     }

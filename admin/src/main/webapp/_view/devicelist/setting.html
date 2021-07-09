@@ -156,37 +156,55 @@
             -webkit-filter: drop-shadow(32px 0);
             filter: drop-shadow(32px 0);
         }
+        .iconchange{
+            position: relative;
+            left: -32px;
+            border-right: 32px solid transparent;
+            -webkit-filter: drop-shadow(32px 0);
+            filter: drop-shadow(32px 0);
+        }
     </style>
 </head>
+<style>
+
+</style>
 <body>
 <div class="layui-fluid">
     <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
         <div style="width:100%">
             <div class="layui-card" style="display: flex">
-                <ul style="display: flex ;margin: auto;height: 100px">
-                    <li class="little">
-                        <div style="display: flex;justify-content: center;"><i class="icon"><i class="icon" style="background: url(/assets/images/deviceinform_black.png) no-repeat center;"></i></i></div>
+                <ul style="display: flex ;margin: auto;height: 100px" id="menu">
+                    <li class="little" id="fastsetting"  >
+                        <div style="display: flex;justify-content: center;" id="fastsetting2"><i  class="icon" ><i id="fastsetting1"  class="icon" style="background: url(/assets/images/icon-zhinan.png) no-repeat center;"></i></i></div>
+                        <div>快速设置</div>
+                    </li>
+                    <li class="little" id="deviceinfo">
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="deviceinfo1" class="icon" style="background: url(/assets/images/deviceinform_black.png) no-repeat center;"></i></i></div>
                         <div>设备信息</div>
                     </li>
-                    <li class="little">
-                        <div style="display: flex;justify-content: center;"><i class="icon"><i class="icon" style="background: url(/assets/images/testsetting_black.png) no-repeat center;"></i></i></div>
+                    <li class="little" id="devicesetting">
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="devicesetting1" class="icon" style="background: url(/assets/images/testsetting_black.png) no-repeat center;"></i></i></div>
                         <div>测站设置</div>
                     </li>
-                    <li class="little">
-                        <div style="display: flex;justify-content: center;"><i class="icon"><i class="icon" style="background: url(/assets/images/netsetting_black.png) no-repeat center;"></i></i></div>
-                        <div>网络设置</div>
-                    </li>
-                    <li class="little">
-                        <div style="display: flex;justify-content: center;"><i class="icon"><i class="icon" style="background: url(/assets/images/datadownload_black.png) no-repeat center;"></i></i></div>
+<!--                    <li class="little" id="internetset">-->
+<!--                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="internetset1" class="icon" style="background: url(/assets/images/netsetting_black.png) no-repeat center;"></i></i></div>-->
+<!--                        <div>网络设置</div>-->
+<!--                    </li>-->
+                    <li class="little" id="download">
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="download1" class="icon" style="background: url(/assets/images/datadownload_black.png) no-repeat center;"></i></i></div>
                         <div>数据下载</div>
                     </li>
-                    <li class="little">
-                        <div style="display: flex;justify-content: center;"><i class="icon"><i class="icon" style="background: url(/assets/images/othersetting_black.png) no-repeat center;"></i></i></div>
+                    <li class="little" id="other">
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="other1" class="icon" style="background: url(/assets/images/othersetting_black.png) no-repeat center;"></i></i></div>
                         <div>其他设置</div>
                     </li>
                 </ul>
             </div>
         </div>
+    </div>
+    <div style="width: 1500px;margin: auto;padding-top: 30px;">
+        <iframe id="iframe_a" src="/devicelist/fastsetting" frameborder="0" machinesn="#(machinedata)" name="iframe_a" onload="this.height=iframe_a.document.body.scrollHeight"
+                width="100%" scrolling="no" frameborder="0" style="height: 1200px"></iframe>
     </div>
 </div>
 </div>
@@ -196,12 +214,42 @@
 <script src="/assets/lib/loadlanguage.js"></script>
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script>
-    var projetid = "#(projetid)";
+    var machinedata = "#(machinedata)";
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index']);
+    }).use(['index','devicesetting']);
+
+    function  iframechange() {
+        var iframes = document.getElementsByTagName('iframe_a');
+        debugger
+        for (let i = 0, j = iframes.length; i < j; ++i) {
+            // 放在闭包中，防止iframe触发load事件的时候下标不匹配
+            (function(_i) {
+                iframes[_i].onload = function() {
+                    // 提前还原高度
+                    this.setAttribute('height', 'auto'); // 或设为''
+                    // 再在下一轮事件循环中设置新高度
+                    setTimeout(function() {
+                        iframes[_i].setAttribute('height', iframes[_i].contentWindow.document.body.scrollHeight);
+                    }, 0);
+                }
+            })(i);
+        }
+        for (let i= 0, j = iframes.length; i < j; ++i) {
+            // 放在闭包中，防止iframe触发load事件的时候下标不匹配
+            (function(_i) {
+                iframes[_i].onload = function() {
+                    this.contentWindow.onbeforeunload = function() {
+                        iframes[_i].setAttribute('height', 'auto');
+                    };
+
+                    this.setAttribute('height', this.contentWindow.document.body.scrollHeight);
+                };
+            })(i);
+        }
+    }
 </script>
 </body>
 </html>

@@ -1,39 +1,39 @@
 
-\
-java:S1124ž"EReorder the modifiers to comply with the Java Language Specification.(÷úôÿ
-\	java:S112å"FDefine and throw a dedicated exception instead of using a generic one.(õËŽÏ
+R	java:S125ú"<This block of commented-out lines of code should be removed.(†€éˆ
 v
-java:S1149•"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(˜åü
-O
-java:S1854à"8Remove this useless assignment to local variable "jday".(öä‹Â
-l	java:S117Ø"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(šø“úýÿÿÿÿ
-T	java:S106ì"9Replace this use of System.out or System.err by a logger.(´ˆ¶šþÿÿÿÿ
-R	java:S125þ"<This block of commented-out lines of code should be removed.(œ£é¶
-U
-java:S1118":Add a private constructor to hide the implicit public one.(ïÅ¼•ýÿÿÿÿ
-R	java:S125ý"<This block of commented-out lines of code should be removed.(†€éˆ
-W	java:S125Ö"<This block of commented-out lines of code should be removed.(ÎÅÔäùÿÿÿÿ
-v
-java:S1149ö"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰
-R	java:S125ë"<This block of commented-out lines of code should be removed.(ŒÙµ•
-\
-java:S1124•"EReorder the modifiers to comply with the Java Language Specification.(™šØ
-E
-java:S1481Ù")Remove this unused "jday" local variable.(Ã¤¯©ýÿÿÿÿ
+java:S1149’"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(˜åü
+W	java:S125Ó"<This block of commented-out lines of code should be removed.(ÎÅÔäùÿÿÿÿ
 J
-java:S10662"/Merge this if statement with the enclosing one.(½ŒÁ¾ùÿÿÿÿ
-c	java:S100Å"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¶Ø’
-R	java:S125ã"<This block of commented-out lines of code should be removed.(Ñ¦°
-X
-java:S1126µ"AReplace this if-then-else statement by a single return statement.(´ÒÀö
-R	java:S125ñ"<This block of commented-out lines of code should be removed.(Àþ³Î
-T
-java:S1197Ø"8Move the array designator from the variable to the type.(šø“úýÿÿÿÿ
-b
-java:S1192ã"KDefine a constant instead of duplicating this literal "yyyy-MM-dd" 3 times.(¤Ã
+java:S1066/"/Merge this if statement with the enclosing one.(½ŒÁ¾ùÿÿÿÿ
+R	java:S125ë"<This block of commented-out lines of code should be removed.(¸çµ
 \
-java:S1126m"AReplace this if-then-else statement by a single return statement.(û£¸ÿÿÿÿÿ
-R	java:S125î"<This block of commented-out lines of code should be removed.(¸çµ
-W	java:S125ö"<This block of commented-out lines of code should be removed.(å¸ÿŸÿÿÿÿÿ
-s
-java:S1488ä"\Immediately return this expression instead of assigning it to the temporary variable "week".(Ü÷ØÅ
+java:S1124’"EReorder the modifiers to comply with the Java Language Specification.(™šØ
+\
+java:S1126j"AReplace this if-then-else statement by a single return statement.(û£¸ÿÿÿÿÿ
+l	java:S117Õ"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(šø“úýÿÿÿÿ
+R	java:S125è"<This block of commented-out lines of code should be removed.(ŒÙµ•
+X
+java:S1126²"AReplace this if-then-else statement by a single return statement.(´ÒÀö
+W	java:S125ó"<This block of commented-out lines of code should be removed.(å¸ÿŸÿÿÿÿÿ
+O
+java:S3011©",This accessibility update should be removed.(Í”úÆùÿÿÿÿ8‚ÂßÎ§/
+R	java:S125û"<This block of commented-out lines of code should be removed.(œ£é¶
+T	java:S106é"9Replace this use of System.out or System.err by a logger.(´ˆ¶šþÿÿÿÿ
+O
+java:S1854Ý"8Remove this useless assignment to local variable "jday".(öä‹Â
+b
+java:S1192à"KDefine a constant instead of duplicating this literal "yyyy-MM-dd" 3 times.(¤Ã
+R	java:S125à"<This block of commented-out lines of code should be removed.(Ñ¦°
+R	java:S125î"<This block of commented-out lines of code should be removed.(Àþ³Î
+T
+java:S1197Õ"8Move the array designator from the variable to the type.(šø“úýÿÿÿÿ
+\	java:S112â"FDefine and throw a dedicated exception instead of using a generic one.(õËŽÏ
+E
+java:S1481Ö")Remove this unused "jday" local variable.(Ã¤¯©ýÿÿÿÿ
+v
+java:S1149ó"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰
+\
+java:S1118":Add a private constructor to hide the implicit public one.(ïÅ¼•ýÿÿÿÿ8Å§éÎ§/
+c	java:S100Â"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¶Ø’
+\
+java:S1124›"EReorder the modifiers to comply with the Java Language Specification.(÷úôÿ

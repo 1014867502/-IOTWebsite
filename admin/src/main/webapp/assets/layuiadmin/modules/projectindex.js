@@ -101,10 +101,10 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , where: {'agentNumber': agentnum, 'sn': snreal, 'state': stats}
             , cols: [[
                 {field: 'id', title: "序号", align: 'center'}
-                , {field: 'serial', title: "设备sn号", align: 'center'}
+                , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
-                , {field: 'date', title: "登录时间", align: 'center'}
-                , {field: 'state', title: "在线状态", align: 'center', templet: '#table-online-state'}
+                , {field: 'createTime', title: "登录时间", align: 'center'}
+                , {field: 'onlineState', title: "在线状态", align: 'center', templet: '#table-online-state'}
                 , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
             ]]
             , limit: 50 //每页默认显示的数量
@@ -153,14 +153,14 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
         }else if(obj.event === 'edit'){
             debugger
-            location.href = '/devicelist/setting?sn='+data.serial;
+            location.href = '/devicelist/setting?sn='+data.machineSerial;
         } else if (obj.event === 'del') {
             debugger
             layer.confirm('真的删除行么', function(index){
                 admin.req({
                     url:'/devicelist/delConnectDev',
                     data:{
-                        sn:data.serial
+                        sn:data.machineSerial
                     },
                     done:function (res) {
                         renderTable();
@@ -185,10 +185,10 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , where: {'userid':userid}
             , cols: [[
                 {field: 'id', title: "序号", align: 'center'}
-                , {field: 'serial', title: "设备sn号", align: 'center'}
+                , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
-                , {field: 'date', title: "登录时间", align: 'center'}
-                , {field: 'state', title: "处理状态", align: 'center', templet: '#table-online-state'}
+                , {field: 'createTime', title: "登录时间", align: 'center'}
+                , {field: 'onlineState', title: "处理状态", align: 'center', templet: '#table-online-state'}
                 , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
             ]]
             , limit: 50 //每页默认显示的数量
@@ -220,7 +220,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , where: {'agentnum':agentNumber,'content':"",'type':stats2}
             , cols: [[
                 {type:'checkbox'}
-                , {field: 'serial', title: "设备sn号", align: 'center'}
+                , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 ,{ fixed: 'right', title:"状态", align:'center', toolbar: '#statusdemo'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
             ]]
@@ -272,7 +272,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , where: {'agentnum':agentNumber,'content':content,'type':stats2}
             , cols: [[
                 {type:'checkbox'}
-                , {field: 'serial', title: "设备sn号", align: 'center'}
+                , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 ,{ fixed: 'right', title:"状态", align:'center', toolbar: '#statusdemo'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
             ]]
@@ -354,6 +354,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             el: '#companylist',
             radio: true,
             data: arrData,
+            clickClose: true,
             theme: {
                 color: '#01AAED',
             },

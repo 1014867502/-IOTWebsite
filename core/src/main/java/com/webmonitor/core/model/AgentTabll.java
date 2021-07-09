@@ -3,8 +3,8 @@ package com.webmonitor.core.model;
 /**给json报文转换**/
 public class AgentTabll {
     private String date;
-    private String serial;
-    private String state;
+    private String machineSerial;
+    private String onlineState;
     private int id;
     private String agentNumber;
     private String proGroupId;
@@ -18,20 +18,20 @@ public class AgentTabll {
         this.date = date;
     }
 
-    public String getSerial() {
-        return serial;
+    public String getMachineSerial() {
+        return machineSerial;
     }
 
-    public void setSerial(String serial) {
-        this.serial = serial;
+    public void setMachineSerial(String machineSerial) {
+        this.machineSerial = machineSerial;
     }
 
-    public String getState() {
-        return state;
+    public String getOnlineState() {
+        return onlineState;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setOnlineState(String onlineState) {
+        this.onlineState = onlineState;
     }
 
     public int getId() {

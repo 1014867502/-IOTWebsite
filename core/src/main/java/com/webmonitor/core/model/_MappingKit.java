@@ -23,6 +23,7 @@ public class _MappingKit {
 		arp.addMapping("machine_data", "id", MachineData.class);
 		arp.addMapping("sys_account", "ID", Account.class);
 		arp.addMapping("sys_session", "accessToken", Session.class);
+		arp.addMapping("cache_order", "id", CacheOrder.class);
 	}
 }
 
