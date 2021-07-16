@@ -128,17 +128,25 @@
         color: #F1F1F1!important;
         background-color:#1e9fff;
     }
+
+    .tabborder{
+        border-color: #F1F1F1;
+    }
+    .tabborder:hover{
+        border-bottom: 2px solid #1e9fff;
+    }
+
 </style>
 <body>
-<div class="layui-fluid">
+<div class="layui-fluid" style="padding: 0px">
     <div class="layui-tab">
-        <ul class="layui-tab-title" style="color: #1e9fff;background-color: #FFF;">
-            <li class="layui-this">解算设置</li>
-            <li>坐标系统</li>t
-            <li>平台对接</li>
-            <li>辅助功能</li>
+        <ul class="layui-tab-title" style="color: #1e9fff;background-color: #FFF;border-color:#FFF;">
+            <li class="tabborder layui-this">解算设置</li>
+            <li class="tabborder">坐标系统</li>t
+            <li class="tabborder">平台对接</li>
+            <li class="tabborder">辅助功能</li>
         </ul>
-        <div class="layui-tab-content">
+        <div class="layui-tab-content" style="padding: 0px">
             <div class="layui-tab-item layui-show">
                 <iframe id="iframe_compute" src="" frameborder="0"  onload="this.height=iframe_compute.document.body.scrollHeight"
                         width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>

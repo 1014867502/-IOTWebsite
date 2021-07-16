@@ -56,12 +56,8 @@ public class ManagerController extends BaseController {
         render("sensordata.html");
     }
 
-    public void gnssdevicehome() {
-        String projetid = getCookie(IndexService.me.accessUserId);
-        if (Tools.isEmpty(projetid))
-            projetid = "";
-        setAttr("projetid", projetid);
-        render("devicelist.html");
+    public void customermanage() {
+        render("customermanage.html");
     }
 
     public void sensordevicehome() {
@@ -72,48 +68,8 @@ public class ManagerController extends BaseController {
         render("sensorlist.html");
     }
 
-    //报告管理的网页
-    public void reportdevicehome() {
-        String projetid = getCookie(IndexService.me.accessUserId);
-        if (Tools.isEmpty(projetid))
-            projetid = "";
-        setAttr("projetid", projetid);
-        render("reportlist.html");
-    }
 
-    public void sensordatahome() {
-        String sn = getPara("sn");
-        int type = getParaToInt("type");
-        if (type == 0) {
-            //雨量计
-            setAttr("sensorsn", sn);
-            render("sensordata.html");
-        } else if (type == 1) {
-            //含水计
-            setAttr("sensorsn", sn);
-            render("sensorwaterdata.html");
-        } else if (type == 2) {
-            //加速度计
-            setAttr("projid", getPara("projid"));
-            setAttr("sensorsn", sn);
-            render("sensoraccelerationdata.html");
-        }
 
-    }
-
-    public void gnssdatahome() {
-        String sn = getPara("sn");
-        int type = getParaToInt("type");
-        if (type == 0) {
-            //移动站
-            setAttr("projid", getPara("projid"));
-            setAttr("gnssSN", sn);
-            render("gnssoffsetdata.html");
-        } else if (type == 1) {
-            //基站
-        }
-
-    }
 
     /**
      * 获取当前用户的项目列表
@@ -316,7 +272,7 @@ public class ManagerController extends BaseController {
     public void getAllCompanyPage(){
         Result<Page<AgentTable>> result=Result.newOne();
         int pageno = getParaToInt("pageno", 1);
-        int limit = getParaToInt("limit", 20);
+        int limit = getParaToInt("limit", 5);
         try{
             Page<AgentTable> page= CompanyService.me.getAllCompanys(pageno,limit);
             result.success(page);

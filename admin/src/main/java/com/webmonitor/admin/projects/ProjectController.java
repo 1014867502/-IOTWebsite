@@ -5,10 +5,15 @@ import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.devicelist.DeviceListService;
 import com.webmonitor.core.bll.ProjectService;
 import com.webmonitor.core.model.AgentData;
+import com.webmonitor.core.model.AgentDataDao;
 import com.webmonitor.core.model.ProDevCount;
+import com.webmonitor.core.model.ProjectsData;
+import com.webmonitor.core.model.userbase.BaseProjects;
 import com.webmonitor.core.model.userbase.ExportGNSSWord;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import com.webmonitor.core.vo.Result;
+
+import java.util.List;
 
 public class ProjectController extends BaseController {
 
@@ -57,6 +62,29 @@ public class ProjectController extends BaseController {
         try{
             Page<AgentData> proDevCount= DeviceListService.me.getAllDeviceByGroupid(groupid,pageno,limit);
             result.success(proDevCount);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    public void getAllProjectlist(){
+        Result<List<ProjectsData>> result=Result.newOne();
+        try{
+            List<ProjectsData> list= ProjectsData.dao.find("select * from projects_data");
+            result.success(list);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    public void getProjectByComId(){
+        String id=getPara("id");
+        Result<List<BaseProjects>> result=Result.newOne();
+        try{
+            List<BaseProjects> list=ProjectService.me.getProjectByComId(id);
+            result.success(list);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }

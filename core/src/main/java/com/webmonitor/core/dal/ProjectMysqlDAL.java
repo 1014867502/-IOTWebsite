@@ -63,8 +63,8 @@ public class ProjectMysqlDAL implements IProject {
     @Override/**根据企业编号进行查询**/
     public List<BaseProjects> getProjectsByComId(String id) {
         List<BaseProjects> list=new ArrayList<>();
-        String sql="select a.*, b.agentName from projects_data a ,agent_table b where a.agentNumber=b.agentNumber where"
-                +" agentNumber='"+id+"'";
+        String sql="select a.*, b.agentName from projects_data a ,agent_table b where a.agentNumber=b.agentNumber and "
+                +" a.agentNumber='"+id+"'";
         List<Record> record= Db.find(sql);
         for(Record item:record){
             BaseProjects baseProjects=new BaseProjects();
@@ -73,7 +73,7 @@ public class ProjectMysqlDAL implements IProject {
             baseProjects.setAgentname(item.getStr("agentName"));
             baseProjects.setProjectid(item.getStr("proGroupId"));
             baseProjects.setProgroupname(item.getStr("proGroupName"));
-            sql="select count(*) from agent_data a, where proGroupId="+item.getStr("proGroupName");
+            sql="select count(*) from agent_data  where proGroupId="+item.getStr("proGroupId");
             Record  record1=Db.findFirst(sql);
             baseProjects.setDevicenum(record1.getInt("count(*)"));
             list.add(baseProjects);

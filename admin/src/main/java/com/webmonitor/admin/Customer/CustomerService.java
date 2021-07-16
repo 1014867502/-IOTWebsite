@@ -1,14 +1,18 @@
-package com.webmonitor.admin.role;
+package com.webmonitor.admin.Customer;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.admin.common.kit.I18nKit;
-import com.webmonitor.core.bll.StaffService;
+import com.webmonitor.core.dal.AgentDataMysqlDAL;
+import com.webmonitor.core.dal.StaffDataMysqlDAL;
+import com.webmonitor.core.idal.IAgentData;
+import com.webmonitor.core.idal.IStaffData;
 import com.webmonitor.core.model.Permission;
 import com.webmonitor.core.model.Role;
 import com.webmonitor.core.model.StaffData;
+import com.webmonitor.core.model.StaffDataEntity;
 import com.webmonitor.core.util.exception.BusinessException;
 import com.webmonitor.core.vo.Result;
 
@@ -18,51 +22,60 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class RoleService {
-    public static final RoleService me = new RoleService();
+public class CustomerService {
+    public static final CustomerService me = new CustomerService();
 
-    public Page<Role> paginate(int pageNo, int limit, boolean showSuper) {
-        String condition = "";
-        if (!showSuper) {
-            condition = " where id != 1 ";
-        }
-        return Role.dao.paginate(pageNo, limit, "select *", "from sys_role "+condition+" order by id asc");
+    private static IStaffData dal=new StaffDataMysqlDAL();
+
+    /**分页查询用户数据**/
+    public Page<StaffData> paginate(String customername,int pageNo, int limit) {
+        return StaffData.dao.paginate(pageNo, limit, "select *", "from staff_data where uAccountNum like '%"+customername+"%'");
     }
 
-    public Role findById(int roleId) {
-        return Role.dao.findById(roleId);
+    /**根据用户id查找用户**/
+    public StaffData findById(int roleId) {
+        return StaffData.dao.findById(roleId);
     }
 
-    public Result<String> save(Role role) {
-        if (exists(-1, role.getName())) {
-            String tip = I18nKit.getI18nStr("error_name_existsed");
-            throw new BusinessException(tip);
-        }
-        role.setName(role.getName().trim());
-        role.setCreateAt(new Date());
-        role.save();
+    /**新增用户**/
+    public Result<String> save(StaffDataEntity staffData,String select) {
         Result<String> result = Result.newOne();
-        return result.success("ok");
+        StaffData staffData1=new StaffData();
+        staffData1.setAgentNumber(staffData.getAgentNumber());
+        staffData1.setCDept(staffData.getcDept());
+        staffData1.setIAccountType(staffData.getiAccountType());
+        staffData1.setIRoleType(staffData.getiRoleType());
+        staffData1.setUPassword(staffData.getuPassword());
+        staffData1.setURealName(staffData.getuRealName());
+        staffData1.setUAccountNum(staffData.getuAccountNum());
+        staffData1.setGroupAssemble(select);
+        if(staffData1.save()){
+            result.success("成功");
+        }else{
+            result.success("失败");
+        }
+        return result;
     }
 
-    public boolean exists(int roleId, String name) {
-        name = name.toLowerCase().trim();
-        String sql = "select id from sys_role where lower(name) = ? and id != ? limit 1";
-        Integer id = Db.queryInt(sql, name, roleId);
+    /**根据id判断用户是否存在**/
+    public boolean exists(int staffid) {
+        String sql = "select id from staff_data where id="+staffid;
+        Integer id = Db.queryInt(sql);
         return id != null;
     }
 
-    public Result<String> update(Role role) {
-        if (exists(role.getId(), role.getName())) {
+    /**更新用户资料**/
+    public Result<String> update(StaffData staffData) {
+        if (exists(staffData.getId())) {
             String tip = I18nKit.getI18nStr("error_name_existsed");
             throw new BusinessException(tip);
         }
-        role.setName(role.getName().trim());
-        role.update();
+        staffData.update();
         Result<String> result = Result.newOne();
         return result.success("ok");
     }
 
+    /**删除用户资料**/
     public Result<String> delete(final int roleId) {
         if (roleId == 1) {
             String tip = I18nKit.getI18nStr("error_super_account_cannot_deleted");
@@ -70,9 +83,7 @@ public class RoleService {
         }
         boolean flag = Db.tx(new IAtom() {
             public boolean run() throws SQLException {
-                Db.delete("delete from sys_account_role where roleId=?", roleId);
-                Db.delete("delete from sys_role_permission where roleId=?", roleId);
-                Role.dao.deleteById(roleId);
+                StaffData.dao.deleteById(roleId);
                 return true;
             }
         });
@@ -83,6 +94,29 @@ public class RoleService {
         Result<String> result = Result.newOne();
         return result.success("ok");
     }
+
+    /**获取所有用户**/
+    public List<StaffDataEntity> getAllCustom(int pageno,int limit){
+        return dal.getAllCustomByPage(pageno,limit);
+    }
+
+    /**获取各类别的用户数量**/
+    public int getCountByType(String type){
+        List<StaffDataEntity> list=dal.getCountByType(type);
+        return list.size();
+    }
+
+    /**获取所有的用户的数量**/
+    public int getAllcount(){
+        List<StaffDataEntity> list=dal.getAlCustom();
+        return list.size();
+    }
+
+
+
+
+
+    /**--------------------------------------------------------------------------------**/
 
     public Result<String> addPermission(int roleId, int permissionId) {
         if (roleId == 1) {
@@ -150,8 +184,5 @@ public class RoleService {
 
         return ret;
     }
-
-    /**--------------------------------------------------------------------------------**/
-
 
 }

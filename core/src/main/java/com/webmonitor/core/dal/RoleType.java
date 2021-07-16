@@ -35,6 +35,21 @@ public enum RoleType {
         return "none";
     }
 
+    public static String getTypeName(int type){
+        String name="";
+        switch(type){
+            case 0:
+                name="普通用户";
+                break;
+            case 1:
+                name="供销商管理员";
+                break;
+            case 2:
+                name="超级管理员";
+                break;
+        }
+        return name;
+    }
 
     public int getIndex() {
         return this.index;

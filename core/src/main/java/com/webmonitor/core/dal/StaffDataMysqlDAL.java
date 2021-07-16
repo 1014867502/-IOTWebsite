@@ -1,10 +1,15 @@
 package com.webmonitor.core.dal;
 
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.core.idal.IStaffData;
 import com.webmonitor.core.model.StaffData;
+import com.webmonitor.core.model.StaffDataEntity;
+import com.webmonitor.core.model.userbase.BaseProjects;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class StaffDataMysqlDAL implements IStaffData {
@@ -20,22 +25,22 @@ public class StaffDataMysqlDAL implements IStaffData {
         return  staffData;
     }
     @Override
-    public void edit(String comid, String loginaccount,String realname, String dept, String roletype, String accounttype, String groupassemble) {
-        Record staff= Db.findFirst("select * from staff_data where uAccountNum='"+loginaccount+"'");
-        staff.set("uRealName",realname).set("agentNumber",comid).set("cDept",dept).
-                set("iRoleType",roletype).set("iAccountType",accounttype).set("groupAssemble",groupassemble);
-        Db.update("staff_data",staff);
+    public void edit(StaffData staffData) {
+//        Record staff= Db.findFirst("select * from staff_data where uAccountNum='"+staffData.getUAccountNum()+"'");
+//        staff.set("uRealName",realname).set("agentNumber",comid).set("cDept",dept).
+//                set("iRoleType",roletype).set("iAccountType",accounttype).set("groupAssemble",groupassemble);
+           staffData.update();
     }
 
     @Override
-    public void add(String comid, String password, String realname, String dept, String roletype, String accounttype, String groupassemble) {
+    public void add(StaffData staffData) {
         String account="";
         if(isExistTable(randomAcount(),"staff_data","uAccountNum")){
-            add(comid, password, realname, dept, roletype, accounttype, groupassemble);
+            add(staffData);
         }else{
-            Record staff=new Record().set("agentNumber",comid).set("uAccountNum",account).set("uPassword",password)
-                    .set("uRealName",realname).set("cDept",dept).set("iRoleType",roletype).set("iAccountType",accounttype)
-                    .set("groupAssemble",groupassemble);
+            Record staff=new Record().set("agentNumber",staffData.getAgentNumber()).set("uAccountNum",staffData.getUAccountNum()).set("uPassword",staffData.getUPassword())
+                    .set("uRealName",staffData.getURealName()).set("cDept",staffData.getCDept()).set("iRoleType",staffData.getIRoleType()).set("iAccountType",staffData.getIAccountType())
+                    .set("groupAssemble",staffData.getGroupAssemble());
             Db.save("staff_data",staff);
         }
     }
@@ -55,6 +60,13 @@ public class StaffDataMysqlDAL implements IStaffData {
         staff.set("groupAssemble",author);
         Db.update("staff_data",staff);
 
+    }
+
+    @Override
+    public List<StaffData> searchStaffData(String customname) {
+        List<StaffData> staffDataList=new ArrayList<>();
+        staffDataList=StaffData.dao.find("select * from staff_data where uAccountNum like '%"+customname+"%'");
+        return staffDataList;
     }
 
     public String randomAcount(){
@@ -88,5 +100,79 @@ public class StaffDataMysqlDAL implements IStaffData {
         }else{
             return false;
         }
+    }
+
+    /**获取用户列表**/
+    public List<StaffDataEntity> getAllCustomByPage(int pageno,int limit){
+        String sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber";
+        List<StaffDataEntity> list=new ArrayList<>();
+        Page<Record> record= Db.paginate(pageno,limit,"select a.*,b.agentName",sql);
+        List<Record> recordList=record.getList();
+        for(Record item:recordList){
+            StaffDataEntity staffDataEntity=new StaffDataEntity();
+            staffDataEntity.setId(item.getInt("id"));
+            staffDataEntity.setAgentName(item.getStr("agentName"));
+            staffDataEntity.setAgentNumber(item.getStr("agentNumber"));
+            staffDataEntity.setuAccountNum(item.getStr("uAccountNum"));
+            staffDataEntity.setuPassword(item.getStr("uPassword"));
+            staffDataEntity.setcDept(item.getStr("cDept"));
+            staffDataEntity.setuRealName(item.getStr("uRealName"));
+            staffDataEntity.setiRoleType(item.getInt("iRoleType"));
+            String projectlist=item.getStr("groupAssemble").replace('@',',');
+            staffDataEntity.setGroupAssemble(projectlist);
+            int type=item.getInt("iRoleType");
+            staffDataEntity.setRoleType(RoleType.getTypeName(type));
+            list.add(staffDataEntity);
+        }
+        return list;
+    }
+
+    /**根据类别查询用户数目**/
+    @Override
+    public List<StaffDataEntity> getCountByType(String type) {
+        String sql="select a.*,b.agentName from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where iRoleType="+type;
+        List<StaffDataEntity> list=new ArrayList<>();
+        List<Record> record= Db.find(sql);
+        for(Record item:record){
+            StaffDataEntity staffDataEntity=new StaffDataEntity();
+            staffDataEntity.setId(item.getInt("id"));
+            staffDataEntity.setAgentName(item.getStr("agentName"));
+            staffDataEntity.setAgentNumber(item.getStr("agentNumber"));
+            staffDataEntity.setuAccountNum(item.getStr("uAccountNum"));
+            staffDataEntity.setuPassword(item.getStr("uPassword"));
+            staffDataEntity.setcDept(item.getStr("cDept"));
+            staffDataEntity.setuRealName(item.getStr("uRealName"));
+            staffDataEntity.setiRoleType(item.getInt("iRoleType"));
+            String projectlist=item.getStr("groupAssemble").replace('@',',');
+            staffDataEntity.setGroupAssemble(projectlist);
+            int roletype=item.getInt("iRoleType");
+            staffDataEntity.setRoleType(RoleType.getTypeName(roletype));
+            list.add(staffDataEntity);
+        }
+        return list;
+    }
+
+    @Override
+    public List<StaffDataEntity> getAlCustom() {
+        String sql="select a.*,b.agentName from staff_data a left join agent_table b on a.agentNumber=b.agentNumber";
+        List<StaffDataEntity> list=new ArrayList<>();
+        List<Record> record= Db.find(sql);
+        for(Record item:record){
+            StaffDataEntity staffDataEntity=new StaffDataEntity();
+            staffDataEntity.setId(item.getInt("id"));
+            staffDataEntity.setAgentName(item.getStr("agentName"));
+            staffDataEntity.setAgentNumber(item.getStr("agentNumber"));
+            staffDataEntity.setuAccountNum(item.getStr("uAccountNum"));
+            staffDataEntity.setuPassword(item.getStr("uPassword"));
+            staffDataEntity.setcDept(item.getStr("cDept"));
+            staffDataEntity.setuRealName(item.getStr("uRealName"));
+            staffDataEntity.setiRoleType(item.getInt("iRoleType"));
+            String projectlist=item.getStr("groupAssemble").replace('@',',');
+            staffDataEntity.setGroupAssemble(projectlist);
+            int roletype=item.getInt("iRoleType");
+            staffDataEntity.setRoleType(RoleType.getTypeName(roletype));
+            list.add(staffDataEntity);
+        }
+        return list;
     }
 }

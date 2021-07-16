@@ -11,21 +11,28 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     var projectcount;
     var identity="";
 
-    laypage.render({
-        elem: 'demo7'
-        ,count: projectcount
-        ,limit:10
-        ,layout: ['prev', 'page', 'next','skip']
-        ,theme: '#1E9FFF'
-        ,jump: function(obj){
-            debugger
-            getUserProjects(obj.curr);
-        }
-    });
-
-
 
     getProjectCount();
+    pagerender();
+
+    function pagerender(){
+        laypage.render({
+            elem: 'demo7'
+            ,count: projectcount
+            ,limit:5
+            ,layout: ['prev', 'page', 'next','skip']
+            ,theme: '#1E9FFF'
+            ,jump: function(obj){
+                debugger
+                getUserProjects(obj.curr);
+            }
+        });
+    }
+
+
+
+
+
 
     /**针对管理员进行创建项目**/
     function admincreateproject(){
@@ -131,7 +138,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             success: function (data) {
                 debugger
                 projectcount=data.data.length;
-                $("#projectcount").html("<span>"+projectcount+"</span>");
+                $("#companycount").html("<span>"+projectcount+"</span>");
                 debugger
                 identity=judgeidentity();
             }
@@ -261,7 +268,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 laypage.render({
                     elem: 'demo7'
                     ,count:projectcount
-                    ,limit:10
+                    ,limit:5
                     ,layout: ['prev', 'page', 'next','skip']
                     ,theme: '#1E9FFF'
                     ,jump: function(obj){

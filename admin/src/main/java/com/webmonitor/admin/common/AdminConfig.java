@@ -1,6 +1,5 @@
 package com.webmonitor.admin.common;
 
-import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.wall.WallFilter;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
@@ -10,13 +9,11 @@ import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
 import com.jfinal.i18n.I18nInterceptor;
 import com.jfinal.json.MixedJsonFactory;
-import com.jfinal.kit.PathKit;
 import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
-import com.webmonitor.admin.account.AccountController;
 import com.webmonitor.admin.common.assistThread.TimerClearDiskFileThread;
 import com.webmonitor.admin.common.assistThread.TimerClearFileThread;
 import com.webmonitor.admin.common.interceptor.LoginSessionInterceptor;
@@ -37,7 +34,7 @@ import com.webmonitor.admin.manage.ManagerController;
 import com.webmonitor.admin.overview.OverviewController;
 
 import com.webmonitor.admin.projects.ProjectController;
-import com.webmonitor.admin.role.RoleController;
+import com.webmonitor.admin.Customer.CustomerController;
 import com.webmonitor.core.config.JfinalCoreConfig;
 import com.webmonitor.core.config.kit.StartInit;
 import com.webmonitor.core.model._MappingKit;
@@ -88,7 +85,7 @@ public class AdminConfig extends JfinalCoreConfig {
         me.add("/manage", ManagerController.class);
         me.add("/devicelist", DeviceController.class);
         //me.add("/account", AccountController.class);
-        me.add("/role", RoleController.class);
+        me.add("/custom", CustomerController.class);
         me.add("/company", CompanyController.class);
         me.add("/project", ProjectController.class);
         //me.add("/permission", PermissionController.class);

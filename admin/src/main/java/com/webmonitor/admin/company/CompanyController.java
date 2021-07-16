@@ -73,4 +73,16 @@ public class CompanyController extends BaseController {
         }
         renderJson(result);
     }
+
+    public void getAllCompany(){
+        List<AgentTable> agentTables=new ArrayList<>();
+        Result result=Result.newOne();
+        try{
+            agentTables=CompanyService.me.getAllCompany();
+            result.success(agentTables);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
 }
