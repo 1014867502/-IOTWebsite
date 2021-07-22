@@ -22,7 +22,7 @@ public class AgentDataService {
     }
 
     /**不同角色查询当前项目对应的设备**/
-    public Page<AgentDataDao> getDevicelistByParam(int page, int limit,String userid){
+    public Page<AgentData> getDevicelistByParam(int page, int limit,String userid){
         return dal.getDeviceByParams(page,limit,userid);
     }
 

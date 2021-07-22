@@ -140,7 +140,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 "                        <div class=\"projects\">\n" +
                 "                            <div style=\"margin: auto;\">\n" +
                 "                                <div class=\"projectname\">" + item.agentName + "</div>\n" +
-                "                                <div style=\"display: flex;justify-content: space-between;margin-top: 10px;color: #00f0ff;width: 150px\">\n" +
+                "                                <div style=\"display: flex;justify-content: space-between;padding-top: 10px;;color: #00f0ff;margin: auto;width: 150px\">\n" +
                 "                                    <span><a style='color: #00f0ff' href='/company/CompanyDetail?agentNumber="+item.agentNumber+"&&projectid="+projetid+"'>编辑</a></span>\n" +
                 "                                    <span class='delete' id='"+item.agentNumber+"'>删除</span>\n" +
                 "                                </div>\n" +

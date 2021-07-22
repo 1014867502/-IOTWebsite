@@ -28,7 +28,7 @@ public interface IAgentData {
     public Page<AgentData> getAllDeviceByGroupid(String Groupid,int pageno,int limit);
 
     /**不同权限查询设备表内数据**/
-    Page<AgentDataDao> getDeviceByParams(int pageno, int limit,String userid);
+    Page<AgentData> getDeviceByParams(int pageno, int limit,String userid);
 
     /**查找未关联的设备**/
     Page<AgentDataDao> getOutDeviceById(String projectid,int pageno,int limit,int type);

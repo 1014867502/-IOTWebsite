@@ -15,7 +15,7 @@ public class AdminService {
 
     /**查看所有设备**/
     public String getAllDeviceById(int pageno,int limit){
-        String sql=" from agent_data";
+        String sql=" from agent_data a,machine_data b where a.machineSerial=b.machineSerial";
         return sql;
     }
 

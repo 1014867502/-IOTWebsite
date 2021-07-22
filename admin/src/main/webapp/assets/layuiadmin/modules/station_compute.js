@@ -81,7 +81,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
 
         } else {
             doublebase = false;
-
         }
         let source = $('input[name="downloadsource"]:checked').val();
         changesoure(doublebase, source);
@@ -96,6 +95,8 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
             document.getElementById("rtkcontent").style.marginTop = "30px";
         } else {
             rtkturn = false;
+            document.getElementById("rtkfront").innerHTML=""
+            document.getElementById("rtkfront").style.display = "none";
             document.getElementById("rtkcontent").innerHTML = "";
             document.getElementById("rtkcontent").style.display = "none";
         }
@@ -470,7 +471,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            <div class=\"layui-form-item\">\n" +
                     "                                <label style=\"width: 86px;padding: 9px 10px;\" class=\"layui-form-label\">启用RTK解算</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id=\"rtkturn\" type=\"checkbox\" name=\"rtkturn\" lay-skin=\"switch\">\n" +
+                    "                                    <input id=\"rtkturn\" type=\"checkbox\" lay-filter='rtkturn' name=\"rtkturn\" lay-skin=\"switch\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div id=\"coreselect\">\n" +
@@ -483,8 +484,8 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "\n" +
                     "                        </div>\n" +
                     "\n" +
-                    "                        <div style=\"display: flex;margin-top: 30px;margin-bottom: 20px\">\n" +
-                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                        <div id='rtkfront' style=\"display: flex;margin-top: 30px;margin-bottom: 20px\">\n" +
+                    "                           <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">RTK解算设置</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
                     "                                    <select id=\"rtkPos\" name=\"rtkPos\" lay-verify=\"required\">\n" +
@@ -507,7 +508,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                                        <option value=\"5\">5度</option>\n" +
                     "                                    </select>\n" +
                     "                                </div>\n" +
-                    "                            </div>\n" +
+                    "                            </div>\n"+
                     "                        </div>\n" +
                     "                        <div id=\"rtkcontent\">\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
@@ -991,6 +992,30 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     function rtkshow(data) {
         if(data!=null){
             document.getElementById("coreselect").innerHTML="";
+            document.getElementById("rtkfront").innerHTML="<div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">RTK解算设置</label>\n" +
+                "                                <div class=\"layui-input-block\">\n" +
+                "                                    <select id=\"rtkPos\" name=\"rtkPos\" lay-verify=\"required\">\n" +
+                "                                        <option value=\"1\">正常模式（5分钟输出）</option>\n" +
+                "                                        <option value=\"2\">紧急模式（1秒输出）</option>\n" +
+                "                                        <option value=\"3\">紧急模式（5秒输出）</option>\n" +
+                "                                    </select>\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                            <div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\" style=\"width: 150px\">IMU触发RTK紧急模式</label>\n" +
+                "                                <div class=\"layui-input-block\" style=\"margin-left: 180px\">\n" +
+                "                                    <select id=\"imuWarn\" name=\"imuWarn\" lay-verify=\"required\">\n" +
+                "                                        <option value=\"0\">关闭</option>\n" +
+                "                                        <option value=\"0.3\">0.3度</option>\n" +
+                "                                        <option value=\"0.5\">0.5度</option>\n" +
+                "                                        <option value=\"1\">1度</option>\n" +
+                "                                        <option value=\"2\">2度</option>\n" +
+                "                                        <option value=\"3\">3度</option>\n" +
+                "                                        <option value=\"5\">5度</option>\n" +
+                "                                    </select>\n" +
+                "                                </div>\n" +
+                "                            </div>";
             document.getElementById("rtkcontent").innerHTML=" <div class=\"layui-form-item  fastinput\">\n" +
                 "                                <label class=\"layui-form-label\">通信协议</label>\n" +
                 "                                <div class=\"layui-input-block\">\n" +

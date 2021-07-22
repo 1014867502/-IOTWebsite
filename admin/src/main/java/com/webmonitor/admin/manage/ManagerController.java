@@ -34,6 +34,12 @@ public class ManagerController extends BaseController {
         render("selectprojects.html");
     }
 
+    public void companyprojects(){
+        String agentnum=getPara("agentnum");
+        setAttr("agentNum",agentnum);
+        render("companyprojects.html");
+    }
+
     //设备管理页面
     public void devicemanage() {
 //        String projetid = getCookie(IndexService.me.accessProjectId);
@@ -105,7 +111,7 @@ public class ManagerController extends BaseController {
                     break;
                 case companyadmin:
                     setAttr("identity", "user");
-                    result.success(ProjectService.me.getProjectByComIdPageData(currentuser.getAgentNumber(), no, pagesize));
+//                    result.success(ProjectService.me.getProjectByComIdPageData(currentuser.getAgentNumber(), no, pagesize));
                     break;
             }
         } catch (Throwable e) {

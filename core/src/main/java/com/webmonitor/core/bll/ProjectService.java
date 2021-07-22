@@ -47,7 +47,7 @@ public class ProjectService {
     }
 
     /**根据公司编号分页获取项目**/
-    public Page<Object> getProjectByComIdPageData(String comid,int pageno, int limit){
+    public Page<BaseProjects> getProjectByComIdPageData(String comid,int pageno, int limit){
         return dal.getProjectsByComIdPageData(comid,pageno,limit);
     }
 

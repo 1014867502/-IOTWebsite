@@ -91,6 +91,19 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         });
     })
 
+    /*旗下项目管理跳转*/
+    $("#projectmanage").click(function () {
+        $.ajax({
+            url:'/manage/companyprojects',
+            data:{
+                agentnum:agentNumber
+            },
+            success:function () {
+                
+            }
+        })
+    })
+
     //监听页面表格查询
     $("#datasumbit").on('click', function () {
         let agentnum=Devicelist.getValue();

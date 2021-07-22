@@ -187,16 +187,19 @@
         background-color: #fffefe;
         box-shadow: 0 0 6px -1px #9F9F9F;
     }
+
     .devicecard {
         width: 50%;
         text-align: center;
         margin: auto;
     }
+
     .layui-form-checked[lay-skin=primary] i {
         border-color: #1e9fff !important;
         background-color: #1e9fff;
         color: #fff;
     }
+
     .layui-laypage .layui-laypage-curr .layui-laypage-em {
         position: absolute;
         left: -1px;
@@ -241,13 +244,15 @@
         <div class="layui-form-item">
             <label class="layui-form-label">设备名</label>
             <div class="layui-input-block">
-                <input id="machinname" style="width: 70%" type="text" name="machineName"  lay-verify="editaccount|required" placeholder="请输入设备名" autocomplete="off" class="layui-input">
+                <input id="machinname" style="width: 70%" type="text" name="machineName"
+                       lay-verify="editaccount|required" placeholder="请输入设备名" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">设备编号</label>
             <div class="layui-input-block">
-                <input id="machineserial" style="width: 70%" type="text" name="machineSerial" required  lay-verify="required" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
+                <input id="machineserial" style="width: 70%" type="text" name="machineSerial" required
+                       lay-verify="required" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -267,10 +272,10 @@
                 </div>
             </div>
         </div>
-        <div class="layui-form-item" >
+        <div class="layui-form-item">
             <div class="layui-input-block">
-                <button  class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
-                <button  type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
@@ -278,24 +283,24 @@
 
 
 <script type="text/html" id="statusdemo">
-    <button class="layui-btn layui-btn-primary layui-btn-xs" style="background-color: #f19038;color: #F1F1F1">未关联</button>
+    <button class="layui-btn layui-btn-primary layui-btn-xs" style="background-color: #f19038;color: #F1F1F1">未关联
+    </button>
 </script>
-
 
 
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
-                <div class="layui-col-md12 layui-card" id="projectheader"
-                     style="height: auto;background-color: #f8f8f8;box-shadow: 0 0 6px 3px #c9c9c9;display: flex">
-                    <div style="display: flex;margin: auto;">
-                        <ul style="display: flex ;margin: auto;">
-                            <li class="little">
-                                <div>公司名称</div>
-                                <div style="font-size: 20px" id="comname"></div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+        <div class="layui-col-md12 layui-card" id="projectheader"
+             style="height: auto;background-color: #f8f8f8;box-shadow: 0 0 6px 3px #c9c9c9;">
+            <div style="display: flex;margin: auto;">
+                <ul style="display: flex ;margin: auto;">
+                    <li class="little">
+                        <div>公司名称</div>
+                    </li>
+                </ul>
+            </div>
+            <div style="text-align: center;font-size: 20px" id="comname"></div>
+        </div>
         <div class="header-Data">
             <div style="display: flex;max-width: 1440px;margin-left: auto;margin-right: auto;">
                 <div class="indexcard">
@@ -352,11 +357,20 @@
                             </button>
                         </div>
                     </div>
-<!--                    <div style="margin: auto;display: flex">-->
-<!--                        <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>关联设备</button>-->
-<!--                    </div>-->
-                    <div style="margin: auto;display: flex">
-                        <button type="button" class="layui-btn" id="add_device2"><img src="/assets/images/icon_add_device_28.png"/>添加设备</button>
+                    <!--                    <div style="margin: auto;display: flex">-->
+                    <!--                        <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>关联设备</button>-->
+                    <!--                    </div>-->
+                    <div class="layui-form-item" style="margin: auto">
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn" id="projectmanage"><img
+                                    src="/assets/images/icon_add_device_28.png"/>公司下项目管理
+                            </button>
+                        </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn" id="add_device2"><img
+                                    src="/assets/images/icon_add_device_28.png"/>添加设备
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="layui-card-body">
@@ -385,8 +399,8 @@
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
 
 <script>
-    var agentnum="#(agentNum)";
-    var projetid="#(projetid)";
+    var agentnum = "#(agentNum)";
+    var projetid = "#(projetid)";
     debugger
     layui.config({
         base: '/assets/layuiadmin/'

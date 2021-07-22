@@ -12,7 +12,7 @@ public class CompanyAdminService {
 
     /**获取所有设备**/
     public String getAllDevice(String agentnumber){
-        String sql=" from agent_data where agentNumber="+agentnumber;
+        String sql=" from agent_data a,machine_data b  where a.machineSerial=b.machineSerial and agentNumber="+agentnumber;
         return sql;
     }
 

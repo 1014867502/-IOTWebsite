@@ -68,12 +68,12 @@ public class DeviceController  extends BaseController {
 
     /**不同角色查询项目相关的设备列表**/
     public void getDeviceList(){
-        Result<Page<AgentDataDao>> result=Result.newOne();
+        Result<Page<AgentData>> result=Result.newOne();
         String id=getPara("userid");
         int pageno = getParaToInt("page", 1);
         int limit = getParaToInt("limit", 50);
         try{
-            Page<AgentDataDao> page= AgentDataService.me.getDevicelistByParam(pageno,limit,id);
+            Page<AgentData> page= AgentDataService.me.getDevicelistByParam(pageno,limit,id);
             result.success(page);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);

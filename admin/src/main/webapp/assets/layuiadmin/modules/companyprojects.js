@@ -84,7 +84,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             width: "600px", //r、l抽屉可以设置宽度
             content: $("#windowadmin"),
             success: function (layero, index) {
-                 demo = xmSelect.render({
+                demo = xmSelect.render({
                     el: '#demo2',
                     radio: true,
                     clickClose: true,
@@ -142,13 +142,15 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     /**获取项目数量信息**/
     function getProjectCount() {
         $.ajax({
-            url:'/manage/getprojectcount',
+            url:'/project/getProjectByComId',
+            data:{
+                id:agentNum
+            },
             type: 'GET',
             async:false,
             success: function (data) {
                 projectcount=data.data;
-                $("#projectcount").html("<span>"+projectcount+"</span>");
-                identity=judgeidentity();
+                $("#projectcount").html("<span>"+projectcount.size+"</span>");
                 layerpage();
             }
         })
@@ -158,9 +160,10 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     //根据页码获取分页信息
     function getUserProjects(no) {
         $.ajax({
-            url: '/manage/getuserproject',
+            url: '/project/getProjectPageByComId',
             data:{
-              pageno:no
+                pageno:no,
+                agentnum:agentNum
             },
             type: 'GET',
             success: function (data) {
@@ -262,19 +265,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     }
 
 
-    function judgeidentity(){
-        let identity="";
-        $.ajax({
-            url:'/manage/judgeidentity',
-            async:false,
-            type:'get',
-            success:function(data){
-                identity=data.data;
-            }
-        });
-        return identity;
-    }
-
     /**删除项目**/
     function deletproject(projectid){
         $.ajax({
@@ -301,5 +291,5 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     }
 
 
-    exports('selectproject', {})
+    exports('companyprojects', {})
 });

@@ -121,7 +121,7 @@ public class ProjectMysqlDAL implements IProject {
     }
 
     @Override
-    public Page<Object> getProjectsByComIdPageData(String comid, int pageno, int limit) {
+    public Page<BaseProjects> getProjectsByComIdPageData(String comid, int pageno, int limit) {
         List<BaseProjects> list=new ArrayList<>();
         String sql=" from projects_data a ,agent_table b where a.agentNumber=b.agentNumber where"
                 +" agentNumber='"+comid+"'";
@@ -139,7 +139,7 @@ public class ProjectMysqlDAL implements IProject {
             baseProjects.setDevicenum(record1.getInt("count(*)"));
             list.add(baseProjects);
         }
-        return new Page<Object>(Collections.singletonList(list),page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+        return new Page<BaseProjects>(list,page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
     }
 
     /**获取用户项目数量**/

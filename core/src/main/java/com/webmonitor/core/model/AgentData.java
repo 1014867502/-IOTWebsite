@@ -49,6 +49,7 @@ public class AgentData {
         return machineSerial;
     }
 
+
     public void setMachineSerial(String machineSerial) {
         this.machineSerial = machineSerial;
     }

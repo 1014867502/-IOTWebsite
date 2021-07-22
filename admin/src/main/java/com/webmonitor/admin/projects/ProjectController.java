@@ -91,6 +91,21 @@ public class ProjectController extends BaseController {
         renderJson(result);
     }
 
+    /**根据公司获取分页的项目列表**/
+    public void getProjectPageByComId(){
+        int pageno=getParaToInt("pageno",1);
+        int limit=getParaToInt("limit",5);
+        String agentnum=getPara("agentnum");
+        Result<Page<BaseProjects>> result=Result.newOne();
+        try{
+            Page<BaseProjects> projects=ProjectService.me.getProjectByComIdPageData(agentnum,pageno,limit);
+            result.success(projects);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
     public void getProjectByName(){
         String name=getPara("name");
         Result result=Result.newOne();
