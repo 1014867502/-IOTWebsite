@@ -29,8 +29,8 @@ public class ManagerController extends BaseController {
     }
 
     public void selectprojects(){
-        String projetid = getCookie(IndexService.me.accessUserId);
-        setAttr("projetid", projetid);
+        String userid = getCookie(IndexService.me.accessUserId);
+        setAttr("userid", userid);
         render("selectprojects.html");
     }
 
@@ -78,7 +78,7 @@ public class ManagerController extends BaseController {
         String pageno = getPara("pageno");
         int no = Integer.parseInt(pageno);
         Result<Page<Object>> result = Result.newOne();
-        int pagesize = 10;
+        int pagesize = 5;
         List<BaseProjects> list = new ArrayList<>();
         try {
             String userid = getCookie(IndexService.me.accessUserId);
@@ -108,10 +108,10 @@ public class ManagerController extends BaseController {
                     result.success(ProjectService.me.getProjectByComIdPageData(currentuser.getAgentNumber(), no, pagesize));
                     break;
             }
-            renderJson(result);
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
         }
+        renderJson(result);
     }
 
     /**获取用户项目数量**/
@@ -145,8 +145,8 @@ public class ManagerController extends BaseController {
 
     }
 
-    /**获取所有项目**/
-    public void getallproject(){
+    /**获取所有公司**/
+    public void getallCompanys(){
         Result<List<AgentTable>> result=Result.newOne();
         try{
             List<AgentTable> agentTables= CompanyService.me.getAllCompany();
@@ -177,7 +177,7 @@ public class ManagerController extends BaseController {
                     identity="admin";
                     break;
                 case companyadmin:
-                    identity="user";
+                    identity="company";
                     break;
             }
             result.success(identity);

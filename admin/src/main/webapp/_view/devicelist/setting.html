@@ -223,7 +223,6 @@
 
     function  iframechange() {
         var iframes = document.getElementsByTagName('iframe_a');
-        debugger
         for (let i = 0, j = iframes.length; i < j; ++i) {
             // 放在闭包中，防止iframe触发load事件的时候下标不匹配
             (function(_i) {

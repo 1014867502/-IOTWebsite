@@ -10,7 +10,7 @@ public class AgentData {
     private int onlineState;
     private String machineName;
     private Date createTime;
-    private String agentname;
+    private String agentName;
     private int progroupid;
 
     public int getId() {
@@ -29,12 +29,12 @@ public class AgentData {
         this.progroupid = progroupid;
     }
 
-    public String getAgentname() {
-        return agentname;
+    public String getAgentName() {
+        return agentName;
     }
 
-    public void setAgentname(String agentname) {
-        this.agentname = agentname;
+    public void setAgentName(String agentName) {
+        this.agentName = agentName;
     }
 
     public String getAgentNumber() {

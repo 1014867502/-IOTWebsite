@@ -15,7 +15,7 @@
 <body class="layui-layout-body">
 <div id="LAY_app">
     <div class="layui-layout layui-layout-admin">
-        <div class="layui-header" style="background-color: #66b5ef;">
+        <div class="layui-header" style="background-color: #0E41CC;">
             <!-- 头部区域 -->
             #include("/_view/_common/_header.html")
         </div>
@@ -96,18 +96,19 @@
                 url:'/custom/getauthorById',
                 async:false,
                 success:function (data) {
-                    debugger
                     switch (data.data) {
                         case "user":
+                            usermanage
                             document.getElementById("companymanage").style.display="none";
                             document.getElementById("devicemanage").style.display="none";
+                            document.getElementById("usermanage").style.display="none";
                             break;
                         case "companyadmin":
                             document.getElementById("projectmanage").style.display="none";
                             document.getElementById("devicemanage").style.display="none";
+                            document.getElementById("usermanage").style.display="none";
                             break;
                         case "superadmin":
-                            document.getElementById("projectmanage").style.display="none";
                             document.getElementById("devicemanage").style.display="none";
                             break;
                     }

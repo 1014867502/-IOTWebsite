@@ -56,7 +56,7 @@ public class DeviceListService {
     }
 
     public Page<AgentData> getAllDeviceByGroupid(String Groupid,int pageno,int limit){
-        return dal.getAllDeviceByComid(Groupid, pageno, limit);
+        return dal.getAllDeviceByGroupid(Groupid, pageno, limit);
     }
 
 
@@ -102,6 +102,11 @@ public class DeviceListService {
         }
     }
 
+    /**添加新设备**/
+    public void addDevice(AgentData agentData){
+        String state=String.valueOf(agentData.getOnlineState());
+        dal.addDevice(agentData.getMachineName(),agentData.getAgentNumber(),state,agentData.getMachineName());
+    }
 
     public static String getOrder(String order){
         String realorder="";

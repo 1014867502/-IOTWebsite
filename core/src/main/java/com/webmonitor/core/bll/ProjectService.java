@@ -36,6 +36,10 @@ public class ProjectService {
         return dal.getProjectsPageData(pageno,limit);
     }
 
+    /**根据项目名称获取项目**/
+    public BaseProjects getProjectByName(String projectname){
+        return dal.getProjectByName(projectname);
+    }
 
     /**根据用户id获取对应的项目**/
     public Page<Object> getProjectsById(String userid,int pageno,int limit){

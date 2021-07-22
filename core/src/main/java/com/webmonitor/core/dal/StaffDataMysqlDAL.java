@@ -6,9 +6,10 @@ import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.core.idal.IStaffData;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.StaffDataEntity;
-import com.webmonitor.core.model.userbase.BaseProjects;
+import com.webmonitor.core.util.MD5Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -38,7 +39,9 @@ public class StaffDataMysqlDAL implements IStaffData {
         if(isExistTable(randomAcount(),"staff_data","uAccountNum")){
             add(staffData);
         }else{
-            Record staff=new Record().set("agentNumber",staffData.getAgentNumber()).set("uAccountNum",staffData.getUAccountNum()).set("uPassword",staffData.getUPassword())
+            String password=staffData.getUPassword();
+            String code= MD5Utils.md5(password);
+            Record staff=new Record().set("agentNumber",staffData.getAgentNumber()).set("uAccountNum",staffData.getUAccountNum()).set("uPassword",code)
                     .set("uRealName",staffData.getURealName()).set("cDept",staffData.getCDept()).set("iRoleType",staffData.getIRoleType()).set("iAccountType",staffData.getIAccountType())
                     .set("groupAssemble",staffData.getGroupAssemble());
             Db.save("staff_data",staff);
@@ -175,4 +178,37 @@ public class StaffDataMysqlDAL implements IStaffData {
         }
         return list;
     }
+
+    @Override
+    public Page<StaffDataEntity> searchCustomByParam(String content, String agentnum, String roletype, int pageno, int limit) {
+        String sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where a.iRoleType="+roletype;
+        String test="";
+        if(content!=null&&!content.isEmpty()){
+            sql=sql+" and a.uAccountNum like '%"+content+"%' ";
+        }else if(!agentnum.isEmpty()){
+            sql=sql+" and a.agentNumber='"+agentnum+"' ";
+        }
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName",sql);
+        List<Record> recordList = page.getList();
+        List<StaffDataEntity> rslist = new ArrayList<>();
+        for (Record record : recordList) {
+            StaffDataEntity staffDataEntity=new StaffDataEntity();
+            staffDataEntity.setId(record.getInt("id"));
+            staffDataEntity.setAgentName(record.getStr("agentName"));
+            staffDataEntity.setAgentNumber(record.getStr("agentNumber"));
+            staffDataEntity.setuAccountNum(record.getStr("uAccountNum"));
+            staffDataEntity.setuPassword(record.getStr("uPassword"));
+            staffDataEntity.setcDept(record.getStr("cDept"));
+            staffDataEntity.setuRealName(record.getStr("uRealName"));
+            staffDataEntity.setiRoleType(record.getInt("iRoleType"));
+            String projectlist=record.getStr("groupAssemble").replace('@',',');
+            staffDataEntity.setGroupAssemble(projectlist);
+            int type=record.getInt("iRoleType");
+            staffDataEntity.setRoleType(RoleType.getTypeName(type));
+            rslist.add(staffDataEntity);
+        }
+        return new Page<StaffDataEntity>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+    }
+
+
 }

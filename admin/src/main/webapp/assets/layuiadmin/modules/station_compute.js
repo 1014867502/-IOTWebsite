@@ -59,7 +59,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     showform(0, 2);
 
     form.on('radio(compute)', function (data) {
-        debugger
         compute = data.value;
         showform(compute, station);
     });
@@ -77,7 +76,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     })
     /*监听双基站按钮*/
     form.on('switch(doublebase)', function (data) {
-        debugger
         if (this.checked) {
             doublebase = true;
 
@@ -105,7 +103,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     })
     /*监听原始数据回传按钮*/
     form.on('switch(rawdataturn)', function (data) {
-        debugger
         if (this.checked) {
             rawdataturn = true;
             document.getElementById("rawdatacontent").innerHTML = rawdatacontent;
@@ -120,7 +117,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     })
     /*监听表单提交*/
     form.on('submit(formDemo)', function (data) {
-        debugger;
         let test = data.field;
         let stringtest = JSON.stringify(test);
         $.ajax({
@@ -202,7 +198,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         let no = data1.toString()
         let no1 = data2.toString();
         let no2 = no + no1;
-        debugger;
         switch (no2) {
             case "02":
                 if (beforeform != null) {

@@ -10,10 +10,31 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     var projectlist;
     var projectcount;
     var identity="";
+    var layerindex;
 
 
     getProjectCount();
     pagerender();
+
+    form.verify({
+        editaccount:function (value) {
+            let judge;
+            $.ajax({
+                url:'/company/getCompanyByName',
+                data: {
+                    comname: value
+                },
+                async:false,
+                success:function (data) {
+                    judge=data.data;
+                }
+            })
+            if(judge!=null){
+                return "已存在当前账号，请重新输入";
+            }
+        }
+    });
+
 
     function pagerender(){
         laypage.render({
@@ -23,111 +44,58 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             ,layout: ['prev', 'page', 'next','skip']
             ,theme: '#1E9FFF'
             ,jump: function(obj){
-                debugger
                 getUserProjects(obj.curr);
             }
         });
     }
 
 
-
-
-
-
-    /**针对管理员进行创建项目**/
-    function admincreateproject(){
-        let projectlist=getAllProjects();
-        let arrData=[];
-        for (var i = 0; i < projectlist.length; i++) {
-            var item = projectlist[i];
-            var jsonStr = {};
-            jsonStr.name = item.agentName;
-            jsonStr.value = item.agentNumber;
-            arrData.push(jsonStr);
-        }
+    /**添加项目**/
+    $("#add_device").click(function () {
         drawer.render({
-            title: '添加项目',  //标题
-            offset: 'r',    //r:抽屉在右边、l:抽屉在左边
-            width: "600px", //r、l抽屉可以设置宽度
-            content: $("#windowadmin"),
-            btn: ['<i class="layui-icon">&#xe615;</i>提交', '重置'],
-            success: function (layero, index) {
-                var demo2 = xmSelect.render({
-                    el: '#demo2',
-                    radio: true,
-                    clickClose: true,
-                    data:arrData
-                });
-                $("#reset").click();
-            },
-            btn1: function (index, layero) {
-                let data = form.val("example");
-                debugger;
-            },
-            btn2: function (index, layero) {
-                layer.close(index);
-                return false;
-            }
-        });
-    }
-
-    /**针对普通用户和公司管理员**/
-    function usercreateproject(){
-        drawer.render({
-            title: '添加项目',  //标题
+            title: '添加公司',  //标题
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
             width: "600px", //r、l抽屉可以设置宽度
             content: $("#window"),
-            btn: ['<i class="layui-icon">&#xe615;</i>提交', '重置'],
-            success: function (layero, index) {
-                $("#reset").click();
+            success :function (layero, index) {
+                layerindex=index;
             },
-            btn1: function (index, layero) {
-                form.on('submit(formDemo)', function(data){
-                    debugger
-                    $.ajax({
-                        url:'/manage/addproject',
-                        data:{
-                            comid:projetid,
-                            projectname:data.field.title,
-                            userid:userid
-                        },
-                        async:false,
-                        success:function () {
-                            getUserProjects(1);
-                            getProjectCount();
-                        }
-                    })
-                    layer.close(index);
-                });
-                let data = form.val("example");
-                $("#btn1").click();
-                debugger;
-            },
-            btn2: function (index, layero) {
-                layer.close(index);
-                return false;
-            }
         });
-    }
-
-    /**添加项目**/
-    $("#add_device").click(function () {
-        debugger
-        switch(identity){
-            case "user":
-                usercreateproject();
-                break;
-            case "admin":
-                admincreateproject();
-        }
     })
 
+    form.on('submit(formDemo)', function(data){
+        let json=data.field;
+        let name=json.title;
+        $.ajax({
+            url:'/company/addCompany',
+            data:{
+                company:name,
+            },
+            async:false,
+            success:function (data) {
+                layer.msg('提交成功');
+            }
+        })
+        layer.close(layerindex);
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
 
-
-    $(".projects").mouseover(function () {
-
-    })
+    form.on('submit(formDemo2)', function(data){
+        let json=data.field;
+        let name=json.title;
+        $.ajax({
+            url:'/company/addCompany',
+            data:{
+                company:name,
+            },
+            async:false,
+            success:function (data) {
+                layer.msg('提交成功');
+            }
+        })
+        layer.close(layerindex);
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
 
     /**获取项目数量信息**/
     function getProjectCount() {
@@ -136,10 +104,8 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             type: 'GET',
             async:false,
             success: function (data) {
-                debugger
                 projectcount=data.data.length;
                 $("#companycount").html("<span>"+projectcount+"</span>");
-                debugger
                 identity=judgeidentity();
             }
         })
@@ -155,7 +121,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             },
             type: 'GET',
             success: function (data) {
-                debugger
                 var thisNode=document.getElementById("list2");
                 if(thisNode.childNodes.length>0){
                     thisNode.innerHTML = "";
@@ -169,7 +134,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     function showProjects(data) {
         for (let i = 0; i < data.length; i++) {
             let item = data[i];
-            debugger
             var innerHTML = "     <div class=\"layui-card\">\n" +
                 "                <div class=\"cardbody\">\n" +
                 "                    <div class=\"layui-card-body\">\n" +
@@ -177,7 +141,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 "                            <div style=\"margin: auto;\">\n" +
                 "                                <div class=\"projectname\">" + item.agentName + "</div>\n" +
                 "                                <div style=\"display: flex;justify-content: space-between;margin-top: 10px;color: #00f0ff;width: 150px\">\n" +
-                "                                    <span><a style='color: #00f0ff' href='/company/CompanyDetail?agentNumber="+item.agentNumber+"'>编辑</a></span>\n" +
+                "                                    <span><a style='color: #00f0ff' href='/company/CompanyDetail?agentNumber="+item.agentNumber+"&&projectid="+projetid+"'>编辑</a></span>\n" +
                 "                                    <span class='delete' id='"+item.agentNumber+"'>删除</span>\n" +
                 "                                </div>\n" +
                 "                            </div>\n" +
@@ -227,18 +191,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
         })
     }
 
-    function getAllProjects(){
-        let companys=[];
-        $.ajax({
-            url:'/manage/getallproject',
-            type:'get',
-            async:false,
-            success:function(data){
-                companys=data.data;
-            }
-        });
-        return companys;
-    }
 
 
     function judgeidentity(){
@@ -248,7 +200,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             async:false,
             type:'get',
             success:function(data){
-                debugger
                 identity=data.data;
             }
         });
@@ -272,7 +223,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                     ,layout: ['prev', 'page', 'next','skip']
                     ,theme: '#1E9FFF'
                     ,jump: function(obj){
-                        debugger
                         getUserProjects(obj.curr);
                     }
                 });

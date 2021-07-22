@@ -109,12 +109,12 @@
 <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
     <form class="layui-form" id="devicedata" method="post" lay-filter="example">
         <div class="layui-form-item">
-            <label class="layui-form-label">设备编号</label>
+            <label class="layui-form-label">供销商名称</label>
             <div class="layui-input-block">
-                <input style="width: 70%" type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input style="width: 70%" type="text" name="title" required  lay-verify="required|editaccount" placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item" style="visibility: hidden">
+        <div class="layui-form-item" >
             <div class="layui-input-block">
                 <button id="btn1" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
             </div>
@@ -122,24 +122,10 @@
     </form>
 </div>
 
-<div class="site-text" style="margin: 5%; display: none" id="windowadmin" target="test123">
-    <form class="layui-form" id="devicedataadmin" method="post" lay-filter="example">
-        <div class="layui-form-item">
-            <label class="layui-form-label">设备编号</label>
-            <div class="layui-input-block">
-                <input style="width: 70%" type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item" style="display: flex">
-            <label class="layui-form-label">选择公司</label>
-            <div id="demo2" class="xm-select-demo" style="width: 300px"></div>
-        </div>
-    </form>
-</div>
 
-<div class="layui-fluid">
+<div class="layui-fluid" style="padding: 0px">
     <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
-        <div style="width:1000px" id="list">
+        <div style="width:100%" id="list">
             <div class="layui-card" style="display: flex">
                 <ul style="display: flex ;margin: auto;">
                     <li class="little">
@@ -150,7 +136,7 @@
                 <div style="margin: auto">
                     <div style="margin: auto;display: flex">
                         <button type="button" class="layui-btn" id="add_device"><img
-                                src="/assets/images/icon_add_device_28.png"/>添加项目
+                                src="/assets/images/icon_add_device_28.png"/>添加供销商
                         </button>
                     </div>
                 </div>
@@ -162,7 +148,9 @@
 
         </div>
     </div>
-    <div><div style="text-align: center;" id="demo7"></div></div>
+    <div div class="layer-footer" style="position: fixed; bottom: 0;background-color:#fffefe;width:100%;height:50px">
+        <div style="text-align: center;" id="demo7"></div>
+    </div>
 </div>
 </div>
 
@@ -173,7 +161,6 @@
 <script>
     var identity="#(identity)";
     var projetid="#(projetid)";
-    debugger
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

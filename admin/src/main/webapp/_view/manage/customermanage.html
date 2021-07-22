@@ -146,30 +146,30 @@
     </form>
 </div>
 
-<div class="site-text" style="margin: 5%; display: none" id="editwindow" target="test123">
+<div class="site-text" style="margin: 5%; display: none" id="editwindow" target="test1234">
     <form class="layui-form" action="">
         <div class="layui-form-item">
             <label class="layui-form-label">账号名</label>
             <div class="layui-input-block">
-                <input id="uaccountnum" style="width: 70%" type="text" name="uAccountNum"  lay-verify="confirmaccount|required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input id="uaccountnum" style="width: 70%" type="text" name="uAccountNum"  lay-verify="editaccount|required" placeholder="请输入账号" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">昵称</label>
             <div class="layui-input-block">
-                <input id="urealname" style="width: 70%" type="text" name="uRealName" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input id="urealname" style="width: 70%" type="text" name="uRealName" required  lay-verify="required" placeholder="请输入昵称" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">登录密码</label>
             <div class="layui-input-block">
-                <input id="upassword" style="width: 70%" type="password" name="uPassword" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input id="upassword" style="width: 70%" type="password" name="editPassword"  placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">再次输入密码</label>
             <div class="layui-input-block">
-                <input id="againpassword" style="width: 70%" type="password" name="againPassword" required  lay-verify="required|confirmpass" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input id="againpassword" style="width: 70%" type="password" name="againPassword"  lay-verify="confirmeditpass" placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -232,8 +232,6 @@
                 </ul>
                 <div style="margin: auto">
                     <div style="margin: auto;display: flex">
-                        <button type="button" class="layui-btn">批量导出工具</button>
-                        <button type="button" class="layui-btn">批量导入</button>
                         <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>添加用户</button>
                     </div>
                 </div>
@@ -245,14 +243,17 @@
                         <!--                下拉框            <div id="projectlist" class="xm-select-project"></div>-->
                         <!--                        </div>-->
                         <div class="layui-inline">
-                            <select id="stats" name="stats" lay-verify="" lay-filter="stats">
-                                <option value="1">已处理</option>
-                                <option value="0">未处理</option>
-                                <option value="2">全部</option>
+                            <select id="searchtype" name="searchtype" lay-verify="" lay-filter="searchtype">
+                                <option value="0">普通用户</option>
+                                <option value="1">供销商管理员</option>
+                                <option value="2">超级管理员</option>
                             </select>
                         </div>
                         <div class="layui-inline">
-                            <input type="text" class="layui-input" name="SN" id="SN" placeholder=" 请输入设备sn号 " >
+                            <div id="companylistsearch" class="xm-select-project" style="width: 200px" ></div>
+                        </div>
+                        <div class="layui-inline">
+                            <input type="text" class="layui-input" name="account" id="account" placeholder=" 请输入用户账号 " >
                         </div>
                         <div class="layui-inline">
                             <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"

@@ -10,26 +10,66 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     var projectlist;
     var projectcount;
     var identity="";
+    var layerindex;
+    var demo;//添加项目的公司列表
 
-    laypage.render({
-        elem: 'demo7'
-        ,count: projectcount
-        ,limit:10
-        ,layout: ['prev', 'page', 'next','skip']
-        ,theme: '#1E9FFF'
-        ,jump: function(obj){
-            debugger
-            getUserProjects(obj.curr);
-        }
-    });
-
-
+    function layerpage(){
+        laypage.render({
+            elem: 'demo7'
+            ,count: projectcount
+            ,limit:5
+            ,layout: ['prev', 'page', 'next','skip']
+            ,theme: '#1E9FFF'
+            ,jump: function(obj){
+                getUserProjects(obj.curr);
+            }
+        });
+    }
 
     getProjectCount();
 
+    form.verify({
+        editname:function (value) {
+            let judge;
+            $.ajax({
+                url:'/project/getProjectByName',
+                data: {
+                    name: value
+                },
+                async:false,
+                success:function (data) {
+                    judge=data.data;
+                }
+            })
+            if(judge!=null){
+                return "已存在当前名称，请重新输入";
+            }
+        }
+    });
+
+    form.on('submit(formDemo)', function(data){
+        let json=data.field;
+        let company=demo.getValue();
+        $.ajax({
+            url:'/manage/addproject',
+            data:{
+                comid:company[0].value,
+                projectname:json.projectname,
+                userid:userid
+            },
+            async:false,
+            success:function (data) {
+                layer.msg('提交成功');
+            }
+        })
+        layer.close(layerindex);
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
+
+
     /**针对管理员进行创建项目**/
     function admincreateproject(){
-        let projectlist=getAllProjects();
+        let projectlist=getAllCompanys();
         let arrData=[];
         for (var i = 0; i < projectlist.length; i++) {
             var item = projectlist[i];
@@ -43,79 +83,56 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
             width: "600px", //r、l抽屉可以设置宽度
             content: $("#windowadmin"),
-            btn: ['<i class="layui-icon">&#xe615;</i>提交', '重置'],
             success: function (layero, index) {
-                var demo2 = xmSelect.render({
+                 demo = xmSelect.render({
                     el: '#demo2',
                     radio: true,
                     clickClose: true,
                     data:arrData
                 });
-                $("#reset").click();
+                layerindex=index;
             },
-            btn1: function (index, layero) {
-                let data = form.val("example");
-                debugger;
-            },
-            btn2: function (index, layero) {
-                layer.close(index);
-                return false;
-            }
         });
     }
 
     /**针对普通用户和公司管理员**/
     function usercreateproject(){
+        let company=getCurrentCompany();
+        let arrData=[];
+        for (var i = 0; i < company.length; i++) {
+            var item = company[i];
+            var jsonStr = {};
+            jsonStr.name = item.agentName;
+            jsonStr.value = item.agentNumber;
+            arrData.push(jsonStr);
+        }
         drawer.render({
             title: '添加项目',  //标题
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
             width: "600px", //r、l抽屉可以设置宽度
             content: $("#window"),
-            btn: ['<i class="layui-icon">&#xe615;</i>提交', '重置'],
             success: function (layero, index) {
-                $("#reset").click();
-            },
-            btn1: function (index, layero) {
-                form.on('submit(formDemo)', function(data){
-                    debugger
-                    $.ajax({
-                        url:'/manage/addproject',
-                        data:{
-                            comid:projetid,
-                            projectname:data.field.title,
-                            userid:userid
-                        },
-                        async:false,
-                        success:function () {
-                            getUserProjects(1);
-                            getProjectCount();
-                        }
-                    })
-                    layer.close(index);
+                demo = xmSelect.render({
+                    el: '#demo2',
+                    radio: true,
+                    clickClose: true,
+                    data:arrData
                 });
-                let data = form.val("example");
-                $("#btn1").click();
-                debugger;
+                layerindex=index;
             },
-            btn2: function (index, layero) {
-                layer.close(index);
-                return false;
-            }
         });
     }
 
     /**添加项目**/
     $("#add_device").click(function () {
-        debugger
         switch(identity){
-            case "user":
+            case "company":
                 usercreateproject();
                 break;
             case "admin":
                 admincreateproject();
         }
     })
-
 
 
     $(".projects").mouseover(function () {
@@ -129,11 +146,10 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             type: 'GET',
             async:false,
             success: function (data) {
-                debugger
                 projectcount=data.data;
                 $("#projectcount").html("<span>"+projectcount+"</span>");
-                debugger
                 identity=judgeidentity();
+                layerpage();
             }
         })
     }
@@ -142,13 +158,12 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     //根据页码获取分页信息
     function getUserProjects(no) {
         $.ajax({
-            url: '/project/getProjectsById',
+            url: '/manage/getuserproject',
             data:{
               pageno:no
             },
             type: 'GET',
             success: function (data) {
-                debugger
                 var thisNode=document.getElementById("list2");
                 if(thisNode.childNodes.length>0){
                     thisNode.innerHTML = "";
@@ -163,7 +178,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
         let real=data[0];
         for (let i = 0; i < real.length; i++) {
             let item = real[i];
-            debugger
             var innerHTML = "     <div class=\"layui-card\">\n" +
                 "                <div class=\"cardbody\">\n" +
                 "                    <div class=\"layui-card-body\">\n" +
@@ -221,10 +235,23 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
         })
     }
 
-    function getAllProjects(){
+    function getAllCompanys(){
         let companys=[];
         $.ajax({
-            url:'/manage/getallproject',
+            url:'/manage/getallCompanys',
+            type:'get',
+            async:false,
+            success:function(data){
+                companys=data.data;
+            }
+        });
+        return companys;
+    }
+
+    function getCurrentCompany(){
+        let companys=[];
+        $.ajax({
+            url:'/company/getCurrentCom',
             type:'get',
             async:false,
             success:function(data){
@@ -242,7 +269,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             async:false,
             type:'get',
             success:function(data){
-                debugger
                 identity=data.data;
             }
         });
@@ -266,7 +292,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                     ,layout: ['prev', 'page', 'next','skip']
                     ,theme: '#1E9FFF'
                     ,jump: function(obj){
-                        debugger
                         getUserProjects(obj.curr);
                     }
                 });
@@ -274,6 +299,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
         })
 
     }
+
 
     exports('selectproject', {})
 });

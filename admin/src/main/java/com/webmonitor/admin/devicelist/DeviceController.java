@@ -191,7 +191,26 @@ public class DeviceController  extends BaseController {
             projects=authority.split("@");
         }
         try{
-            Page<AgentData> agentDataList=AgentDataService.me.searchDeviceByParam(agentnum,content,projects,state,pageno,limit);
+            Page<AgentData> agentDataList=AgentDataService.me.searchDeviceByParam(content,agentnum,projects,state,pageno,limit);
+            result.success(agentDataList);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**根据不同的条件筛选设备**/
+    public void findDevice(){
+        Result<Page<AgentData>> result=Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        int pageno = getParaToInt("page", 1);
+        int limit = getParaToInt("limit", 50);
+        String content=getPara("sn");
+        String agentnum=getPara("agentNumber");
+        String state=getPara("state");
+        String projectid=getPara("groupid");
+        try{
+            Page<AgentData> agentDataList=AgentDataService.me.findDeviceByParam(content,agentnum,projectid,state,pageno,limit);
             result.success(agentDataList);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -213,6 +232,21 @@ public class DeviceController  extends BaseController {
             renderJson(result.error("修改失败"));
         }
 
+    }
+
+    /**添加设备**/
+    public void addDevice(){
+        Result result=Result.newOne();
+        String jsondata=getPara("json");
+        Gson gson=new Gson();
+        AgentData agentDataDao= gson.fromJson(jsondata, new TypeToken<AgentData>(){}.getType());
+        try{
+            DeviceListService.me.addDevice(agentDataDao);
+            result.success("成功");
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
     }
 
 }

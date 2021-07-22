@@ -17,6 +17,10 @@ public interface IAgentData {
     /**筛选所有设备**/
     Page<AgentData> searchDeviceByParam(String content,String agentname,String[] projectid,String state,int pageno,int limit);
 
+    /**筛选所有设备不根据权限限制**/
+    Page<AgentData> findDeviceByParam(String content,String agentname,String projectid,String state,int pageno,int limit);
+
+
     /**获取设备表所有数据通过公司id**/
     Page<AgentData> getAllDeviceByComid(String Companyid,int pageno,int limit);
 

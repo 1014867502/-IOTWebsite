@@ -2,6 +2,7 @@ package com.webmonitor.admin.Customer;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.permission.PermissionService;
 import com.webmonitor.core.bll.StaffService;
@@ -62,27 +63,18 @@ public class CustomerController extends BaseController {
 
     @Remark("用户资料编辑")
     public void edit() {
-        String staffjson=getPara("data");
+        String staffjson=getPara("json");
         Result<String> result = Result.newOne();
+        String select=getPara("select");
+        select=select.replace(',','@');
         Gson gson=new Gson();
-        StaffData staffData= gson.fromJson(staffjson, new TypeToken<StaffData>(){}.getType());
-        try {
-            result = srv.update(staffData);
-        } catch (Throwable e) {
-            ExceptionUtil.handleThrowable(result, e);
+        StaffDataEntity staffData= gson.fromJson(staffjson, new TypeToken<StaffDataEntity>(){}.getType());
+        StaffData staffData1=StaffData.dao.findById(staffData.getId());
+        if(staffData.getuPassword()==""){
+            staffData.setuPassword(staffData1.getUPassword());
         }
-        renderJson(result);
-    }
-
-    @Remark("角色更新")
-    public void update() {
-        String staffjson=getPara("data");
-        Result<String> result = Result.newOne();
-        Gson gson=new Gson();
-        StaffData staffData= gson.fromJson(staffjson, new TypeToken<StaffData>(){}.getType());
-        System.out.println(getPara("role.name"));
         try {
-            result = srv.update(staffData);
+            result = srv.update(staffData,select);
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
         }
@@ -180,19 +172,36 @@ public class CustomerController extends BaseController {
                 count=CustomerService.me.getCountByType(usertype);
                 String type=RoleType.getTypeName(i);
                 switch (type){
-                    case "user":
+                    case "普通用户":
                         customCount.setOrdinaryusers(count);
                         break;
-                    case "companyadmin":
+                    case "供销商管理员":
                         customCount.setComadmins(count);
                         break;
-                    case "super":
+                    case "超级管理员":
                         customCount.setSuperadmins(count);
                 }
             }
             int sum=CustomerService.me.getAllcount();
             customCount.setSum(sum);
             result.success(customCount);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**用户条件查询**/
+    public void searchCustomByParam(){
+        String account=getPara("account");
+        String roletype=getPara("roletype");
+        String comid=getPara("agentNumber");
+        int pageno=getParaToInt("page",1);
+        int limit =getParaToInt("limit",50);
+        Result<Page<StaffDataEntity>> result=Result.newOne();
+        try{
+            Page<StaffDataEntity> customlist=CustomerService.me.searchCustomByParam(account,comid,roletype,pageno,limit);
+            result.success(customlist);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }

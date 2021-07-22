@@ -47,7 +47,7 @@ public class CompanyAdminService {
                     sql=" from agent_data where proGroupId is null and agentNumber="+agentnum;
                     break;
             }
-            sql=sql+" order by date desc";
+            sql=sql+" order by createTime desc";
             return sql;
         }
 

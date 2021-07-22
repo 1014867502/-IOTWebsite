@@ -6,7 +6,6 @@ layui.define(['form', 'drawer'], function (exports) {
     var obj = {
         judgeidentity: function ()
         {
-            debugger
             let identity="";
             $.ajax({
                 url:'/manage/judgeidentity',

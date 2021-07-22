@@ -28,7 +28,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             },
             async:false,
             success:function (data) {
-                debugger
                 let item=data.data;
                 $("#comname").html(item.progroupname);
                 $("#createtime").html(item.createtime);
@@ -63,7 +62,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 renderlayerTable();
             },
             btn1: function (index, layero) {
-                debugger
                 updateConnect(connectdevice);
                 renderTable();
                 layer.close(index);
@@ -96,8 +94,8 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , title: 'logdata'
             , height:'full-200'
             , totalRow: true
-            , url: '/devicelist/searchDevice'
-            , where: {'agentNumber': agentnum, 'sn': snreal, 'state': stats}
+            , url: '/devicelist/findDevice'
+            , where: {'agentNumber': agentnum, 'sn': snreal, 'state': stats,'groupid':progroupid}
             , cols: [[
                 {field: 'id', title: "序号", align: 'center'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
@@ -146,15 +144,12 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     //每行记录的按钮事件
     table.on('tool(table-from)', function (obj) {
-        debugger
         var data = obj.data;
         if (obj.event === 'echarts') {
             location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
         }else if(obj.event === 'edit'){
-            debugger
             location.href = '/devicelist/setting?sn='+data.machineSerial;
         } else if (obj.event === 'del') {
-            debugger
             layer.confirm('真的删除行么', function(index){
                 admin.req({
                     url:'/devicelist/delConnectDev',
@@ -195,7 +190,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , id: 'table-form'
             , page: true
             , parseData: function (res) {
-                debugger
                 return {
                     "code": res.code,
                     "msg": res.msg,
@@ -208,7 +202,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
 
     function renderlayerTable(){
-        debugger;
         var stats2 = $("#stats2").val();
         table2.render({
             elem: '#table3'
@@ -219,7 +212,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , where: {'agentnum':agentNumber,'content':"",'type':stats2}
             , cols: [[
                 {type:'checkbox'}
-                , {field: 'serial', title: "设备sn号", align: 'center'}
+                , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 ,{ fixed: 'right', title:"状态", align:'center', toolbar: '#statusdemo'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
             ]]
@@ -234,7 +227,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     "data": res.data == null ? {} : res.data.list
                 };
             },done: function () {
-                debugger
                 table2.on('checkbox(table3)', function(obj){
                     let checkStatus = table2.checkStatus('table3')
                         ,data = checkStatus.data;
@@ -250,7 +242,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             url:"/devicelist/changeConDev",
             data:{
                 connectdevice:data,
-                projectid:projId
+                projectid:progroupid
             },
             async:false,
             success:function () {
@@ -271,8 +263,8 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , where: {'agentnum':agentNumber,'content':content,'type':stats2}
             , cols: [[
                 {type:'checkbox'}
-                , {field: 'serial', title: "设备sn号", align: 'center'}
-                ,{ fixed: 'right', title:"状态", align:'center', toolbar: '#statusdemo'}
+                , {field: 'machineSerial', title: "设备sn号", align: 'center'}
+                ,{ fixed: 'onlineState', title:"状态", align:'center', toolbar: '#statusdemo'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
             ]]
             , limit: 20 //每页默认显示的数量
@@ -286,7 +278,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     "data": res.data == null ? {} : res.data.list
                 };
             },done: function () {
-                debugger
                 table2.on('checkbox(table3)', function(obj){
                     let checkStatus = table2.checkStatus('table3')
                         ,data = checkStatus.data;
@@ -330,7 +321,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     }
 
     function assignCompanyList(json){
-        debugger
         var arrData = [];
         if (json == null) {
             arrData = [];

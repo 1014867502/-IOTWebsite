@@ -5,6 +5,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         , table = layui.table
         , drawer = layui.drawer
         ,table2=layui.table
+        ,form=layui.form
 
 
     var projectlist;
@@ -13,6 +14,8 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var agentNumber;
     var connectdevice=[];
     var Devicelist;
+    var companylistadd;
+    var layerindex;
 
 
     getDeviceCounts();
@@ -64,7 +67,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 renderlayerTable();
             },
             btn1: function (index, layero) {
-                debugger
                updateConnect(connectdevice);
                 renderTable();
                 layer.close(index);
@@ -73,6 +75,20 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 layer.close(index);
                 return false;
             }
+        });
+    })
+
+    /*添加设备*/
+    $("#add_device2").click(function () {
+        drawer.render({
+            title: '添加设备',  //标题
+            offset: 'r',    //r:抽屉在右边、l:抽屉在左边
+            width: "600px", //r、l抽屉可以设置宽度
+            content: $("#addprowindow"),
+            success :function (layero, index) {
+                getCompanyListByRoleAdd(userid);
+                layerindex=index;
+            },
         });
     })
 
@@ -98,7 +114,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , height:'full-200'
             , totalRow: true
             , url: '/devicelist/searchDevice'
-            , where: {'agentNumber': agentnum, 'sn': snreal, 'state': stats}
+            , where: {'agentNumber': agentnum[0].value, 'sn': snreal, 'state': stats}
             , cols: [[
                 {field: 'id', title: "序号", align: 'center'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
@@ -145,17 +161,33 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     renderTable();
 
+    form.on('submit(formDemo2)', function(data){
+        let json=data.field;
+        let company=companylistadd.getValue();
+        json.agentNumber=company[0].value;
+        let jsondata=JSON.stringify(json);
+        $.ajax({
+            url:'/devicelist/addDevice',
+            data:{
+                json:jsondata,
+            },
+            async:false,
+            success:function (data) {
+                layer.msg('提交成功');
+            }
+        })
+        layer.close(layerindex);
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
+
     //每行记录的按钮事件
     table.on('tool(table-from)', function (obj) {
-        debugger
         var data = obj.data;
         if (obj.event === 'echarts') {
             location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
         }else if(obj.event === 'edit'){
-            debugger
             location.href = '/devicelist/setting?sn='+data.machineSerial;
         } else if (obj.event === 'del') {
-            debugger
             layer.confirm('真的删除行么', function(index){
                 admin.req({
                     url:'/devicelist/delConnectDev',
@@ -273,7 +305,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , cols: [[
                 {type:'checkbox'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
-                ,{ fixed: 'right', title:"状态", align:'center', toolbar: '#statusdemo'}
+                ,{ fixed: 'onlineState', title:"状态", align:'center', toolbar: '#statusdemo'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
             ]]
             , limit: 20 //每页默认显示的数量
@@ -305,6 +337,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             success:function (data) {
                 switch (data.data) {
                     case "user":
+                        $("#addequip").css("display","none");
                         break;
                     case "companyadmin":
                         break;
@@ -317,7 +350,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         })
     }
 
-    /**获取当前角色的公司列表**/
+    /**获取当前角色的公司列表(主页上的)**/
     function getCompanyListByRole(userid){
         $.ajax({
             url:'/manage/getCompanyListByRole',
@@ -331,7 +364,21 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         })
     }
 
-    /**渲染公司列表**/
+    /**获取当前角色的公司列表(添加设备上的)**/
+    function getCompanyListByRoleAdd(userid){
+        $.ajax({
+            url:'/manage/getCompanyListByRole',
+            data:{
+                userid:userid
+            },
+            async:false,
+            success:function(data){
+                assignCompanyListadd(data.data);
+            }
+        })
+    }
+
+    /**渲染公司列表（主页上的）**/
     function assignCompanyList(json){
         debugger
         var arrData = [];
@@ -352,6 +399,47 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         }
         Devicelist = xmSelect.render({
             el: '#companylist',
+            radio: true,
+            data: arrData,
+            clickClose: true,
+            theme: {
+                color: '#01AAED',
+            },
+            model: {
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 0,
+                        //是否显示删除图标
+                        showIcon: false,
+                    }
+                }
+            }
+        })
+    }
+
+    /**渲染公司列表（添加设备上的）**/
+    function assignCompanyListadd(json){
+        debugger
+        var arrData = [];
+        if (json == null) {
+            arrData = [];
+        } else {
+            for (var i = 0; i < json.length; i++) {
+                var item = json[i];
+                var jsonStr = {};
+
+                jsonStr.name = item.agentName;
+                jsonStr.value = item.agentNumber;
+                if (i == 0) {
+                    jsonStr.selected = true;
+                }
+                arrData.push(jsonStr);
+            }
+        }
+        companylistadd = xmSelect.render({
+            el: '#companylistadd',
             radio: true,
             data: arrData,
             clickClose: true,

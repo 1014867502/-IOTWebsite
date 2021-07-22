@@ -235,6 +235,47 @@
     </div>
 </div>
 
+<!--//添加设备弹窗-->
+<div class="site-text" style="margin: 5%; display: none" id="addprowindow" target="test1234">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备名</label>
+            <div class="layui-input-block">
+                <input id="machinname" style="width: 70%" type="text" name="machineName"  lay-verify="editaccount|required" placeholder="请输入设备名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备编号</label>
+            <div class="layui-input-block">
+                <input id="machineserial" style="width: 70%" type="text" name="machineSerial" required  lay-verify="required" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">所属公司</label>
+            <div class="layui-input-block">
+                <div id="companylistadd" class="xm-select-project" style="width: 70%"></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <div style="width: 70%">
+                    <select id="onlinestate" name="onlineState" lay-filter="type" style="width: 70%">
+                        <option value="0">离线</option>
+                        <option value="1">在线</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item" >
+            <div class="layui-input-block">
+                <button  class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
+                <button  type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 <script type="text/html" id="statusdemo">
     <button class="layui-btn layui-btn-primary layui-btn-xs" style="background-color: #f19038;color: #F1F1F1">未关联</button>
 </script>
@@ -326,15 +367,22 @@
                             </button>
                         </div>
                         <div class="layui-inline">
-                            <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
-                                    id="selectall" lay-filter="LAY-app-contlist-search">
-                                <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询全部</i>
-                            </button>
+                            <div id="addequip" >
+                                <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
+                                        id="selectall" lay-filter="LAY-app-contlist-search">
+                                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询全部</i>
+                                </button>
+                            </div>
+
                         </div>
                     </div>
+<!--                    <div style="margin: auto;display: flex">-->
+<!--                        <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>关联设备</button>-->
+<!--                    </div>-->
                     <div style="margin: auto;display: flex">
-                        <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>关联设备</button>
+                        <button type="button" class="layui-btn" id="add_device2"><img src="/assets/images/icon_add_device_28.png"/>添加设备</button>
                     </div>
+
                 </div>
                 <div class="layui-card-body">
                     <table class="layui-hide" id="table-form" lay-filter="table-from"></table>

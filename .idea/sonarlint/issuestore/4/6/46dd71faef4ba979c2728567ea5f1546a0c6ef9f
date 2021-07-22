@@ -1,30 +1,30 @@
 
-X	java:S125F"<This block of commented-out lines of code should be removed.(²¶¿Î8Ä¢¦¥Ÿ/
+E
+java:S3740H"/Provide the parametrized type for this generic.(ÿÎ™Ä
+V	java:S125h"<This block of commented-out lines of code should be removed.(†¿½¬ûÿÿÿÿ
+Q	java:S125!"<This block of commented-out lines of code should be removed.(é®¼
 P
 java:S1172 ".Remove this unused method parameter "loginIp".(èö¹ÿÿÿÿÿ8Ä¢¦¥Ÿ/
-I
-java:S1172]".Remove this unused method parameter "loginIp".(×å¿ìüÿÿÿÿ
+E
+java:S3740H"/Provide the parametrized type for this generic.(ÿÎ™Ä
+Q	java:S125n"<This block of commented-out lines of code should be removed.(²¶¿Î
+X	java:S125)"<This block of commented-out lines of code should be removed.(èäÍ‹8Ä¢¦¥Ÿ/
+X	java:S125F"<This block of commented-out lines of code should be removed.(²¶¿Î8Ä¢¦¥Ÿ/
 r
 java:S1192D"UUse already-defined constant 'accessTokenName' instead of duplicating its value here.(ì¬ÍÛ8Ä¢¦¥Ÿ/
-š
-java:S1130 "Remove the declaration of thrown exception 'com.webmonitor.core.util.exception.BusinessException' which is a runtime exception.(èö¹ÿÿÿÿÿ
-E
-java:S3740H"/Provide the parametrized type for this generic.(ÿÎ™Ä
 {	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(Çôøûÿÿÿÿ8öê¶¥/
-t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(×ò½Úÿÿÿÿÿ
-Q	java:S125!"<This block of commented-out lines of code should be removed.(é®¼
+t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(­Ö§ôıÿÿÿÿ
 F
 java:S11251")Remove the literal "false" boolean value.(±âİÁ8Ä¢¦¥Ÿ/
-E
-java:S3740H"/Provide the parametrized type for this generic.(ÿÎ™Ä
-t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ÏóÛÿÿÿÿÿ
 c
 java:S21845"FCast one of the operands of this multiplication operation to a "long".(ƒÈ›ÿ8Ä¢¦¥Ÿ/
-E
-java:S1125…")Remove the literal "false" boolean value.(òØäÄûÿÿÿÿ
 P
 java:S1144R"3Remove this unused private "createLoginLog" method.(ëó‰©8Ä¢¦¥Ÿ/
-X	java:S125)"<This block of commented-out lines of code should be removed.(èäÍ‹8Ä¢¦¥Ÿ/
-Q	java:S125n"<This block of commented-out lines of code should be removed.(²¶¿Î
-V	java:S125h"<This block of commented-out lines of code should be removed.(†¿½¬ûÿÿÿÿ
-t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(­Ö§ôıÿÿÿÿ
+t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(×ò½Úÿÿÿÿÿ
+E
+java:S1125…")Remove the literal "false" boolean value.(òØäÄûÿÿÿÿ
+I
+java:S1172]".Remove this unused method parameter "loginIp".(×å¿ìüÿÿÿÿ
+t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ÏóÛÿÿÿÿÿ
+š
+java:S1130 "Remove the declaration of thrown exception 'com.webmonitor.core.util.exception.BusinessException' which is a runtime exception.(èö¹ÿÿÿÿÿ

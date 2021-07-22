@@ -331,7 +331,7 @@
 <script src="/assets/lib/loadlanguage.js"></script>
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script type="text/html" id="table-online-state">
-    {{ d.state == 1 ? '
+    {{ d.onlineState == 1 ? '
     <button class="layui-btn layui-btn-sm treated">在线</button>'
     : '
     <button class="layui-btn layui-btn-sm untreated">离线</button>' }}
@@ -341,7 +341,6 @@
 
 <script>
     var progroupid="#(progroupid)";
-    debugger
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

@@ -7,6 +7,7 @@ import com.webmonitor.core.idal.IAgent;
 import com.webmonitor.core.model.AgentData;
 import com.webmonitor.core.model.AgentTable;
 import com.webmonitor.core.util.Tools;
+import sun.management.Agent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,17 @@ public class AgentTableMysqlDAL implements IAgent {
         AgentTable agentTable=new AgentTable();
         try{
            agentTable=AgentTable.dao.findFirst("select * from agent_data where agentNumber="+comid);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return agentTable;
+    }
+
+    /**根据名称查询**/
+    public AgentTable getAgentTableByName(String comname) {
+        AgentTable agentTable=new AgentTable();
+        try{
+            agentTable=AgentTable.dao.findFirst("select * from agent_table where agentName like '%"+comname+"%'");
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -94,5 +106,15 @@ public class AgentTableMysqlDAL implements IAgent {
 //        }
 //        return agentTables;
 //    }
+
+    /**添加公司**/
+    public void addCompany(String companyname){
+        AgentTable latest=AgentTable.dao.findFirst("select *  from agent_table  order by id desc limit 0,1");
+        int agentid=latest.getId()+1;
+        AgentTable agentTable=new AgentTable();
+        agentTable.setAgentName(companyname);
+        agentTable.setAgentNumber(String.valueOf(agentid));
+        agentTable.save();
+    }
 
 }

@@ -18,7 +18,9 @@ public class CompanyController extends BaseController {
 
     public void CompanyDetail(){
         String agentNum=getPara("agentNumber");
+        String projectid=getPara("projectid");
         setAttr("agentNum",agentNum);
+        setAttr("projetid",projectid);
         render("CompanyDetail.html");
     }
 
@@ -80,6 +82,44 @@ public class CompanyController extends BaseController {
         try{
             agentTables=CompanyService.me.getAllCompany();
             result.success(agentTables);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    public void addCompany(){
+        String companyname=getPara("company");
+        Result result=Result.newOne();
+        try{
+            CompanyService.me.addCompany(companyname);
+            result.success("成功");
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    public void getCompanyByName(){
+        String companyname=getPara("comname");
+        Result result=Result.newOne();
+        try{
+            AgentTable agentTable=CompanyService.me.getAgentTableByName(companyname);
+            result.success(agentTable);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    public void getCurrentCom(){
+        Result result=Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        StaffData currentuser = StaffService.me.getStaffById(userid);
+        String num=currentuser.getAgentNumber();
+        try{
+            AgentTable agentTable=CompanyService.me.getAgentById(num);
+            result.success(agentTable);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }

@@ -32,19 +32,19 @@ public class AgentDataMysqlDAL implements IAgentData {
             map.setProgroupid(record.getInt("proGroupId"));
             map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
-            map.setAgentname(record.getStr("agentName"));
+            map.setAgentName(record.getStr("agentName"));
             rslist.add(map);
         }
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
     }
 
-    public Page<AgentData> searchDeviceByParam(String content,String agentname,String[] projectid,String state,int pageno,int limit){
+    public Page<AgentData> searchDeviceByParam(String content,String agentnum,String[] projectid,String state,int pageno,int limit){
         String sql=" from agent_data where onlineState="+state;
         String test="";
         if(content!=null&&!content.isEmpty()){
-            sql=sql+" and machineSerial like %"+content+"% ";
-        }else if(!agentname.isEmpty()){
-            sql=sql+" and agentName='"+agentname+"' ";
+            sql=sql+" and machineSerial like '%"+content+"%' ";
+        }else if(agentnum!=null&&!agentnum.isEmpty()){
+            sql=sql+" and agentNumber='"+agentnum+"' ";
         }else if(projectid.length > 0&&(!projectid[0].equals("all"))){
             if(projectid.length>1){
                 test=" and (proGroupid="+projectid[0];
@@ -74,7 +74,41 @@ public class AgentDataMysqlDAL implements IAgentData {
             }
             map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
-            map.setAgentname(record.getStr("agentName"));
+            map.setAgentName(record.getStr("agentName"));
+            rslist.add(map);
+        }
+        return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+    }
+
+    @Override
+    public Page<AgentData> findDeviceByParam(String content, String agentnum, String projectid, String state, int pageno, int limit) {
+        String sql=" from agent_data where onlineState="+state;
+        String test="";
+        if(content!=null&&!content.isEmpty()){
+            sql=sql+" and machineSerial like '%"+content+"%' ";
+        }else if(agentnum!=null&&!agentnum.isEmpty()){
+            sql=sql+" and agentNumber='"+agentnum+"' ";
+        }else if(projectid!=null&&!projectid.isEmpty()){
+            sql=sql+" and proGroupid="+projectid;
+        }
+        Page<Record> page = Db.paginate(pageno, limit, "select * ",sql);
+        List<Record> recordList = page.getList();
+        List<AgentData> rslist = new ArrayList<>();
+        for (Record record : recordList) {
+            AgentData map = new AgentData();
+            int state1=Integer.parseInt(record.getStr("onlineState"));
+            map.setOnlineState(state1);
+            map.setId(record.getInt("id"));
+            map.setAgentNumber(record.getStr("agentNumber"));
+            map.setCreateTime(Tools.toDate(record.getStr("createTime")));
+            if(record.getInt("proGroupId")==null){
+                map.setProgroupid(-1);
+            }else{
+                map.setProgroupid(record.getInt("proGroupId"));
+            }
+            map.setMachineSerial(record.getStr("machineSerial"));
+            map.setMachineName(record.getStr("machineName"));
+            map.setAgentName(record.getStr("agentName"));
             rslist.add(map);
         }
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
@@ -102,7 +136,7 @@ public class AgentDataMysqlDAL implements IAgentData {
             }
             map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
-            map.setAgentname(record.getStr("agentName"));
+            map.setAgentName(record.getStr("agentName"));
             rslist.add(map);
         }
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
@@ -129,7 +163,7 @@ public class AgentDataMysqlDAL implements IAgentData {
             }
             map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
-            map.setAgentname(record.getStr("agentName"));
+            map.setAgentName(record.getStr("agentName"));
             rslist.add(map);
         }
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
@@ -251,9 +285,9 @@ public class AgentDataMysqlDAL implements IAgentData {
         Date date=new Date();
         DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
         String time=format.format(date);
-        Record device=new Record().set("machineSerial",sn).set("machine",machinename).set("onlineState",Integer.parseInt(state))
+        Record device=new Record().set("machineSerial",sn).set("machineName",machinename).set("onlineState",Integer.parseInt(state))
                 .set("agentNumber",comid).set("createTime",time);
-        Db.save("groups_data",device);
+        Db.save("agent_data",device);
     }
 
     @Override

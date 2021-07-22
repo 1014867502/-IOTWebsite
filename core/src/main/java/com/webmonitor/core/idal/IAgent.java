@@ -16,4 +16,11 @@ public interface IAgent {
 
     /**根据项目id获取公司列表**/
     List<AgentTable> getCompanyByGroupid(String Groupid);
+
+    /**添加公司**/
+     void addCompany(String companyname);
+
+    /**根据名称查询**/
+    AgentTable getAgentTableByName(String comname);
+
 }

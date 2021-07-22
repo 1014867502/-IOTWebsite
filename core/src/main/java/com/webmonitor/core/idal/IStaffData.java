@@ -1,5 +1,6 @@
 package com.webmonitor.core.idal;
 
+import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.StaffDataEntity;
 
@@ -33,5 +34,9 @@ public interface IStaffData {
 
     /**获取所有用户**/
     List<StaffDataEntity> getAlCustom();
+
+    /**根据条件查询用户
+     * @return**/
+    Page<StaffDataEntity> searchCustomByParam(String content, String agentnum, String roletype, int pageno, int limit);
 
 }

@@ -25,7 +25,6 @@ layui.define(['form','drawer','table'], function (exports) {
         }else{
             target2=target.parentNode.parentNode;
         }
-        debugger
         if(beforeselect !== null && beforeselect !== undefined && beforeselect !== ''){
             document.getElementById(beforeselect).style.color=null;
             document.getElementById(beforeselect+"1").style.color=null;
@@ -85,7 +84,6 @@ layui.define(['form','drawer','table'], function (exports) {
 
     function  iframechange() {
         var iframes = document.getElementsByTagName('iframe_a');
-       debugger
         for (let i = 0, j = iframes.length; i < j; ++i) {
             // 放在闭包中，防止iframe触发load事件的时候下标不匹配
             (function(_i) {

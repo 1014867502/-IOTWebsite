@@ -13,6 +13,7 @@ import com.webmonitor.core.model.Permission;
 import com.webmonitor.core.model.Role;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.StaffDataEntity;
+import com.webmonitor.core.util.MD5Utils;
 import com.webmonitor.core.util.exception.BusinessException;
 import com.webmonitor.core.vo.Result;
 
@@ -45,7 +46,9 @@ public class CustomerService {
         staffData1.setCDept(staffData.getcDept());
         staffData1.setIAccountType(staffData.getiAccountType());
         staffData1.setIRoleType(staffData.getiRoleType());
-        staffData1.setUPassword(staffData.getuPassword());
+        String password=staffData.getuPassword();
+        String code= MD5Utils.md5(password)+"0";
+        staffData1.setUPassword(code);
         staffData1.setURealName(staffData.getuRealName());
         staffData1.setUAccountNum(staffData.getuAccountNum());
         staffData1.setGroupAssemble(select);
@@ -65,14 +68,29 @@ public class CustomerService {
     }
 
     /**更新用户资料**/
-    public Result<String> update(StaffData staffData) {
-        if (exists(staffData.getId())) {
-            String tip = I18nKit.getI18nStr("error_name_existsed");
-            throw new BusinessException(tip);
-        }
-        staffData.update();
+    public Result<String> update(StaffDataEntity staffData,String select) {
         Result<String> result = Result.newOne();
-        return result.success("ok");
+        StaffData staffData1=new StaffData();
+        staffData1.setId(staffData.getId());
+        staffData1.setAgentNumber(staffData.getAgentNumber());
+        staffData1.setCDept(staffData.getcDept());
+        staffData1.setIAccountType(staffData.getiAccountType());
+        staffData1.setIRoleType(staffData.getiRoleType());
+        String password=staffData.getuPassword();
+        String oldpassword=StaffData.dao.findById(staffData.getId()).getUPassword();
+        if(!password.equals("")&&!oldpassword.equals(password)){
+            String code= MD5Utils.md5(password)+"0";
+            staffData1.setUPassword(code);
+        }
+        staffData1.setURealName(staffData.getuRealName());
+        staffData1.setUAccountNum(staffData.getuAccountNum());
+        staffData1.setGroupAssemble(select);
+        if(staffData1.update()){
+            result.success("成功");
+        }else{
+            result.success("失败");
+        }
+        return result;
     }
 
     /**删除用户资料**/
@@ -110,6 +128,11 @@ public class CustomerService {
     public int getAllcount(){
         List<StaffDataEntity> list=dal.getAlCustom();
         return list.size();
+    }
+
+    /**搜索用户**/
+    public Page<StaffDataEntity> searchCustomByParam(String content,String agentnum,String roletype,int pageno,int limit){
+        return dal.searchCustomByParam(content, agentnum, roletype, pageno, limit);
     }
 
 

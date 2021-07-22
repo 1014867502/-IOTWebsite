@@ -9,6 +9,11 @@ layui.define(['form','drawer','table'], function (exports) {
 
     var agentNumber;
     var layerindex;
+    var companylistfind;
+    var companylist;
+    var projectlist;
+    var account;//编辑页面的用户账号
+    var id;//当前用户的id
 
     form.verify({
         username: function(value, item){ //value：表单的值、item：表单的DOM对象
@@ -38,6 +43,10 @@ layui.define(['form','drawer','table'], function (exports) {
             if($('input[name=uPassword]').val()!=value)
                 return "两次密码输入不一致";
         },
+        confirmeditpass:function (value) {
+            if($('input[name=editPassword]').val()!=value)
+                return "两次密码输入不一致";
+        },
         confirmaccount:function (value) {
             let judge;
             $.ajax({
@@ -53,11 +62,26 @@ layui.define(['form','drawer','table'], function (exports) {
             if(judge!=null){
                 return "已存在当前账号，请重新输入";
             }
+        },
+        editaccount:function (value) {
+            let judge;
+            $.ajax({
+                url:'/custom/getStaffByNum',
+                data: {
+                    accountname: value
+                },
+                async:false,
+                success:function (data) {
+                    judge=data.data;
+                }
+            })
+            if(judge!=null&&value!=judge.uAccountNum){
+                return "已存在当前账号，请重新输入";
+            }
         }
     });
 
     form.on('select(type)',function(data){
-        debugger
         let type=data.value;
         if(type=="0"){
             document.getElementById("formprojectedit").innerHTML=" <div class=\"layui-form-item\">\n" +
@@ -73,13 +97,15 @@ layui.define(['form','drawer','table'], function (exports) {
     });
 
     form.on('submit(formDemo1)', function(data){
-        debugger
-        let json=JSON.stringify(data.field);
+        let json=data.field;
+        let company=companylist.getValue();
+        json.agentNumber=company[0].value;
+        let jsondata=JSON.stringify(data.field);
         let select=data.field.select;
         $.ajax({
             url:'/custom/save',
             data:{
-                json:json,
+                json:jsondata,
                 select:select
             },
             async:false,
@@ -92,13 +118,16 @@ layui.define(['form','drawer','table'], function (exports) {
     });
 
     form.on('submit(formDemo2)', function(data){
-        debugger
-        let json=JSON.stringify(data.field);
+        let json=data.field;
+        json.id=id;
+        let company=companylist.getValue();
+        json.agentNumber=company[0].value;
+        let jsondata=JSON.stringify(data.field);
         let select=data.field.select;
         $.ajax({
-            url:'/custom/save',
+            url:'/custom/edit',
             data:{
-                json:json,
+                json:jsondata,
                 select:select
             },
             async:false,
@@ -127,17 +156,14 @@ layui.define(['form','drawer','table'], function (exports) {
 
     //监听查询
     $("#datasumbit").on('click', function () {
-        // var projectArr = projectid;
-        var stats = $("#stats").val();
-        var input = $("#SN").val();
-        var id=projectid ,sn, snreal;
-        // for (var i = 0; i < projectArr.length; i++) {
-        //     id = projectArr[i].value;
-        // }
+        let agentnum=companylistfind.getValue();
+        let roletype = $("#searchtype").val();
+        let input = $("#account").val();
+        let id=projectid ,sn, snreal;
         if (typeof (id) == "undefined") {
             layer.msg("项目不能为空");
             return;
-        } else if ((input.length == 0 || input == null) && (!stats == 2)) {
+        } else if ((input.length == 0 || input == null) && (!roletype == 2)) {
             layer.msg("输入不能为空");
             return;
         } else {
@@ -149,14 +175,15 @@ layui.define(['form','drawer','table'], function (exports) {
             , title: 'logdata'
             , height:'full-200'
             , totalRow: true
-            , url: '/devicelist/getDeviceList'
-            , where: {'projectid': projectid, 'sn': snreal, 'state': stats}
+            , url: '/custom/searchCustomByParam'
+            , where: {'agentNumber': agentnum[0].value, 'account': snreal, 'roletype': roletype}
             , cols: [[
                 {field: 'id', title: "序号", align: 'center'}
-                , {field: 'machineSerial', title: "设备sn号", align: 'center'}
-                , {field: 'machineName', title: "设备名称", align: 'center'}
-                , {field: 'createTime', title: "登录时间", align: 'center'}
-                , {field: 'onlineState', title: "处理状态", align: 'center', templet: '#table-online-state'}
+                , {field: 'agentName', title: "隶属公司", align: 'center'}
+                , {field: 'uAccountNum', title: "登录账号", align: 'center'}
+                , {field: 'uRealName', title: "昵称", align: 'center'}
+                , {field: 'cDept', title: "所属部门", align: 'center'}
+                , {field: 'roleType', title: "用户类型", align: 'center', templet: '#table-online-state'}
                 , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
             ]]
             , limit: 50 //每页默认显示的数量
@@ -175,28 +202,12 @@ layui.define(['form','drawer','table'], function (exports) {
         });
     });
 
-    /**未关联设备的查询**/
-    $("#datasumbit2").on('click',function(){
-        let stats = $("#stats2").val();
-        let input = $("#SN2").val();
-        let id2=projectid,sn2, snreal2;
-        if (typeof (id2) == "undefined") {
-            layer.msg("项目不能为空");
-            return;
-        } else if ((input.length == 0 || input == null) && (!stats == 2)) {
-            layer.msg("输入不能为空" );
-            return;
-        } else {
-            snreal = input;
-        }
-        searchUnconnectDev(input);
-    });
+
 
     renderTable();
-
+    getcompanylistsearch();
     //表格刷新
     function renderTable(){
-        debugger;
         var stats = $("#stats").val();
         table.render({
             elem: '#table-form'
@@ -218,7 +229,6 @@ layui.define(['form','drawer','table'], function (exports) {
             , id: 'table-form'
             , page: true
             , parseData: function (res) {
-                debugger
                 return {
                     "code": res.code,
                     "msg": res.msg,
@@ -235,7 +245,6 @@ layui.define(['form','drawer','table'], function (exports) {
         if (obj.event === 'echarts') {
             location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
         }else if(obj.event === 'edit'){
-            debugger
             drawer.render({
                 title: '修改用户',  //标题
                 offset: 'r',    //r:抽屉在右边、l:抽屉在左边
@@ -243,6 +252,7 @@ layui.define(['form','drawer','table'], function (exports) {
                 content: $("#editwindow"),
                 success :function (layero, index) {
                     editwindow(data);
+                    id=data.id;
                     layerindex=index;
                 },
 
@@ -263,7 +273,6 @@ layui.define(['form','drawer','table'], function (exports) {
     });
 
     function renderlayerTable(){
-        debugger;
         var stats2 = $("#stats2").val();
         table2.render({
             elem: '#table3'
@@ -275,7 +284,7 @@ layui.define(['form','drawer','table'], function (exports) {
             , cols: [[
                 {type:'checkbox'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
-                ,{ fixed: 'right', title:"状态", align:'center', toolbar: '#statusdemo'}
+                ,{ fixed: 'onlineState', title:"状态", align:'center', toolbar: '#statusdemo'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
             ]]
             , limit: 20 //每页默认显示的数量
@@ -289,7 +298,6 @@ layui.define(['form','drawer','table'], function (exports) {
                     "data": res.data == null ? {} : res.data.list
                 };
             },done: function () {
-                debugger
                 table2.on('checkbox(table3)', function(obj){
                     let checkStatus = table2.checkStatus('table3')
                         ,data = checkStatus.data;
@@ -299,75 +307,7 @@ layui.define(['form','drawer','table'], function (exports) {
         });
     }
 
-    /**关联设备**/
-    function updateConnect(data){
-        $.ajax({
-            url:"/devicelist/changeConDev",
-            data:{
-                connectdevice:data,
-                projectid:projectid
-            },
-            async:false,
-            success:function () {
-                layer.alert("修改成功");
-            }
-        })
-    }
-
-    /**搜索未关联设备**/
-    function searchUnconnectDev(content){
-        var stats2 = $("#stats2").val();
-        table2.render({
-            elem: '#table3'
-            , title: 'logdata'
-            , totalRow: true
-            , height:'full-300'
-            , url: '/devicelist/searchUnconnectDev'
-            , where: {'agentnum':agentNumber,'content':content,'type':stats2}
-            , cols: [[
-                {type:'checkbox'}
-                , {field: 'machineSerial', title: "设备sn号", align: 'center'}
-                ,{ fixed: 'right', title:"状态", align:'center', toolbar: '#statusdemo'}
-                , {field: 'machineName', title: "设备名称", align: 'center'}
-            ]]
-            , limit: 20 //每页默认显示的数量
-            , limits: [50, 100, 200]
-            , page: true
-            , parseData: function (res) {
-                return {
-                    "code": res.code,
-                    "msg": res.msg,
-                    "count": res.data == null ? 0 : res.data.totalRow,
-                    "data": res.data == null ? {} : res.data.list
-                };
-            },done: function () {
-                debugger
-                table2.on('checkbox(table3)', function(obj){
-                    let checkStatus = table2.checkStatus('table3')
-                        ,data = checkStatus.data;
-                    connectdevice=JSON.stringify(data);
-                });
-            }
-        });
-    }
-
-    function getDetailProject(){
-        $.ajax({
-            url:'/manage/getDetailProject',
-            data:{
-                projectid:projectid
-            },
-            async:false,
-            success:function (data) {
-                let item=data.data;
-                agentNumber=item.agentnumber;
-
-            }
-        })
-    }
-
-
-    /**获取项目列表**/
+    /**获取项目列表(添加用户)**/
     function getprojectlist(id){
         $.ajax({
             url:'/project/getProjectByComId',
@@ -376,7 +316,7 @@ layui.define(['form','drawer','table'], function (exports) {
             },
             async:false,
             success: function(data){
-                loadprojectlist(data.data);
+                initloadprojectlist(data.data);
             }
         })
     }
@@ -390,7 +330,7 @@ layui.define(['form','drawer','table'], function (exports) {
             },
             async:false,
             success: function(data){
-                initprojectlist(data.data,init);
+                initloadprojectlist(data.data,init);
             }
         })
     }
@@ -402,6 +342,17 @@ layui.define(['form','drawer','table'], function (exports) {
             async:false,
             success: function(data){
                 loadcompanylist(data.data);
+            }
+        })
+    }
+
+    /**获取公司列表(搜索栏)**/
+    function getcompanylistsearch(){
+        $.ajax({
+            url:'/company/getAllCompany',
+            async:false,
+            success: function(data){
+                loadcompanylistsearch(data.data);
             }
         })
     }
@@ -429,7 +380,7 @@ layui.define(['form','drawer','table'], function (exports) {
             jsonStr.value = item.agentNumber;
             arrData.push(jsonStr);
         }
-       var companylist = xmSelect.render({
+        companylist = xmSelect.render({
             el: '#companylist',
             toolbar:{
                 show: true,
@@ -451,7 +402,6 @@ layui.define(['form','drawer','table'], function (exports) {
                 }
             },
             on: function(data){
-                debugger
                 let change = data.change[0];
                 getprojectlist(change.value);
             },
@@ -469,7 +419,7 @@ layui.define(['form','drawer','table'], function (exports) {
             jsonStr.value = item.agentNumber;
             arrData.push(jsonStr);
         }
-        var companylist = xmSelect.render({
+        companylist = xmSelect.render({
             el: '#companylistedit',
             toolbar:{
                 show: true,
@@ -492,7 +442,6 @@ layui.define(['form','drawer','table'], function (exports) {
                 }
             },
             on: function(data){
-                debugger
                 let change = data.change[0];
                 getprojectlist(change.value);
             },
@@ -510,8 +459,8 @@ layui.define(['form','drawer','table'], function (exports) {
             jsonStr.value = item.projectid;
             arrData.push(jsonStr);
         }
-       var projectlist = xmSelect.render({
-            el: '#projectlist2',
+        projectlist = xmSelect.render({
+            el: '#projectlist',
             toolbar:{
                 show: true,
             },
@@ -532,18 +481,52 @@ layui.define(['form','drawer','table'], function (exports) {
         })
     }
 
-    /**加载项目列表(初始化)**/
-    function initprojectlist(json,init){
+    /**加载公司列表**/
+    function loadcompanylistsearch(json){
         var arrData = [];
         var selectSn ="";
         for(var i=0;i<json.length;i++){
             var item = json[i];
             var jsonStr = {};
-            jsonStr.name = item.progroupname;
-            jsonStr.value = item.progroupid;
+            jsonStr.name = item.agentName;
+            jsonStr.value = item.agentNumber;
             arrData.push(jsonStr);
         }
-        var projectlist = xmSelect.render({
+        companylistfind = xmSelect.render({
+            el: '#companylistsearch',
+            data: arrData,
+            layVerify: 'required',
+            radio:true,
+            clickClose:true,
+            initValue:[1],
+            layVerType: 'msg',
+            model:{
+                label:{
+                    type:'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 0,
+                        //是否显示删除图标
+                        showIcon: false,
+                    }
+                }
+            },
+        })
+    }
+
+    /**加载项目列表(初始化)**/
+    function initloadprojectlist(json){
+        var arrData = [];
+        let proidinit=[];
+        for(var i=0;i<json.length;i++){
+            var item = json[i];
+            var jsonStr = {};
+            jsonStr.name = item.progroupname;
+            jsonStr.value = item.projectid;
+            arrData.push(jsonStr);
+            proidinit.push(item.projectid);
+        }
+        projectlist = xmSelect.render({
             el: '#projectlist2',
             toolbar:{
                 show: true,
@@ -551,7 +534,7 @@ layui.define(['form','drawer','table'], function (exports) {
             data: arrData,
             layVerify: 'required',
             layVerType: 'msg',
-            initValue: [init],
+            initValue: proidinit,
             model:{
                 label:{
                     type:'block',
@@ -569,6 +552,7 @@ layui.define(['form','drawer','table'], function (exports) {
     /**加载编辑页面**/
     function editwindow(data){
         $("#uaccountnum").val(data.uAccountNum);
+        account=data.uAccountNum;
         $("#urealname").val(data.uRealName);
         $("#cDpet").val(data.cDept);
         agentNumber=data.agentNumber;

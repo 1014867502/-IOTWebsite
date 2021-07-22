@@ -20,7 +20,6 @@ public class MD5Utils {
 		for (int i = 0; i < 32 - md5code.length(); i++) {
 			md5code = "0" + md5code;
 		}
-
 		folderName = md5code;
 		return md5code;
 	}

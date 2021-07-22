@@ -12,6 +12,10 @@ public interface IProject {
     List<BaseProjects> getAllProjects();
     /**根据项目id获取项目**/
     BaseProjects getProjectById(String projectid);
+
+    /**根据项目名称获取项目**/
+    BaseProjects getProjectByName(String projectname);
+
     /**根据项目归属公司查询**/
     List<BaseProjects> getProjectsByComId(String id);
 

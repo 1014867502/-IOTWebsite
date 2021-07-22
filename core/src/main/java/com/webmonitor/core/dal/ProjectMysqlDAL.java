@@ -60,6 +60,24 @@ public class ProjectMysqlDAL implements IProject {
         return baseProjects;
     }
 
+    @Override
+    public BaseProjects getProjectByName(String projectname) {
+        String sql="select a.*, b.agentName from projects_data a ,agent_table b where a.agentNumber=b.agentNumber" +
+                " and a.proGroupName='"+projectname+"'";
+        Record record= Db.findFirst(sql);
+        BaseProjects baseProjects=new BaseProjects();
+        baseProjects.setId(record.getStr("id"));
+        baseProjects.setCreatetime(record.getDate("createTime"));
+        baseProjects.setAgentname(record.getStr("agentName"));
+        baseProjects.setProjectid(record.getStr("proGroupId"));
+        baseProjects.setProgroupname(record.getStr("proGroupName"));
+        baseProjects.setAgentnumber(record.getStr("agentNumber"));
+        sql="select count(*) from agent_data where proGroupId="+record.getStr("proGroupId");
+        record=Db.findFirst(sql);
+        baseProjects.setDevicenum(record.getInt("count(*)"));
+        return baseProjects;
+    }
+
     @Override/**根据企业编号进行查询**/
     public List<BaseProjects> getProjectsByComId(String id) {
         List<BaseProjects> list=new ArrayList<>();
@@ -84,9 +102,9 @@ public class ProjectMysqlDAL implements IProject {
     @Override
     public Page<Object> getProjectsPageData(int pageno, int limit) {
         List<BaseProjects> list=new ArrayList<>();
-        String sql=" from projects_data a ,agent_table b where a.agentNumber=b.agentNumber";
-        List<Record> record= Db.find(sql);
+        String sql="from projects_data a ,agent_table b where a.agentNumber=b.agentNumber";
         Page<Record> page=Db.paginate(pageno,limit,"select a.*, b.agentName ",sql);
+        List<Record> record= page.getList();
         for(Record item:record){
             BaseProjects baseProjects=new BaseProjects();
             baseProjects.setId(item.getStr("id"));
@@ -107,8 +125,8 @@ public class ProjectMysqlDAL implements IProject {
         List<BaseProjects> list=new ArrayList<>();
         String sql=" from projects_data a ,agent_table b where a.agentNumber=b.agentNumber where"
                 +" agentNumber='"+comid+"'";
-        List<Record> record= Db.find(sql);
         Page<Record> page=Db.paginate(pageno,limit,"select  a.*, b.agentName ",sql);
+        List<Record> record= page.getList();
         for(Record item:record){
             BaseProjects baseProjects=new BaseProjects();
             baseProjects.setId(item.getStr("id"));

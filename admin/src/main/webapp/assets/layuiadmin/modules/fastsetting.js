@@ -54,7 +54,6 @@ layui.define(['element','form','drawer','table'], function (exports) {
     showform(0,2);
 
     form.on('radio(compute)', function(data) {
-        debugger
         compute=data.value;
         showform(compute,station);
     });
@@ -67,7 +66,6 @@ layui.define(['element','form','drawer','table'], function (exports) {
         changemark(mark);
     });
     form.on('switch(doublebase)',function (data) {
-        debugger
         let test=data.value
         if(this.checked) {
             document.getElementById("secondbase").innerHTML = " <div class=\"layui-form-item  fastinput\">\n" +
@@ -92,7 +90,6 @@ layui.define(['element','form','drawer','table'], function (exports) {
         }
     })
     form.on('submit(formDemo)',function (data) {
-        debugger;
         let test=data.field;
         let stringtest=JSON.stringify(test);
         $.ajax({
@@ -145,7 +142,6 @@ layui.define(['element','form','drawer','table'], function (exports) {
         let no=data1.toString()
         let no1=data2.toString();
         let no2=no+no1;
-        debugger;
         switch(no2){
             case "02":
                 if(beforeform!=null){

@@ -90,4 +90,16 @@ public class ProjectController extends BaseController {
         }
         renderJson(result);
     }
+
+    public void getProjectByName(){
+        String name=getPara("name");
+        Result result=Result.newOne();
+        try{
+            BaseProjects baseProjects=ProjectService.me.getProjectByName(name);
+            result.success(baseProjects);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
 }
