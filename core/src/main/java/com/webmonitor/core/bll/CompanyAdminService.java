@@ -12,7 +12,7 @@ public class CompanyAdminService {
 
     /**获取所有设备**/
     public String getAllDevice(String agentnumber){
-        String sql=" from agent_data a,machine_data b  where a.machineSerial=b.machineSerial and agentNumber="+agentnumber;
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where agentNumber="+agentnumber;
         return sql;
     }
 
@@ -31,7 +31,7 @@ public class CompanyAdminService {
                         sql = " from agent_data" +
                                 " where proGroupId is null and machineSerial like '" + sn1 + "' and agentNumber="+agentnum;
                     }else{
-                        sql=" from agent_data where proGroupId is null and agentNumber="+agentnum;
+                        sql=" from agent_data where (proGroupId is null or proGroupId=0) and agentNumber="+agentnum;
                     }
                     break;
                 case "1":
@@ -40,11 +40,11 @@ public class CompanyAdminService {
                         sql = " from agent_data" +
                                 " where proGroupId is null and agentName like '" + sn1 + "'and agentNumber="+agentnum;
                     }else{
-                        sql=" from agent_data where proGroupId is null and agentNumber="+agentnum;
+                        sql=" from agent_data where (proGroupId is null or proGroupId=0) and agentNumber="+agentnum;
                     }
                     break;
                 case "2":
-                    sql=" from agent_data where proGroupId is null and agentNumber="+agentnum;
+                    sql=" from agent_data where (proGroupId is null or proGroupId=0) and agentNumber="+agentnum;
                     break;
             }
             sql=sql+" order by createTime desc";

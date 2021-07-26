@@ -226,7 +226,7 @@ public class ManagerController extends BaseController {
         Result result=Result.newOne();
         String comid=getPara("comid");
         String name=getPara("projectname");
-        String userid=getPara("userid");
+         String userid = getCookie(IndexService.me.accessUserId);
         ProjectService.me.addProject(userid,comid,name);
         renderJson(result.success("ok"));
     }

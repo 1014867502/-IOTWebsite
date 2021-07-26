@@ -1,31 +1,0 @@
-
-GWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(‹ü­½
-FWeb:TableWithoutCaptionCheck" Add a description to this table.(Ä­¾Ä
-AWeb:PageWithoutTitleCheck"Add a <title> tag to this page.(Õ¶¯M
-LWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(‰¶Ô”úÿÿÿÿ
-AWeb:BoldAndItalicTagsCheck"Replace this <i> tag by <em>.(ªşİˆ
-X	Web:S5254"@Add "lang" and/or "xml:lang" attributes to this "<html>" element(œ÷Ãûÿÿÿÿ
-GWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(´Êß
-GWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(‹ü­½
-LWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(¸õÓìøÿÿÿÿ
-GWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(‹ü­½
-8	Web:S5256"%Add "<th>" headers to this "<table>".(Ä­¾Ä
-GWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(¯ë‹Î
-LWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(µÃ¶»ÿÿÿÿÿ
-GWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(Î¡•ş
-GWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(‹ü­½
-GWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(œ˜¸
-GWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(²Œµ¯
-FWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(ÂÄä
-GWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(‹ü­½
-FWeb:BoldAndItalicTagsCheck"Replace this <i> tag by <em>.(ãš×Óşÿÿÿÿ
-GWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(²Œµ¯
-KWeb:BoldAndItalicTagsCheck"!Replace this <b> tag by <strong>.(ÁY8 ò­à”/
-QWeb:BoldAndItalicTagsCheck"!Replace this <b> tag by <strong>.(˜Õåµıÿÿÿÿ8 ò­à”/
-LWeb:BoldAndItalicTagsCheck"!Replace this <b> tag by <strong>.(õ±’ä8 ò­à”/
-QWeb:BoldAndItalicTagsCheck"!Replace this <b> tag by <strong>.(È¬Í¹ÿÿÿÿÿ8 ò­à”/
-QWeb:BoldAndItalicTagsCheck"!Replace this <b> tag by <strong>.(ê“Û®üÿÿÿÿ8 ò­à”/
-QWeb:BoldAndItalicTagsCheck"!Replace this <b> tag by <strong>.(äúùıøÿÿÿÿ8 ò­à”/
-LWeb:BoldAndItalicTagsCheck"!Replace this <b> tag by <strong>.(¤€í’8 ò­à”/
-RWeb:TableWithoutCaptionCheck" Add a description to this table.(åÂÅ·ÿÿÿÿÿ8 ò­à”/
-D	Web:S5256"%Add "<th>" headers to this "<table>".(åÂÅ·ÿÿÿÿÿ8 ò­à”/

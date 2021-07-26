@@ -20,7 +20,7 @@ public class ConsumerService {
     public String getAllDevice(String userid){
         StaffData currentuser= StaffService.me.getStaffByName(userid);
         String[] projects=currentuser.getGroupAssemble().split("@");
-        String sql=" from agent_data a,machine_data b  where a.machineSerial=b.machineSerial and   proGroupId="+projects[0];
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where  proGroupId="+projects[0];
         for(int i=1;i<projects.length;i++){
             sql=sql+" or proGroupId="+projects[i];
         }

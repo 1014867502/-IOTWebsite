@@ -1,14 +1,0 @@
-
-JWeb:BoldAndItalicTagsCheck "Replace this <i> tag by <em>.(í’ñü8Œ´î«/
-JWeb:BoldAndItalicTagsCheck#"Replace this <i> tag by <em>.(ñ›½¸8ºî¼Ûœ/
-PWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(ˆœª8Œ´î«/
-UWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(ù¸èÿùÿÿÿÿ8øÉ—Â¬/
-PWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(„Åîÿ8øÉ—Â¬/
-UWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(¹¦…øûÿÿÿÿ8øÉ—Â¬/
-PWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(ƒÍìç8øÉ—Â¬/
-PWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(Çëí8øÉ—Â¬/
-PWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(”ôã8øÉ—Â¬/
-UWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(†´ÀŠùÿÿÿÿ8øÉ—Â¬/
-UWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(‘¨÷ üÿÿÿÿ8øÉ—Â¬/
-UWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(Ö‡¬îÿÿÿÿÿ8øÉ—Â¬/
-PWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(˜‰Â8øÉ—Â¬/

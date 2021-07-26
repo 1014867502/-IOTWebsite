@@ -64,6 +64,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             btn1: function (index, layero) {
                 updateConnect(connectdevice);
                 renderTable();
+                getCompanyListByRole()
                 layer.close(index);
             },
             btn2: function (index, layero) {

@@ -121,8 +121,12 @@ public class StaffDataMysqlDAL implements IStaffData {
             staffDataEntity.setcDept(item.getStr("cDept"));
             staffDataEntity.setuRealName(item.getStr("uRealName"));
             staffDataEntity.setiRoleType(item.getInt("iRoleType"));
-            String projectlist=item.getStr("groupAssemble").replace('@',',');
-            staffDataEntity.setGroupAssemble(projectlist);
+            if(item.getStr("groupAssemble")!=null&&!item.getStr("groupAssemble").equals("")){
+                String projectlist=item.getStr("groupAssemble").replace('@',',');
+                staffDataEntity.setGroupAssemble(projectlist);
+            }else{
+                staffDataEntity.setGroupAssemble("");
+            }
             int type=item.getInt("iRoleType");
             staffDataEntity.setRoleType(RoleType.getTypeName(type));
             list.add(staffDataEntity);
@@ -146,8 +150,13 @@ public class StaffDataMysqlDAL implements IStaffData {
             staffDataEntity.setcDept(item.getStr("cDept"));
             staffDataEntity.setuRealName(item.getStr("uRealName"));
             staffDataEntity.setiRoleType(item.getInt("iRoleType"));
-            String projectlist=item.getStr("groupAssemble").replace('@',',');
-            staffDataEntity.setGroupAssemble(projectlist);
+            if(item.getStr("groupAssemble")!=null&&!item.getStr("groupAssemble").equals("")){
+                String projectlist=item.getStr("groupAssemble").replace('@',',');
+                staffDataEntity.setGroupAssemble(projectlist);
+            }else{
+                staffDataEntity.setGroupAssemble("");
+            }
+
             int roletype=item.getInt("iRoleType");
             staffDataEntity.setRoleType(RoleType.getTypeName(roletype));
             list.add(staffDataEntity);
@@ -170,8 +179,12 @@ public class StaffDataMysqlDAL implements IStaffData {
             staffDataEntity.setcDept(item.getStr("cDept"));
             staffDataEntity.setuRealName(item.getStr("uRealName"));
             staffDataEntity.setiRoleType(item.getInt("iRoleType"));
-            String projectlist=item.getStr("groupAssemble").replace('@',',');
-            staffDataEntity.setGroupAssemble(projectlist);
+            if(item.getStr("groupAssemble")!=null&&!item.getStr("groupAssemble").equals("")){
+                String projectlist=item.getStr("groupAssemble").replace('@',',');
+                staffDataEntity.setGroupAssemble(projectlist);
+            }else{
+                staffDataEntity.setGroupAssemble("");
+            }
             int roletype=item.getInt("iRoleType");
             staffDataEntity.setRoleType(RoleType.getTypeName(roletype));
             list.add(staffDataEntity);
@@ -201,8 +214,12 @@ public class StaffDataMysqlDAL implements IStaffData {
             staffDataEntity.setcDept(record.getStr("cDept"));
             staffDataEntity.setuRealName(record.getStr("uRealName"));
             staffDataEntity.setiRoleType(record.getInt("iRoleType"));
-            String projectlist=record.getStr("groupAssemble").replace('@',',');
-            staffDataEntity.setGroupAssemble(projectlist);
+            if(record.getStr("groupAssemble")!=null&&!record.getStr("groupAssemble").equals("")){
+                String projectlist=record.getStr("groupAssemble").replace('@',',');
+                staffDataEntity.setGroupAssemble(projectlist);
+            }else{
+                staffDataEntity.setGroupAssemble("");
+            }
             int type=record.getInt("iRoleType");
             staffDataEntity.setRoleType(RoleType.getTypeName(type));
             rslist.add(staffDataEntity);

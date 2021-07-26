@@ -148,20 +148,20 @@
         </ul>
         <div class="layui-tab-content" style="padding: 0px">
             <div class="layui-tab-item layui-show">
-                <iframe id="iframe_compute" src="" frameborder="0"  onload="this.height=iframe_compute.document.body.scrollHeight"
+                <iframe id="iframe_compute" src="" frameborder="0" name="iframe_compute"  onload="this.height=iframe_compute.document.body.scrollHeight"
                         width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>
             </div>
             <div class="layui-tab-item">
-                <iframe id="iframe_mark" src="/devicelist/fastsetting" frameborder="0" machinesn="#(machinedata)" name="iframe_a" onload="this.height=iframe_a.document.body.scrollHeight"
-                        width="100%" scrolling="no" frameborder="0" style="height: 1200px"></iframe>
+                <iframe id="iframe_locate" src="" frameborder="0"  name="iframe_locate" onload="this.height=iframe_locate.document.body.scrollHeight"
+                        width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>
             </div>
             <div class="layui-tab-item">
-                <iframe id="iframe_platform" src="/devicelist/fastsetting" frameborder="0" machinesn="#(machinedata)" name="iframe_a" onload="this.height=iframe_a.document.body.scrollHeight"
-                        width="100%" scrolling="no" frameborder="0" style="height: 1200px"></iframe>
+                <iframe id="iframe_platform" src="" name="iframe_platform" frameborder="0"  onload="this.height=iframe_platform.document.body.scrollHeight"
+                        width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>
             </div>
             <div class="layui-tab-item">
-                <iframe id="iframe_" src="/devicelist/fastsetting" frameborder="0" machinesn="#(machinedata)" name="iframe_a" onload="this.height=iframe_a.document.body.scrollHeight"
-                        width="100%" scrolling="no" frameborder="0" style="height: 1200px"></iframe>
+                <iframe id="iframe_auxiliary" src="" frameborder="0" name="iframe_auxiliary" onload="this.height=iframe_auxiliary.document.body.scrollHeight"
+                        width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>
             </div>
         </div>
     </div>
@@ -181,6 +181,9 @@
     src();
     function src() {
         document.getElementById("iframe_compute").src="/devicelist/stationcompute?machinesn="+machinesn;
+        document.getElementById("iframe_locate").src="/devicelist/stationlocate?machinesn="+machinesn;
+        document.getElementById("iframe_platform").src="/devicelist/stationplatform?machinesn="+machinesn;
+        document.getElementById("iframe_auxiliary").src="/devicelist/stationauxiliary?machinesn="+machinesn;
     }
     layui.config({
         base: '/assets/layuiadmin/'

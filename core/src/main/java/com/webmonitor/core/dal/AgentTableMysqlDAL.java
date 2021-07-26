@@ -44,7 +44,7 @@ public class AgentTableMysqlDAL implements IAgent {
     public AgentTable getAgentTableById(String comid) {
         AgentTable agentTable=new AgentTable();
         try{
-           agentTable=AgentTable.dao.findFirst("select * from agent_data where agentNumber="+comid);
+           agentTable=AgentTable.dao.findFirst("select * from agent_table where agentNumber="+comid);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }

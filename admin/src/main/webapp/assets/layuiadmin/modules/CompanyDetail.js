@@ -24,17 +24,17 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     function getDetailProject(){
         $.ajax({
-            url:'/manage/getDetailProject',
+            url:'/company/getCompanyById',
             data:{
-                projectid:agentnum
+                agentNumber:agentnum
             },
             async:false,
             success:function (data) {
                 let item=data.data;
-                agentNumber=item.agentnumber;
-                agentName=item.agentname;
-                $("#comname").html(item.agentname);
-                $("#createtime").html(item.createtime);
+                agentNumber=item.agentNumber;
+                agentName=item.agentName;
+                $("#comname").html(item.agentName);
+                // $("#createtime").html(item.createtime);
             }
         })
     }
@@ -93,20 +93,13 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     /*旗下项目管理跳转*/
     $("#projectmanage").click(function () {
-        $.ajax({
-            url:'/manage/companyprojects',
-            data:{
-                agentnum:agentNumber
-            },
-            success:function () {
-                
-            }
-        })
+        debugger
+        location.href="/manage/companyprojects?agentnum="+agentnum;
     })
 
     //监听页面表格查询
     $("#datasumbit").on('click', function () {
-        let agentnum=Devicelist.getValue();
+        // let agentnum=Devicelist.getValue();
         let stats = $("#stats").val();
         let input = $("#SN").val();
         let id=1,sn, snreal;
@@ -126,7 +119,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , height:'full-200'
             , totalRow: true
             , url: '/devicelist/searchDevice'
-            , where: {'agentNumber': agentnum[0].value, 'sn': snreal, 'state': stats}
+            , where: {'agentNumber': agentnum, 'sn': snreal, 'state': stats}
             , cols: [[
                 {field: 'id', title: "序号", align: 'center'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}

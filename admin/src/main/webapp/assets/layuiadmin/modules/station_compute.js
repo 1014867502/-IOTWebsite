@@ -20,10 +20,10 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     var compute = 0;
     var station = 0;
     var mark = 0;
-    var downloadsource = 0;
-    var rtkturn = false;
-    var rawdataturn = false;
-    var doublebase = false;
+    var downloadsource = 0;//基站数据来源的数据来源单选
+    var rtkturn = true;//rtk开关
+    var rawdataturn = false;//原始数据上传开关
+    var doublebase = false;//双基站开关
 
     form.verify({
         ip: [
@@ -73,6 +73,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     form.on('radio(downloadsource)', function (data) {
         downloadsource = data.value;
         changesoure(doublebase, downloadsource);
+        rtkcore();
     })
     /*监听双基站按钮*/
     form.on('switch(doublebase)', function (data) {
@@ -84,22 +85,24 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         }
         let source = $('input[name="downloadsource"]:checked').val();
         changesoure(doublebase, source);
+        rtkcore()
     })
     /*监听rtk数据按钮*/
     form.on('switch(rtkturn)', function (data) {
         debugger
         if (this.checked) {
-            rtkturn = true;
-            document.getElementById("rtkcontent").innerHTML = rtkcontent;
-            document.getElementById("rtkcontent").style.display = "block";
-            document.getElementById("rtkcontent").style.marginTop = "30px";
+                rtkturn = true;
+                document.getElementById("rtkcontent").innerHTML = rtkcontent;
+                document.getElementById("rtkcontent").style.display = "block";
+                document.getElementById("rtkcontent").style.marginTop = "30px";
         } else {
-            rtkturn = false;
-            document.getElementById("rtkfront").innerHTML=""
-            document.getElementById("rtkfront").style.display = "none";
-            document.getElementById("rtkcontent").innerHTML = "";
-            document.getElementById("rtkcontent").style.display = "none";
+                rtkturn = false;
+                document.getElementById("rtkfront").innerHTML=""
+                document.getElementById("rtkfront").style.display = "none";
+                document.getElementById("rtkcontent").innerHTML = "";
+                document.getElementById("rtkcontent").style.display = "none";
         }
+        rtkcore();
         form.render();
     })
     /*监听原始数据回传按钮*/
@@ -159,6 +162,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 $("#networkPort").val(device.networkPort);
                 $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
                 if (device.rtkPos > 0) {
+                    rtkturn=true;
                     $("#rtkturn").prop("checked", true);
                     $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
                     $("#imuWarn").find("option[value=" + device.imuWarn + "]").prop("selected", true);
@@ -462,6 +466,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                        </div>"
                 break;
             case "rtksetting":
+                debugger
                 document.getElementById(select).innerHTML = " <div class=\"layui-card\">\n" +
                     "                    <div class=\"layui-form layui-card-header layuiadmin-card-header-auto\" style=\"display: flex\">\n" +
                     "                        加密监测设置\n" +
@@ -471,15 +476,10 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            <div class=\"layui-form-item\">\n" +
                     "                                <label style=\"width: 86px;padding: 9px 10px;\" class=\"layui-form-label\">启用RTK解算</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id=\"rtkturn\" type=\"checkbox\" lay-filter='rtkturn' name=\"rtkturn\" lay-skin=\"switch\">\n" +
+                    "                                    <input id=\"rtkturn\" type=\"checkbox\" lay-filter='rtkturn' name=\"rtkturn\" lay-skin=\"switch\" checked>\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div id=\"coreselect\">\n" +
-                    "                                <label class=\"layui-form-label\"></label>\n" +
-                    "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input type=\"radio\" lay-filter=\"station\" name=\"coredata\" value=\"0\" title=\"与CORS①数据同源\" checked>\n" +
-                    "                                    <input type=\"radio\" lay-filter=\"station\" name=\"coredata\" value=\"1\" title=\"与CORS②数据同源\">\n" +
-                    "                                </div>\n" +
                     "                            </div>\n" +
                     "\n" +
                     "                        </div>\n" +
@@ -964,11 +964,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                         "                                    </div>\n" +
                         "                                </div>"
                     if(rtknode!=null){
-                        document.getElementById("coreselect").innerHTML="  <label class=\"layui-form-label\"></label>\n" +
-                            "                                <div class=\"layui-input-block\">\n" +
-                            "                                    <input type=\"radio\" lay-filter=\"station\" name=\"coredata\" value=\"0\" title=\"与CORS①数据同源\" checked>\n" +
-                            "                                    <input type=\"radio\" lay-filter=\"station\" name=\"coredata\" value=\"1\" title=\"与CORS②数据同源\">\n" +
-                            "                                </div>";
                         document.getElementById("rtkcontent").innerHTML="";
                     }
                     break;
@@ -1073,8 +1068,53 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 "                                </div>\n" +
                 "                            </div>";
         }
+        rtkcore();
     }
 
+    /*判断是否插入core选择框*/
+    function rtkcore(){
+        let base=doublebase;
+        let source=downloadsource;
+        let turn=rtkturn;
+        if(base&&source==1&&turn){
+            document.getElementById("coreselect").innerHTML="  <label class=\"layui-form-label\"></label>\n" +
+                "                                <div class=\"layui-input-block\">\n" +
+                "                                    <input type=\"radio\" lay-filter=\"coresource\" name=\"coredata\" value=\"0\" title=\"与CORS①数据同源\" checked>\n" +
+                "                                    <input type=\"radio\" lay-filter=\"coresource\" name=\"coredata\" value=\"1\" title=\"与CORS②数据同源\">\n" +
+                "                                </div>";
+            document.getElementById("rtkfront").style.display="flex";
+            document.getElementById("rtkcontent").innerHTML="";
+            document.getElementById("rtkfront").innerHTML="<div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">RTK解算设置</label>\n" +
+                "                                <div class=\"layui-input-block\">\n" +
+                "                                    <select id=\"rtkPos\" name=\"rtkPos\" lay-verify=\"required\">\n" +
+                "                                        <option value=\"1\">正常模式（5分钟输出）</option>\n" +
+                "                                        <option value=\"2\">紧急模式（1秒输出）</option>\n" +
+                "                                        <option value=\"3\">紧急模式（5秒输出）</option>\n" +
+                "                                    </select>\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                            <div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\" style=\"width: 150px\">IMU触发RTK紧急模式</label>\n" +
+                "                                <div class=\"layui-input-block\" style=\"margin-left: 180px\">\n" +
+                "                                    <select id=\"imuWarn\" name=\"imuWarn\" lay-verify=\"required\">\n" +
+                "                                        <option value=\"0\">关闭</option>\n" +
+                "                                        <option value=\"0.3\">0.3度</option>\n" +
+                "                                        <option value=\"0.5\">0.5度</option>\n" +
+                "                                        <option value=\"1\">1度</option>\n" +
+                "                                        <option value=\"2\">2度</option>\n" +
+                "                                        <option value=\"3\">3度</option>\n" +
+                "                                        <option value=\"5\">5度</option>\n" +
+                "                                    </select>\n" +
+                "                                </div>\n" +
+                "                            </div>";
+        }else if(base&&source!=1&&turn){
+        }
+        else{
+            document.getElementById("coreselect").innerHTML="";
+            document.getElementById("rtkfront").innerHTML="";
+        }
+    }
 
     var rtkcontent = " <div style=\"display: flex;margin-top: 30px;margin-bottom: 20px\">\n" +
         "                                <div class=\"layui-form-item  fastinput\">\n" +

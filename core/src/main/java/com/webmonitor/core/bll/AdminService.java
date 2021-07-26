@@ -15,7 +15,7 @@ public class AdminService {
 
     /**查看所有设备**/
     public String getAllDeviceById(int pageno,int limit){
-        String sql=" from agent_data a,machine_data b where a.machineSerial=b.machineSerial";
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial ";
         return sql;
     }
 
@@ -40,7 +40,7 @@ public class AdminService {
                     sql = " from agent_data" +
                             " where proGroupId is null and machineSerial like '" + sn1 + "'";
                 }else{
-                    sql=" from agent_data where proGroupId is null";
+                    sql=" from agent_data where proGroupId is null or proGroupId=0";
                 }
                 break;
             case "1":
@@ -49,11 +49,11 @@ public class AdminService {
                     sql = " from agent_data" +
                             " where proGroupId is null and agentName like '" + sn1 + "'";
                 }else{
-                    sql=" from agent_data where proGroupId is null";
+                    sql=" from agent_data where proGroupId is null or proGroupId=0";
                 }
                 break;
             case "2":
-                sql=" from agent_data where proGroupId is null";
+                sql=" from agent_data where proGroupId is null or proGroupId=0";
                 break;
         }
         sql=sql+" order by createTime desc";

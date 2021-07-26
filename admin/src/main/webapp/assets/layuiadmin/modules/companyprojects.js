@@ -12,6 +12,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     var identity="";
     var layerindex;
     var demo;//添加项目的公司列表
+    var currentAgent;//当前公司编号
 
     function layerpage(){
         laypage.render({
@@ -26,7 +27,8 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
         });
     }
 
-    getProjectCount();
+    getProjectCount()
+    judgeidentity();
 
     form.verify({
         editname:function (value) {
@@ -49,16 +51,17 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
 
     form.on('submit(formDemo)', function(data){
         let json=data.field;
-        let company=demo.getValue();
+        // let company=demo.getValue();
         $.ajax({
             url:'/manage/addproject',
             data:{
-                comid:company[0].value,
+                // comid:company[0].value,
+                comid:currentAgent,
                 projectname:json.projectname,
-                userid:userid
             },
             async:false,
             success:function (data) {
+                getProjectCount()
                 layer.msg('提交成功');
             }
         })
@@ -97,46 +100,37 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
 
     /**针对普通用户和公司管理员**/
     function usercreateproject(){
-        let company=getCurrentCompany();
-        let arrData=[];
-        for (var i = 0; i < company.length; i++) {
-            var item = company[i];
-            var jsonStr = {};
-            jsonStr.name = item.agentName;
-            jsonStr.value = item.agentNumber;
-            arrData.push(jsonStr);
-        }
+        // let company=getCurrentCompany();
+        currentAgent=agentNum;
         drawer.render({
             title: '添加项目',  //标题
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
             width: "600px", //r、l抽屉可以设置宽度
             content: $("#window"),
             success: function (layero, index) {
-                demo = xmSelect.render({
-                    el: '#demo2',
-                    radio: true,
-                    clickClose: true,
-                    data:arrData
-                });
+                // demo = xmSelect.render({
+                //     el: '#demo2',
+                //     radio: true,
+                //     clickClose: true,
+                //     data:arrData
+                // });
                 layerindex=index;
             },
         });
+
     }
 
     /**添加项目**/
     $("#add_device").click(function () {
-        switch(identity){
-            case "company":
-                usercreateproject();
-                break;
-            case "admin":
-                admincreateproject();
-        }
-    })
-
-
-    $(".projects").mouseover(function () {
-
+        debugger
+        usercreateproject();
+        // switch(identity){
+        //     case "company":
+        //
+        //         break;
+        //     case "admin":
+        //         admincreateproject();
+        // }
     })
 
     /**获取项目数量信息**/
@@ -149,8 +143,9 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             type: 'GET',
             async:false,
             success: function (data) {
+                debugger
                 projectcount=data.data;
-                $("#projectcount").html("<span>"+projectcount.size+"</span>");
+                $("#projectcount").html("<span>"+projectcount.length+"</span>");
                 layerpage();
             }
         })
@@ -167,6 +162,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             },
             type: 'GET',
             success: function (data) {
+                debugger
                 var thisNode=document.getElementById("list2");
                 if(thisNode.childNodes.length>0){
                     thisNode.innerHTML = "";
@@ -178,7 +174,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     }
 
     function showProjects(data) {
-        let real=data[0];
+        let real=data;
         for (let i = 0; i < real.length; i++) {
             let item = real[i];
             var innerHTML = "     <div class=\"layui-card\">\n" +
@@ -264,6 +260,17 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
         return companys;
     }
 
+    function judgeidentity(){
+        $.ajax({
+            url:'/manage/judgeidentity',
+            async:false,
+            type:'get',
+            success:function(data){
+                identity=data.data;
+            }
+        });
+        return identity;
+    }
 
     /**删除项目**/
     function deletproject(projectid){

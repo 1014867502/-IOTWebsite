@@ -58,11 +58,11 @@ public abstract class BaseAgentData<M extends BaseAgentData<M>> extends Model<M>
 	}
 
 	public void setProGroupId(java.lang.Integer ProGroupId) {
-		set("ProGroupId", ProGroupId);
+		set("proGroupId", ProGroupId);
 	}
 	
 	public java.lang.Integer getProGroupId() {
-		return getInt("ProGroupId");
+		return getInt("proGroupId");
 	}
 
 }

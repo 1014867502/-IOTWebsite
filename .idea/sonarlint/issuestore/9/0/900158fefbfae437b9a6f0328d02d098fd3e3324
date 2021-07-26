@@ -1,24 +1,0 @@
-
-JWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(¯ë‹Î
-JWeb:AvoidCommentedOutCodeCheckƒ"Remove this commented out code.(‹ü­½
-IWeb:AvoidCommentedOutCodeCheckw"Remove this commented out code.(Î¡•ş
-IWeb:TableWithoutCaptionCheck¤" Add a description to this table.(Ä­¾Ä
-HWeb:AvoidCommentedOutCodeCheck{"Remove this commented out code.(ÂÄä
-IWeb:AvoidCommentedOutCodeCheckz"Remove this commented out code.(œ˜¸
-NWeb:AvoidCommentedOutCodeCheckx"Remove this commented out code.(‰¶Ô”úÿÿÿÿ
-NWeb:AvoidCommentedOutCodeCheck|"Remove this commented out code.(Å¯íôøÿÿÿÿ
-CWeb:PageWithoutTitleCheck"Add a <title> tag to this page.(Õ¶¯M
-IWeb:AvoidCommentedOutCodeCheck~"Remove this commented out code.(‹ü­½
-JWeb:AvoidCommentedOutCodeCheck…"Remove this commented out code.(‹ü­½
-DWeb:BoldAndItalicTagsCheckŠ"Replace this <i> tag by <em>.(ªşİˆ
-IWeb:AvoidCommentedOutCodeCheck"Remove this commented out code.(²Œµ¯
-IWeb:AvoidCommentedOutCodeCheck}"Remove this commented out code.(‹ü­½
-IWeb:BoldAndItalicTagsCheck"Replace this <i> tag by <em>.(ãš×Óşÿÿÿÿ
-;	Web:S5256¤"%Add "<th>" headers to this "<table>".(Ä­¾Ä
-OWeb:AvoidCommentedOutCodeCheck‚"Remove this commented out code.(µÃ¶»ÿÿÿÿÿ
-JWeb:AvoidCommentedOutCodeCheck„"Remove this commented out code.(‹ü­½
-Z	Web:S5254"@Add "lang" and/or "xml:lang" attributes to this "<html>" element(œ÷Ãûÿÿÿÿ
-IWeb:AvoidCommentedOutCodeChecky"Remove this commented out code.(²Œµ¯
-CWeb:BoldAndItalicTagsChecko"Replace this <i> tag by <em>.(ªşİˆ
-OWeb:AvoidCommentedOutCodeCheck€"Remove this commented out code.(¸õÓìøÿÿÿÿ
-HWeb:BoldAndItalicTagsCheckf"Replace this <i> tag by <em>.(ãš×Óşÿÿÿÿ

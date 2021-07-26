@@ -47,7 +47,26 @@ public class DeviceController  extends BaseController {
         setAttr("machinesn",machinesn);
         render("station_compute.html");
     }
-    /****/
+    /**站点 坐标设置**/
+    public void stationlocate(){
+        String machinesn=getPara("machinesn");
+        setAttr("machinsn",machinesn);
+        render("station_locate.html");
+    }
+
+    /**站点 平台设置**/
+    public void stationplatform(){
+        String machinesn=getPara("machinesn");
+        setAttr("machinsn",machinesn);
+        render("station_platform.html");
+    }
+
+    /**站点 平台设置**/
+    public void stationauxiliary(){
+        String machinesn=getPara("machinesn");
+        setAttr("machinsn",machinesn);
+        render("station_auxiliary.html");
+    }
 
     public void searchlist(){
         render("setting.html");

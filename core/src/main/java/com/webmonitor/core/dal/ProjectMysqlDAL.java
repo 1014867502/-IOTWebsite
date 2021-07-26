@@ -45,7 +45,7 @@ public class ProjectMysqlDAL implements IProject {
     @Override
     public BaseProjects getProjectById(String projectid) {
         String sql="select a.*, b.agentName from projects_data a ,agent_table b where a.agentNumber=b.agentNumber" +
-                " and a.ProGroupId='"+projectid+"'";
+                " and a.proGroupId='"+projectid+"'";
         Record record= Db.findFirst(sql);
         BaseProjects baseProjects=new BaseProjects();
         baseProjects.setId(record.getStr("id"));
@@ -123,8 +123,8 @@ public class ProjectMysqlDAL implements IProject {
     @Override
     public Page<BaseProjects> getProjectsByComIdPageData(String comid, int pageno, int limit) {
         List<BaseProjects> list=new ArrayList<>();
-        String sql=" from projects_data a ,agent_table b where a.agentNumber=b.agentNumber where"
-                +" agentNumber='"+comid+"'";
+        String sql=" from projects_data a ,agent_table b where a.agentNumber=b.agentNumber and "
+                +" a.agentNumber="+comid+"";
         Page<Record> page=Db.paginate(pageno,limit,"select  a.*, b.agentName ",sql);
         List<Record> record= page.getList();
         for(Record item:record){
@@ -134,7 +134,7 @@ public class ProjectMysqlDAL implements IProject {
             baseProjects.setAgentname(item.getStr("agentName"));
             baseProjects.setProjectid(item.getStr("proGroupId"));
             baseProjects.setProgroupname(item.getStr("proGroupName"));
-            sql="select count(*) from agent_data a, where proGroupId="+item.getStr("proGroupName");
+            sql="select count(*) from agent_data a,machine_data b where a.machineSerial=b.machineSerial and a.proGroupId="+item.getStr("proGroupId");
             Record  record1=Db.findFirst(sql);
             baseProjects.setDevicenum(record1.getInt("count(*)"));
             list.add(baseProjects);
@@ -163,9 +163,11 @@ public class ProjectMysqlDAL implements IProject {
 
     @Override
     public void addProject(String userid,String comid, String projectname) {
-
+        int id=1;
         ProjectsData projectsData=ProjectsData.dao.findFirst("SELECT * FROM projects_data  ORDER BY Id DESC limit 0,1");
-        int id=projectsData.getProGroupId()+1;
+        if(projectsData!=null){
+            id=projectsData.getProGroupId()+1;
+        }
         String sid=String.valueOf(id);
         Date date=new Date();
         DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
@@ -195,7 +197,7 @@ public class ProjectMysqlDAL implements IProject {
     /**获取项目里设备的数目**/
     @Override
     public int getProDevCountById(String projectid) {
-        Record count=Db.findFirst("select count(*) from projects_data a,agent_data b where a.proGroupId=b.proGroupId and a.proGroupId="+projectid);
+        Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where a.proGroupId="+projectid);
         int sum=count.getInt("count(*)");
         return sum;
     }
@@ -203,7 +205,7 @@ public class ProjectMysqlDAL implements IProject {
     /**获取项目里在线设备的数目**/
     @Override
     public int getProDevOnCountById(String projectid) {
-        Record count=Db.findFirst("select count(*) from projects_data a,agent_data b where a.proGroupId=b.proGroupId and b.onlineState=1 and a.proGroupId="+projectid);
+        Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where b.connectState=1 and a.proGroupId="+projectid);
         int sum=count.getInt("count(*)");
         return sum;
     }
@@ -211,7 +213,7 @@ public class ProjectMysqlDAL implements IProject {
     /**获取项目里离线设备的数目**/
     @Override
     public int getProDevOutCountById(String projectid) {
-        Record count=Db.findFirst("select count(*) from projects_data a,agent_data b where a.proGroupId=b.proGroupId and b.onlineState=0 and a.proGroupId="+projectid);
+        Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where (b.connectState=0 or b.connectState is null) and a.proGroupId="+projectid);
         int sum=count.getInt("count(*)");
         return sum;
     }
