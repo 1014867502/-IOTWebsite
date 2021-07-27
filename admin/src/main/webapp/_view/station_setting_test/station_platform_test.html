@@ -1,0 +1,406 @@
+<!--测站设置的坐标设置-->
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("测站设置的坐标设置")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style type="text/css">
+        .layui-form-checked span, .layui-form-checked:hover span {
+            background-color: #FF5722;
+        }
+
+        .layui-form-checked i, .layui-form-checked:hover i {
+            color: #FF5722;
+        }
+
+        .layui-btn.onlinebtn {
+            background-color: #009688;
+            color: #FFFFFF;
+        }
+
+        .layui-btn.offlinebtn {
+            background-color: #ff0000;
+            color: #FFFFFF;
+        }
+
+        .layui-card-body.layui-layout-box {
+            width: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            /*border-style: solid;*/
+            background-color: #1e9fff;
+            /*!*border-image: url(/img/bg.png) 4 4 4 4 fill round;*!*/
+            /*border-image: url(/img/bg.png) 4 4 4 4 fill stretch;*/
+            box-sizing: border-box;
+            /*height: calc(100% - 42px);*/
+            height: 130px;
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .data {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+        }
+
+        .layadmin-carousel.history {
+            height: 400px !important;
+        }
+    </style>
+</head>
+<style>
+    .fastinput {
+        width: 400px;
+    }
+
+    .btn_primary {
+        border-color: #1e9fff;
+        background-color: #F1F1F1;
+        color: #1e9fff;
+
+    }
+
+    .btn_primary:hover {
+        background-color: #1e9fff;
+        color: #F1F1F1;
+    }
+
+    .layui-form-radio > i:hover, .layui-form-radioed > i {
+        color: #1e9fff;
+    }
+
+    .layui-form-label {
+        float: left;
+        display: block;
+        padding: 9px 15px;
+        width: 80px;
+        font-weight: bold;
+        line-height: 20px;
+        text-align: right;
+    }
+
+    .layui-form-onswitch {
+        border-color: #1e9fff;
+        background-color: #1e9fff;
+    }
+
+    .layui-form-select dl dd.layui-this {
+        background-color: #1e9fff;
+        color: #fff;
+    }
+
+    .circle {
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        background-color: #1e9fff;
+        margin-top: 7px;
+        margin-right: 6px;
+        /* 宽度和高度需要相等 */
+    }
+
+    .basecoreindex {
+        width: 100px;
+        padding: 9px 5px;
+    }
+</style>
+<body>
+<div class="layui-fluid" style="padding: 0px;">
+    <div class="layui-row layui-col-space15" style="font-weight: bold">
+        <form class="layui-form" action="">
+            <div class="layui-card">
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                    中移动OneNET平台对接
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form-item">
+                        <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
+                        <div class="layui-input-block">
+                            <input id="onenet_enable" lay-filter="onenet_enable" type="checkbox" name="onenet_enable" lay-skin="switch">
+                        </div>
+                        <div class="layui-form-item  fastinput" style="margin-top: 30px;display: flex" >
+                            <label class="layui-form-label" style="width: 86px;padding: 9px 10px;">模式</label>
+                            <div class="layui-input-block" style="margin: 0;">
+                                <select id="onenet_mode" name="onenet_mode" lay-filter="onenet_mode" lay-verify="required">
+                                    <option value="0">MQTT</option>
+                                    <option value="1">MQTT-S</option>
+                                    <option value="2">MQTT-S自注册</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">设备ID</label>
+                                <div class="layui-input-block">
+                                    <input id='onenet_id' type="text" name="onenet_id" required lay-verify="required"
+                                           placeholder="请输入ID"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">产品ID</label>
+                                <div class="layui-input-block">
+                                    <input id='onenet_user' type="text" name="onenet_user" required lay-verify="required"
+                                           placeholder="请输入ID"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">设备KEY</label>
+                                <div class="layui-input-block">
+                                    <input id='onenet_key' type="text" name="onenet_key" required lay-verify="required"
+                                           placeholder="请输入KEY"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">产品KEY</label>
+                                <div class="layui-input-block">
+                                    <input id='onenet_key' type="text" name="onenet_key" required lay-verify="required"
+                                           placeholder="请输入KEY"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">数据流ID</label>
+                                <div class="layui-input-block">
+                                    <input id='onenet_data' type="text" name="onenet_data" required lay-verify="required"
+                                           placeholder="请输入ID"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                    地灾物联网平台对接
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form-item">
+                        <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
+                        <div class="layui-input-block">
+                            <input id="dz_iot_enable" type="checkbox" lay-filter="dz_iot_enable" name="dz_iot_enable" lay-skin="switch">
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">MQTT IP</label>
+                                <div class="layui-input-block">
+                                    <input id='iot_ip' type="text" name="iot_ip" required lay-verify="required"
+                                           placeholder="请输入ip"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">MQTT 端口</label>
+                                <div class="layui-input-block">
+                                    <input id='iot_port' type="text" name="iot_port" required lay-verify="required"
+                                           placeholder="请输入端口"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">设备ID</label>
+                                <div class="layui-input-block">
+                                    <input id='iot_id' type="text" name="iot_id" required lay-verify="required"
+                                           placeholder="请输入KEY"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">设备KEY</label>
+                                <div class="layui-input-block">
+                                    <input id='iot_key' type="text" name="iot_key" required lay-verify="required"
+                                           placeholder="请输入ID"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">HTTP参数</label>
+                                <div class="layui-input-block">
+                                    <input id='iot_http' type="text" name="iot_http" required lay-verify="required"
+                                           placeholder="请输入ID"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label style="width: 90px;padding: 9px 12px;" class="layui-form-label">上传RTCM3.2</label>
+                                <div class="layui-input-block">
+                                    <input id="iot_gnss_data" type="checkbox" name="iot_gnss_data" lay-skin="switch">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label style="width: 114px;padding: 9px 6px;" class="layui-form-label">上传RTK解算结果</label>
+                                <div class="layui-input-block">
+                                    <input id="iot_rtk_result" type="checkbox" name="iot_rtk_result" lay-skin="switch">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                    重庆地灾平台对接
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form-item">
+                        <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
+                        <div class="layui-input-block">
+                            <input id="chongqing_iot_turn" lay-filter="chongqing_iot_turn" type="checkbox" name="chongqing_iot_turn" lay-skin="switch">
+                        </div>
+                        <div id="chongqiselect">
+                            <div class="layui-form-item  fastinput" style="margin-top: 30px">
+                                <label class="layui-form-label" style="width: 86px;padding: 9px;">运营商</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" lay-filter="chongqiselect" name="chongqiselect" value="1" title="NB-IOT" checked>
+                                    <input type="radio" lay-filter="chongqiselect" name="chongqiselect" value="1" title="MQTT">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item  fastinput" style="margin-top: 30px">
+                            <label class="layui-form-label" style="width: 86px;padding: 9px;">参数设置</label>
+                            <button class="layui-btn btn_primary">读取IMEI</button>
+                        </div>
+
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label" style="width: 86px;padding: 9px;">运营商</label>
+                                <div class="layui-input-block">
+                                    <select id="chongqing_iot_telecom" name="chongqing_iot_telecom" lay-verify="required">
+                                        <option value="1">电信</option>
+                                        <option value="2">移动</option>
+                                        <option value="3">联通</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">设备ID</label>
+                                <div class="layui-input-block">
+                                    <input id='chongqing_iot_id' type="text" name="chonqing_iot_id" required lay-verify="required"
+                                           placeholder="请输入ID"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">鉴权码</label>
+                                <div class="layui-input-block">
+                                    <input id='chongqing_iot_key' type="text" name="chongqing_iot_key" required lay-verify="required"
+                                           placeholder="请输入ID"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">NB IMEI</label>
+                                <div class="layui-input-block">
+                                    <input id='chongqing_iot_nb_imei' type="text" name="chongqing_iot_nb_imei"
+                                           autocomplete="off" class="layui-select input-sm layui-btn-disabled"  disabled>
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">NB IMSI</label>
+                                <div class="layui-input-block">
+                                    <input id='chongqing_iot_nb_imsi' type="text" name="chongqing_iot_nb_imsi"
+                                           autocomplete="off" class="layui-select input-sm layui-btn-disabled"  disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">产品ID</label>
+                                <div class="layui-input-block">
+                                    <input id='chongqing_iot_user' type="text" name="chongqing_iot_user" required lay-verify="required"
+                                           placeholder="请输入ID"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding-top: 30px;text-align: center">
+                <div class="layui-input-block" style="margin-left: 0px!important;">
+                    <button class="layui-btn" type="button" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+    var agentnum = "#(agentNum)";
+    var machinesn = "#(machinesn)";
+    debugger
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'station_platform']);
+</script>
+</body>
+</html>

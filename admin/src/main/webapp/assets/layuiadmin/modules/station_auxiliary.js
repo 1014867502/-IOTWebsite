@@ -24,7 +24,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
               "                        </div>\n" +
               "                        <div class=\"layui-form-item  fastinput\" style=\"margin-top: 30px\">\n" +
               "                            <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">传感器列表</label>\n" +
-              "                            <button class=\"layui-btn btn_primary\" id='add_sensor'>新增传感器</button>\n" +
+              "                            <button class=\"layui-btn btn_primary\" id='add_sensor' type='button'>新增传感器</button>\n" +
               "                        </div>\n" +
               "                        <div style=\"display: flex;margin-top: 30px\">\n" +
               "                            <div class=\"layui-form-item  fastinput\">\n" +
@@ -35,7 +35,20 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
               "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
               "                                </div>\n" +
               "                            </div>\n" +
-              "                        </div>"
+              "                        </div>";
+            /*添加设备*/
+            $("#add_sensor").click(function () {
+                debugger
+                drawer.render({
+                    title: '添加设备',  //标题
+                    offset: 'r',    //r:抽屉在右边、l:抽屉在左边
+                    width: "600px", //r、l抽屉可以设置宽度
+                    content: $("#addprowindow"),
+                    success :function (layero, index) {
+
+                    },
+                });
+            })
         } else {
            document.getElementById("connectsensor").innerHTML="";
         }
@@ -194,19 +207,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         form.render();
     })
 
-    /*添加设备*/
-    $("#add_sensor").click(function () {
-        debugger
-        drawer.render({
-            title: '添加设备',  //标题
-            offset: 'r',    //r:抽屉在右边、l:抽屉在左边
-            width: "600px", //r、l抽屉可以设置宽度
-            content: $("#addprowindow"),
-            success :function (layero, index) {
 
-            },
-        });
-    })
 
     exports('station_auxiliary', {})
 });

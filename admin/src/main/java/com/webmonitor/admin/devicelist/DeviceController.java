@@ -50,7 +50,7 @@ public class DeviceController  extends BaseController {
     /**站点 坐标设置**/
     public void stationlocate(){
         String machinesn=getPara("machinesn");
-        setAttr("machinsn",machinesn);
+        setAttr("machinesn",machinesn);
         render("station_locate.html");
     }
 

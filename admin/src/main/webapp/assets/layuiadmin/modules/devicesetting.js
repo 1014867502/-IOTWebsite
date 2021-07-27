@@ -34,7 +34,7 @@ layui.define(['form','drawer','table'], function (exports) {
                 document.getElementById("fastsetting").style.color="#00f0ff"
                 document.getElementById("fastsetting1").style.color="#00f0ff";
                 beforeselect="fastsetting";
-                document.getElementById("iframe_a").style.height="1200px";
+                document.getElementById("iframe_a").style.height="1000px";
                 document.getElementById("iframe_a").src="/devicelist/fastsetting";
 
                 break;
@@ -48,7 +48,7 @@ layui.define(['form','drawer','table'], function (exports) {
                 document.getElementById("devicesetting").style.color="#00f0ff";
                 document.getElementById("devicesetting1").style.color="#00f0ff";
                 beforeselect="devicesetting";
-                document.getElementById("iframe_a").style.height="2000px";
+                document.getElementById("iframe_a").style.height="1800px";
                 document.getElementById("iframe_a").src="/devicelist/stationsetting?machinedata="+machinedata;
                 break;
             case "internetset":
