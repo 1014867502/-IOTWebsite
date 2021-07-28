@@ -14,7 +14,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var basehidepara;
 
     form.on('switch(coordcvt_enable)', function (data) {
-        debugger
         if (this.checked) {
             document.getElementById("locate_content").innerHTML =locatecontent;
         } else {
@@ -58,7 +57,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             test.coordcvt_seven_rx+"|"+test.coordcvt_seven_ry+"|"+test.coordcvt_seven_rz+"|"+test.coordcvt_seven_scale;
         jsondata.coordcvtFourParam=fourturn+"|"+test.coordcvt_four_tx+"|"+test.coordvt_four_ty+"|"+test.coordvt_four_rt+"|"+test.coordvt_four_scale+fourhidepara;
         let stringtest=JSON.stringify(jsondata);
-        debugger
         $.ajax({
             url:'/devicelist/editSetting',
             data:{
@@ -66,7 +64,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 machinesn:machinesn
             },
             success:function (data) {
-                debugger
                 getDeviceSetting(machinesn);
                 alert(data.data);
             }
@@ -81,7 +78,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 machineSerial: sn
             },
             success: function (data) {
-                debugger
                 device = data.data;
                 locatedata=device;
                 if(device.coordcvtEnabled>0){

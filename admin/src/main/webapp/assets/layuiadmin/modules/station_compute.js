@@ -89,7 +89,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     })
     /*监听rtk数据按钮*/
     form.on('switch(rtkturn)', function (data) {
-        debugger
         if (this.checked) {
                 rtkturn = true;
                 document.getElementById("rtkcontent").innerHTML = rtkcontent;
@@ -466,7 +465,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                        </div>"
                 break;
             case "rtksetting":
-                debugger
                 document.getElementById(select).innerHTML = " <div class=\"layui-card\">\n" +
                     "                    <div class=\"layui-form layui-card-header layuiadmin-card-header-auto\" style=\"display: flex\">\n" +
                     "                        加密监测设置\n" +

@@ -93,7 +93,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     /*旗下项目管理跳转*/
     $("#projectmanage").click(function () {
-        debugger
         location.href="/manage/companyprojects?agentnum="+agentnum;
     })
 

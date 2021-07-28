@@ -132,11 +132,13 @@ public class MachineInfoEntity {
     private String moveWarnThreshold;
     private String moveWarnBaud;
     private String moveWarnCmd;
+    private String moveALiYunSms;
     private String dzIotEnabled;
     private String dzIotId;
     private String dzIotIp;
     private String dzIotPort;
     private String dzIotKey;
+    private String dzIotHttp;
     private String dzIotGnssData;
     private String cqIotEnabled;
     private String cqIotTelecom;
@@ -213,7 +215,7 @@ public class MachineInfoEntity {
             String extSensorEnabled, String extSensorCmd, String extSensorPower,
             String scheduler, String moveWarnEnabled, String moveWarnThreshold,
             String moveWarnBaud, String moveWarnCmd, String dzIotEnabled,
-            String dzIotId, String dzIotIp, String dzIotPort, String dzIotKey,
+            String dzIotId, String dzIotIp, String dzIotPort, String dzIotKey,String dzIotHttp,
             String dzIotGnssData, String cqIotEnabled, String cqIotTelecom,
             String cqIotId, String cqIotUser, String cqIotKey, String cqIotStatus,
             String oneNetEnabled, String oneNetId, String oneNetUser,
@@ -278,6 +280,7 @@ public class MachineInfoEntity {
         this.dzIotIp = dzIotIp;
         this.dzIotPort = dzIotPort;
         this.dzIotKey = dzIotKey;
+        this.dzIotHttp=dzIotHttp;
         this.dzIotGnssData = dzIotGnssData;
         this.cqIotEnabled = cqIotEnabled;
         this.cqIotTelecom = cqIotTelecom;
@@ -996,6 +999,18 @@ public class MachineInfoEntity {
     }
     public void setRawRate(String rawRate) {
         this.rawRate = rawRate;
+    }
+    public String getDzIotHttp() {
+        return dzIotHttp;
+    }
+    public void setDzIotHttp(String dzIotHttp) {
+        this.dzIotHttp = dzIotHttp;
+    }
+    public String getMoveALiYunSms() {
+        return moveALiYunSms;
+    }
+    public void setMoveALiYunSms(String moveALiYunSms) {
+        this.moveALiYunSms = moveALiYunSms;
     }
 
 

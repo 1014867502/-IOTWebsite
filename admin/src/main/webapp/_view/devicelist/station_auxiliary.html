@@ -277,7 +277,7 @@
                     <div class="layui-form-item">
                         <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
                         <div class="layui-input-block">
-                            <input id="onenet_enable" lay-filter="onenet_enable" type="checkbox" name="onenet_enable" lay-skin="switch">
+                            <input id="sensor_enable" lay-filter="sensor_enable" type="checkbox" name="sensor_enable" lay-skin="switch">
                         </div>
                         <div id="connectsensor"></div>
                     </div>
@@ -291,7 +291,7 @@
                     <div class="layui-form-item">
                         <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
                         <div class="layui-input-block">
-                            <input id="chongqing_iot_turn" lay-filter="chongqing_iot_turn" type="checkbox" name="onenet_enable" lay-skin="switch">
+                            <input id="scheduler_enable" lay-filter="scheduler_enable" type="checkbox" name="scheduler_enable" lay-skin="switch">
                         </div>
                         <div id="timeswitch"></div>
                     </div>
@@ -305,7 +305,7 @@
                     <div class="layui-form-item">
                         <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
                         <div class="layui-input-block">
-                            <input id="dz_iot_enable" lay-filter="dz_iot_enable" type="checkbox" name="dz_iot_enable" lay-skin="switch">
+                            <input id="move_warn_enable" lay-filter="move_warn_enable" type="checkbox" name="move_warn_enable" lay-skin="switch">
                         </div>
                         <div id="warning"></div>
                     </div>
@@ -313,7 +313,7 @@
             </div>
             <div class="layui-form-item" style="padding-top: 30px;text-align: center">
                 <div class="layui-input-block" style="margin-left: 0px!important;">
-                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button class="layui-btn" type="button" lay-submit lay-filter="formDemo">立即提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>
@@ -331,7 +331,6 @@
 <script>
     var agentnum = "#(agentNum)";
     var machinesn = "#(machinesn)";
-    debugger
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

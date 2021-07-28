@@ -57,14 +57,14 @@ public class DeviceController  extends BaseController {
     /**站点 平台设置**/
     public void stationplatform(){
         String machinesn=getPara("machinesn");
-        setAttr("machinsn",machinesn);
+        setAttr("machinesn",machinesn);
         render("station_platform.html");
     }
 
     /**站点 平台设置**/
     public void stationauxiliary(){
         String machinesn=getPara("machinesn");
-        setAttr("machinsn",machinesn);
+        setAttr("machinesn",machinesn);
         render("station_auxiliary.html");
     }
 

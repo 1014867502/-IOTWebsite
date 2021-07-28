@@ -228,7 +228,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , id: 'table-form'
             , page: true
             , parseData: function (res) {
-                debugger
                 return {
                     "code": res.code,
                     "msg": res.msg,
@@ -241,7 +240,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
 
     function renderlayerTable(){
-        debugger;
         var stats2 = $("#stats2").val();
         table2.render({
             elem: '#table3'
@@ -267,7 +265,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     "data": res.data == null ? {} : res.data.list
                 };
             },done: function () {
-                debugger
                 table2.on('checkbox(table3)', function(obj){
                     let checkStatus = table2.checkStatus('table3')
                         ,data = checkStatus.data;
@@ -319,7 +316,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     "data": res.data == null ? {} : res.data.list
                 };
             },done: function () {
-                debugger
                 table2.on('checkbox(table3)', function(obj){
                     let checkStatus = table2.checkStatus('table3')
                         ,data = checkStatus.data;
@@ -380,7 +376,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     /**渲染公司列表（主页上的）**/
     function assignCompanyList(json){
-        debugger
         var arrData = [];
         if (json == null) {
             arrData = [];
@@ -421,7 +416,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     /**渲染公司列表（添加设备上的）**/
     function assignCompanyListadd(json){
-        debugger
         var arrData = [];
         if (json == null) {
             arrData = [];

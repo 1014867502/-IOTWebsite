@@ -7,11 +7,18 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         , table2 = layui.table
         , form = layui.form
 
+    var locatedata;
+
+    getDeviceSetting(machinesn);
 
     form.on('switch(onenet_enable)', function (data) {
-        debugger
         if (this.checked) {
             document.getElementById("onenetcontent").innerHTML = onenetcontent;
+            if(locatedata.oneNetMode!=null){
+                onenetshow(locatedata.oneNetMode);
+            }else{
+                onenetshow("0");
+            }
         } else {
             document.getElementById("onenetcontent").innerHTML = "";
         }
@@ -19,7 +26,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     })
 
     form.on('switch(dz_iot_enable)', function (data) {
-        debugger
         if (this.checked) {
             document.getElementById("dzcontent").innerHTML =dznetcontent;
         } else {
@@ -38,8 +44,71 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         chongqingshow(select);
     });
 
+    form.on('submit(formDemo)',function (data) {
+        let test=data.field;
+        let jsondata={};
 
+        jsondata.dzIotEnabled=test.dz_iot_enable;
+        if(test.dz_iot_enable=="on"){
+            jsondata.dzIotGnssData=test.iot_gnss_data;
+            jsondata.dzIotHttp=test.iot_http;
+            jsondata.dzIotId=test.iot_id;
+            jsondata.dzIotIp=test.iot_ip;
+            jsondata.dzIotKey=test.iot_key;
+            jsondata.dzIotPort=test.iot_port;
+        }
 
+        jsondata.oneNetEnabled=test.onenet_enable;
+        if(test.onenet_enable=="one"){
+            jsondata.oneNetMode=test.onenet_mode;
+            switch(test.onenet_mode){
+                case "0":
+                    jsondata.oneNetId=test.onenet_id;
+                    jsondata.oneNetUser=test.onenet_user;
+                    jsondata.oneNetKey=test.onenet_key;
+                    jsondata.oneNetGnssData=test.onenet_data;
+                    break;
+                case "1":
+                    jsondata.oneNetId=test.onenet_id;
+                    jsondata.oneNetUser=test.onenet_user;
+                    jsondata.oneNetKey=test.onenet_key;
+                    break;
+                case "2":
+                    jsondata.oneNetUser=test.onenet_user;
+                    jsondata.oneNetKey=test.onenet_key;
+                    break;
+            }
+        }
+
+        jsondata.cqIotEnabled=test.chongqing_mode;
+        switch(test.chongqing_mode){
+            case "0":
+                break;
+            case "1":
+                jsondata.cqIotUser=test.chongqing_iot_user;
+                break;
+            case "2":
+                jsondata.cqIotTelecom=test.chongqing_iot_telecom;
+                jsondata.cqIotId=test.chonqing_iot_id;
+                jsondata.cqIotUser=test.chongqing_iot_user;
+                jsondata.cqIotKey=test.chongqing_iot_key;
+                break;
+        }
+        let stringtest=JSON.stringify(jsondata);
+        $.ajax({
+            url:'/devicelist/editSetting',
+            data:{
+                setting:stringtest,
+                machinesn:machinesn
+            },
+            success:function (data) {
+                getDeviceSetting(machinesn);
+                alert(data.data);
+            }
+        })
+    })
+
+    //onenet平台的动态变化
     function onenetshow(select) {
         switch (select) {
             case "0":
@@ -58,6 +127,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         form.render();
     }
 
+    //重庆平台的动态变化
     function chongqingshow(select){
         switch(select){
             case "0":
@@ -73,6 +143,61 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 break;
         }
         form.render();
+    }
+
+    /*初始化*/
+    function getDeviceSetting(sn) {
+        $.ajax({
+            url: '/devicelist/getDeviceSetting',
+            data: {
+                machineSerial: sn
+            },
+            success: function (data) {
+                let device = data.data;
+                locatedata=device;
+                if(device.oneNetEnabled>0){
+                        document.getElementById("onenetcontent").innerHTML = onenetcontent;
+                        onenetshow(device.oneNetMode);
+                } else {
+                        document.getElementById("onenetcontent").innerHTML = "";
+                }
+                $("#onenet_id").val(device.oneNetId);
+                $("#onenet_user").val(device.oneNetUser);
+                $("#onenet_key").val(device.oneNetKey);
+                $("#onenet_data").val(device.oneNetGnssData)
+
+                /*地灾平台*/
+                if (device.dzIotEnabled>0) {
+                    document.getElementById("dzcontent").innerHTML =dznetcontent;
+                } else {
+                    document.getElementById("dzcontent").innerHTML = "";
+                }
+                $("#iot_ip").val(device.dzIotIp);
+                $("#iot_port").val(device.dzIotPort);
+                $("#iot_id").val(device.dzIotId);
+                $("#iot_key").val(device.dzIotKey);
+                $("#iot_http").val(device.dzlotHttp);
+                if(device.dzIotGnssData>0){
+                    $("#iot_gnss_data").prop('checked',true);
+                }else{
+                    $("#iot_gnss_data").prop('checked',false);
+                }
+                if(device.dzIotRtkResult>0){
+                    $("#iot_rtk_result").prop('checked',true);
+                }else{
+                    $("#iot_rtk_result").prop('checked',false);
+                }
+
+                /*重庆平台*/
+                chongqingshow(device.cqIotEnabled);
+                $("#chongqing_iot_telecom").val(device.cqIotTelecom);
+                $("#chongqing_iot_id").val(device.cqIotId);
+                $("#chongqing_iot_key").val(device.cqIotKey);
+                $("#chongqing_iot_user").val(device.cqIotUser);
+
+                form.render();
+            }
+        })
     }
 
 

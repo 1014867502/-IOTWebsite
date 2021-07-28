@@ -122,7 +122,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
 
     /**添加项目**/
     $("#add_device").click(function () {
-        debugger
         usercreateproject();
         // switch(identity){
         //     case "company":
@@ -143,7 +142,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             type: 'GET',
             async:false,
             success: function (data) {
-                debugger
                 projectcount=data.data;
                 $("#projectcount").html("<span>"+projectcount.length+"</span>");
                 layerpage();
@@ -162,7 +160,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             },
             type: 'GET',
             success: function (data) {
-                debugger
                 var thisNode=document.getElementById("list2");
                 if(thisNode.childNodes.length>0){
                     thisNode.innerHTML = "";
