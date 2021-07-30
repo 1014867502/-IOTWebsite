@@ -230,7 +230,7 @@ public class OrderConstants  {
     public static String SEVEN_PARAM="SET,GPS.COORDCVT.SEVEN_PARAM,";
 
     //设置四参数
-    public static String FOUR_PARAM="SET，GPS.COORDCVT.FOUR_PARAM,";
+    public static String FOUR_PARAM="SET,GPS.COORDCVT.FOUR_PARAM,";
 
     //设置设置投影参数
     public static String COORDCVT_PROJ_PARAM = "SET,GPS.COORDCVT.PROJ_PARAM,";

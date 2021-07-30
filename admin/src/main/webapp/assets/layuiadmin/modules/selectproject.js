@@ -147,8 +147,17 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             async:false,
             success: function (data) {
                 projectcount=data.data;
-                $("#projectcount").html("<span>"+projectcount+"</span>");
+                // $("#projectcount").html("<span>"+projectcount+"</span>");
                 identity=judgeidentity();
+                switch (identity) {
+                    case "user":
+                        $("#add_device").css("display","none");
+                        break;
+                    case "company":
+                        break;
+                    case "admin":
+                        break;
+                }
                 layerpage();
             }
         })
@@ -175,6 +184,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     }
 
     function showProjects(data) {
+        debugger
         let real=data[0];
         for (let i = 0; i < real.length; i++) {
             let item = real[i];
@@ -185,7 +195,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 "                            <div style=\"margin: auto;\">\n" +
                 "                                <div class=\"projectname\">" + item.progroupname+ "</div>\n" +
                 "                                <div style=\"display: flex;justify-content: space-between;padding-top: 10px;margin:auto;color: #00f0ff;width: 150px\">\n" +
-                "                                    <span><a style='color: #00f0ff' href='/project/projectdetail?progroupid="+item.projectid+"'>编辑</a></span>\n" +
+                "                                    <span><a style='color: #00f0ff' href='/project/projectdetail?progroupid="+item.projectid+"&&agentnum="+item.agentnumber+"'>编辑</a></span>\n" +
                 "                                    <span class='delete' id='"+item.progroupname+"'>删除</span>\n" +
                 "                                </div>\n" +
                 "                            </div>\n" +

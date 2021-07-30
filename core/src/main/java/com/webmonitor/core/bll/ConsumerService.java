@@ -5,11 +5,12 @@ import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.core.model.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ConsumerService {
     public static final ConsumerService me=new ConsumerService();
-
 
     /**获取用户下属设备的在线离线情况**/
     public ProDevCount getDevCount(String[] projects){
@@ -20,18 +21,18 @@ public class ConsumerService {
     public String getAllDevice(String userid){
         StaffData currentuser= StaffService.me.getStaffByName(userid);
         String[] projects=currentuser.getGroupAssemble().split("@");
-        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where  proGroupId="+projects[0];
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where  a.proGroupId="+projects[0];
         for(int i=1;i<projects.length;i++){
-            sql=sql+" or proGroupId="+projects[i];
+            sql=sql+" or a.proGroupId="+projects[i];
         }
         return sql;
     }
 
     /**获取公司列表**/
-    public List<AgentTable> getCompanyListById(String userid){
+    public List<AgentTable> getCompanyListById(String Name){
         List<AgentTable> agentTables=new ArrayList<>();
         try{
-            StaffData staffData=StaffService.me.getStaffById(userid);
+            StaffData staffData=StaffService.me.getStaffByName(Name);
             String[] projects=staffData.getGroupAssemble().split("@");
             for(int i=0;i<projects.length;i++){
                Record record=new Record();
@@ -40,7 +41,15 @@ public class ConsumerService {
                agentTable.setId(record.getInt("id"));
                agentTable.setAgentName(record.getStr("agentName"));
                agentTable.setAgentNumber(record.getStr("agentNumber"));
-               agentTables.add(agentTable);
+               if(agentTables.isEmpty()){
+                   agentTables.add(agentTable);
+               }else{
+                   for(int k=0;k<agentTables.size();k++){
+                       if(!agentTable.getAgentName().equals(agentTables.get(i).getAgentName())){
+                           agentTables.add(agentTable);
+                       }
+                   }
+               }
             }
         }catch (Exception e){
             System.out.println(e.getMessage());

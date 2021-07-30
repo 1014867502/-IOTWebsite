@@ -12,6 +12,8 @@ layui.define(['form','drawer','table'], function (exports) {
     var companylistfind;
     var companylist;
     var projectlist;
+    var newtype="0";//新建用户页面的用户类型
+    var edittype="0"//修改用户页面
     var account;//编辑页面的用户账号
     var id;//当前用户的id
 
@@ -82,7 +84,25 @@ layui.define(['form','drawer','table'], function (exports) {
     });
 
     form.on('select(type)',function(data){
+        debugger
         let type=data.value;
+        newtype=type;
+        if(type=="0"){
+            document.getElementById("formproject").innerHTML=" <div class=\"layui-form-item\">\n" +
+                "            <label class=\"layui-form-label\">用户允许访问项目</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <div id=\"projectlist\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "            </div>\n" +
+                "        </div>";
+            getprojectlist(agentNumber);
+        }else{
+            document.getElementById("formproject").innerHTML="";
+        }
+    });
+
+    form.on('select(type2)',function(data){
+        let type=data.value;
+        edittype=type;
         if(type=="0"){
             document.getElementById("formprojectedit").innerHTML=" <div class=\"layui-form-item\">\n" +
                 "            <label class=\"layui-form-label\">用户允许访问项目</label>\n" +
@@ -90,11 +110,12 @@ layui.define(['form','drawer','table'], function (exports) {
                 "                <div id=\"projectlist2\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
                 "            </div>\n" +
                 "        </div>";
-            getprojectlist(agentNumber);
+            initprojectlist(agentNumber,"");
         }else{
             document.getElementById("formprojectedit").innerHTML="";
         }
     });
+
 
     form.on('submit(formDemo1)', function(data){
         let json=data.field;
@@ -120,6 +141,8 @@ layui.define(['form','drawer','table'], function (exports) {
     form.on('submit(formDemo2)', function(data){
         let json=data.field;
         json.id=id;
+        json.uPassword=json.editPassword;
+        json.iRoleType=json.type2;
         let company=companylist.getValue();
         json.agentNumber=company[0].value;
         let jsondata=JSON.stringify(data.field);
@@ -153,6 +176,30 @@ layui.define(['form','drawer','table'], function (exports) {
 
         });
     })
+
+    /**加载编辑页面**/
+    function editwindow(data){
+        $("#uaccountnum").val(data.uAccountNum);
+        account=data.uAccountNum;
+        $("#urealname").val(data.uRealName);
+        $("#cDpet").val(data.cDept);
+        agentNumber=data.agentNumber;
+        $("#roletype").find("option[value=" + data.iRoleType + "]").prop("selected", true);
+        if(data.iRoleType=="0"){
+            document.getElementById("formprojectedit").innerHTML="<div class=\"layui-form-item\">\n" +
+                "                <label class=\"layui-form-label\" style=\"width: 84px;padding: 9px 13px;\">可查看的项目</label>\n" +
+                "                <div class=\"layui-input-block\">\n" +
+                "                    <div id=\"projectlist2\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "                </div>\n" +
+                "            </div>";
+            initcompany(data.agentNumber);
+            initprojectlist(data.agentNumber,data.groupAssemble);
+        }else{
+            document.getElementById("formprojectedit").innerHTML="";
+            initcompany(data.agentNumber);
+        }
+        form.render();
+    }
 
     //监听查询
     $("#datasumbit").on('click', function () {
@@ -316,7 +363,7 @@ layui.define(['form','drawer','table'], function (exports) {
             },
             async:false,
             success: function(data){
-                initloadprojectlist(data.data);
+                loadprojectlist(data.data);
             }
         })
     }
@@ -442,14 +489,19 @@ layui.define(['form','drawer','table'], function (exports) {
                 }
             },
             on: function(data){
+                debugger
                 let change = data.change[0];
-                getprojectlist(change.value);
+                if(edittype=="0"){
+                    initprojectlist(change.value,"");
+                }
+
             },
         })
     }
 
     /**加载项目列表**/
     function loadprojectlist(json){
+        debugger
         var arrData = [];
         var selectSn ="";
         for(var i=0;i<json.length;i++){
@@ -465,7 +517,6 @@ layui.define(['form','drawer','table'], function (exports) {
                 show: true,
             },
             data: arrData,
-            layVerify: 'required',
             layVerType: 'msg',
             model:{
                 label:{
@@ -532,7 +583,6 @@ layui.define(['form','drawer','table'], function (exports) {
                 show: true,
             },
             data: arrData,
-            layVerify: 'required',
             layVerType: 'msg',
             initValue: proidinit,
             model:{
@@ -549,29 +599,7 @@ layui.define(['form','drawer','table'], function (exports) {
         })
     }
 
-    /**加载编辑页面**/
-    function editwindow(data){
-        $("#uaccountnum").val(data.uAccountNum);
-        account=data.uAccountNum;
-        $("#urealname").val(data.uRealName);
-        $("#cDpet").val(data.cDept);
-        agentNumber=data.agentNumber;
-        $("#roletype").find("option[value=" + data.iRoleType + "]").prop("selected", true);
-        if(data.iRoleType=="0"){
-            document.getElementById("formprojectedit").innerHTML="<div class=\"layui-form-item\">\n" +
-                "                <label class=\"layui-form-label\" style=\"width: 84px;padding: 9px 13px;\">可查看的项目</label>\n" +
-                "                <div class=\"layui-input-block\">\n" +
-                "                    <div id=\"projectlist2\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
-                "                </div>\n" +
-                "            </div>";
-            initcompany(data.agentNumber);
-            initprojectlist(data.agentNumber,data.groupAssemble);
-        }else{
-            document.getElementById("formprojectedit").innerHTML="";
-            initcompany(data.agentNumber);
-        }
-        form.render();
-    }
+
 
     /**获取各类别用户数量**/
     function getCustomCount(){

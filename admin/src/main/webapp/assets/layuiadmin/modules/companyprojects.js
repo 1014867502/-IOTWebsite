@@ -143,7 +143,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             async:false,
             success: function (data) {
                 projectcount=data.data;
-                $("#projectcount").html("<span>"+projectcount.length+"</span>");
+                // $("#projectcount").html("<span>"+projectcount.length+"</span>");
                 layerpage();
             }
         })
@@ -172,6 +172,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
 
     function showProjects(data) {
         let real=data;
+        debugger
         for (let i = 0; i < real.length; i++) {
             let item = real[i];
             var innerHTML = "     <div class=\"layui-card\">\n" +
@@ -181,7 +182,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 "                            <div style=\"margin: auto;\">\n" +
                 "                                <div class=\"projectname\">" + item.progroupname+ "</div>\n" +
                 "                                <div style=\"display: flex;justify-content: space-between;padding-top: 10px;margin:auto;color: #00f0ff;width: 150px\">\n" +
-                "                                    <span><a style='color: #00f0ff' href='/project/projectdetail?progroupid="+item.projectid+"'>编辑</a></span>\n" +
+                "                                    <span><a style='color: #00f0ff' href='/project/projectdetail?progroupid="+item.projectid+"&&"+"agentnum="+item.agentnumber+"'>编辑</a></span>\n" +
                 "                                    <span class='delete' id='"+item.progroupname+"'>删除</span>\n" +
                 "                                </div>\n" +
                 "                            </div>\n" +

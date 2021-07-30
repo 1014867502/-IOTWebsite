@@ -291,15 +291,29 @@
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12 layui-card" id="projectheader"
-             style="height: auto;background-color: #f8f8f8;box-shadow: 0 0 6px 3px #c9c9c9;">
-            <div style="display: flex;margin: auto;">
-                <ul style="display: flex ;margin: auto;">
-                    <li class="little">
-                        <div>公司名称</div>
-                    </li>
-                </ul>
+             style="height: auto;background-color: #f8f8f8;box-shadow: 0 0 6px 3px #c9c9c9;display: flex">
+            <div style="width: 70%;">
+<!--                <div style="display: flex;margin: auto;">-->
+<!--                    <ul style="display: flex ;margin: auto;">-->
+<!--                        <li class="little">-->
+<!--                            <div>公司名称</div>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+                <div style="font-size: 30px;font-weight: bold;margin-left: 120px;" id="comname"></div>
             </div>
-            <div style="text-align: center;font-size: 30px;font-weight: bold;" id="comname"></div>
+            <div style="display: flex;width: 30%">
+                <div class="layui-inline" style="margin: auto;margin-left: 10px;margin-right: 10px">
+                    <button type="button" class="layui-btn" id="projectmanage"><img
+                            src="/assets/images/icon_add_device_28.png"/>公司下项目管理
+                    </button>
+                </div>
+                <div class="layui-inline" style="margin: auto;margin-left: 10px">
+                    <button type="button" class="layui-btn" id="add_device2"><img
+                            src="/assets/images/icon_add_device_28.png"/>添加设备
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="header-Data">
             <div style="display: flex;max-width: 1440px;margin-left: auto;margin-right: auto;">
@@ -318,7 +332,6 @@
                         <div style="font-size: 18px;margin-top: 10px">公司设备在线数</div>
                     </div>
                     <div class="devicecard" id="onlinenum" style="font-size: 20px;">
-
                     </div>
 
                 </div>
@@ -338,9 +351,9 @@
                 <div class="layui-card-header">设备表格</div>
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
                     <div class="layui-form-item" style="margin: auto">
-<!--                        <div class="layui-inline">-->
-<!--                            <div id="companylist" class="xm-select-project" style="width: 200px;"></div>-->
-<!--                        </div>-->
+                        <!--                        <div class="layui-inline">-->
+                        <!--                            <div id="companylist" class="xm-select-project" style="width: 200px;"></div>-->
+                        <!--                        </div>-->
                         <div class="layui-inline">
                             <select id="stats" name="stats" lay-verify="" lay-filter="stats">
                                 <option value="1">在线</option>
@@ -360,17 +373,6 @@
                     <!--                    <div style="margin: auto;display: flex">-->
                     <!--                        <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>关联设备</button>-->
                     <!--                    </div>-->
-                    <div class="layui-form-item" style="margin: auto">
-                        <div class="layui-inline" >
-                            <button type="button" class="layui-btn" id="projectmanage"><img
-                                    src="/assets/images/icon_add_device_28.png"/>公司下项目管理
-                            </button>
-                        </div>
-                        <div class="layui-inline" >
-                            <button type="button" class="layui-btn" id="add_device2"><img
-                                    src="/assets/images/icon_add_device_28.png"/>添加设备
-                            </button>
-                        </div>
                     </div>
                 </div>
                 <div class="layui-card-body">

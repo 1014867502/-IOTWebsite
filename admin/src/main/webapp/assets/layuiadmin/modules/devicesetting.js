@@ -42,7 +42,7 @@ layui.define(['form','drawer','table'], function (exports) {
                 document.getElementById("deviceinfo").style.color="#00f0ff";
                 document.getElementById("deviceinfo1").style.color="#00f0ff";
                 beforeselect="deviceinfo";
-                document.getElementById("iframe_a").src="/company/CompanyDetail";
+                // document.getElementById("iframe_a").src="/company/CompanyDetail";
                 break;
             case "devicesetting" :
                 document.getElementById("devicesetting").style.color="#00f0ff";
@@ -55,19 +55,19 @@ layui.define(['form','drawer','table'], function (exports) {
                 document.getElementById("internetset").style.color="#00f0ff";
                 document.getElementById("internetset1").style.color="#00f0ff";
                 beforeselect="internetset";
-                document.getElementById("iframe_a").src="/company/CompanyDetail";
+                // document.getElementById("iframe_a").src="/company/CompanyDetail";
                 break;
             case "download":
                 document.getElementById("download").style.color="#00f0ff";
                 document.getElementById("download1").style.color="#00f0ff";
                 beforeselect="download";
-                document.getElementById("iframe_a").src="/company/CompanyDetail";
+                // document.getElementById("iframe_a").src="/company/CompanyDetail";
                 break;
             case "other":
                 document.getElementById("other").style.color="#00f0ff";
                 document.getElementById("other1").style.color="#00f0ff";
                 beforeselect="other";
-                document.getElementById("iframe_a").src="/company/CompanyDetail";
+                // document.getElementById("iframe_a").src="/company/CompanyDetail";
                 break;
         }
 

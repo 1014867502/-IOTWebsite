@@ -49,6 +49,7 @@ public class CustomerController extends BaseController {
     public void save() {
         String staffjson=getPara("json");
         String select=getPara("select");
+        select=(select==null)?"":select;
         select=select.replace(',','@');
         Result result=Result.newOne();
         Gson gson=new Gson();
@@ -66,6 +67,7 @@ public class CustomerController extends BaseController {
         String staffjson=getPara("json");
         Result<String> result = Result.newOne();
         String select=getPara("select");
+        select=(select==null)?"":select;
         select=select.replace(',','@');
         Gson gson=new Gson();
         StaffDataEntity staffData= gson.fromJson(staffjson, new TypeToken<StaffDataEntity>(){}.getType());

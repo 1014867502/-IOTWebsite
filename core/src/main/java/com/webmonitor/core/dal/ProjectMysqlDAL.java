@@ -131,6 +131,7 @@ public class ProjectMysqlDAL implements IProject {
             BaseProjects baseProjects=new BaseProjects();
             baseProjects.setId(item.getStr("id"));
             baseProjects.setCreatetime(item.getDate("createTime"));
+            baseProjects.setAgentnumber(item.getStr("agentNumber"));
             baseProjects.setAgentname(item.getStr("agentName"));
             baseProjects.setProjectid(item.getStr("proGroupId"));
             baseProjects.setProgroupname(item.getStr("proGroupName"));
@@ -142,6 +143,28 @@ public class ProjectMysqlDAL implements IProject {
         return new Page<BaseProjects>(list,page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
     }
 
+    public Page<Object> getProjectsByComIdPageDataO(String comid, int pageno, int limit) {
+        List<BaseProjects> list=new ArrayList<>();
+        String sql=" from projects_data a ,agent_table b where a.agentNumber=b.agentNumber and "
+                +" a.agentNumber="+comid+"";
+        Page<Record> page=Db.paginate(pageno,limit,"select  a.*, b.agentName ",sql);
+        List<Record> record= page.getList();
+        for(Record item:record){
+            BaseProjects baseProjects=new BaseProjects();
+            baseProjects.setId(item.getStr("id"));
+            baseProjects.setCreatetime(item.getDate("createTime"));
+            baseProjects.setAgentnumber(item.getStr("agentNumber"));
+            baseProjects.setAgentname(item.getStr("agentName"));
+            baseProjects.setProjectid(item.getStr("proGroupId"));
+            baseProjects.setProgroupname(item.getStr("proGroupName"));
+            sql="select count(*) from agent_data a,machine_data b where a.machineSerial=b.machineSerial and a.proGroupId="+item.getStr("proGroupId");
+            Record  record1=Db.findFirst(sql);
+            baseProjects.setDevicenum(record1.getInt("count(*)"));
+            list.add(baseProjects);
+        }
+        return new Page<Object>(Collections.singletonList(list),page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+    }
+
     /**获取用户项目数量**/
     @Override
     public int getProjectCountById(String type,String comid) {
@@ -149,7 +172,7 @@ public class ProjectMysqlDAL implements IProject {
         Record record=new Record();
         String sql="";
         switch (type){
-            case "compangy":
+            case "company":
                 sql="select count(*) from projects_data where agentNumber="+comid;
                 break;
             case "admin":

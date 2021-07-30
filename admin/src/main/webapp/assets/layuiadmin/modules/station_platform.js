@@ -19,6 +19,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             }else{
                 onenetshow("0");
             }
+            getDeviceSetting(machinesn);
         } else {
             document.getElementById("onenetcontent").innerHTML = "";
         }
@@ -28,6 +29,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     form.on('switch(dz_iot_enable)', function (data) {
         if (this.checked) {
             document.getElementById("dzcontent").innerHTML =dznetcontent;
+            getDeviceSetting(machinesn);
         } else {
             document.getElementById("dzcontent").innerHTML = "";
         }
@@ -48,18 +50,31 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         let test=data.field;
         let jsondata={};
 
-        jsondata.dzIotEnabled=test.dz_iot_enable;
+
         if(test.dz_iot_enable=="on"){
-            jsondata.dzIotGnssData=test.iot_gnss_data;
+            jsondata.dzIotEnabled=1;
+            if(test.iot_gnss_data=="on"){
+                jsondata.dzIotGnssData=1;
+            }else {
+                jsondata.dzIotGnssData=0;
+            }
+            if(test.iot_rtk_result=="on"){
+                jsondata.dzIotRtkResult=1;
+            }else{
+                jsondata.dzIotRtkResult=0;
+            }
             jsondata.dzIotHttp=test.iot_http;
             jsondata.dzIotId=test.iot_id;
             jsondata.dzIotIp=test.iot_ip;
             jsondata.dzIotKey=test.iot_key;
             jsondata.dzIotPort=test.iot_port;
+        }else{
+            jsondata.dzIotEnabled=0;
         }
 
-        jsondata.oneNetEnabled=test.onenet_enable;
-        if(test.onenet_enable=="one"){
+
+        if(test.onenet_enable=="on"){
+            jsondata.oneNetEnabled=1;
             jsondata.oneNetMode=test.onenet_mode;
             switch(test.onenet_mode){
                 case "0":
@@ -78,6 +93,8 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     jsondata.oneNetKey=test.onenet_key;
                     break;
             }
+        }else{
+            jsondata.oneNetEnabled=0;
         }
 
         jsondata.cqIotEnabled=test.chongqing_mode;
@@ -129,6 +146,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     //重庆平台的动态变化
     function chongqingshow(select){
+        $("#chongqing_mode").val(select);
         switch(select){
             case "0":
                 document.getElementById("chongqingcontent").innerHTML = "";
@@ -156,6 +174,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 let device = data.data;
                 locatedata=device;
                 if(device.oneNetEnabled>0){
+                        $("#onenet_enable").prop('checked',true);
                         document.getElementById("onenetcontent").innerHTML = onenetcontent;
                         onenetshow(device.oneNetMode);
                 } else {
@@ -168,7 +187,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
                 /*地灾平台*/
                 if (device.dzIotEnabled>0) {
+                    $("#dz_iot_enable").prop('checked',true);
                     document.getElementById("dzcontent").innerHTML =dznetcontent;
+
                 } else {
                     document.getElementById("dzcontent").innerHTML = "";
                 }
@@ -176,7 +197,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 $("#iot_port").val(device.dzIotPort);
                 $("#iot_id").val(device.dzIotId);
                 $("#iot_key").val(device.dzIotKey);
-                $("#iot_http").val(device.dzlotHttp);
+                $("#iot_http").val(device.dzIotHttp);
                 if(device.dzIotGnssData>0){
                     $("#iot_gnss_data").prop('checked',true);
                 }else{

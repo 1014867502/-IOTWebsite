@@ -148,11 +148,12 @@ public class DeviceController  extends BaseController {
         int roletype = currentuser.getIRoleType();
         RoleType role = RoleType.getIndex(roletype);
         String roles="";
-        switch (role){
-            case user:roles="consumer";break;
-            case companyadmin:roles="consumer";break;
-            case superadmin:roles="admin";break;
-        }
+//        switch (role){
+//            case user:roles="consumer";break;
+//            case companyadmin:roles="consumer";break;
+//            case superadmin:roles="admin";break;
+//        }
+        roles="consumer";
         Result<Page<AgentDataDao>> result=Result.newOne();
         int pageno = getParaToInt("page", 1);
         int limit = getParaToInt("limit", 20);

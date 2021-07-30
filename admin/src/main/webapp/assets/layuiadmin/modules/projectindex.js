@@ -328,14 +328,17 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     /**根据权限显示不同页面内容**/
     function adaptauthority(){
         $.ajax({
-            url:'/role/getauthorById',
+            url:'/custom/getauthorById',
             async:false,
             success:function (data) {
+                debugger
                 switch (data.data) {
                     case "user":
                         $("#addequip").css("display","none");
+                        $("#add_device2").css("display","none");
                         break;
                     case "companyadmin":
+                        $("#add_device2").css("display","none");
                         break;
                     case "superadmin":
                         $("#projectheader").css("display","none");

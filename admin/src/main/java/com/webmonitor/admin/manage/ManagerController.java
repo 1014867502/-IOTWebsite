@@ -111,7 +111,7 @@ public class ManagerController extends BaseController {
                     break;
                 case companyadmin:
                     setAttr("identity", "user");
-//                    result.success(ProjectService.me.getProjectByComIdPageData(currentuser.getAgentNumber(), no, pagesize));
+                    result.success(ProjectService.me.getProjectByComIdPageDataO(currentuser.getAgentNumber(), no, pagesize));
                     break;
             }
         } catch (Throwable e) {
@@ -264,7 +264,7 @@ public class ManagerController extends BaseController {
                 agentTables=AdminService.me.getCompanyList();
                 break;
             case "companyadmin":
-               agentTables=CompanyService.me.getAllCompany();
+               agentTables=ConsumerService.me.getCompanyListById(id);
                 break;
             case "user":
                agentTables=ConsumerService.me.getCompanyListById(id);

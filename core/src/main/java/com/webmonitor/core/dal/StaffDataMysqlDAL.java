@@ -198,7 +198,7 @@ public class StaffDataMysqlDAL implements IStaffData {
         String test="";
         if(content!=null&&!content.isEmpty()){
             sql=sql+" and a.uAccountNum like '%"+content+"%' ";
-        }else if(!agentnum.isEmpty()){
+        }if(!agentnum.isEmpty()){
             sql=sql+" and a.agentNumber='"+agentnum+"' ";
         }
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName",sql);

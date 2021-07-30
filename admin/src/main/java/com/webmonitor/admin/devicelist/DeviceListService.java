@@ -95,6 +95,7 @@ public class DeviceListService {
                     }
                 }
             }
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,16 +127,22 @@ public class DeviceListService {
             case "dataLink":
                 break;
             case "timeZone":
+                realorder=OrderConstants.TIMEZONE_Order;
                 break;
             case "rtkPos":
+                realorder=OrderConstants.RTK_POS_Order;
                 break;
             case "imuWarn":
+                realorder=OrderConstants.IMU_WARN_Order;
                 break;
             case "rawName":
+                realorder=OrderConstants.Name_Order;
                 break;
             case "rawMode":
+                realorder=OrderConstants.RAW_MODE_Order;
                 break;
             case "recordInterval":
+                realorder=OrderConstants.Interval_Order;
                 break;
             case "rawIp":
                 realorder=OrderConstants.RAW_IP_Order;
@@ -150,12 +157,16 @@ public class DeviceListService {
                 realorder=OrderConstants.RESULT_PORT_Order;
                 break;
             case "resultMsg":
+                realorder=OrderConstants.RESULT_MSG_Order;
                 break;
             case "resultRs232":
+                realorder=OrderConstants.RESULT_RS232_Order;
                 break;
             case "resultImu":
+                realorder=OrderConstants.RESULT_IMU_Order;
                 break;
             case "secondBase":
+                realorder=OrderConstants.SECOND_BASE_Order;
                 break;
             case "secondIp":
                 realorder=OrderConstants.SECOND_IP_Order;
@@ -167,60 +178,87 @@ public class DeviceListService {
                 realorder=OrderConstants.RAW_RATE_Order;
                 break;
             case "doubleInv":
+                realorder=OrderConstants.RAW_DOUBLE_INV_Order;
                 break;
             case "resultSmooth":
+                realorder=OrderConstants.RESULT_SMOOTH_Order;
                 break;
-            case "resultStatus":
-                break;
+//            case "resultStatus":
+//                break;
             case "extSensorEnabled":
+                realorder=OrderConstants.ENABLED_Order;
                 break;
             case "extSensorCmd":
+
                 break;
             case "extSensorPower":
+                realorder=OrderConstants.SENSOR_POWER_Order;
                 break;
             case "scheduler":
+                realorder=OrderConstants.SCHEDULER_Order;
                 break;
             case "moveWarnEnabled":
+                realorder=OrderConstants.MOVE_WARN_Order;
                 break;
             case "moveWarnThreshold":
+                realorder=OrderConstants.MOVE_WARN_THRESHOLD_Order;
                 break;
             case "moveWarnBaud":
+                realorder=OrderConstants.WARN_BAUD_Order;
                 break;
             case "moveWarnCmd":
+                realorder=OrderConstants.MOVE_WARN_CMD;
                 break;
             case "dzIotEnabled":
+                realorder=OrderConstants.DZ_IOT_ENABLED_Order;
                 break;
             case "dzIotId":
+                realorder=OrderConstants.DZ_IOT_ID_Order;
                 break;
             case "dzIotIp":
+                realorder=OrderConstants.DZ_IOT_IP_Order;
                 break;
             case "dzIotPort":
+                realorder=OrderConstants.DZ_IOT_PORT_Order;
                 break;
             case "dzIotKey":
+                realorder=OrderConstants.DZ_IOT_KEY_Order;
                 break;
             case "dzIotGnssData":
+                realorder=OrderConstants.DZ_IOT_GNSS_DATA_Order;
                 break;
             case "cqIotEnabled":
+                realorder=OrderConstants.CHONGQING_IOT_ENABLED_Order;
                 break;
             case "cqIotTelecom":
+                realorder=OrderConstants.CHONGQING_IOT_TELECOM;
                 break;
             case "cqIotId":
+                realorder=OrderConstants.CHONGQING_IOT_ID;
                 break;
             case "cqIotUser":
+                realorder=OrderConstants.CHONGQING_IOT_USER;
                 break;
             case "cqIotKey":
+                realorder=OrderConstants.CHONGQING_IOT_KEY;
                 break;
             case "cqIotStatus":
+                realorder=OrderConstants.CHONGQING_IOT_STATUS;
                 break;
             case "oneNetEnabled":
+                realorder=OrderConstants.ONENET_ENABLED;
                 break;
             case "oneNetId":
+                realorder=OrderConstants.ONENET_ID;
                 break;
             case "oneNetUser":
+                realorder=OrderConstants.ONENET_USER;
                 break;
             case "oneNetKey":
+                realorder=OrderConstants.ONENET_KEY;
                 break;
             case "oneNetGnssData":
+                realorder=OrderConstants.ONENET_GNSS_DATAD;
                 break;
             case "wifiMode":
                 break;
@@ -255,14 +293,19 @@ public class DeviceListService {
             case "networksignalLevel":
                 break;
             case "networkEnabled":
+                realorder=OrderConstants.NETWORK_ENABLED;
                 break;
             case "networkApn":
+                realorder=OrderConstants.NETWORK_APN;
                 break;
             case "networkApnUser":
+                realorder=OrderConstants.NETWORK_APNUSER;
                 break;
             case "networkApnPass":
+                realorder=OrderConstants.NETWORK_APNPASS;
                 break;
             case "networkMode":
+                realorder=OrderConstants.NETWORK_MODE;
                 break;
             case "networkAddress":
                 realorder=OrderConstants.NETWORK_ADDR;
@@ -271,25 +314,34 @@ public class DeviceListService {
                 realorder=OrderConstants.NETWORK_PORT;
                 break;
             case "networkMountpoint":
+                realorder=OrderConstants.NETWORK_MOUNTPOINT;
                 break;
             case "networkMountpointPass":
                 realorder=OrderConstants.NETWORK_MOUNTPOINTUSERPASS;
                 break;
             case "networkUploadGga":
+                realorder=OrderConstants.NETWORK_UPLOADGGA;
                 break;
             case "coordcvtEnabled":
+                realorder=OrderConstants.COORDCVT_ENABLED;
                 break;
             case "coordcvtSrcDatum":
+
                 break;
             case "coordcvtDstDatum":
+                realorder=OrderConstants.COORDCVT_DST_DATUM;
                 break;
             case "coordcvtSevenParam":
+                realorder=OrderConstants.SEVEN_PARAM;
                 break;
             case "coordcvtFourParam":
+                realorder=OrderConstants.FOUR_PARAM;
                 break;
             case "coordcvtProjParam":
+                realorder=OrderConstants.COORDCVT_PROJ_PARAM;
                 break;
             case "smsWakeup":
+                realorder=OrderConstants.SMS_WAKEUP_Order;
                 break;
             case "coordinatesX":
                 realorder=OrderConstants.DEVICE_COORDINATES_X;
@@ -301,24 +353,34 @@ public class DeviceListService {
                 realorder=OrderConstants.DEVICE_COORDINATES_Z;
                 break;
             case "rawBackEnabled":
+                realorder=OrderConstants.RAW_BACK_ENABLED;
                 break;
             case "rawBackAddress":
+                realorder=OrderConstants.RAW_BACK_ADDR;
                 break;
             case "rawBackPort":
+                realorder=OrderConstants.RAW_BACK_PORT;
                 break;
             case "rawBackGnssData":
+                realorder=OrderConstants.RAW_BACK_GNSS_DATA;
                 break;
             case "rawBackUser":
+                realorder=OrderConstants.RAW_BACK_USER;
                 break;
             case "rawBackPass":
+                realorder=OrderConstants.RAW_BACK_PASS;
                 break;
             case "rawBackBaud":
+                realorder=OrderConstants.RAW_BACK_BAUD;
                 break;
             case "dzIotRtkResult":
+                realorder=OrderConstants.DZ_IOT_RTK;
                 break;
             case "moveWarnMems":
+                realorder=OrderConstants.MOVE_WARN_MEMS;
                 break;
             case "ntrIpBase":
+                realorder=OrderConstants.RAW_NTRIP_BASE;
                 break;
             case "connectState":
                 break;
@@ -332,9 +394,12 @@ public class DeviceListService {
                 realorder=OrderConstants.GPS_BASE_HEIGHT;
                 break;
             case "oneNetMode":
+                realorder=OrderConstants.ONENET_MODE;
                 break;
             case "accessKey":
                 break;
+            case "dzIotHttp":
+                realorder=OrderConstants.DZ_IOT_HTTP_Order;
         }
         return realorder;
     }

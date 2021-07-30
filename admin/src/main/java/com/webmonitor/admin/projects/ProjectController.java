@@ -20,7 +20,9 @@ public class ProjectController extends BaseController {
     /**项目详情**/
     public void projectdetail(){
         String progroupid=getPara("progroupid");
+        String agentnum=getPara("agentnum");
         setAttr("progroupid",progroupid);
+        setAttr("agentnum",agentnum);
         render("projectdetail.html");
     }
 

@@ -118,10 +118,15 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         }
         form.render();
     })
+    /*监听原始数据回传的通信设置*/
+    form.on('select(rawBackEnabled)',function (data) {
+
+    })
     /*监听表单提交*/
     form.on('submit(formDemo)', function (data) {
         let test = data.field;
         let stringtest = JSON.stringify(test);
+        debugger;
         $.ajax({
             url: '/devicelist/editSetting',
             data: {
@@ -584,7 +589,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                        <div class=\"layui-form-item  fastinput\">\n" +
                     "                            <label class=\"layui-form-label\">通讯设置</label>\n" +
                     "                            <div class=\"layui-input-block\">\n" +
-                    "                                <select id=\"rawBackEnabled\" name=\"rawRate\" lay-verify=\"required\">\n" +
+                    "                                <select id=\"rawBackEnabled\" name=\"rawBackEnabled\" lay-filter='rawBackEnabled' lay-verify=\"required\">\n" +
                     "                                    <option value=\"0\">关闭</option>\n" +
                     "                                    <option value=\"1\">TCP客户端</option>\n" +
                     "                                    <option value=\"2\">TCP服务端</option>\n" +
@@ -603,6 +608,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                                </select>\n" +
                     "                            </div>\n" +
                     "                        </div>\n" +
+                    "                        <div>\n"+
                     "                        <div style=\"display: flex;margin-top: 30px\">\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">IP地址</label>\n" +
@@ -1069,8 +1075,22 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         rtkcore();
     }
 
+    /**原始数据回传刷新**/
+    function rawdatabackflush(data) {
+        if(data.rawBackEnabled==1||data.rawBackEnabled==2){
+
+        }
+        if(data.rawBackEnabled==3){
+
+        }
+        if(data.rawBackEnabled==10||data.rawBackEnabled==11){
+
+        }
+    }
+
     /*判断是否插入core选择框*/
     function rtkcore(){
+        debugger
         let base=doublebase;
         let source=downloadsource;
         let turn=rtkturn;
@@ -1082,37 +1102,45 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 "                                </div>";
             document.getElementById("rtkfront").style.display="flex";
             document.getElementById("rtkcontent").innerHTML="";
-            document.getElementById("rtkfront").innerHTML="<div class=\"layui-form-item  fastinput\">\n" +
-                "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">RTK解算设置</label>\n" +
-                "                                <div class=\"layui-input-block\">\n" +
-                "                                    <select id=\"rtkPos\" name=\"rtkPos\" lay-verify=\"required\">\n" +
-                "                                        <option value=\"1\">正常模式（5分钟输出）</option>\n" +
-                "                                        <option value=\"2\">紧急模式（1秒输出）</option>\n" +
-                "                                        <option value=\"3\">紧急模式（5秒输出）</option>\n" +
-                "                                    </select>\n" +
-                "                                </div>\n" +
-                "                            </div>\n" +
-                "                            <div class=\"layui-form-item  fastinput\">\n" +
-                "                                <label class=\"layui-form-label\" style=\"width: 150px\">IMU触发RTK紧急模式</label>\n" +
-                "                                <div class=\"layui-input-block\" style=\"margin-left: 180px\">\n" +
-                "                                    <select id=\"imuWarn\" name=\"imuWarn\" lay-verify=\"required\">\n" +
-                "                                        <option value=\"0\">关闭</option>\n" +
-                "                                        <option value=\"0.3\">0.3度</option>\n" +
-                "                                        <option value=\"0.5\">0.5度</option>\n" +
-                "                                        <option value=\"1\">1度</option>\n" +
-                "                                        <option value=\"2\">2度</option>\n" +
-                "                                        <option value=\"3\">3度</option>\n" +
-                "                                        <option value=\"5\">5度</option>\n" +
-                "                                    </select>\n" +
-                "                                </div>\n" +
-                "                            </div>";
-        }else if(base&&source!=1&&turn){
+            document.getElementById("rtkfront").innerHTML=rtkfront;
+        }else if(!base&&turn){
+            document.getElementById("rtkfront").style.display="flex";
+            document.getElementById("rtkfront").innerHTML=rtkfront;
+        }
+        else if(base&&source==0&&turn){
+            document.getElementById("rtkfront").style.display="flex";
+            document.getElementById("rtkfront").innerHTML=rtkfront;
         }
         else{
             document.getElementById("coreselect").innerHTML="";
             document.getElementById("rtkfront").innerHTML="";
         }
     }
+
+    var rtkfront="<div class=\"layui-form-item  fastinput\">\n" +
+        "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">RTK解算设置</label>\n" +
+        "                                <div class=\"layui-input-block\">\n" +
+        "                                    <select id=\"rtkPos\" name=\"rtkPos\" lay-verify=\"required\">\n" +
+        "                                        <option value=\"1\">正常模式（5分钟输出）</option>\n" +
+        "                                        <option value=\"2\">紧急模式（1秒输出）</option>\n" +
+        "                                        <option value=\"3\">紧急模式（5秒输出）</option>\n" +
+        "                                    </select>\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                            <div class=\"layui-form-item  fastinput\">\n" +
+        "                                <label class=\"layui-form-label\" style=\"width: 150px\">IMU触发RTK紧急模式</label>\n" +
+        "                                <div class=\"layui-input-block\" style=\"margin-left: 180px\">\n" +
+        "                                    <select id=\"imuWarn\" name=\"imuWarn\" lay-verify=\"required\">\n" +
+        "                                        <option value=\"0\">关闭</option>\n" +
+        "                                        <option value=\"0.3\">0.3度</option>\n" +
+        "                                        <option value=\"0.5\">0.5度</option>\n" +
+        "                                        <option value=\"1\">1度</option>\n" +
+        "                                        <option value=\"2\">2度</option>\n" +
+        "                                        <option value=\"3\">3度</option>\n" +
+        "                                        <option value=\"5\">5度</option>\n" +
+        "                                    </select>\n" +
+        "                                </div>\n" +
+        "                            </div>";
 
     var rtkcontent = " <div style=\"display: flex;margin-top: 30px;margin-bottom: 20px\">\n" +
         "                                <div class=\"layui-form-item  fastinput\">\n" +

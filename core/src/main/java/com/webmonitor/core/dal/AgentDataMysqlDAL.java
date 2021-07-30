@@ -52,9 +52,9 @@ public class AgentDataMysqlDAL implements IAgentData {
         String test="";
         if(content!=null&&!content.isEmpty()){
             sql=sql+" and a.machineSerial like '%"+content+"%' ";
-        }else if(agentnum!=null&&!agentnum.isEmpty()){
+        }if(agentnum!=null&&!agentnum.isEmpty()){
             sql=sql+" and a.agentNumber='"+agentnum+"' ";
-        }else if(projectid.length > 0&&(!projectid[0].equals("all"))){
+        }if(projectid.length > 0&&(!projectid[0].equals("all"))){
             if(projectid.length>1){
                 test=" and (a.proGroupid="+projectid[0];
                 for(int k=0;k<projectid.length;k++){
@@ -101,11 +101,11 @@ public class AgentDataMysqlDAL implements IAgentData {
         String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where "+connectstatus;
         String test="";
         if(content!=null&&!content.isEmpty()){
-            sql=sql+" and machineSerial like '%"+content+"%' ";
-        }else if(agentnum!=null&&!agentnum.isEmpty()){
-            sql=sql+" and agentNumber='"+agentnum+"' ";
-        }else if(projectid!=null&&!projectid.isEmpty()){
-            sql=sql+" and proGroupid="+projectid;
+            sql=sql+" and a.machineSerial like '%"+content+"%' ";
+        }if(agentnum!=null&&!agentnum.isEmpty()){
+            sql=sql+" and a.agentNumber='"+agentnum+"' ";
+        }if(projectid!=null&&!projectid.isEmpty()){
+            sql=sql+" and a.proGroupid="+projectid;
         }
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState ",sql);
         List<Record> recordList = page.getList();

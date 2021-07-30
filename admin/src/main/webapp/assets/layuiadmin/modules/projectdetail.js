@@ -10,7 +10,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var projectlist;
     var projectcount;
     var identity="";
-    var agentNumber;
+    var agentNumber=agentnum;
     var agentName;
     var connectdevice=[];
     var Devicelist;
@@ -28,8 +28,10 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             },
             async:false,
             success:function (data) {
+                debugger
                 let item=data.data;
-                $("#comname").html(item.progroupname);
+                $("#comname").html(item.agentname);
+                $("#progroupname").html(item.progroupname);
                 $("#createtime").html(item.createtime);
             }
         })
@@ -57,7 +59,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
             width: "600px", //r、l抽屉可以设置宽度
             content: $("#window"),
-            btn: ['<i class="layui-icon">&#xe615;</i>提交修改', '重置'],
+            btn: ['<i class="layui-icon">&#xe615;</i>关联设备'],
             success :function (layero, index) {
                 renderlayerTable();
             },
@@ -67,16 +69,12 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 getCompanyListByRole()
                 layer.close(index);
             },
-            btn2: function (index, layero) {
-                layer.close(index);
-                return false;
-            }
         });
     })
 
     //监听页面表格查询
     $("#datasumbit").on('click', function () {
-        let agentnum=Devicelist.getValue();
+        let agentnum=agentNumber;
         let stats = $("#stats").val();
         let input = $("#SN").val();
         let id=1,sn, snreal;
@@ -210,7 +208,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , totalRow: true
             , height:'full-300'
             , url: '/devicelist/searchUnconnectDev'
-            , where: {'agentnum':agentNumber,'content':"",'type':stats2}
+            , where: {'agentnum':agentnum,'content':"",'type':stats2}
             , cols: [[
                 {type:'checkbox'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
@@ -261,7 +259,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , totalRow: true
             , height:'full-300'
             , url: '/devicelist/searchUnconnectDev'
-            , where: {'agentnum':agentNumber,'content':content,'type':stats2}
+            , where: {'agentnum':agentnum,'content':content,'type':stats2}
             , cols: [[
                 {type:'checkbox'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
@@ -316,7 +314,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             },
             async:false,
             success:function(data){
-                assignCompanyList(data.data);
+                // assignCompanyList(data.data);
             }
         })
     }

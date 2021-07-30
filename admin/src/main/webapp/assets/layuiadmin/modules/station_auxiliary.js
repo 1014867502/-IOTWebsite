@@ -72,6 +72,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         if(test.move_warn_enable==="on"){
             jsondata.moveWarnEnabled="1";
             jsondata.moveWarnThreshold=test.move_warn_dx+"|"+test.move_warn_dy+"|"+test.move_warn_dz;
+            jsondata.moveWarnMems=test.move_warn_mems;
             jsondata.moveWarnBaud=test.move_warn_baud;
             jsondata.moveWarnCmd=test.move_warn_cmd;
             jsondata.moveALiYunSms=test.move_warn_aliyun_ms;
@@ -231,9 +232,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             $("#move_warn_dx").val(movewarn[0]);
             $("#move_warn_dy").val(movewarn[1]);
             $("#move_warn_dz").val(movewarn[2]);
-            $("#move_warn_mems").val(device.moveWarnMems);
-            $("#move_warn_baud").val(device.moveWarnBaud);
-            $("#move_warn_cmd").val(device.moveWarnCmd);
+            $("#move_warn_mems").val(locatedata.moveWarnMems);
+            $("#move_warn_baud").val(locatedata.moveWarnBaud);
+            $("#move_warn_cmd").val(locatedata.moveWarnCmd);
         }
     }
 
