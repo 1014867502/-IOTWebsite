@@ -17,10 +17,30 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var companylistadd;
     var layerindex;
 
+    form.verify({
+        confirmserial:function (value) {
+            let judge;
+            $.ajax({
+                url:'/devicelist/getDeviceBySerial',
+                data: {
+                    machineSerial: value
+                },
+                async:false,
+                success:function (data) {
+                    judge=data.data;
+                }
+            })
+            if(judge!=null){
+                return "已存在当前设备编号，请重新输入";
+            }
+        }
+    });
 
     getDeviceCounts();
     adaptauthority();
-    getCompanyListByRole(userid);
+    // getCompanyListByRole(userid);
+
+
 
     function getDetailProject(){
         $.ajax({
@@ -94,7 +114,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     //监听页面表格查询
     $("#datasumbit").on('click', function () {
-        let agentnum=Devicelist.getValue();
        let stats = $("#stats").val();
        let input = $("#SN").val();
        let id=1,sn, snreal;
@@ -114,9 +133,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , height:'full-200'
             , totalRow: true
             , url: '/devicelist/searchDevice'
-            , where: {'agentNumber': agentnum[0].value, 'sn': snreal, 'state': stats}
+            , where: {'sn': snreal, 'state': stats}
             , cols: [[
-                {field: 'id', title: "序号", align: 'center'}
+                {field: 'agentName', title: "所属公司", align: 'center'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
                 , {field: 'createTime', title: "登录时间", align: 'center'}
@@ -162,9 +181,11 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     renderTable();
 
     form.on('submit(formDemo2)', function(data){
+        debugger
         let json=data.field;
         let company=companylistadd.getValue();
         json.agentNumber=company[0].value;
+        json.onlineState=0;
         let jsondata=JSON.stringify(json);
         $.ajax({
             url:'/devicelist/addDevice',
@@ -188,9 +209,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         }else if(obj.event === 'edit'){
             location.href = '/devicelist/setting?sn='+data.machineSerial;
         } else if (obj.event === 'del') {
-            layer.confirm('真的删除行么', function(index){
+            layer.confirm('真的取消关联吗？', function(index){
                 admin.req({
-                    url:'/devicelist/delConnectDev',
+                    url:'/devicelist/reductionDev',
                     data:{
                         sn:data.machineSerial
                     },
@@ -216,11 +237,11 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , url: '/devicelist/getDeviceList'
             , where: {'userid':userid}
             , cols: [[
-                {field: 'id', title: "序号", align: 'center'}
+                {field: 'agentName', title: "所属公司", align: 'center'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
                 , {field: 'createTime', title: "登录时间", align: 'center'}
-                , {field: 'onlineState', title: "处理状态", align: 'center', templet: '#table-online-state'}
+                , {field: 'onlineState', title: "在线状态", align: 'center', templet: '#table-online-state'}
                 , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
             ]]
             , limit: 50 //每页默认显示的数量
@@ -336,14 +357,24 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     case "user":
                         $("#addequip").css("display","none");
                         $("#add_device2").css("display","none");
+                        document.getElementById("barDemo").innerHTML="   <a class=\"layui-btn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n";
                         break;
                     case "companyadmin":
                         $("#add_device2").css("display","none");
+                        document.getElementById("barDemo").innerHTML="   <a class=\"layui-btn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n";
                         break;
                     case "superadmin":
                         $("#projectheader").css("display","none");
+                        document.getElementById("select").innerHTML="<select id=\"stats\" name=\"stats\" lay-verify=\"\" lay-filter=\"stats\">\n" +
+                            "                                <option value=\"1\">在线</option>\n" +
+                            "                                <option value=\"0\">离线</option>\n" +
+                            "                                <option value=\"2\">公司</option>\n" +
+                            "                            </select>";
+                        document.getElementById("barDemo").innerHTML="   <a class=\"layui-btn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n" +
+                            "                        <a class=\"layui-btn layui-btn-danger layui-btn-xs\" lay-event=\"del\">取消关联</a>";
                         break;
                 }
+                form.render();
 
             }
         })

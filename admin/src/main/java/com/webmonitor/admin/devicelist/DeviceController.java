@@ -181,12 +181,26 @@ public class DeviceController  extends BaseController {
         renderJson(result.success("success"));
     }
 
-    /**删除关联设备**/
+    /**删除关联设备（项目）**/
     public void delConnectDev(){
         Result result=Result.newOne();
         String sn=getPara("sn");
         try{
-            DeviceListService.me.deleteDeviceByGroupid(sn);
+            DeviceListService.me.deleteDeviceBySerial(sn);
+            result.success("success");
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+
+        }
+        renderJson(result);
+    }
+
+    /**删除关联设备（项目）**/
+    public void reductionDev(){
+        Result result=Result.newOne();
+        String sn=getPara("sn");
+        try{
+            DeviceListService.me.reductionDeviceBySerial(sn);
             result.success("success");
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -203,7 +217,6 @@ public class DeviceController  extends BaseController {
         int limit = getParaToInt("limit", 50);
         String content=getPara("sn");
         String[] projects=new String[20];
-        String agentnum=getPara("agentNumber");
         String state=getPara("state");
         StaffData currentuser = StaffService.me.getStaffById(userid);
         String authority = currentuser.getGroupAssemble();
@@ -211,7 +224,7 @@ public class DeviceController  extends BaseController {
             projects=authority.split("@");
         }
         try{
-            Page<AgentData> agentDataList=AgentDataService.me.searchDeviceByParam(content,agentnum,projects,state,pageno,limit);
+            Page<AgentData> agentDataList=AgentDataService.me.searchDeviceByParam(content,projects,state,pageno,limit);
             result.success(agentDataList);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -240,16 +253,19 @@ public class DeviceController  extends BaseController {
 
     /**更改设备配置**/
     public void editSetting(){
-        Result result=Result.newOne();
+        Result<String> result=Result.newOne();
         Gson gson = new Gson();
         String json=getPara("setting");
         String machine=getPara("machinesn");
         MachineInfoEntity agentDataDao= gson.fromJson(json, new TypeToken<MachineInfoEntity>(){}.getType());
         boolean test=DeviceListService.checkObjAllFieldsIsNull(machine,agentDataDao);
         if(test){
-            renderJson(result.success("修改成功"));
+            result.setMsg("修改成功");
+            result.success(machine);
+            renderJson(result);
         }else{
-            renderJson(result.error("修改失败"));
+            result.setMsg("修改失败");
+            renderJson(result);
         }
 
     }
@@ -266,6 +282,15 @@ public class DeviceController  extends BaseController {
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }
+        renderJson(result);
+    }
+
+    /**根据serial获取设备**/
+    public void getDeviceBySerial(){
+        Result result=Result.newOne();
+        String machinesn=getPara("machineSerial");
+        AgentDataDao agentDataDao=AgentDataDao.dao.findFirst("select * from agent_data where machineSerial='"+machinesn+"'");
+        result.success(agentDataDao);
         renderJson(result);
     }
 

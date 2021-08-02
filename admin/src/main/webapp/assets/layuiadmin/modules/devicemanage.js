@@ -64,7 +64,7 @@ layui.define(['form','drawer','table'], function (exports) {
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
                 , {field: 'createTime', title: "登录时间", align: 'center'}
-                , {field: 'onlineState', title: "处理状态", align: 'center', templet: '#table-online-state'}
+                , {field: 'onlineState', title: "在线状态", align: 'center', templet: '#table-online-state'}
                 , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
             ]]
             , limit: 50 //每页默认显示的数量
@@ -118,7 +118,7 @@ layui.define(['form','drawer','table'], function (exports) {
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
                 , {field: 'createTime', title: "登录时间", align: 'center'}
-                , {field: 'onlineState', title: "处理状态", align: 'center', templet: '#table-online-state'}
+                , {field: 'onlineState', title: "在线状态", align: 'center', templet: '#table-online-state'}
                 , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
             ]]
             , limit: 50 //每页默认显示的数量

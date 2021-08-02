@@ -24,6 +24,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     var rtkturn = true;//rtk开关
     var rawdataturn = false;//原始数据上传开关
     var doublebase = false;//双基站开关
+    var machineserial=machinesn;
 
     form.verify({
         ip: [
@@ -34,6 +35,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
             if (value.length < 5) {
                 return '标题至少得5个字符啊';
             }
+            l
         }
         , Ndouble: [
             /^[1-9]\d*$/
@@ -79,7 +81,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     form.on('switch(doublebase)', function (data) {
         if (this.checked) {
             doublebase = true;
-
         } else {
             doublebase = false;
         }
@@ -90,16 +91,22 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     /*监听rtk数据按钮*/
     form.on('switch(rtkturn)', function (data) {
         if (this.checked) {
-                rtkturn = true;
-                document.getElementById("rtkcontent").innerHTML = rtkcontent;
-                document.getElementById("rtkcontent").style.display = "block";
-                document.getElementById("rtkcontent").style.marginTop = "30px";
+            rtkturn = true;
+            document.getElementById("rtkcontent").innerHTML = rtkcontent;
+            document.getElementById("rtkcontent").style.display = "block";
+            document.getElementById("rtkcontent").style.marginTop = "30px";
+            $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
+            $("#imuWarn").find("option[value=" + device.imuWarn + "]").prop("selected", true);
+            $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
+            $("#networkAddress").val(device.networkAddress);
+            $("#networkPort").val(device.networkPort);
+            $("#networkMountpoint").find("option[value=" + device.networkMountpoint + "]").prop("selected", true);
         } else {
-                rtkturn = false;
-                document.getElementById("rtkfront").innerHTML=""
-                document.getElementById("rtkfront").style.display = "none";
-                document.getElementById("rtkcontent").innerHTML = "";
-                document.getElementById("rtkcontent").style.display = "none";
+            rtkturn = false;
+            document.getElementById("rtkfront").innerHTML = ""
+            document.getElementById("rtkfront").style.display = "none";
+            document.getElementById("rtkcontent").innerHTML = "";
+            document.getElementById("rtkcontent").style.display = "none";
         }
         rtkcore();
         form.render();
@@ -111,6 +118,11 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
             document.getElementById("rawdatacontent").innerHTML = rawdatacontent;
             document.getElementById("rawdatacontent").style.display = "block";
             document.getElementById("rawdatacontent").style.marginTop = "30px";
+            let rawreturndata={};
+            rawreturndata.value=parseInt(device.rawBackEnabled);
+            rawdatabackflush(rawreturndata);
+            $("#rawBackEnabled").find("option[value=" + device.rawBackEnabled + "]").prop("selected", true);
+            $("#rawBackGnssData").find("option[value=" + device.rawBackGnssData + "]").prop("selected", true);
         } else {
             rawdataturn = false;
             document.getElementById("rawdatacontent").innerHTML = "";
@@ -119,8 +131,8 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         form.render();
     })
     /*监听原始数据回传的通信设置*/
-    form.on('select(rawBackEnabled)',function (data) {
-
+    form.on('select(rawBackEnabled)', function (data) {
+        rawdatabackflush(data);
     })
     /*监听表单提交*/
     form.on('submit(formDemo)', function (data) {
@@ -134,8 +146,8 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 machinesn: machinesn
             },
             success: function (data) {
-                getDeviceSetting(machinesn);
-                alert(data.data);
+                getDeviceSetting(data.data);
+                alert(data.msg);
             }
         })
     })
@@ -166,7 +178,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 $("#networkPort").val(device.networkPort);
                 $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
                 if (device.rtkPos > 0) {
-                    rtkturn=true;
+                    rtkturn = true;
                     $("#rtkturn").prop("checked", true);
                     $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
                     $("#imuWarn").find("option[value=" + device.imuWarn + "]").prop("selected", true);
@@ -179,8 +191,9 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     $("#rawdataturn").attr("checked", "checked");
                     $("#rawBackEnabled").find("option[value=" + device.rawBackEnabled + "]").prop("selected", true);
                     $("#rawBackGnssData").find("option[value=" + device.rawBackGnssData + "]").prop("selected", true);
-                    $("#rawBackAddress").val(device.rawBackAddress);
-                    $("#rawBackPort").val(device.rawBackPort);
+                    let enabledata={};
+                    enabledata.value=parseInt(device.rawBackEnabled);
+                    rawdatabackflush(enabledata);
                 }
                 let status2 = $("#resultMsg")
                 if (status2 != null) {
@@ -300,7 +313,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">大地高</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id='baseHeight' type=\"text\" name=\"baseHeight\" required lay-verify=\"number|required\" placeholder=\"请输入大地高\"\n" +
+                    "                                    <input id='baseHeight' type=\"text\" name=\"baseHeight\"   placeholder=\"请输入大地高\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
@@ -420,7 +433,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">大地高</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id='coordinatesZ' type=\"text\" name=\"coordinatesZ\" required lay-verify=\"required\" placeholder=\"请输入大地高\"\n" +
+                    "                                    <input id='coordinatesZ' type=\"text\" name=\"coordinatesZ\"  placeholder=\"请输入大地高\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
@@ -511,7 +524,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                                        <option value=\"5\">5度</option>\n" +
                     "                                    </select>\n" +
                     "                                </div>\n" +
-                    "                            </div>\n"+
+                    "                            </div>\n" +
                     "                        </div>\n" +
                     "                        <div id=\"rtkcontent\">\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
@@ -602,31 +615,14 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                        <div class=\"layui-form-item  fastinput\">\n" +
                     "                            <label class=\"layui-form-label\">数据类型</label>\n" +
                     "                            <div class=\"layui-input-block\">\n" +
-                    "                                <select id=\"rawBackGnssData\" name=\"rawRate\" lay-verify=\"required\">\n" +
+                    "                                <select id=\"rawBackGnssData\" name=\"rawBackGnssData\" lay-verify=\"required\">\n" +
                     "                                    <option value=\"0\">GNSS原始数据</option>\n" +
                     "                                    <option value=\"1\">RTCM3.2数据</option>\n" +
                     "                                </select>\n" +
                     "                            </div>\n" +
                     "                        </div>\n" +
-                    "                        <div>\n"+
-                    "                        <div style=\"display: flex;margin-top: 30px\">\n" +
-                    "                            <div class=\"layui-form-item  fastinput\">\n" +
-                    "                                <label class=\"layui-form-label\">IP地址</label>\n" +
-                    "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id=\"rawBackAddress\" type=\"text\" name=\"rawBackAddress\" required\n" +
-                    "                                           lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
-                    "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-                    "                                </div>\n" +
-                    "                            </div>\n" +
-                    "                            <div class=\"layui-form-item  fastinput\">\n" +
-                    "                                <label class=\"layui-form-label\">端口</label>\n" +
-                    "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id=\"rawBackPort\" type=\"text\" name=\"rawBackPort\" required\n" +
-                    "                                           lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
-                    "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-                    "                                </div>\n" +
-                    "                            </div>\n" +
-                    "                        </div>\n" +
+                    "                        <div>\n" +
+                    "                      <div id='rawdatabackcontent'></div>" +
                     "                    </div>\n" +
                     "                   \n" +
                     "                </div> </div>\n";
@@ -689,7 +685,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            </div>"
                 break;
         }
-        getDeviceSetting(machinesn);
+        getDeviceSetting(machineserial);
         form.render();
     }
 
@@ -744,11 +740,11 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            </div>";
                 break;
         }
-        getDeviceSetting(machinesn);
+        getDeviceSetting(machineserial);
     }
 
     function changesoure(doubleturn, type) {
-        let rtknode=document.getElementById("rtkturn");
+        let rtknode = document.getElementById("rtkturn");
         let stationturn;
         if (doubleturn) {
             stationturn = 1;
@@ -967,12 +963,12 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                         "                                        </div>\n" +
                         "                                    </div>\n" +
                         "                                </div>"
-                    if(rtknode!=null){
-                        document.getElementById("rtkcontent").innerHTML="";
+                    if (rtknode != null) {
+                        document.getElementById("rtkcontent").innerHTML = "";
                     }
                     break;
             }
-            getDeviceSetting(machinesn);
+            getDeviceSetting(machineserial);
         }
 
     }
@@ -989,33 +985,10 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     }
 
     function rtkshow(data) {
-        if(data!=null){
-            document.getElementById("coreselect").innerHTML="";
-            document.getElementById("rtkfront").innerHTML="<div class=\"layui-form-item  fastinput\">\n" +
-                "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">RTK解算设置</label>\n" +
-                "                                <div class=\"layui-input-block\">\n" +
-                "                                    <select id=\"rtkPos\" name=\"rtkPos\" lay-verify=\"required\">\n" +
-                "                                        <option value=\"1\">正常模式（5分钟输出）</option>\n" +
-                "                                        <option value=\"2\">紧急模式（1秒输出）</option>\n" +
-                "                                        <option value=\"3\">紧急模式（5秒输出）</option>\n" +
-                "                                    </select>\n" +
-                "                                </div>\n" +
-                "                            </div>\n" +
-                "                            <div class=\"layui-form-item  fastinput\">\n" +
-                "                                <label class=\"layui-form-label\" style=\"width: 150px\">IMU触发RTK紧急模式</label>\n" +
-                "                                <div class=\"layui-input-block\" style=\"margin-left: 180px\">\n" +
-                "                                    <select id=\"imuWarn\" name=\"imuWarn\" lay-verify=\"required\">\n" +
-                "                                        <option value=\"0\">关闭</option>\n" +
-                "                                        <option value=\"0.3\">0.3度</option>\n" +
-                "                                        <option value=\"0.5\">0.5度</option>\n" +
-                "                                        <option value=\"1\">1度</option>\n" +
-                "                                        <option value=\"2\">2度</option>\n" +
-                "                                        <option value=\"3\">3度</option>\n" +
-                "                                        <option value=\"5\">5度</option>\n" +
-                "                                    </select>\n" +
-                "                                </div>\n" +
-                "                            </div>";
-            document.getElementById("rtkcontent").innerHTML=" <div class=\"layui-form-item  fastinput\">\n" +
+        if (data != null) {
+            document.getElementById("coreselect").innerHTML = "";
+            document.getElementById("rtkfront").innerHTML = rtkfront;
+            document.getElementById("rtkcontent").innerHTML = " <div class=\"layui-form-item  fastinput\">\n" +
                 "                                <label class=\"layui-form-label\">通信协议</label>\n" +
                 "                                <div class=\"layui-input-block\">\n" +
                 "                                    <select id=\"networkMode\" name=\"networkMode\" lay-verify=\"required\">\n" +
@@ -1077,47 +1050,153 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
 
     /**原始数据回传刷新**/
     function rawdatabackflush(data) {
-        if(data.rawBackEnabled==1||data.rawBackEnabled==2){
-
+        if(data.value==0){
+            document.getElementById("rawdatabackcontent").innerHTML = "";
+            document.getElementById("rawdatabackcontent").innerHTML = "<div style=\"display: flex;margin-top: 30px\">\n" +
+                "                            <div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\">服务器地址</label>\n" +
+                "                                <div class=\"layui-input-block\">\n" +
+                "                                    <input id=\"rawBackAddress\" type=\"text\" name=\"rawBackAddress\" required\n" +
+                "                                           lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
+                "                                           autocomplete=\"off\" disabled class=\"layui-input layui-disabled\">\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                            <div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\">服务器端口</label>\n" +
+                "                                <div class=\"layui-input-block\">\n" +
+                "                                    <input id=\"rawBackPort\" type=\"text\" name=\"rawBackPort\" required\n" +
+                "                                           lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                "                                           autocomplete=\"off\" disabled class=\"layui-input layui-disabled\">\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                        </div>\n";
+            $("#rawBackAddress").val(device.rawBackAddress);
+            $("#rawBackPort").val(device.rawBackPort);
         }
-        if(data.rawBackEnabled==3){
-
+        if (data.value == 1 || data.value == 2) {
+            document.getElementById("rawdatabackcontent").innerHTML = "";
+            document.getElementById("rawdatabackcontent").innerHTML = "<div style=\"display: flex;margin-top: 30px\">\n" +
+                "                            <div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\">服务器地址</label>\n" +
+                "                                <div class=\"layui-input-block\">\n" +
+                "                                    <input id=\"rawBackAddress\" type=\"text\" name=\"rawBackAddress\" required\n" +
+                "                                           lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
+                "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                            <div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\">服务器端口</label>\n" +
+                "                                <div class=\"layui-input-block\">\n" +
+                "                                    <input id=\"rawBackPort\" type=\"text\" name=\"rawBackPort\" required\n" +
+                "                                           lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                        </div>\n";
+            $("#rawBackAddress").val(device.rawBackAddress);
+            $("#rawBackPort").val(device.rawBackPort);
         }
-        if(data.rawBackEnabled==10||data.rawBackEnabled==11){
-
+        if (data.value == 3) {
+            document.getElementById("rawdatabackcontent").innerHTML = "";
+            document.getElementById("rawdatabackcontent").innerHTML = "<div style=\"display: flex;margin-top: 30px\">\n" +
+                "                            <div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\">服务器地址</label>\n" +
+                "                                <div class=\"layui-input-block\">\n" +
+                "                                    <input id=\"rawBackAddress\" type=\"text\" name=\"rawBackAddress\" required\n" +
+                "                                           lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
+                "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                            <div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\">服务器端口</label>\n" +
+                "                                <div class=\"layui-input-block\">\n" +
+                "                                    <input id=\"rawBackPort\" type=\"text\" name=\"rawBackPort\" required\n" +
+                "                                           lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                        </div>" +
+                "                        <div style=\"display: flex;margin-top: 30px\">\n" +
+                "                            <div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\">接入点</label>\n" +
+                "                                <div class=\"layui-input-block\">\n" +
+                "                                    <input id=\"rawreturnuser\" type=\"text\" name=\"rawBackUser\" required\n" +
+                "                                           lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                            <div class=\"layui-form-item  fastinput\">\n" +
+                "                                <label class=\"layui-form-label\">密码</label>\n" +
+                "                                <div class=\"layui-input-block\">\n" +
+                "                                    <input id=\"rawreturnpass\" type=\"text\" name=\"rawBackPass\" required\n" +
+                "                                           lay-verify=\"required\" placeholder=\"请输入密码\"\n" +
+                "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                        </div>\n";
+            $("#rawBackAddress").val(device.rawBackAddress);
+            $("#rawBackPort").val(device.rawBackPort);
+            let user=(device.rawBackUser!=null)?device.rawBackUser:"";
+            let pass=(device.rawBackPass!=null)?device.rawBackPass:"";
+            $("#rawreturnuser").val(user);
+            $("#rawreturnpass").val(pass);
         }
+        if (data.value == 10 || data.value == 11) {
+            document.getElementById("rawdatabackcontent").innerHTML = "";
+            document.getElementById("rawdatabackcontent").innerHTML =
+                "<div style=\"display: flex;margin-top: 30px\">\n" +
+                " <div class=\"layui-form-item\">\n" +
+                "            <label class=\"layui-form-label\">串口波特率</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <div style=\"width: 70%\">\n" +
+                "                    <select id=\"rawreturnbaud\" name=\"rawBackBaud\" lay-filter=\"type\" style=\"width: 70%\">\n" +
+                "                        <option value=\"4800\">4800 bps</option>\n" +
+                "                        <option value=\"9600\" selected>9600 bps</option>\n" +
+                "                        <option value=\"19200\">19200 bps</option>\n" +
+                "                        <option value=\"38400\">38400 bps</option>\n" +
+                "                        <option value=\"57600\">57600 bps</option>\n" +
+                "                        <option value=\"115200\">115200 bps</option>\n" +
+                "                    </select>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "        </div>" +
+                "                        </div>";
+            let baud=(device.rawBackBaud!=null)?device.rawBackBaud:"";
+            $("#rawreturnbaud").val(baud);
+        }
+        form.render();
     }
 
+
     /*判断是否插入core选择框*/
-    function rtkcore(){
+    function rtkcore() {
         debugger
-        let base=doublebase;
-        let source=downloadsource;
-        let turn=rtkturn;
-        if(base&&source==1&&turn){
-            document.getElementById("coreselect").innerHTML="  <label class=\"layui-form-label\"></label>\n" +
+        let base = doublebase;
+        let source = downloadsource;
+        let turn = rtkturn;
+        if (base && source == 1 && turn) {
+            document.getElementById("coreselect").innerHTML = "  <label class=\"layui-form-label\"></label>\n" +
                 "                                <div class=\"layui-input-block\">\n" +
                 "                                    <input type=\"radio\" lay-filter=\"coresource\" name=\"coredata\" value=\"0\" title=\"与CORS①数据同源\" checked>\n" +
                 "                                    <input type=\"radio\" lay-filter=\"coresource\" name=\"coredata\" value=\"1\" title=\"与CORS②数据同源\">\n" +
                 "                                </div>";
-            document.getElementById("rtkfront").style.display="flex";
-            document.getElementById("rtkcontent").innerHTML="";
-            document.getElementById("rtkfront").innerHTML=rtkfront;
-        }else if(!base&&turn){
-            document.getElementById("rtkfront").style.display="flex";
-            document.getElementById("rtkfront").innerHTML=rtkfront;
-        }
-        else if(base&&source==0&&turn){
-            document.getElementById("rtkfront").style.display="flex";
-            document.getElementById("rtkfront").innerHTML=rtkfront;
-        }
-        else{
-            document.getElementById("coreselect").innerHTML="";
-            document.getElementById("rtkfront").innerHTML="";
+            document.getElementById("rtkfront").style.display = "flex";
+            document.getElementById("rtkcontent").innerHTML = "";
+            document.getElementById("rtkfront").innerHTML = rtkfront;
+        } else if ((!base && source == 0 && turn) || (base && source == 0 && turn)) {
+            document.getElementById("rtkfront").innerHTML = "";
+            document.getElementById("rtkfront").innerHTML = rtkfront;
+        } else if (!base && source == 1 && turn) {
+            document.getElementById("rtkfront").innerHTML = "";
+            document.getElementById("rtkfront").innerHTML = rtkfront;
+        } else {
+            document.getElementById("coreselect").innerHTML = "";
+            document.getElementById("rtkfront").innerHTML = "";
         }
     }
 
-    var rtkfront="<div class=\"layui-form-item  fastinput\">\n" +
+
+    var rtkfront = "<div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">RTK解算设置</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"rtkPos\" name=\"rtkPos\" lay-verify=\"required\">\n" +
@@ -1228,7 +1307,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     var rawdatacontent = "<div class=\"layui-form-item  fastinput\">\n" +
         "                            <label class=\"layui-form-label\">通讯设置</label>\n" +
         "                            <div class=\"layui-input-block\">\n" +
-        "                                <select id=\"rawBackEnabled\" name=\"rawRate\" lay-verify=\"required\">\n" +
+        "                                <select id=\"rawBackEnabled\" name=\"rawBackEnabled\" lay-filter='rawBackEnabled' lay-verify=\"required\">\n" +
         "                                    <option value=\"0\">关闭</option>\n" +
         "                                    <option value=\"1\">TCP客户端</option>\n" +
         "                                    <option value=\"2\">TCP服务端</option>\n" +
@@ -1241,12 +1320,13 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         "                        <div class=\"layui-form-item  fastinput\">\n" +
         "                            <label class=\"layui-form-label\">数据类型</label>\n" +
         "                            <div class=\"layui-input-block\">\n" +
-        "                                <select id=\"rawBackGnssData\" name=\"rawRate\" lay-verify=\"required\">\n" +
+        "                                <select id=\"rawBackGnssData\" name=\"rawBackGnssData\" lay-verify=\"required\">\n" +
         "                                    <option value=\"0\">GNSS原始数据</option>\n" +
         "                                    <option value=\"1\">RTCM3.2数据</option>\n" +
         "                                </select>\n" +
         "                            </div>\n" +
         "                        </div>\n" +
+        "<div id='rawdatabackcontent'>"+
         "                        <div style=\"display: flex;margin-top: 30px\">\n" +
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\">IP地址</label>\n" +
@@ -1264,6 +1344,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
         "                            </div>\n" +
-        "                        </div>";
+        "                        </div></div>";
     exports('station_compute', {})
 });

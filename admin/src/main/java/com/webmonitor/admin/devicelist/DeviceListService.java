@@ -46,8 +46,13 @@ public class DeviceListService {
     }
 
     /**删除关联设备**/
-    public void deleteDeviceByGroupid(String sn){
-        dal.deleteDeviceByGroupid(sn);
+    public void deleteDeviceBySerial(String sn){
+        dal.deleteDeviceBySerial(sn);
+    }
+
+    /**删除关联设备**/
+    public void reductionDeviceBySerial(String sn){
+        dal.reductionDeviceBySerial(sn);
     }
 
     /**根据公司id查找对应的设备**/
@@ -106,7 +111,7 @@ public class DeviceListService {
     /**添加新设备**/
     public void addDevice(AgentData agentData){
         String state=String.valueOf(agentData.getOnlineState());
-        dal.addDevice(agentData.getMachineName(),agentData.getAgentNumber(),state,agentData.getMachineName());
+        dal.addDevice(agentData.getMachineSerial(),agentData.getAgentNumber(),state,agentData.getMachineName());
     }
 
     public static String getOrder(String order){

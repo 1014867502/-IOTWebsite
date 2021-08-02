@@ -239,7 +239,7 @@
 <div class="site-text" style="margin: 5%; display: none" id="addprowindow" target="test1234">
     <form class="layui-form" action="">
         <div class="layui-form-item">
-            <label class="layui-form-label">设备名</label>
+            <label class="layui-form-label">设备名称</label>
             <div class="layui-input-block">
                 <input id="machinname" style="width: 70%" type="text" name="machineName"  lay-verify="editaccount|required" placeholder="请输入设备名" autocomplete="off" class="layui-input">
             </div>
@@ -247,7 +247,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">设备编号</label>
             <div class="layui-input-block">
-                <input id="machineserial" style="width: 70%" type="text" name="machineSerial" required  lay-verify="required" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
+                <input id="machineserial" style="width: 70%" type="text" name="machineSerial"  lay-verify="required|confirmserial" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -256,17 +256,17 @@
                 <div id="companylistadd" class="xm-select-project" style="width: 70%"></div>
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">状态</label>
-            <div class="layui-input-block">
-                <div style="width: 70%">
-                    <select id="onlinestate" name="onlineState" lay-filter="type" style="width: 70%">
-                        <option value="0">离线</option>
-                        <option value="1">在线</option>
-                    </select>
-                </div>
-            </div>
-        </div>
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">状态</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <div style="width: 70%">-->
+<!--                    <select id="onlinestate" name="onlineState" lay-filter="type" style="width: 70%">-->
+<!--                        <option value="0">离线</option>-->
+<!--                        <option value="1">在线</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="layui-form-item" >
             <div class="layui-input-block">
                 <button  class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
@@ -348,10 +348,7 @@
                 <div class="layui-card-header">设备表格</div>
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
                     <div class="layui-form-item" style="margin: auto">
-                        <div class="layui-inline">
-                            <div id="companylist" class="xm-select-project" style="width: 200px;"></div>
-                        </div>
-                        <div class="layui-inline">
+                        <div class="layui-inline" id="select">
                             <select id="stats" name="stats" lay-verify="" lay-filter="stats">
                                 <option value="1">在线</option>
                                 <option value="0">离线</option>
@@ -389,8 +386,7 @@
                 <div class="layui-card-body">
                     <table class="layui-hide" id="table-form" lay-filter="table-from"></table>
                     <script type="text/html" id="barDemo">
-                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+
                     </script>
                 </div>
             </div>

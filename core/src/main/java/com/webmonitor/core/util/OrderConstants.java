@@ -206,13 +206,13 @@ public class OrderConstants  {
     public static String NETWORK_MODE="SET,NETWORK.MODE,";
 
     //网络模块服务器地址，支持IP或域名
-    public static String NETWORK_ADDR="SET,NETWORK.MODE,ADDR,";
+    public static String NETWORK_ADDR="SET,NETWORK.MODE.ADDR,";
 
     //网络模块服务器端口
-    public static String NETWORK_PORT="SET,NETWORK.MODE,PORT";
+    public static String NETWORK_PORT="SET,NETWORK.MODE.PORT,";
 
     //Ntrip接入点
-    public static String NETWORK_MOUNTPOINT="SET,NETWORK.MODE,MOUNTPOINT,";
+    public static String NETWORK_MOUNTPOINT="SET,NETWORK.MODE.MOUNTPOINT,";
 
     //Ntrip用户名|密码
     public static String NETWORK_MOUNTPOINTUSERPASS="SET,NETWORK.MOUNTPOINTUSERPASS,";
@@ -261,9 +261,9 @@ public class OrderConstants  {
 
     public static String DEVICE_COORDINATES_X="SET,DEVICE.COORDINATES.X,";//设置基准坐标，用于计算位移
 
-    public static String DEVICE_COORDINATES_Y="DEVICE_COORDINATES_Y";//设置基准坐标，用于计算位移
+    public static String DEVICE_COORDINATES_Y="SET,DEVICE_COORDINATES_Y,";//设置基准坐标，用于计算位移
 
-    public static String DEVICE_COORDINATES_Z="DEVICE_COORDINATES_Z";//设置基准坐标，用于计算位移
+    public static String DEVICE_COORDINATES_Z="SET,DEVICE_COORDINATES_Z,";//设置基准坐标，用于计算位移
 
 
 }

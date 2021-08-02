@@ -187,16 +187,17 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     //每行记录的按钮事件
     table.on('tool(table-from)', function (obj) {
         var data = obj.data;
+        debugger
         if (obj.event === 'echarts') {
             location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
         }else if(obj.event === 'edit'){
-            location.href = '/devicelist/setting?sn='+data.serial;
+            location.href = '/devicelist/setting?sn='+data.machineSerial;
         } else if (obj.event === 'del') {
-            layer.confirm('真的删除行么', function(index){
+            layer.confirm('真的取消关联吗？', function(index){
                 admin.req({
                     url:'/devicelist/delConnectDev',
                     data:{
-                        sn:data.serial
+                        sn:data.machineSerial
                     },
                     done:function (res) {
                         renderTable();
@@ -220,11 +221,11 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , url: '/company/getAllDeviceByComid'
             , where: {'agentnum':agentnum}
             , cols: [[
-                {field: 'id', title: "序号", align: 'center'}
+                {field: 'agentName', title: "所属公司", align: 'center'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
                 , {field: 'createTime', title: "登录时间", align: 'center'}
-                , {field: 'onlineState', title: "处理状态", align: 'center', templet: '#table-online-state'}
+                , {field: 'onlineState', title: "在线状态", align: 'center', templet: '#table-online-state'}
                 , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
             ]]
             , limit: 50 //每页默认显示的数量

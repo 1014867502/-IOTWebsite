@@ -21,8 +21,8 @@ import java.util.List;
 public class AgentDataMysqlDAL implements IAgentData {
 
     public Page<AgentData> getAllDevice(int pageno,int limit){
-        String sql=" from agent_data a left join agent_table b on a.agentNumber=b.agentNumber ";
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName ",sql);
+        String sql=" from agent_data a left join agent_table b on a.agentNumber=b.agentNumber LEFT JOIN agent_table c on a.agentNumber=c.agentNumber ";
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName,c.agentName ",sql);
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -45,16 +45,29 @@ public class AgentDataMysqlDAL implements IAgentData {
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
     }
 
-    public Page<AgentData> searchDeviceByParam(String content,String agentnum,String[] projectid,String state,int pageno,int limit){
-        String connectstatus="";
-        connectstatus=state.equals("0")?"(b.connectState=0 or b.connectState is null)":"b.connectState=1";
-        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where "+connectstatus;
+    public Page<AgentData> searchDeviceByParam(String content,String[] projectid,String state,int pageno,int limit){
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where ";
         String test="";
-        if(content!=null&&!content.isEmpty()){
-            sql=sql+" and a.machineSerial like '%"+content+"%' ";
-        }if(agentnum!=null&&!agentnum.isEmpty()){
-            sql=sql+" and a.agentNumber='"+agentnum+"' ";
-        }if(projectid.length > 0&&(!projectid[0].equals("all"))){
+        switch(state){
+            case "0"://离线
+                if(!content.isEmpty()){
+                    sql=sql+"(b.connectState=0 or b.connectState is null) and a.machineSerial like '%"+content+"%'";
+                }else{
+                    sql=sql+"(b.connectState=0 or b.connectState is null)";
+                }
+                break;
+            case "1"://在线
+                if(!content.isEmpty()){
+                    sql=sql+"b.connectState=1 and a.machineSerial like '%"+content+"%'";
+                }else{
+                    sql=sql+"b.connectState=1";
+                }
+                break;
+            case "2"://公司
+                sql=sql+" c.agentName like '%"+content+"%'";
+                break;
+        }
+        if(projectid.length > 0&&(!projectid[0].equals("all"))){
             if(projectid.length>1){
                 test=" and (a.proGroupid="+projectid[0];
                 for(int k=0;k<projectid.length;k++){
@@ -66,7 +79,7 @@ public class AgentDataMysqlDAL implements IAgentData {
                 sql=sql+" and a.proGroupid="+projectid[0];
             }
         }
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState ",sql);
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -96,18 +109,30 @@ public class AgentDataMysqlDAL implements IAgentData {
 
     @Override
     public Page<AgentData> findDeviceByParam(String content, String agentnum, String projectid, String state, int pageno, int limit) {
-        String connectstatus="";
-        connectstatus=state.equals("0")?"(b.connectState=0 or b.connectState is null)":"b.connectState=1";
-        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where "+connectstatus;
-        String test="";
-        if(content!=null&&!content.isEmpty()){
-            sql=sql+" and a.machineSerial like '%"+content+"%' ";
-        }if(agentnum!=null&&!agentnum.isEmpty()){
-            sql=sql+" and a.agentNumber='"+agentnum+"' ";
-        }if(projectid!=null&&!projectid.isEmpty()){
-            sql=sql+" and a.proGroupid="+projectid;
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where ";
+        switch(state){
+            case "0"://离线
+                if(!content.isEmpty()){
+                    sql=sql+"(b.connectState=0 or b.connectState is null) and a.machineSerial like '%"+content+"%'";
+                }else{
+                    sql=sql+"(b.connectState=0 or b.connectState is null)";
+                }
+                break;
+            case "1"://在线
+                if(!content.isEmpty()){
+                    sql=sql+"b.connectState=1 and a.machineSerial like '%"+content+"%'";
+                }else{
+                    sql=sql+"b.connectState=1";
+                }
+                break;
+            case "2"://公司
+                sql=sql+" c.agentName like '%"+content+"%'";
+                break;
         }
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState ",sql);
+        if(projectid!=null&&!projectid.isEmpty()){
+                sql=sql+" and a.proGroupid="+projectid;
+        }
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -129,6 +154,7 @@ public class AgentDataMysqlDAL implements IAgentData {
             }
             map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
+            map.setAgentName(record.getStr("agentName"));
             rslist.add(map);
         }
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
@@ -137,8 +163,8 @@ public class AgentDataMysqlDAL implements IAgentData {
     /**根据公司id获取公司旗下所有设备**/
     @Override
     public Page<AgentData> getAllDeviceByComid(String Companyid,int pageno,int limit) {
-        String sql="  from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where a.agentNumber="+Companyid;
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState",sql);
+        String sql="  from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.agentNumber="+Companyid;
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName",sql);
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -160,6 +186,7 @@ public class AgentDataMysqlDAL implements IAgentData {
             }
             map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
+            map.setAgentName(record.getStr("agentName"));
             rslist.add(map);
         }
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
@@ -167,8 +194,8 @@ public class AgentDataMysqlDAL implements IAgentData {
 
     /**查询当前项目旗下的所有设备（分页）**/
     public Page<AgentData> getAllDeviceByGroupid(String Groupid,int pageno,int limit) {
-        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where a.proGroupId="+Groupid;
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState ",sql);
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.proGroupId="+Groupid;
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -190,6 +217,7 @@ public class AgentDataMysqlDAL implements IAgentData {
             }
             map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
+            map.setAgentName(record.getStr("agentName"));
             rslist.add(map);
         }
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
@@ -215,7 +243,7 @@ public class AgentDataMysqlDAL implements IAgentData {
                 sql= CompanyAdminService.me.getAllDevice(currentuser.getAgentNumber());
                 break;
         }
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState ",sql);
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -226,6 +254,7 @@ public class AgentDataMysqlDAL implements IAgentData {
                 connect=record.getStr("connectState");
                 state=Integer.parseInt(connect);
             }
+            map.setAgentName(record.getStr("agentName"));
             map.setOnlineState(state);
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
@@ -236,7 +265,7 @@ public class AgentDataMysqlDAL implements IAgentData {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            map.setProgroupid(record.getInt("proGroupId"));
+            map.setProgroupid((record.getInt("proGroupId")!=null)?record.getInt("proGroupId"):0);
             map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
             rslist.add(map);
@@ -283,7 +312,7 @@ public class AgentDataMysqlDAL implements IAgentData {
         switch (role) {
             /**根据serial查询**/
             case "admin":
-                sql= AdminService.me.searchOutDeviceByParam(content, pageno, limit, type);
+                sql= CompanyAdminService.me.searchOutDeviceByParam(agentnum, content, pageno, limit, type, role);
             break;
             /**根据名称查询**/
             case "consumer":
@@ -312,8 +341,12 @@ public class AgentDataMysqlDAL implements IAgentData {
     }
 
     @Override
-    public void deleteDeviceByGroupid(String sn) {
+    public void deleteDeviceBySerial(String sn) {
         Db.update("update agent_data set proGroupId = null where machineSerial=?",sn);
+    }
+
+    public void reductionDeviceBySerial(String sn){
+        Db.update("update agent_data set proGroupId = null,agentNumber=1 where machineSerial=?",sn);
     }
 
     @Override

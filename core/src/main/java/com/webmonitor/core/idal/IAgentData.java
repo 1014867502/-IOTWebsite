@@ -15,7 +15,7 @@ public interface IAgentData {
     public Page<AgentData> getAllDevice(int pageno,int limit);
 
     /**筛选所有设备**/
-    Page<AgentData> searchDeviceByParam(String content,String agentname,String[] projectid,String state,int pageno,int limit);
+    Page<AgentData> searchDeviceByParam(String content,String[] projectid,String state,int pageno,int limit);
 
     /**筛选所有设备不根据权限限制**/
     Page<AgentData> findDeviceByParam(String content,String agentname,String projectid,String state,int pageno,int limit);
@@ -36,8 +36,11 @@ public interface IAgentData {
     /**根据参数查找未关联设备**/
     Page<AgentDataDao> searchOutDeviceByParam(String agentnum,String content, int pageno, int limit, String type, String role);
 
-    /**删除关联设备**/
-    void deleteDeviceByGroupid(String sn);
+    /**取消关联设备（项目）**/
+    void deleteDeviceBySerial(String sn);
+
+    /**取消关联设备（全局）**/
+    void reductionDeviceBySerial(String sn);
 
     /**添加关联设备**/
     void insertDeviceById(String projectid,String sn);

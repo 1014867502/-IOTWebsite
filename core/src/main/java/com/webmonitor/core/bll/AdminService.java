@@ -15,7 +15,7 @@ public class AdminService {
 
     /**查看所有设备**/
     public String getAllDeviceById(int pageno,int limit){
-        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial ";
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber";
         return sql;
     }
 
@@ -25,8 +25,8 @@ public class AdminService {
     }
 
     /**筛选设备**/
-    public Page<AgentData> searchDeviceByParam(String content,String agentName,String[] projetcid,String state,int pageno,int limit){
-        Page<AgentData> page=AgentDataService.me.searchDeviceByParam(content, agentName, projetcid, state, pageno, limit);
+    public Page<AgentData> searchDeviceByParam(String content,String[] projetcid,String state,int pageno,int limit){
+        Page<AgentData> page=AgentDataService.me.searchDeviceByParam(content, projetcid, state, pageno, limit);
         return page;
     }
 

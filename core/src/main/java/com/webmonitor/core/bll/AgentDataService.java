@@ -12,8 +12,8 @@ public class AgentDataService {
     private static IAgentData dal=new AgentDataMysqlDAL();
 
     /**条件查询所有设备**/
-    public Page<AgentData> searchDeviceByParam(String content,String agentnum,String[] projectid,String state,int pageno,int limit){
-        return dal.searchDeviceByParam(content,agentnum, projectid, state, pageno, limit);
+    public Page<AgentData> searchDeviceByParam(String content,String[] projectid,String state,int pageno,int limit){
+        return dal.searchDeviceByParam(content, projectid, state, pageno, limit);
     }
 
     /**条件查询所有设备(根据y)**/

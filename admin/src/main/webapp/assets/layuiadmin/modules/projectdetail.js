@@ -96,10 +96,10 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , url: '/devicelist/findDevice'
             , where: {'agentNumber': agentnum, 'sn': snreal, 'state': stats,'groupid':progroupid}
             , cols: [[
-                {field: 'id', title: "序号", align: 'center'}
+                {field: 'agentName', title: "所属公司", align: 'center'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
-                , {field: 'date', title: "登录时间", align: 'center'}
+                , {field: 'createTime', title: "登录时间", align: 'center'}
                 , {field: 'state', title: "在线状态", align: 'center', templet: '#table-online-state'}
                 , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
             ]]
@@ -126,7 +126,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     $("#datasumbit2").on('click',function(){
         let stats = $("#stats2").val();
         let input = $("#SN2").val();
-        let id2=projId,sn2, snreal2;
+        let id2=progroupid,sn2, snreal2;
         if (typeof (id2) == "undefined") {
             layer.msg("项目不能为空");
             return;
@@ -149,7 +149,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         }else if(obj.event === 'edit'){
             location.href = '/devicelist/setting?sn='+data.machineSerial;
         } else if (obj.event === 'del') {
-            layer.confirm('真的删除行么', function(index){
+            layer.confirm('真的取消关联吗？', function(index){
                 admin.req({
                     url:'/devicelist/delConnectDev',
                     data:{
@@ -177,11 +177,11 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , url: '/project/getAllDeviceByGroupid'
             , where: {'progroupid':progroupid}
             , cols: [[
-                {field: 'id', title: "序号", align: 'center'}
+                {field: 'agentName', title: "所属公司", align: 'center'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
                 , {field: 'createTime', title: "登录时间", align: 'center'}
-                , {field: 'onlineState', title: "处理状态", align: 'center', templet: '#table-online-state'}
+                , {field: 'onlineState', title: "在线状态", align: 'center', templet: '#table-online-state'}
                 , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
             ]]
             , limit: 50 //每页默认显示的数量
@@ -263,7 +263,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , cols: [[
                 {type:'checkbox'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
-                ,{ fixed: 'onlineState', title:"状态", align:'center', toolbar: '#statusdemo'}
+                ,{ fixed: 'right', title:"状态", align:'center', toolbar: '#statusdemo'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
             ]]
             , limit: 20 //每页默认显示的数量
