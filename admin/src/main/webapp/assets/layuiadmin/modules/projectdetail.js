@@ -28,7 +28,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             },
             async:false,
             success:function (data) {
-                debugger
                 let item=data.data;
                 $("#comname").html(item.agentname);
                 $("#progroupname").html(item.progroupname);
@@ -245,7 +244,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             },
             async:false,
             success:function () {
-                layer.alert("修改成功");
+                layer.alert("关联成功");
             }
         })
     }

@@ -172,7 +172,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
 
     function showProjects(data) {
         let real=data;
-        debugger
+
         for (let i = 0; i < real.length; i++) {
             let item = real[i];
             var innerHTML = "     <div class=\"layui-card\">\n" +

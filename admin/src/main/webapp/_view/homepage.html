@@ -98,7 +98,6 @@
                 success:function (data) {
                     switch (data.data) {
                         case "user":
-                            usermanage
                             document.getElementById("companymanage").style.display="none";
                             document.getElementById("devicemanage").style.display="none";
                             document.getElementById("usermanage").style.display="none";
@@ -106,7 +105,7 @@
                         case "companyadmin":
                             document.getElementById("companymanage").style.display="none";
                             document.getElementById("devicemanage").style.display="none";
-                            document.getElementById("usermanage").style.display="none";
+                            document.getElementById("usermanage2").setAttribute("lay-href","/manage/comusermanage");
                             break;
                         case "superadmin":
                             document.getElementById("devicemanage").style.display="none";

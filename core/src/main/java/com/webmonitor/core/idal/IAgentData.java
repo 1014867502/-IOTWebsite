@@ -4,6 +4,8 @@ import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.core.model.AgentData;
 import com.webmonitor.core.model.AgentDataDao;
 import com.webmonitor.core.model.ProDevCount;
+import com.webmonitor.core.model.userbase.DeviceSensorList;
+import com.webmonitor.core.model.userbase.Templates;
 
 import java.util.Date;
 import java.util.List;
@@ -15,7 +17,10 @@ public interface IAgentData {
     public Page<AgentData> getAllDevice(int pageno,int limit);
 
     /**筛选所有设备**/
-    Page<AgentData> searchDeviceByParam(String content,String[] projectid,String state,int pageno,int limit);
+    Page<AgentData> searchDeviceByParam(String type,String content,String agentNum,String[] projectid,String state,int pageno,int limit);
+
+    /**公司详情页上的搜索框**/
+    Page<AgentData> searchDeviceByCom(String content,String agentnum,String state,int pageno,int limit);
 
     /**筛选所有设备不根据权限限制**/
     Page<AgentData> findDeviceByParam(String content,String agentname,String projectid,String state,int pageno,int limit);
@@ -45,6 +50,9 @@ public interface IAgentData {
     /**添加关联设备**/
     void insertDeviceById(String projectid,String sn);
 
+    /**修改设备的归属**/
+    void updateDeivceAgentBySerial(String sn,String agentnum);
+
     /**增删改**/
     void editDevice(String sn,String machinename);
 
@@ -60,6 +68,17 @@ public interface IAgentData {
     /**获取公司旗下所有设备数目**/
     ProDevCount getDeviceCountByComid(String comid);
 
+    /**获取设备外接传感器列表**/
+    Page<DeviceSensorList> getDeivceSensorList(String machineserial,int pageno,int limit);
+
     /**获取用户属下的所有设备数目**/
     ProDevCount getDeviceCountByUserid(String[] authoritys);
+
+    /**添加设备的传感器**/
+    void addSensorByData(DeviceSensorList deviceSensorList,String machineserial);
+
+    /**删除设备的传感器**/
+    void delSensorByData(DeviceSensorList deviceSensorList,String machineserial);
+
+
 }

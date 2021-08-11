@@ -208,6 +208,17 @@
      }
 </style>
 
+<div class="site-text" style="margin: 5%; display: none" id="devicechangewindow" target="test123">
+        <div class="layui-form-item">
+            <label class="layui-form-label">迁移至</label>
+            <div class="layui-input-block">
+                <div id="companylist" class="xm-select-project" style="width: auto" ></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
 <!--//关联设备弹窗-->
 <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
     <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
@@ -223,7 +234,7 @@
                 <input type="text" class="layui-input" name="SN" id="SN2" placeholder=" 请输入设备sn号 " dis>
             </div>
             <div class="layui-inline">
-                <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
+                <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
                         id="datasumbit2" lay-filter="LAY-app-contlist-search">
                     <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
                 </button>
@@ -269,8 +280,8 @@
 <!--        </div>-->
         <div class="layui-form-item" >
             <div class="layui-input-block">
-                <button  class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
-                <button  type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button type="button" class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
+                <button  type="reset" class="layui-btn ">取消</button>
             </div>
         </div>
     </form>
@@ -352,24 +363,25 @@
                             <select id="stats" name="stats" lay-verify="" lay-filter="stats">
                                 <option value="1">在线</option>
                                 <option value="0">离线</option>
+                                <option value="3">全部</option>
                             </select>
                         </div>
                         <div class="layui-inline">
                             <input type="text" class="layui-input" name="SN" id="SN" placeholder=" 请输入设备sn号 ">
                         </div>
                         <div class="layui-inline">
-                            <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
+                            <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
                                     id="datasumbit" lay-filter="LAY-app-contlist-search">
                                 <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
                             </button>
                         </div>
                         <div class="layui-inline">
-                            <div id="addequip" >
-                                <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
-                                        id="selectall" lay-filter="LAY-app-contlist-search">
-                                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询全部</i>
-                                </button>
-                            </div>
+<!--                            <div id="addequip" >-->
+<!--                                <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"-->
+<!--                                        id="selectall" lay-filter="LAY-app-contlist-search">-->
+<!--                                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询全部</i>-->
+<!--                                </button>-->
+<!--                            </div>-->
 
                         </div>
                         <div class="layui-inline">

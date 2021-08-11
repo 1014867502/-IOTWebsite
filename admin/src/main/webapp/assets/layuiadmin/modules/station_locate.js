@@ -12,10 +12,20 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var locatedata;
     var fourhidepara;
     var basehidepara;
+    var layerindex;
+
+    $("#reset").click(function () {
+        getDeviceSetting(machinesn);
+    })
+
+    $("#savemodel").click(function () {
+        saveModel();
+        addModel();
+    })
 
     form.on('switch(coordcvt_enable)', function (data) {
         if (this.checked) {
-            document.getElementById("locate_content").innerHTML =locatecontent;
+            document.getElementById("locate_content").innerHTML = locatecontent;
         } else {
             document.getElementById("locate_content").innerHTML = "";
         }
@@ -35,7 +45,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     form.on('switch(coordcvt_four_use)', function (data) {
         if (this.checked) {
-            document.getElementById("four_use").innerHTML =four_use;
+            document.getElementById("four_use").innerHTML = four_use;
         } else {
             document.getElementById("four_use").innerHTML = "";
         }
@@ -43,32 +53,160 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         form.render();
     })
 
-    form.on('submit(formDemo)',function (data) {
-        let test=data.field;
-        let jsondata={};
-        let dstturn=(test.coordcvt_enable!="on")?0:1;
-        let seventurn=(test.coordcvt_seven_use!="on")?0:1;
-        let fourturn=(test.coordcvt_four_use!="on")?0:1;
-        jsondata.coordcvtEnabled=dstturn;
-        jsondata.coordcvtDstDatum=test.coordcvt_dst_datum_select+"|"+test.coordvt_dst_datum_da+"|"+test.coordvt_dst_datum_df;
-        jsondata.coordcvtProjParam=test.corrdcvt_proj_mode_select+"|"+test.coordvt_proj_centralmeridian+"|"+test.coordvt_proj_scale+"|"+test.coordvt_proj_north+
-            "|"+test.coordvt_proj_east+"|"+test.coordvt_proj_height+"|"+test.coordvt_proj_lat+basehidepara;
-        jsondata.coordcvtSevenParam=seventurn+"|"+test.coordcvt_seven_tx+"|"+test.coordcvt_seven_ty+"|"+test.coordcvt_seven_tz+"|"+
-            test.coordcvt_seven_rx+"|"+test.coordcvt_seven_ry+"|"+test.coordcvt_seven_rz+"|"+test.coordcvt_seven_scale;
-        jsondata.coordcvtFourParam=fourturn+"|"+test.coordcvt_four_tx+"|"+test.coordvt_four_ty+"|"+test.coordvt_four_rt+"|"+test.coordvt_four_scale+fourhidepara;
-        let stringtest=JSON.stringify(jsondata);
+    form.on('select(datumselect)', function (data) {
+        switch (data.value) {
+            case "WGS84":
+                $("#coordvt_dst_datum_da").val("6378137");
+                $("#coordvt_dst_datum_df").val("298.257223563");
+                break;
+            case "北京54":
+                $("#coordvt_dst_datum_da").val("6378245");
+                $("#coordvt_dst_datum_df").val("298.3");
+                break;
+            case "XIAN80":
+                $("#coordvt_dst_datum_da").val("6378140");
+                $("#coordvt_dst_datum_df").val("298.257");
+                break;
+            case "CGCS2000":
+                $("#coordvt_dst_datum_da").val("6378137");
+                $("#coordvt_dst_datum_df").val("298.257222101");
+                break;
+            case "CUSTOM":
+                $("#coordvt_dst_datum_da").val("");
+                $("#coordvt_dst_datum_df").val("")
+                break;
+        }
+
+    })
+
+    form.on('submit(formDemo)', function (data) {
+        let test = data.field;
+        let jsondata = datatranform(test);
+        let stringtest = JSON.stringify(jsondata);
         $.ajax({
-            url:'/devicelist/editSetting',
-            data:{
-                setting:stringtest,
-                machinesn:machinesn
+            url: '/devicelist/editSetting',
+            data: {
+                setting: stringtest,
+                machinesn: machinesn
             },
-            success:function (data) {
+            success: function (data) {
                 getDeviceSetting(machinesn);
                 alert(data.data);
             }
         })
     })
+
+    form.on('select(modeselect)',function (data) {
+        switch(data.value){
+            case "0":
+                document.getElementById("projnorth").innerHTML=projnorth;
+                document.getElementById("projeast").innerHTML=projeast;
+                document.getElementById("projscale").innerHTML=projscale;
+                document.getElementById("projlat").innerHTML=projlat;
+                document.getElementById("projheight").innerHTML=projheight;
+                break;
+            case "1":
+                document.getElementById("projnorth").innerHTML="";
+                document.getElementById("projeast").innerHTML="";
+                document.getElementById("projscale").innerHTML="";
+                document.getElementById("projlat").innerHTML="";
+                document.getElementById("projheight").innerHTML="";
+                break;
+            case "2":
+                document.getElementById("projnorth").innerHTML=projnorth;
+                document.getElementById("projeast").innerHTML=projeast;
+                document.getElementById("projscale").innerHTML=projscale;
+                document.getElementById("projlat").innerHTML=projlat;
+                document.getElementById("projheight").innerHTML=projheight;
+                break;
+            case "3":
+                document.getElementById("projnorth").innerHTML=projnorth;
+                document.getElementById("projeast").innerHTML=projeast;
+                document.getElementById("projscale").innerHTML=projscale;
+                document.getElementById("projlat").innerHTML=projlat;
+                document.getElementById("projheight").innerHTML="";
+                break;
+            case "4":
+                document.getElementById("projnorth").innerHTML=projnorth;
+                document.getElementById("projeast").innerHTML=projeast;
+                document.getElementById("projscale").innerHTML=projscale;
+                document.getElementById("projlat").innerHTML=projlat;
+                document.getElementById("projheight").innerHTML="";
+                break;
+        }
+        if (locatedata.coordcvtProjParam != null) {
+            let coordvt_proj = locatedata.coordcvtProjParam.split('|');
+            $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
+            $("#coordvt_proj_centralmeridian").val(coordvt_proj[1]);
+            $("#coordvt_proj_scale").val(coordvt_proj[2]);
+            $("#coordvt_proj_north").val(coordvt_proj[3]);
+            $("#coordvt_proj_east").val(coordvt_proj[4]);
+            $("#coordvt_proj_height").val(coordvt_proj[5]);
+            $("#coordvt_proj_lat").val(coordvt_proj[6]);
+        }
+    })
+
+    //提交模板
+    form.on('submit(example)',function () {
+        debugger
+        let setting=parent.testmodel
+        let jsondata=setting.compute.substring(0,setting.compute.length-1)+","+setting.locate.substring(1,setting.locate.length-1)+","
+            +setting.plaform.substring(1,setting.plaform.length-1)+setting.auxiliary.substring(1,setting.auxiliary.length);
+        let data1 = form.val("example");
+        $.ajax({
+            url:'/template/addTemplate',
+            data:{
+                json:jsondata,
+                machinesn:machinesn,
+                templatename:data1.templatename,
+                type:"2"
+            },
+            async:false,
+            success:function () {
+                layer.msg("提交成功");
+            }
+        })
+        layer.close(layerindex);
+    })
+
+    /**添加模组**/
+    function addModel(){
+        layer.open({
+            type: 1
+            ,id: 'layerDemo' //防止重复弹出
+            , title: ['保存模板']
+            ,offset: '500px'
+            , area: ['300px', '300px']
+            , content: $("#window")
+            , success: function (layero, index) {
+                layerindex=index;
+            },
+        });
+    }
+
+    /**保存模组**/
+    function saveModel(){
+        debugger
+        let data1 = form.val("formDemo");
+        let jsondata=datatranform(data1);
+        parent.testmodel.locate= JSON.stringify(jsondata);
+    }
+
+    //将表格数据转化成类
+    function datatranform(test){
+        let jsondata={};
+        let dstturn = (test.coordcvt_enable != "on") ? 0 : 1;
+        let seventurn = (test.coordcvt_seven_use != "on") ? 0 : 1;
+        let fourturn = (test.coordcvt_four_use != "on") ? 0 : 1;
+        jsondata.coordcvtEnabled = dstturn;
+        jsondata.coordcvtDstDatum = test.coordcvt_dst_datum_select + "|" + test.coordvt_dst_datum_da + "|" + test.coordvt_dst_datum_df;
+        jsondata.coordcvtProjParam = test.corrdcvt_proj_mode_select + "|" + test.coordvt_proj_centralmeridian + "|" + test.coordvt_proj_scale + "|" + test.coordvt_proj_north +
+            "|" + test.coordvt_proj_east + "|" + test.coordvt_proj_height + "|" + test.coordvt_proj_lat + basehidepara;
+        jsondata.coordcvtSevenParam = seventurn + "|" + test.coordcvt_seven_tx + "|" + test.coordcvt_seven_ty + "|" + test.coordcvt_seven_tz + "|" +
+            test.coordcvt_seven_rx + "|" + test.coordcvt_seven_ry + "|" + test.coordcvt_seven_rz + "|" + test.coordcvt_seven_scale;
+        jsondata.coordcvtFourParam = fourturn + "|" + test.coordcvt_four_tx + "|" + test.coordvt_four_ty + "|" + test.coordvt_four_rt + "|" + test.coordvt_four_scale + fourhidepara;
+        return jsondata;
+    }
 
     /*初始化*/
     function getDeviceSetting(sn) {
@@ -78,62 +216,70 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 machineSerial: sn
             },
             success: function (data) {
-                device = data.data;
-                locatedata=device;
-                if(device.coordcvtEnabled>0){
-                    $("#coordcvt_enable").prop('checked',true);
-                    document.getElementById("locate_content").innerHTML =locatecontent;
-                }else{
-                    $("#coordcvt_enable").prop('checked',false);
+                let device = data.data;
+                locatedata = device;
+                if (device.coordcvtEnabled > 0) {
+                    $("#coordcvt_enable").prop('checked', true);
+                    document.getElementById("locate_content").innerHTML = locatecontent;
+                } else {
+                    $("#coordcvt_enable").prop('checked', false);
+                    document.getElementById("locate_content").innerHTML = "";
                 }
-                let coordcvt_dst=device.coordcvtDstDatum.split('|');
-                $("#coordcvt_dst_datum_select").val(coordcvt_dst[0]);
-                $("#coordvt_dst_datum_da").val(coordcvt_dst[1]);
-                $("#coordvt_dst_datum_df").val(coordcvt_dst[2]);
+                if (device.coordcvtDstDatum != null) {
+                    let coordcvt_dst = device.coordcvtDstDatum.split('|');
+                    $("#coordcvt_dst_datum_select").val(coordcvt_dst[0]);
+                    $("#coordvt_dst_datum_da").val(coordcvt_dst[1]);
+                    $("#coordvt_dst_datum_df").val(coordcvt_dst[2]);
+                }
+
 
                 /*投影参数*/
-                let coordvt_proj=device.coordcvtProjParam.split('|');
-                $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
-                $("#coordvt_proj_centralmeridian").val(coordvt_proj[1]);
-                $("#coordvt_proj_scale").val(coordvt_proj[2]);
-                $("#coordvt_proj_north").val(coordvt_proj[3]);
-                $("#coordvt_proj_east").val(coordvt_proj[4]);
-                $("#coordvt_proj_height").val(coordvt_proj[5]);
-                $("#coordvt_proj_lat").val(coordvt_proj[6]);
-                basehidepara="|"+coordvt_proj[7]+"|"+coordvt_proj[8]+"|"+coordvt_proj[9];
-
+                if (device.coordcvtProjParam != null) {
+                    let coordvt_proj = device.coordcvtProjParam.split('|');
+                    $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
+                    $("#coordvt_proj_centralmeridian").val(coordvt_proj[1]);
+                    $("#coordvt_proj_scale").val(coordvt_proj[2]);
+                    $("#coordvt_proj_north").val(coordvt_proj[3]);
+                    $("#coordvt_proj_east").val(coordvt_proj[4]);
+                    $("#coordvt_proj_height").val(coordvt_proj[5]);
+                    $("#coordvt_proj_lat").val(coordvt_proj[6]);
+                    basehidepara = "|" + coordvt_proj[7] + "|" + coordvt_proj[8] + "|" + coordvt_proj[9];
+                }
 
                 /*七参数*/
-                let coordvt_seven=device.coordcvtSevenParam.split('|');
-                if(coordvt_seven[0]>0){
-                    $("#coordcvt_seven_use").prop('checked',true);
-                    document.getElementById("seven_use").innerHTML =seven_use;
-                }else{
-                    $("#coordcvt_seven_use").prop('checked',false);
+                if (device.coordcvtSevenParam != null) {
+                    let coordvt_seven = device.coordcvtSevenParam.split('|');
+                    if (coordvt_seven[0] > 0) {
+                        $("#coordcvt_seven_use").prop('checked', true);
+                        document.getElementById("seven_use").innerHTML = seven_use;
+                    } else {
+                        $("#coordcvt_seven_use").prop('checked', false);
+                    }
+                    $("#coordcvt_seven_tx").val(coordvt_seven[1]);
+                    $("#coordcvt_seven_ty").val(coordvt_seven[2]);
+                    $("#coordcvt_seven_tz").val(coordvt_seven[3]);
+                    $("#coordcvt_seven_rx").val(coordvt_seven[4]);
+                    $("#coordcvt_sevent_ry").val(coordvt_seven[5]);
+                    $("#coordcvt_seven_rz").val(coordvt_seven[6]);
+                    $("#coordcvt_seven_scale").val(coordvt_seven[7]);
                 }
-                $("#coordcvt_seven_tx").val(coordvt_seven[1]);
-                $("#coordcvt_seven_ty").val(coordvt_seven[2]);
-                $("#coordcvt_seven_tz").val(coordvt_seven[3]);
-                $("#coordcvt_seven_rx").val(coordvt_seven[4]);
-                $("#coordcvt_sevent_ry").val(coordvt_seven[5]);
-                $("#coordcvt_seven_rz").val(coordvt_seven[6]);
-                $("#coordcvt_seven_scale").val(coordvt_seven[7]);
-
 
                 /*四参数*/
-                let coordvt_four=device.coordcvtFourParam.split('|');
-                if(coordvt_four[0]>0){
-                    $("#coordcvt_four_use").prop('checked',true);
-                    document.getElementById("four_use").innerHTML =four_use;
-                }else{
-                    $("#coordcvt_four_use").prop('checked',false);
+                if (device.coordcvtFourParam != null) {
+                    let coordvt_four = device.coordcvtFourParam.split('|');
+                    if (coordvt_four[0] > 0) {
+                        $("#coordcvt_four_use").prop('checked', true);
+                        document.getElementById("four_use").innerHTML = four_use;
+                    } else {
+                        $("#coordcvt_four_use").prop('checked', false);
+                    }
+                    $("#coordcvt_four_tx").val(coordvt_four[1]);
+                    $("#coordcvt_four_ty").val(coordvt_four[2]);
+                    $("#coordcvt_four_rotate").val(coordvt_four[3]);
+                    $("#coordcvt_four_scale").val(coordvt_four[4]);
+                    fourhidepara = "|" + coordvt_four[5] + "|" + coordvt_four[6];
                 }
-                $("#coordcvt_four_tx").val(coordvt_four[1]);
-                $("#coordcvt_four_ty").val(coordvt_four[2]);
-                $("#coordcvt_four_rotate").val(coordvt_four[3]);
-                $("#coordcvt_four_scale").val(coordvt_four[4]);
-                fourhidepara="|"+coordvt_four[5]+"|"+coordvt_four[6];
-
+                saveModel();
                 form.render();
             }
         })
@@ -141,46 +287,89 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     /*局部刷新*/
     function flushdata(type) {
-        switch(type){
+        switch (type) {
             case "base":
-                let coordcvt_dst=locatedata.coordcvtDstDatum.split('|');
-                $("#coordcvt_dst_datum_select").val(coordcvt_dst[0]);
-                $("#coordvt_dst_datum_da").val(coordcvt_dst[1]);
-                $("#coordvt_dst_datum_df").val(coordcvt_dst[2]);
+                if (locatedata.coordcvtDstDatum != null) {
+                    let coordcvt_dst = locatedata.coordcvtDstDatum.split('|');
+                    $("#coordcvt_dst_datum_select").val(coordcvt_dst[0]);
+                    $("#coordvt_dst_datum_da").val(coordcvt_dst[1]);
+                    $("#coordvt_dst_datum_df").val(coordcvt_dst[2]);
+                }
 
                 /*投影参数*/
-                let coordvt_proj=locatedata.coordcvtProjParam.split('|');
-                $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
-                $("#coordvt_proj_centralmeridian").val(coordvt_proj[1]);
-                $("#coordvt_proj_scale").val(coordvt_proj[2]);
-                $("#coordvt_proj_north").val(coordvt_proj[3]);
-                $("#coordvt_proj_east").val(coordvt_proj[4]);
-                $("#coordvt_proj_height").val(coordvt_proj[5]);
-                $("#coordvt_proj_lat").val(coordvt_proj[6]);
+                if (locatedata.coordcvtProjParam != null) {
+                    let coordvt_proj = locatedata.coordcvtProjParam.split('|');
+                    $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
+                    $("#coordvt_proj_centralmeridian").val(coordvt_proj[1]);
+                    $("#coordvt_proj_scale").val(coordvt_proj[2]);
+                    $("#coordvt_proj_north").val(coordvt_proj[3]);
+                    $("#coordvt_proj_east").val(coordvt_proj[4]);
+                    $("#coordvt_proj_height").val(coordvt_proj[5]);
+                    $("#coordvt_proj_lat").val(coordvt_proj[6]);
+                }
 
                 break;
             case "seven":
-                let coordvt_seven=locatedata.coordcvtSevenParam.split('|');
-                $("#coordcvt_seven_tx").val(coordvt_seven[1]);
-                $("#coordcvt_seven_ty").val(coordvt_seven[2]);
-                $("#coordcvt_seven_tz").val(coordvt_seven[3]);
-                $("#coordcvt_seven_rx").val(coordvt_seven[4]);
-                $("#coordcvt_sevent_ry").val(coordvt_seven[5]);
-                $("#coordcvt_seven_rz").val(coordvt_seven[6]);
-                $("#coordcvt_seven_scale").val(coordvt_seven[7]);
+                if (locatedata.coordcvtSevenParam != null) {
+                    let coordvt_seven = locatedata.coordcvtSevenParam.split('|');
+                    $("#coordcvt_seven_tx").val(coordvt_seven[1]);
+                    $("#coordcvt_seven_ty").val(coordvt_seven[2]);
+                    $("#coordcvt_seven_tz").val(coordvt_seven[3]);
+                    $("#coordcvt_seven_rx").val(coordvt_seven[4]);
+                    $("#coordcvt_sevent_ry").val(coordvt_seven[5]);
+                    $("#coordcvt_seven_rz").val(coordvt_seven[6]);
+                    $("#coordcvt_seven_scale").val(coordvt_seven[7]);
+                }
                 break;
             case "four":
-                let coordvt_four=locatedata.coordcvtFourParam.split('|');
-                $("#coordcvt_four_tx").val(coordvt_four[1]);
-                $("#coordcvt_four_ty").val(coordvt_four[2]);
-                $("#coordcvt_four_rotate").val(coordvt_four[3]);
-                $("#coordcvt_four_scale").val(coordvt_four[4]);
+                if (locatedata.coordcvtFourParam != null) {
+                    let coordvt_four = locatedata.coordcvtFourParam.split('|');
+                    $("#coordcvt_four_tx").val(coordvt_four[1]);
+                    $("#coordcvt_four_ty").val(coordvt_four[2]);
+                    $("#coordcvt_four_rotate").val(coordvt_four[3]);
+                    $("#coordcvt_four_scale").val(coordvt_four[4]);
+                }
                 break;
         }
 
     }
 
-    var locatecontent="   <div class=\"layui-card-body\" style=\"padding: 0px 15px\">\n" +
+    var projnorth="<label class=\"layui-form-label  \">北加常数</label>\n" +
+        "                                <div class=\"layui-input-block\">\n" +
+        "                                    <input id='coordvt_proj_north' type=\"text\" name=\"coordvt_proj_north\" required lay-verify=\"required\"\n" +
+        "                                           placeholder=\"请输入北加常数\"\n" +
+        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+        "                                </div>\n";
+
+    var projeast="<label class=\"layui-form-label  \">东加常数</label>\n" +
+        "                                <div class=\"layui-input-block\">\n" +
+        "                                    <input id='coordvt_proj_east' type=\"text\" name=\"coordvt_proj_east\" required lay-verify=\"required\"\n" +
+        "                                           placeholder=\"请输入东加常数\"\n" +
+        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+        "                                </div>\n";
+
+    var projlat="<label class=\"layui-form-label  \">基准纬度</label>\n" +
+        "                                <div class=\"layui-input-block\">\n" +
+        "                                    <input id='coordvt_proj_lat' type=\"text\" name=\"coordvt_proj_lat\" required lay-verify=\"required\"\n" +
+        "                                           placeholder=\"请输入基准纬度\"\n" +
+        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+        "                                </div>\n";
+
+    var projheight="<label class=\"layui-form-label  \">投影高</label>\n" +
+        "                                <div class=\"layui-input-block\">\n" +
+        "                                    <input id='coordvt_proj_height' type=\"text\" name=\"coordvt_proj_height\" required lay-verify=\"required\"\n" +
+        "                                           placeholder=\"请输入投影高\"\n" +
+        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+        "                                </div>\n";
+
+    var projscale="<label class=\"layui-form-label  \">投影比例尺</label>\n" +
+        "                                <div class=\"layui-input-block\">\n" +
+        "                                    <input id='coordvt_proj_scale' type=\"text\" name=\"coordvt_proj_scale\" required lay-verify=\"required\"\n" +
+        "                                           placeholder=\"请输入比例尺\"\n" +
+        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+        "                                </div>\n"
+
+    var locatecontent = "   <div class=\"layui-card-body\" style=\"padding: 0px 15px\">\n" +
         "                    <div class=\"layui-form-item\">\n" +
         "                        <div style=\"display: flex;margin-top: 30px\">\n" +
         "                            <div class=\"circle\"></div>\n" +
@@ -190,7 +379,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">椭球名称</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <select id=\"coordcvt_dst_datum_select\" name=\"coordcvt_dst_datum_select\" lay-verify=\"required\">\n" +
+        "                                    <select id=\"coordcvt_dst_datum_select\" lay-filter='datumselect' name=\"coordcvt_dst_datum_select\" lay-verify=\"required\">\n" +
         "                                        <option value=\"WGS84\">WGS84</option>\n" +
         "                                        <option value=\"北京54\">北京54</option>\n" +
         "                                        <option value=\"XIAN80\">西安80</option>\n" +
@@ -226,7 +415,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">投影方式</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <select id=\"corrdcvt_proj_mode_select\" name=\"corrdcvt_proj_mode_select\" lay-verify=\"required\">\n" +
+        "                                    <select id=\"corrdcvt_proj_mode_select\" name=\"corrdcvt_proj_mode_select\" lay-filter='modeselect' lay-verify=\"required\">\n" +
         "                                        <option value=\"0\">高斯</option>\n" +
         "                                        <option value=\"1\">UTM</option>\n" +
         "                                        <option value=\"2\">横轴墨卡托</option>\n" +
@@ -243,7 +432,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
         "                            </div>\n" +
-        "                            <div class=\"layui-form-item  fastinput\">\n" +
+        "                            <div id='projnorth' class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">北加常数</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <input id='coordvt_proj_north' type=\"text\" name=\"coordvt_proj_north\" required lay-verify=\"required\"\n" +
@@ -253,7 +442,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            </div>\n" +
         "                        </div>\n" +
         "                        <div style=\"display: flex;margin-top: 30px\">\n" +
-        "                            <div class=\"layui-form-item  fastinput\">\n" +
+        "                            <div id='projeast' class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">东加常数</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <input id='coordvt_proj_east' type=\"text\" name=\"coordvt_proj_east\" required lay-verify=\"required\"\n" +
@@ -261,7 +450,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
         "                            </div>\n" +
-        "                            <div class=\"layui-form-item  fastinput\">\n" +
+        "                            <div id='projscale' class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">投影比例尺</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <input id='coordvt_proj_scale' type=\"text\" name=\"coordvt_proj_scale\" required lay-verify=\"required\"\n" +
@@ -269,21 +458,21 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
         "                            </div>\n" +
-        "                            <div class=\"layui-form-item  fastinput\">\n" +
-        "                                <label class=\"layui-form-label  \">投影高</label>\n" +
+        "                            <div id='projlat' class=\"layui-form-item  fastinput\">\n" +
+        "                               <label class=\"layui-form-label  \">基准纬度</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_height' type=\"text\" name=\"coordvt_proj_height\" required lay-verify=\"required\"\n" +
-        "                                           placeholder=\"请输入投影高\"\n" +
+        "                                    <input id='coordvt_proj_lat' type=\"text\" name=\"coordvt_proj_lat\" required lay-verify=\"required\"\n" +
+        "                                           placeholder=\"请输入基准纬度\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
         "                            </div>\n" +
         "                        </div>\n" +
         "                        <div style=\"display: flex;margin-top: 30px\">\n" +
-        "                            <div class=\"layui-form-item  fastinput\">\n" +
-        "                                <label class=\"layui-form-label  \">基准纬度</label>\n" +
+        "                            <div id='projheight' class=\"layui-form-item  fastinput\">\n" +
+        "                               <label class=\"layui-form-label  \">投影高</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_lat' type=\"text\" name=\"coordvt_proj_lat\" required lay-verify=\"required\"\n" +
-        "                                           placeholder=\"请输入基准纬度\"\n" +
+        "                                    <input id='coordvt_proj_height' type=\"text\" name=\"coordvt_proj_height\" required lay-verify=\"required\"\n" +
+        "                                           placeholder=\"请输入投影高\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
         "                            </div>\n" +
@@ -317,7 +506,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                    </div>\n" +
         "                </div>";
 
-    var seven_use=" <div style=\"display: flex;margin-top: 30px\">\n" +
+    var seven_use = " <div style=\"display: flex;margin-top: 30px\">\n" +
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">模型</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
@@ -388,7 +577,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            </div>\n" +
         "                        </div>";
 
-    var four_use= "  <div style=\"display: flex;margin-top: 30px\">\n" +
+    var four_use = "  <div style=\"display: flex;margin-top: 30px\">\n" +
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">x平移</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +

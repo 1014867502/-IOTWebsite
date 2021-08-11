@@ -9,6 +9,8 @@ import com.webmonitor.core.model.AgentData;
 import com.webmonitor.core.model.AgentDataDao;
 import com.webmonitor.core.model.ProDevCount;
 import com.webmonitor.core.model.StaffData;
+import com.webmonitor.core.model.userbase.DeviceSensorList;
+import com.webmonitor.core.model.userbase.Templates;
 import com.webmonitor.core.util.Tools;
 
 import java.text.DateFormat;
@@ -45,7 +47,8 @@ public class AgentDataMysqlDAL implements IAgentData {
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
     }
 
-    public Page<AgentData> searchDeviceByParam(String content,String[] projectid,String state,int pageno,int limit){
+    /**首页上的搜索框**/
+    public Page<AgentData> searchDeviceByParam(String type,String content,String agentnum,String[] projectid,String state,int pageno,int limit){
         String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where ";
         String test="";
         switch(state){
@@ -67,7 +70,7 @@ public class AgentDataMysqlDAL implements IAgentData {
                 sql=sql+" c.agentName like '%"+content+"%'";
                 break;
         }
-        if(projectid.length > 0&&(!projectid[0].equals("all"))){
+        if(projectid[0]!=null&&(!projectid[0].equals("all"))){
             if(projectid.length>1){
                 test=" and (a.proGroupid="+projectid[0];
                 for(int k=0;k<projectid.length;k++){
@@ -79,6 +82,9 @@ public class AgentDataMysqlDAL implements IAgentData {
                 sql=sql+" and a.proGroupid="+projectid[0];
             }
         }
+        if(type.equals("1")){
+            sql=sql+" and a.agentNumber="+agentnum;
+        }
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
@@ -95,7 +101,7 @@ public class AgentDataMysqlDAL implements IAgentData {
             map.setAgentNumber(record.getStr("agentNumber"));
             map.setCreateTime(Tools.toDate(record.getStr("createTime").replace('/','-')));
             if(record.getInt("proGroupId")==null){
-                map.setProgroupid(-1);
+                map.setProgroupid(0);
             }else{
                 map.setProgroupid(record.getInt("proGroupId"));
             }
@@ -107,30 +113,28 @@ public class AgentDataMysqlDAL implements IAgentData {
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
     }
 
-    @Override
-    public Page<AgentData> findDeviceByParam(String content, String agentnum, String projectid, String state, int pageno, int limit) {
-        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where ";
+
+    /**公司详情页上的搜索框**/
+    public Page<AgentData> searchDeviceByCom(String content,String agentnum,String state,int pageno,int limit){
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.agentNumber="+agentnum;
+        String test="";
         switch(state){
             case "0"://离线
                 if(!content.isEmpty()){
-                    sql=sql+"(b.connectState=0 or b.connectState is null) and a.machineSerial like '%"+content+"%'";
+                    sql=sql+" and (b.connectState=0 or b.connectState is null) and a.machineSerial like '%"+content+"%'";
                 }else{
-                    sql=sql+"(b.connectState=0 or b.connectState is null)";
+                    sql=sql+" and (b.connectState=0 or b.connectState is null)";
                 }
                 break;
             case "1"://在线
                 if(!content.isEmpty()){
-                    sql=sql+"b.connectState=1 and a.machineSerial like '%"+content+"%'";
+                    sql=sql+" and b.connectState=1 and a.machineSerial like '%"+content+"%'";
                 }else{
-                    sql=sql+"b.connectState=1";
+                    sql=sql+" and b.connectState=1";
                 }
                 break;
-            case "2"://公司
-                sql=sql+" c.agentName like '%"+content+"%'";
+            case "2"://全部
                 break;
-        }
-        if(projectid!=null&&!projectid.isEmpty()){
-                sql=sql+" and a.proGroupid="+projectid;
         }
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
         List<Record> recordList = page.getList();
@@ -148,7 +152,59 @@ public class AgentDataMysqlDAL implements IAgentData {
             map.setAgentNumber(record.getStr("agentNumber"));
             map.setCreateTime(Tools.toDate(record.getStr("createTime").replace('/','-')));
             if(record.getInt("proGroupId")==null){
-                map.setProgroupid(-1);
+                map.setProgroupid(0);
+            }else{
+                map.setProgroupid(record.getInt("proGroupId"));
+            }
+            map.setMachineSerial(record.getStr("machineSerial"));
+            map.setMachineName(record.getStr("machineName"));
+            map.setAgentName(record.getStr("agentName"));
+            rslist.add(map);
+        }
+        return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+    }
+
+
+
+
+    @Override
+    public Page<AgentData> findDeviceByParam(String content, String agentnum, String projectid, String state, int pageno, int limit) {
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.proGroupid="+projectid;
+        switch(state){
+            case "0"://离线
+                if(!content.isEmpty()){
+                    sql=sql+" and (b.connectState=0 or b.connectState is null) and a.machineSerial like '%"+content+"%'";
+                }else{
+                    sql=sql+" and (b.connectState=0 or b.connectState is null)";
+                }
+                break;
+            case "1"://在线
+                if(!content.isEmpty()){
+                    sql=sql+" and b.connectState=1 and a.machineSerial like '%"+content+"%'";
+                }else{
+                    sql=sql+" and b.connectState=1";
+                }
+                break;
+            case "2"://全部
+                break;
+        }
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
+        List<Record> recordList = page.getList();
+        List<AgentData> rslist = new ArrayList<>();
+        for (Record record : recordList) {
+            AgentData map = new AgentData();
+            int state1=0;
+            String connect="";
+            if(record.getStr("connectState")!=null&&!record.getStr("connectState").equals("")){
+                connect=record.getStr("connectState");
+                state1=Integer.parseInt(connect);
+            }
+            map.setOnlineState(state1);
+            map.setId(record.getInt("id"));
+            map.setAgentNumber(record.getStr("agentNumber"));
+            map.setCreateTime(Tools.toDate(record.getStr("createTime").replace('/','-')));
+            if(record.getInt("proGroupId")==null){
+                map.setProgroupid(0);
             }else{
                 map.setProgroupid(record.getInt("proGroupId"));
             }
@@ -180,7 +236,7 @@ public class AgentDataMysqlDAL implements IAgentData {
             map.setAgentNumber(record.getStr("agentNumber"));
             map.setCreateTime(Tools.toDate(record.getStr("createTime").replace('/','-')));
             if(record.getInt("proGroupId")==null){
-                map.setProgroupid(-1);
+                map.setProgroupid(0);
             }else{
                 map.setProgroupid(record.getInt("proGroupId"));
             }
@@ -342,16 +398,20 @@ public class AgentDataMysqlDAL implements IAgentData {
 
     @Override
     public void deleteDeviceBySerial(String sn) {
-        Db.update("update agent_data set proGroupId = null where machineSerial=?",sn);
+        Db.update("update agent_data set proGroupId = 0 where machineSerial=?",sn);
     }
 
     public void reductionDeviceBySerial(String sn){
-        Db.update("update agent_data set proGroupId = null,agentNumber=1 where machineSerial=?",sn);
+        Db.update("update agent_data set proGroupId = 0,agentNumber=1 where machineSerial=?",sn);
     }
 
     @Override
     public void insertDeviceById(String projectid, String sn) {
         Db.update("update agent_data set proGroupId = ? where machineSerial=?",projectid,sn);
+    }
+
+    public void updateDeivceAgentBySerial(String sn,String agentnum){
+        Db.update("update agent_data set agentNumber=?,proGroupId=0 where machineSerial=?",agentnum,sn);
     }
 
     @Override
@@ -367,7 +427,7 @@ public class AgentDataMysqlDAL implements IAgentData {
         DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
         String time=format.format(date);
         Record device=new Record().set("machineSerial",sn).set("machineName",machinename).set("onlineState",Integer.parseInt(state))
-                .set("agentNumber",comid).set("createTime",time);
+                .set("agentNumber",comid).set("createTime",time).set("proGroupId",0);
         Db.save("agent_data",device);
     }
 
@@ -414,6 +474,62 @@ public class AgentDataMysqlDAL implements IAgentData {
         return proDevCount;
     }
 
+    /**获取传感器列表中的传感器**/
+    @Override
+    public Page<DeviceSensorList> getDeivceSensorList(String machineserial,int pageno,int limit) {
+        String sql="select extSensorCmd from machine_data where machineSerial='"+machineserial+"'";
+        List<DeviceSensorList> deviceSensorLists=new ArrayList<>();
+        try{
+            String result=Db.findFirst(sql).getStr("extSensorCmd");
+            if(result!=null&&!result.equals("")){
+                String[] list=result.split("\\|");
+                for(int i=0;i<list.length;i++){
+                    String[] sensor=list[i].split(";");
+                    DeviceSensorList deviceSensorList=new DeviceSensorList();
+                    deviceSensorList.setInterval(0<sensor.length?sensor[0]:"");
+                    deviceSensorList.setVoltage(1<sensor.length?sensor[1]:"");
+                    deviceSensorList.setBruad(2<sensor.length?sensor[2]:"");
+                    deviceSensorList.setSn(4<sensor.length?sensor[4]:"");
+                    deviceSensorList.setType(5<sensor.length?sensor[5]:"");
+                    deviceSensorList.setVender(6<sensor.length?sensor[6]:"");
+                    deviceSensorList.setCmd(3<sensor.length?sensor[3]:"");
+                    deviceSensorList.setRef(7<sensor.length?sensor[7]:"");
+                    deviceSensorLists.add(deviceSensorList);
+                }
+        }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return new Page<DeviceSensorList>(deviceSensorLists, pageno, limit,(deviceSensorLists.size()/ limit) + 1, deviceSensorLists.size());
+    }
+
+    /**添加传感器列表中的传感器**/
+    public void addSensorByData(DeviceSensorList deviceSensorList,String machineserial){
+        String add="";
+        String sql="select extSensorCmd from machine_data where machineSerial='"+machineserial+"'";
+        String str1=deviceSensorList.getInterval()+";"+deviceSensorList.getVoltage()+";"+deviceSensorList.getBruad()+";"+deviceSensorList.getCmd()+";"+deviceSensorList.getSn()+";"+deviceSensorList.getType()+";"+
+                deviceSensorList.getVender()+";"+deviceSensorList.getRef();
+        String result=Db.findFirst(sql).getStr("extSensorCmd");
+        if(result.equals("")){
+            add=str1;
+        }else{
+            add=result+"|"+str1;
+        }
+        Db.update("update machine_data set extSensorCmd = ? where machineSerial=?",add,machineserial);
+    }
+
+    /**删除传感器列表中的传感器**/
+    public void delSensorByData(DeviceSensorList deviceSensorList,String machineserial){
+        String sql="select extSensorCmd from machine_data where machineSerial='"+machineserial+"'";
+        String result=Db.findFirst(sql).getStr("extSensorCmd");
+        String str1=deviceSensorList.getInterval()+";"+deviceSensorList.getVoltage()+";"+deviceSensorList.getBruad()+";"+deviceSensorList.getCmd()+";"+deviceSensorList.getSn()+";"+deviceSensorList.getType()+";"+
+                deviceSensorList.getVender()+";"+deviceSensorList.getRef();
+        String afterdel=getSubString(result,str1);
+        Db.update("update machine_data set extSensorCmd = ? where machineSerial=?",afterdel,machineserial);
+    }
+
+
+
     @Override
     public ProDevCount getDeviceCountByUserid(String[] authoritys) {
         int sum=0;
@@ -433,7 +549,15 @@ public class AgentDataMysqlDAL implements IAgentData {
     }
 
 
-
-
-
+    public static String getSubString(String str1, String str2) {
+        StringBuffer sb = new StringBuffer(str1);
+            int index = sb.indexOf(str2);
+            int num=str1.split("\\|").length;
+            if(num>1){
+                sb.delete(index-1, index + str2.length());
+            }else{
+                sb.delete(index, index + str2.length());
+            }
+        return sb.toString();
+    }
 }

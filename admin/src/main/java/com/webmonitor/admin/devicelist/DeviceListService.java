@@ -11,6 +11,7 @@ import com.webmonitor.core.model.AgentData;
 import com.webmonitor.core.model.AgentDataDao;
 import com.webmonitor.core.model.MachineData;
 import com.webmonitor.core.model.MachineInfoEntity;
+import com.webmonitor.core.model.userbase.DeviceSensorList;
 import com.webmonitor.core.util.OrderConstants;
 import com.webmonitor.core.util.Tools;
 import net.sf.ehcache.search.expression.Or;
@@ -43,6 +44,11 @@ public class DeviceListService {
     /**添加关联设备**/
     public void insertDeviceById(String projectid,String sn){
         dal.insertDeviceById(projectid,sn);
+    }
+
+    /*修改设备归属*/
+    public void changeDeviceAgentBySerial(String sn,String agentnum){
+        dal.updateDeivceAgentBySerial(sn,agentnum);
     }
 
     /**删除关联设备**/
@@ -112,6 +118,21 @@ public class DeviceListService {
     public void addDevice(AgentData agentData){
         String state=String.valueOf(agentData.getOnlineState());
         dal.addDevice(agentData.getMachineSerial(),agentData.getAgentNumber(),state,agentData.getMachineName());
+    }
+
+    /**获取外接传感器列表**/
+    public Page<DeviceSensorList> getDeviceSensorList(String machineserial,int pageno,int limit){
+        return dal.getDeivceSensorList(machineserial,pageno,limit);
+    }
+
+    /**添加传感器**/
+    public void addSensorByData(DeviceSensorList deviceSensorList,String machineserial){
+        dal.addSensorByData(deviceSensorList,machineserial);
+    }
+
+    /**删除传感器**/
+    public void delSensorByData(DeviceSensorList deviceSensorList,String machineserial){
+        dal.delSensorByData(deviceSensorList,machineserial);
     }
 
     public static String getOrder(String order){

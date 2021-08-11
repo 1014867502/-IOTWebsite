@@ -29,7 +29,7 @@ public class CompanyAdminService {
                     if(!content.isEmpty()&&content!=null){
                         String sn1 = "%" + content + "%";
                         sql = " from agent_data" +
-                                " where proGroupId is null and machineSerial like '" + sn1 + "' and agentNumber="+agentnum;
+                                " where (proGroupId is null or proGroupId=0) and machineSerial like '" + sn1 + "' and agentNumber="+agentnum;
                     }else{
                         sql=" from agent_data where (proGroupId is null or proGroupId=0) and agentNumber="+agentnum;
                     }
@@ -38,7 +38,7 @@ public class CompanyAdminService {
                     if(!content.isEmpty()&&content!=null){
                         String sn1 = "%" + content + "%";
                         sql = " from agent_data" +
-                                " where proGroupId is null and agentName like '" + sn1 + "'and agentNumber="+agentnum;
+                                " where (proGroupId is null or proGroupId=0) and agentName like '" + sn1 + "'and agentNumber="+agentnum;
                     }else{
                         sql=" from agent_data where (proGroupId is null or proGroupId=0) and agentNumber="+agentnum;
                     }

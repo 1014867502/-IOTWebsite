@@ -114,7 +114,7 @@ public class CustomerService {
     }
 
     /**获取所有用户**/
-    public List<StaffDataEntity> getAllCustom(int pageno,int limit){
+    public Page<StaffDataEntity> getAllCustom(int pageno,int limit){
         return dal.getAllCustomByPage(pageno,limit);
     }
 
@@ -132,11 +132,14 @@ public class CustomerService {
 
     /**搜索用户**/
     public Page<StaffDataEntity> searchCustomByParam(String content,String agentnum,String roletype,int pageno,int limit){
-        return dal.searchCustomByParam(content, agentnum, roletype, pageno, limit);
+        return dal.searchCustomByParam(content,agentnum,roletype, pageno, limit);
     }
 
 
-
+    /**根据公司号查找用户**/
+    public Page<StaffDataEntity> getCustomByComId(String agentnum,int pageno,int limit){
+        return dal.getCustomByComId(agentnum, pageno, limit);
+    }
 
 
     /**--------------------------------------------------------------------------------**/

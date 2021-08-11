@@ -216,14 +216,13 @@
                 <select id="stats2" name="stats" lay-verify="" lay-filter="stats">
                     <option value="2">全部</option>
                     <option value="0">设备ID</option>
-                    <option value="1">设备名称</option>
                 </select>
             </div>
             <div class="layui-inline">
                 <input type="text" class="layui-input" name="SN" id="SN2" placeholder=" 请输入设备sn号 " dis>
             </div>
             <div class="layui-inline">
-                <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
+                <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
                         id="datasumbit2" lay-filter="LAY-app-contlist-search">
                     <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
                 </button>
@@ -302,6 +301,7 @@
                             <select id="stats" name="stats" lay-verify="" lay-filter="stats">
                                 <option value="1">在线</option>
                                 <option value="0">离线</option>
+                                <option value="2">全部</option>
                             </select>
                         </div>
                         <div class="layui-inline">

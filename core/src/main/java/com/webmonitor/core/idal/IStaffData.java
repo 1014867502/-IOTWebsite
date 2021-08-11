@@ -27,7 +27,7 @@ public interface IStaffData {
     List<StaffData> searchStaffData(String customname);
 
     /**获取用户列表**/
-    List<StaffDataEntity> getAllCustomByPage(int pageno,int limit);
+    Page<StaffDataEntity> getAllCustomByPage(int pageno,int limit);
 
     /**根据类别获取用户数量**/
     List<StaffDataEntity> getCountByType(String type);
@@ -37,6 +37,8 @@ public interface IStaffData {
 
     /**根据条件查询用户
      * @return**/
-    Page<StaffDataEntity> searchCustomByParam(String content, String agentnum, String roletype, int pageno, int limit);
+    Page<StaffDataEntity> searchCustomByParam(String content,String agentnum, String roletype, int pageno, int limit);
 
+     /**根据公司编号返回用户**/
+     Page<StaffDataEntity> getCustomByComId(String agentnum,int pageno,int limit);
 }

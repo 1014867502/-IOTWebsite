@@ -3,7 +3,56 @@ layui.define(['jquery','layer'],function (exports) {
     var layer=layui.layer;
     var mod_name="drawer";
     var obj={
-        render:(i)=>render(i),
+        render:function(e){
+            if(e.offset=="r"){
+                e.skin='layui-anim layui-anim-rl layui-layer-drawer';
+                if(!e.area)
+                    e.area=e.width?[e.width,'100%']:['300px','100%'];
+            }
+            else if(e.offset=="l"){
+                e.skin='layui-anim lyaui-anim-lr layui-layer-drawer';
+                if(!e.area)
+                    e.area=e.width?[e.width,'100%']:['300px','100%'];
+            }
+            else if(e.offset="t"){
+                e.skin='layui-anim layui-anim-down';
+                if(!e.area)
+                    e.area=e.height?['100%',e.height]:['100%','300px'];
+            }
+            else if(e.offset=="b"){
+                e.skin='layui-anim layui-anim-up';
+                if(!e.area){
+                    e.area=e.height?['100%',e.height]:['100%','300px'];
+                }
+            }
+            var success=e.success;
+            e.success=function (layero,index) {
+                if(e.top!=undefined)
+                    $(layero).css({top:e.top});
+                if(e.bottom!=undefined)
+                    $(layero).css({bottom:e.bottom});
+                success&&success(layero, index);
+            }
+            var end=e.end;
+            e.end=function () {
+                layer.closeAll("tips");
+                end&&end(layero, index);
+            };
+
+            layer.open($.extend({
+                type: 1
+                ,title: false //不显示标题栏
+                ,closeBtn: 1
+                ,area: '336px;'
+                ,anim:-1
+                ,shade: 0.8
+                ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                ,btnAlign: 'c'
+                ,isOutAnim:false
+                ,moveType: 1 //拖拽模式，0或者1
+                ,content: ''
+            },e));
+        }
     };
 
     $("body").append('<style type="text/css">\n' +
@@ -91,56 +140,56 @@ layui.define(['jquery','layer'],function (exports) {
         '        }\n' +
         '    }\n' +
         '</style>');
-
-    var render=function(e){
-        if(e.offset=="r"){
-            e.skin='layui-anim layui-anim-rl layui-layer-drawer';
-            if(!e.area)
-                e.area=e.width?[e.width,'100%']:['300px','100%'];
-        }
-        else if(e.offset=="l"){
-            e.skin='layui-anim lyaui-anim-lr layui-layer-drawer';
-            if(!e.area)
-                e.area=e.width?[e.width,'100%']:['300px','100%'];
-        }
-        else if(e.offset="t"){
-            e.skin='layui-anim layui-anim-down';
-            if(!e.area)
-                e.area=e.height?['100%',e.height]:['100%','300px'];
-        }
-        else if(e.offset=="b"){
-            e.skin='layui-anim layui-anim-up';
-            if(!e.area){
-                e.area=e.height?['100%',e.height]:['100%','300px'];
-            }
-        }
-        var success=e.success;
-        e.success=function (layero,index) {
-            if(e.top!=undefined)
-                $(layero).css({top:e.top});
-            if(e.bottom!=undefined)
-                $(layero).css({bottom:e.bottom});
-            success&&success(layero, index);
-        }
-        var end=e.end;
-        e.end=function () {
-            layer.closeAll("tips");
-            end&&end(layero, index);
-        };
-
-        layer.open($.extend({
-            type: 1
-            ,title: false //不显示标题栏
-            ,closeBtn: 1
-            ,area: '336px;'
-            ,anim:-1
-            ,shade: 0.8
-            ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
-            ,btnAlign: 'c'
-            ,isOutAnim:false
-            ,moveType: 1 //拖拽模式，0或者1
-            ,content: ''
-        },e));
-    }
+    //
+    // var render=function(e){
+    //     if(e.offset=="r"){
+    //         e.skin='layui-anim layui-anim-rl layui-layer-drawer';
+    //         if(!e.area)
+    //             e.area=e.width?[e.width,'100%']:['300px','100%'];
+    //     }
+    //     else if(e.offset=="l"){
+    //         e.skin='layui-anim lyaui-anim-lr layui-layer-drawer';
+    //         if(!e.area)
+    //             e.area=e.width?[e.width,'100%']:['300px','100%'];
+    //     }
+    //     else if(e.offset="t"){
+    //         e.skin='layui-anim layui-anim-down';
+    //         if(!e.area)
+    //             e.area=e.height?['100%',e.height]:['100%','300px'];
+    //     }
+    //     else if(e.offset=="b"){
+    //         e.skin='layui-anim layui-anim-up';
+    //         if(!e.area){
+    //             e.area=e.height?['100%',e.height]:['100%','300px'];
+    //         }
+    //     }
+    //     var success=e.success;
+    //     e.success=function (layero,index) {
+    //         if(e.top!=undefined)
+    //             $(layero).css({top:e.top});
+    //         if(e.bottom!=undefined)
+    //             $(layero).css({bottom:e.bottom});
+    //         success&&success(layero, index);
+    //     }
+    //     var end=e.end;
+    //     e.end=function () {
+    //         layer.closeAll("tips");
+    //         end&&end(layero, index);
+    //     };
+    //
+    //     layer.open($.extend({
+    //         type: 1
+    //         ,title: false //不显示标题栏
+    //         ,closeBtn: 1
+    //         ,area: '336px;'
+    //         ,anim:-1
+    //         ,shade: 0.8
+    //         ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+    //         ,btnAlign: 'c'
+    //         ,isOutAnim:false
+    //         ,moveType: 1 //拖拽模式，0或者1
+    //         ,content: ''
+    //     },e));
+    // }
     exports(mod_name,obj);
 });

@@ -24,11 +24,11 @@ public class AdminService {
         return AgentDataService.me.getDevCount();
     }
 
-    /**筛选设备**/
-    public Page<AgentData> searchDeviceByParam(String content,String[] projetcid,String state,int pageno,int limit){
-        Page<AgentData> page=AgentDataService.me.searchDeviceByParam(content, projetcid, state, pageno, limit);
-        return page;
-    }
+//    /**筛选设备**/
+//    public Page<AgentData> searchDeviceByParam(String content,String agentnum,String[] projetcid,String state,int pageno,int limit){
+//        Page<AgentData> page=AgentDataService.me.searchDeviceByParam(content,agentnum, projetcid, state, pageno, limit);
+//        return page;
+//    }
 
     /**检索未关联的设备**/
     public String searchOutDeviceByParam(String content, int pageno, int limit, String type){

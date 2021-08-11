@@ -40,6 +40,13 @@ public class ManagerController extends BaseController {
         render("companyprojects.html");
     }
 
+    public void templatemanage(){
+        String userid = getCookie(IndexService.me.accessUserId);
+        String agentnum=StaffService.me.getStaffById(userid).getAgentNumber();
+        setAttr("agentnum",agentnum);
+        render("templatemanage.html");
+    }
+
     //设备管理页面
     public void devicemanage() {
 //        String projetid = getCookie(IndexService.me.accessProjectId);
@@ -64,6 +71,16 @@ public class ManagerController extends BaseController {
 
     public void customermanage() {
         render("customermanage.html");
+    }
+
+    public void comusermanage(){
+        String userid = getCookie(IndexService.me.accessUserId);
+        String agentnum=StaffService.me.getStaffById(userid).getAgentNumber();
+        if (Tools.isEmpty(userid))
+           userid = "";
+        setAttr("userid", userid);
+        setAttr("agentnum",agentnum);
+        render("comusermanage.html");
     }
 
     public void sensordevicehome() {

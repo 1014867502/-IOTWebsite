@@ -184,7 +184,6 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     }
 
     function showProjects(data) {
-        debugger
         let real=data[0];
         for (let i = 0; i < real.length; i++) {
             let item = real[i];

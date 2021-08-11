@@ -25,6 +25,16 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     var rawdataturn = false;//原始数据上传开关
     var doublebase = false;//双基站开关
     var machineserial=machinesn;
+    var layerindex;
+
+    $("#reset").click(function () {
+        getDeviceSetting(machinesn);
+    })
+
+    $("#savemodel").click(function () {
+        saveModel();
+        addModel();
+    })
 
     form.verify({
         ip: [
@@ -76,6 +86,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         downloadsource = data.value;
         changesoure(doublebase, downloadsource);
         rtkcore();
+        form.render();
     })
     /*监听双基站按钮*/
     form.on('switch(doublebase)', function (data) {
@@ -86,7 +97,8 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         }
         let source = $('input[name="downloadsource"]:checked').val();
         changesoure(doublebase, source);
-        rtkcore()
+        rtkcore();
+        form.render();
     })
     /*监听rtk数据按钮*/
     form.on('switch(rtkturn)', function (data) {
@@ -125,7 +137,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
             $("#rawBackGnssData").find("option[value=" + device.rawBackGnssData + "]").prop("selected", true);
         } else {
             rawdataturn = false;
-            document.getElementById("rawdatacontent").innerHTML = "";
+            document.getElementById("rawdatacontent").innerHTML="";
             document.getElementById("rawdatacontent").style.display = "none";
         }
         form.render();
@@ -134,11 +146,20 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     form.on('select(rawBackEnabled)', function (data) {
         rawdatabackflush(data);
     })
+    form.on('checkbox(coresource)',function (data) {
+        let source = $("#coredata1").prop("checked");
+        let source2 = $("#coredata2").prop("checked");
+        if(!source&&!source2){
+            document.getElementById("rtkcontent").innerHTML=rtkcorecontent;
+            form.render();
+        }else{
+            document.getElementById("rtkcontent").innerHTML="";
+        }
+    })
     /*监听表单提交*/
     form.on('submit(formDemo)', function (data) {
         let test = data.field;
         let stringtest = JSON.stringify(test);
-        debugger;
         $.ajax({
             url: '/devicelist/editSetting',
             data: {
@@ -152,6 +173,28 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         })
     })
 
+    form.on('submit(example)',function () {
+        debugger
+        let setting=parent.testmodel
+        let jsondata=setting.compute.substring(0,setting.compute.length-1)+","+setting.locate.substring(1,setting.locate.length-1)+","
+            +setting.plaform.substring(1,setting.plaform.length-1)+setting.auxiliary.substring(1,setting.auxiliary.length);
+        let data1 = form.val("example");
+        $.ajax({
+            url:'/template/addTemplate',
+            data:{
+                json:jsondata,
+                machinesn:machinesn,
+                templatename:data1.templatename,
+                type:"2"
+            },
+            async:false,
+            success:function () {
+                layer.msg("提交成功");
+            }
+        })
+        layer.close(layerindex);
+    })
+
     /*获取配置数据*/
     function getDeviceSetting(sn) {
         $.ajax({
@@ -161,7 +204,11 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
             },
             success: function (data) {
                 device = data.data;
-                $("#machineSerial").val(device.machineSerial);
+                if(device.rawName!=null&&device.rawName!=""){
+                    $("#rawName").val(device.rawName);
+                }else{
+                    $("#rawName").val(device.machineSerial);
+                }
                 $("#baseLon").val(device.baseLon);
                 $("#baseLat").val(device.baseLat);
                 $("#baseHeight").val(device.baseHeight);
@@ -183,17 +230,21 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
                     $("#imuWarn").find("option[value=" + device.imuWarn + "]").prop("selected", true);
                     $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
-                    $("#networkAddress").val(device.networkAddress);
-                    $("#networkPort").val(device.networkPort);
+                    $("input[name='networkAddress']").val(device.networkAddress);
+                    $("input[name='networkPort']").val(device.networkPort);
                     $("#networkMountpoint").find("option[value=" + device.networkMountpoint + "]").prop("selected", true);
                 }
                 if (device.rawBackEnabled > 0) {
-                    $("#rawdataturn").attr("checked", "checked");
+                    $("#rawdataturn").prop("checked", true);
                     $("#rawBackEnabled").find("option[value=" + device.rawBackEnabled + "]").prop("selected", true);
                     $("#rawBackGnssData").find("option[value=" + device.rawBackGnssData + "]").prop("selected", true);
                     let enabledata={};
                     enabledata.value=parseInt(device.rawBackEnabled);
                     rawdatabackflush(enabledata);
+                }
+                if(device.secondBase>0){
+                    $("input[name='networkAddress']").val(device.networkAddress);
+                    $("input[name='networkPort']").val(device.networkPort);
                 }
                 let status2 = $("#resultMsg")
                 if (status2 != null) {
@@ -205,6 +256,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 if ($("#recordinterval") != null) {
                     $("#recordInterval").find("option[value=" + device.recordInterval + "]").prop("selected", true);
                 }
+                saveModel();
                 form.render();
                 // let userpass=device.networkMountpointPass.toString().split("|");
                 // $("#networkMountpointUse").val(userpass[0]);
@@ -214,6 +266,32 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         })
     }
 
+    /**保存模组**/
+    function saveModel(){
+        let data1 = form.val("formDemo");
+        delete data1.baseLon;
+        delete data1.baseLat;
+        delete data1.baseHeight;
+        delete data1.coordinatesX;
+        delete data1.coordinatesY;
+        delete data1.coordinatesZ;
+        let stringtest=JSON.stringify(data1);
+        parent.testmodel.compute=stringtest;
+    }
+
+    /**提交模组**/
+    function addModel(){
+        layer.open({
+            type: 1
+            ,id: 'layerDemo' //防止重复弹出
+            , title: ['保存模板']
+            , area: ['300px', '300px']
+            , content: $("#window")
+            , success: function (layero, index) {
+                layerindex=index;
+            },
+        });
+    }
 
     /*根据单选按钮组的变化显示不同内容*/
     function showform(data1, data2) {
@@ -285,7 +363,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 document.getElementById("basestation").innerHTML = "   <div style=\"display: flex;margin-top: 30px\">\n" +
                     "                            <div class=\"circle\" style=\"margin-top: 12px;\"></div>\n" +
                     "                            <div>基准站坐标\n" +
-                    "                                <button style=\"margin-left: 50px\" class=\"layui-btn btn_primary\">获取当前坐标</button>\n" +
+                    "                                <button type='button' style=\"margin-left: 50px\" class=\"layui-btn btn_primary\">获取当前坐标</button>\n" +
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                        <div class=\"layui-form-item  fastinput\" style=\"margin-top: 30px\">\n" +
@@ -419,21 +497,21 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">纬度</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id='coordinatesX' type=\"text\" name=\"coordinatesX\" required lay-verify=\"required\" placeholder=\"请输入纬度\"\n" +
+                    "                                    <input id='coordinatesX' type=\"text\" name=\"coordinatesX\" disabled   placeholder=\"请输入纬度\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">经度</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id='coordinatesY' type=\"text\" name=\"coordinatesY\" required lay-verify=\"required\" placeholder=\"请输入经度\"\n" +
+                    "                                    <input id='coordinatesY' type=\"text\" name=\"coordinatesY\" disabled  placeholder=\"请输入经度\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">大地高</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id='coordinatesZ' type=\"text\" name=\"coordinatesZ\"  placeholder=\"请输入大地高\"\n" +
+                    "                                    <input id='coordinatesZ' type=\"text\" name=\"coordinatesZ\" disabled  placeholder=\"请输入大地高\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
@@ -527,7 +605,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                        <div id=\"rtkcontent\">\n" +
-                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                            <div class=\"layui-form-item  fastinput\" style='margin-top: 30px'>\n" +
                     "                                <label class=\"layui-form-label\">通信协议</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
                     "                                    <select id=\"networkMode\" name=\"networkMode\" lay-verify=\"required\">\n" +
@@ -563,22 +641,22 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                                            <option value=\"0.3\">0.3度</option>\n" +
                     "                                            <option value=\"0.5\">0.5度</option>\n" +
                     "                                        </select>\n" +
-                    "                                        <button class=\"layui-btn btn_primary\">获取接入点</button>\n" +
+                    "                                        <button type='button' class=\"layui-btn btn_primary\">获取接入点</button>\n" +
                     "                                    </div>\n" +
                     "                                </div>\n" +
                     "                                <div class=\"layui-form-item  fastinput\">\n" +
                     "                                    <label class=\"layui-form-label\">用户名</label>\n" +
                     "                                    <div class=\"layui-input-block\">\n" +
                     "                                        <input id=\"networkMountpointUse\" type=\"text\" name=\"networkMountpointUse\" required\n" +
-                    "                                               lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                    "                                               lay-verify=\"required\" placeholder=\"请输入用户名\"\n" +
                     "                                               autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                    </div>\n" +
                     "                                </div>\n" +
                     "                                <div class=\"layui-form-item  fastinput\">\n" +
-                    "                                    <label class=\"layui-form-label\">端口</label>\n" +
+                    "                                    <label class=\"layui-form-label\">密码</label>\n" +
                     "                                    <div class=\"layui-input-block\">\n" +
                     "                                        <input id=\"networkMountpointPass\" type=\"text\" name=\"networkMountpointPass\" required\n" +
-                    "                                               lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                    "                                               lay-verify=\"required\" placeholder=\"请输入密码\"\n" +
                     "                                               autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                    </div>\n" +
                     "                                </div>\n" +
@@ -597,9 +675,8 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                        <div class=\"layui-input-block\">\n" +
                     "                            <input id=\"rawdataturn\" type=\"checkbox\" name=\"rawdataturn\" lay-filter=\"rawdataturn\" lay-skin=\"switch\">\n" +
                     "                        </div>\n" +
-                    "                    </div>\n" +
-                    "                    <div id=\"rawdatacontent\">\n" +
-                    "                        <div class=\"layui-form-item  fastinput\">\n" +
+                    "                    </div><div id='rawdatacontent'>\n"+
+                    "<div class=\"layui-form-item  fastinput\">\n" +
                     "                            <label class=\"layui-form-label\">通讯设置</label>\n" +
                     "                            <div class=\"layui-input-block\">\n" +
                     "                                <select id=\"rawBackEnabled\" name=\"rawBackEnabled\" lay-filter='rawBackEnabled' lay-verify=\"required\">\n" +
@@ -612,7 +689,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                                </select>\n" +
                     "                            </div>\n" +
                     "                        </div>\n" +
-                    "                        <div class=\"layui-form-item  fastinput\">\n" +
+                    "                        <div class=\"layui-form-item  fastinput\" style='margin-top: 30px'>\n" +
                     "                            <label class=\"layui-form-label\">数据类型</label>\n" +
                     "                            <div class=\"layui-input-block\">\n" +
                     "                                <select id=\"rawBackGnssData\" name=\"rawBackGnssData\" lay-verify=\"required\">\n" +
@@ -621,11 +698,25 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                                </select>\n" +
                     "                            </div>\n" +
                     "                        </div>\n" +
-                    "                        <div>\n" +
-                    "                      <div id='rawdatabackcontent'></div>" +
-                    "                    </div>\n" +
-                    "                   \n" +
-                    "                </div> </div>\n";
+                    "<div id='rawdatabackcontent'>"+
+                    "                        <div style=\"display: flex;margin-top: 30px\">\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">IP地址</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id=\"rawBackAddress\" type=\"text\" name=\"rawBackAddress\" required\n" +
+                    "                                           lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">端口</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id=\"rawBackPort\" type=\"text\" name=\"rawBackPort\" required\n" +
+                    "                                           lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                        </div></div>";
                 break;
             case "statusresult2":
                 document.getElementById(select).innerHTML = "  <div class=\"layui-form-item  fastinput\">\n" +
@@ -693,27 +784,27 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         switch (type) {
             case "0":
                 document.getElementById("XYZ").innerHTML = "";
-                document.getElementById("BLH").innerHTML = "  <div class=\"layui-form-item  fastinput\">\n" +
+                document.getElementById("BLH").innerHTML =  "<div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">纬度</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input type=\"text\" name=\"title\" required lay-verify=\"Lat\" placeholder=\"请输入纬度\"\n" +
+                    "                                    <input id='baseLat' type=\"text\" name=\"baseLat\" required lay-verify=\"stationLat\" placeholder=\"请输入纬度\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">经度</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input type=\"text\" name=\"title\" required lay-verify=\"Lon\" placeholder=\"请输入经度\"\n" +
+                    "                                    <input id='baseLon' type=\"text\" name=\"baseLon\" required lay-verify=\"stationLon\" placeholder=\"请输入经度\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">大地高</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input type=\"text\" name=\"title\" required lay-verify=\"Ndouble|required\" placeholder=\"请输入大地高\"\n" +
+                    "                                    <input id='baseHeight' type=\"text\" name=\"baseHeight\" required lay-verify=\"number|required\" placeholder=\"请输入大地高\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                </div>\n" +
-                    "                            </div>";
+                    "                            </div>\n";
                 break;
             case "1":
                 document.getElementById("BLH").innerHTML = "";
@@ -740,7 +831,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            </div>";
                 break;
         }
-        getDeviceSetting(machineserial);
+        markcompute();
     }
 
     function changesoure(doubleturn, type) {
@@ -782,18 +873,18 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     break;
                 case "01":
                     document.getElementById("cores").innerHTML = " <div style=\"display: flex;margin-top: 30px\">\n" +
-                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS①IP地址</label>\n" +
+                        " <div class=\"layui-form-item  fastinput\">\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS①IP地址</label>\n" +
                         "                                        <div class=\"layui-input-block\">\n" +
-                        "                                            <input id=\"rawIp2\" type=\"text\" name=\"rawIp2\" required\n" +
+                        "                                            <input id=\"networkAddress\" type=\"text\" name=\"networkAddress\" required\n" +
                         "                                                   lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
                         "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
                         "                                        </div>\n" +
                         "                                    </div>\n" +
                         "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex \">CORS①端口</label>\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex \"style='padding: 9px 4px;width: 93px;'>CORS①端口</label>\n" +
                         "                                        <div class=\"layui-input-block\">\n" +
-                        "                                            <input id=\"rawPort2\" type=\"text\" name=\"rawPort2\" required\n" +
+                        "                                            <input id=\"networkPort\" type=\"text\" name=\"networkPort\" required\n" +
                         "                                                   lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
                         "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
                         "                                        </div>\n" +
@@ -801,29 +892,29 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                         "                                </div>\n" +
                         "                                <div style=\"display: flex;margin-top: 30px\">\n" +
                         "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS①接入点</label>\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS①接入点</label>\n" +
                         "                                        <div class=\"layui-input-block\" style=\"display: flex\">\n" +
                         "                                            <select id=\"networkMountpoint\" name=\"networkMountpoint\" lay-verify=\"required\">\n" +
                         "                                                <option value=\"0\">关闭</option>\n" +
                         "                                                <option value=\"0.3\">0.3度</option>\n" +
                         "                                                <option value=\"0.5\">0.5度</option>\n" +
                         "                                            </select>\n" +
-                        "                                            <button class=\"layui-btn btn_primary\">获取接入点</button>\n" +
+                        "                                            <button type='button' class=\"layui-btn btn_primary\">获取接入点</button>\n" +
                         "                                        </div>\n" +
                         "                                    </div>\n" +
                         "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS①用户名</label>\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS①用户名</label>\n" +
                         "                                        <div class=\"layui-input-block\">\n" +
                         "                                            <input id=\"networkMountpointUse\" type=\"text\" name=\"networkMountpointUse\" required\n" +
-                        "                                                   lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                        "                                                   lay-verify=\"required\" placeholder=\"请输入用户名\"\n" +
                         "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
                         "                                        </div>\n" +
                         "                                    </div>\n" +
                         "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS①IP地址</label>\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 93px;'>CORS①密码</label>\n" +
                         "                                        <div class=\"layui-input-block\">\n" +
                         "                                            <input id=\"networkMountpointPass\" type=\"text\" name=\"networkMountpointPass\" required\n" +
-                        "                                                   lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                        "                                                   lay-verify=\"required\" placeholder=\"请输入密码\"\n" +
                         "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
                         "                                        </div>\n" +
                         "                                    </div>\n" +
@@ -850,75 +941,27 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                         "                                    </div>\n" +
                         "                                </div>";
                     document.getElementById("secondbase").innerHTML = " <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                <label class=\"layui-form-label basecoreindex\">第二基站IP地址</label>\n" +
+                        "                                <label class=\"layui-form-label basecoreindex\" style='width: 98px;padding: 6px 6px;'>第二基站IP地址</label>\n" +
                         "                                <div class=\"layui-input-block\">\n" +
-                        "                                    <input type=\"text\" name=\"secondIp\" required lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
+                        "                                    <input type=\"text\" id='secondIp' name=\"secondIp\" required lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
                         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                         "                                </div>\n" +
                         "                            </div>\n" +
                         "                            <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                <label class=\"layui-form-label basecoreindex \">第二基站端口</label>\n" +
+                        "                                <label class=\"layui-form-label basecoreindex \" style='width: 98px;padding: 6px 6px;'>第二基站端口</label>\n" +
                         "                                <div class=\"layui-input-block\">\n" +
-                        "                                    <input type=\"text\" name=\"secondPort\" required lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                        "                                    <input type=\"text\" id='secondPort' name=\"secondPort\" required lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
                         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                         "                                </div>\n" +
                         "                            </div>";
                     document.getElementById("secondbase").style.display = "flex";
                     document.getElementById("secondbase").style.marginTop = "30px";
-
                     rtkshow(rtknode);
                     break;
                 case "11":
                     document.getElementById("cores").innerHTML = " <div style=\"display: flex;margin-top: 30px\">\n" +
                         "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS①IP地址</label>\n" +
-                        "                                        <div class=\"layui-input-block\">\n" +
-                        "                                            <input id=\"rawIp2\" type=\"text\" name=\"rawIp2\" required\n" +
-                        "                                                   lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
-                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                        </div>\n" +
-                        "                                    </div>\n" +
-                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex \">CORS①端口</label>\n" +
-                        "                                        <div class=\"layui-input-block\">\n" +
-                        "                                            <input id=\"rawPort2\" type=\"text\" name=\"rawPort2\" required\n" +
-                        "                                                   lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
-                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                        </div>\n" +
-                        "                                    </div>\n" +
-                        "                                </div>\n" +
-                        "                                <div style=\"display: flex;margin-top: 30px\">\n" +
-                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS①接入点</label>\n" +
-                        "                                        <div class=\"layui-input-block\" style=\"display: flex\">\n" +
-                        "                                            <select id=\"networkMountpoint\" name=\"networkMountpoint\" lay-verify=\"required\">\n" +
-                        "                                                <option value=\"0\">关闭</option>\n" +
-                        "                                                <option value=\"0.3\">0.3度</option>\n" +
-                        "                                                <option value=\"0.5\">0.5度</option>\n" +
-                        "                                            </select>\n" +
-                        "                                            <button class=\"layui-btn btn_primary\">获取接入点</button>\n" +
-                        "                                        </div>\n" +
-                        "                                    </div>\n" +
-                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS①用户名</label>\n" +
-                        "                                        <div class=\"layui-input-block\">\n" +
-                        "                                            <input id=\"networkMountpointUse\" type=\"text\" name=\"networkMountpointUse\" required\n" +
-                        "                                                   lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
-                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                        </div>\n" +
-                        "                                    </div>\n" +
-                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS①IP地址</label>\n" +
-                        "                                        <div class=\"layui-input-block\">\n" +
-                        "                                            <input id=\"networkMountpointPass\" type=\"text\" name=\"networkMountpointPass\" required\n" +
-                        "                                                   lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
-                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                        </div>\n" +
-                        "                                    </div>\n" +
-                        "                                </div>";
-                    document.getElementById("cores2").innerHTML = " <div style=\"display: flex;margin-top: 30px\">\n" +
-                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS②IP地址</label>\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS①IP地址</label>\n" +
                         "                                        <div class=\"layui-input-block\">\n" +
                         "                                            <input id=\"networkAddress\" type=\"text\" name=\"networkAddress\" required\n" +
                         "                                                   lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
@@ -926,7 +969,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                         "                                        </div>\n" +
                         "                                    </div>\n" +
                         "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS②IP端口</label>\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex \"style='padding: 9px 4px;width: 93px;'>CORS①端口</label>\n" +
                         "                                        <div class=\"layui-input-block\">\n" +
                         "                                            <input id=\"networkPort\" type=\"text\" name=\"networkPort\" required\n" +
                         "                                                   lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
@@ -936,29 +979,76 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                         "                                </div>\n" +
                         "                                <div style=\"display: flex;margin-top: 30px\">\n" +
                         "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS②接入点</label>\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS①接入点</label>\n" +
+                        "                                        <div class=\"layui-input-block\" style=\"display: flex\">\n" +
+                        "                                            <select id=\"networkMountpoint\" name=\"networkMountpoint\" lay-verify=\"required\">\n" +
+                        "                                                <option value=\"0\">关闭</option>\n" +
+                        "                                                <option value=\"0.3\">0.3度</option>\n" +
+                        "                                                <option value=\"0.5\">0.5度</option>\n" +
+                        "                                            </select>\n" +
+                        "                                            <button type='button' class=\"layui-btn btn_primary\">获取接入点</button>\n" +
+                        "                                        </div>\n" +
+                        "                                    </div>\n" +
+                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS①用户名</label>\n" +
+                        "                                        <div class=\"layui-input-block\">\n" +
+                        "                                            <input id=\"networkMountpointUse\" type=\"text\" name=\"networkMountpointUse\" required\n" +
+                        "                                                   lay-verify=\"required\" placeholder=\"请输入用户名\"\n" +
+                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
+                        "                                        </div>\n" +
+                        "                                    </div>\n" +
+                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 93px;'>CORS①密码</label>\n" +
+                        "                                        <div class=\"layui-input-block\">\n" +
+                        "                                            <input id=\"networkMountpointPass\" type=\"text\" name=\"networkMountpointPass\" required\n" +
+                        "                                                   lay-verify=\"required\" placeholder=\"请输入密码\"\n" +
+                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
+                        "                                        </div>\n" +
+                        "                                    </div>\n" +
+                        "                                </div>";
+                    document.getElementById("cores2").innerHTML = " <div style=\"display: flex;margin-top: 30px\">\n" +
+                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS②IP地址</label>\n" +
+                        "                                        <div class=\"layui-input-block\">\n" +
+                        "                                            <input id=\"secondIp\" type=\"text\" name=\"secondIp\" required\n" +
+                        "                                                   lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
+                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
+                        "                                        </div>\n" +
+                        "                                    </div>\n" +
+                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS②IP端口</label>\n" +
+                        "                                        <div class=\"layui-input-block\">\n" +
+                        "                                            <input id=\"secondPort\" type=\"text\" name=\"secondPort\" required\n" +
+                        "                                                   lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
+                        "                                        </div>\n" +
+                        "                                    </div>\n" +
+                        "                                </div>\n" +
+                        "                                <div style=\"display: flex;margin-top: 30px\">\n" +
+                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS②接入点</label>\n" +
                         "                                        <div class=\"layui-input-block\" style=\"display: flex\">\n" +
                         "                                            <select id=\"networkMountpoint2\" name=\"networkMountpoint2\" lay-verify=\"required\">\n" +
                         "                                                <option value=\"0\">关闭</option>\n" +
                         "                                                <option value=\"0.3\">0.3度</option>\n" +
                         "                                                <option value=\"0.5\">0.5度</option>\n" +
                         "                                            </select>\n" +
-                        "                                            <button class=\"layui-btn btn_primary\">获取接入点</button>\n" +
+                        "                                            <button type='button' class=\"layui-btn btn_primary\">获取接入点</button>\n" +
                         "                                        </div>\n" +
                         "                                    </div>\n" +
                         "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\" >CORS②用户名</label>\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\"style='padding: 9px 4px;width: 98px;' >CORS②用户名</label>\n" +
                         "                                        <div class=\"layui-input-block\">\n" +
                         "                                            <input id=\"networkMountpointUse2\" type=\"text\" name=\"networkMountpointUse2\" required\n" +
-                        "                                                   lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                        "                                                   lay-verify=\"required\" placeholder=\"请输入用户名\"\n" +
                         "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
                         "                                        </div>\n" +
                         "                                    </div>\n" +
                         "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\">CORS②IP地址</label>\n" +
+                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 93px;'>CORS②密码</label>\n" +
                         "                                        <div class=\"layui-input-block\">\n" +
                         "                                            <input id=\"networkMountpointPass2\" type=\"text\" name=\"networkMountpointPass2\" required\n" +
-                        "                                                   lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                        "                                                   lay-verify=\"required\" placeholder=\"请输入密码\"\n" +
                         "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
                         "                                        </div>\n" +
                         "                                    </div>\n" +
@@ -968,7 +1058,8 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     }
                     break;
             }
-            getDeviceSetting(machineserial);
+            downloadsourceflush();
+            rtkflush();
         }
 
     }
@@ -1024,22 +1115,22 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 "                                            <option value=\"0.3\">0.3度</option>\n" +
                 "                                            <option value=\"0.5\">0.5度</option>\n" +
                 "                                        </select>\n" +
-                "                                        <button class=\"layui-btn btn_primary\">获取接入点</button>\n" +
+                "                                        <button type='button' class=\"layui-btn btn_primary\">获取接入点</button>\n" +
                 "                                    </div>\n" +
                 "                                </div>\n" +
                 "                                <div class=\"layui-form-item  fastinput\">\n" +
                 "                                    <label class=\"layui-form-label\">用户名</label>\n" +
                 "                                    <div class=\"layui-input-block\">\n" +
                 "                                        <input id=\"networkMountpointUse\" type=\"text\" name=\"networkMountpointUse\" required\n" +
-                "                                               lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                "                                               lay-verify=\"required\" placeholder=\"请输入用户名\"\n" +
                 "                                               autocomplete=\"off\" class=\"layui-input\">\n" +
                 "                                    </div>\n" +
                 "                                </div>\n" +
                 "                                <div class=\"layui-form-item  fastinput\">\n" +
-                "                                    <label class=\"layui-form-label\">端口</label>\n" +
+                "                                    <label class=\"layui-form-label\">密码</label>\n" +
                 "                                    <div class=\"layui-input-block\">\n" +
                 "                                        <input id=\"networkMountpointPass\" type=\"text\" name=\"networkMountpointPass\" required\n" +
-                "                                               lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                "                                               lay-verify=\"required\" placeholder=\"请输入密码\"\n" +
                 "                                               autocomplete=\"off\" class=\"layui-input\">\n" +
                 "                                    </div>\n" +
                 "                                </div>\n" +
@@ -1048,6 +1139,36 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         rtkcore();
     }
 
+    function rtkflush() {
+        if (device.rtkPos > 0) {
+            rtkturn = true;
+            $("#rtkturn").prop("checked", true);
+            $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
+            $("#imuWarn").find("option[value=" + device.imuWarn + "]").prop("selected", true);
+            $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
+            $("input[name='networkAddress']").val(device.networkAddress);
+            $("input[name='networkPort']").val(device.networkPort);
+            $("#networkMountpoint").find("option[value=" + device.networkMountpoint + "]").prop("selected", true);
+        }
+    }
+    
+    function markcompute() {
+        $("#baseLon").val(device.baseLon);
+        $("#baseLat").val(device.baseLat);
+        $("#baseHeight").val(device.baseHeight);
+        form.render();
+    }
+
+    function downloadsourceflush() {
+        $("#rawIp").val(device.rawIp);
+        $("#rawPort").val(device.rawPort)
+        $("#secondIp").val(device.secondIp);
+        $("#secondPort").val(device.secondPort);
+        $("#networkAddress").val(device.networkAddress);
+        $("#networkPort").val(device.networkPort);
+        form.render();
+    }
+    
     /**原始数据回传刷新**/
     function rawdatabackflush(data) {
         if(data.value==0){
@@ -1121,7 +1242,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 "                                <label class=\"layui-form-label\">接入点</label>\n" +
                 "                                <div class=\"layui-input-block\">\n" +
                 "                                    <input id=\"rawreturnuser\" type=\"text\" name=\"rawBackUser\" required\n" +
-                "                                           lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+                "                                           lay-verify=\"required\" placeholder=\"请输入接入点\"\n" +
                 "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                 "                                </div>\n" +
                 "                            </div>\n" +
@@ -1170,16 +1291,15 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
 
     /*判断是否插入core选择框*/
     function rtkcore() {
-        debugger
         let base = doublebase;
         let source = downloadsource;
         let turn = rtkturn;
         if (base && source == 1 && turn) {
             document.getElementById("coreselect").innerHTML = "  <label class=\"layui-form-label\"></label>\n" +
-                "                                <div class=\"layui-input-block\">\n" +
-                "                                    <input type=\"radio\" lay-filter=\"coresource\" name=\"coredata\" value=\"0\" title=\"与CORS①数据同源\" checked>\n" +
-                "                                    <input type=\"radio\" lay-filter=\"coresource\" name=\"coredata\" value=\"1\" title=\"与CORS②数据同源\">\n" +
-                "                                </div>";
+                "     <div class=\"layui-input-block\">\n" +
+                "          <input type=\"checkbox\" id='coredata1' name=\"coredata\"  lay-filter=\"coresource\" title=\"与CORS①数据同源\" lay-skin=\"primary\"  value=\"0\"  checked>"+
+                "          <input type=\"checkbox\" id='coredata2' name=\"coredata\"  lay-filter=\"coresource\" title=\"与CORS②数据同源\" lay-skin=\"primary\"  value=\"1\" >"+
+                "    </div>";
             document.getElementById("rtkfront").style.display = "flex";
             document.getElementById("rtkcontent").innerHTML = "";
             document.getElementById("rtkfront").innerHTML = rtkfront;
@@ -1283,22 +1403,80 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         "                                            <option value=\"0.3\">0.3度</option>\n" +
         "                                            <option value=\"0.5\">0.5度</option>\n" +
         "                                        </select>\n" +
-        "                                        <button class=\"layui-btn btn_primary\">获取接入点</button>\n" +
+        "                                        <button type='button' class=\"layui-btn btn_primary\">获取接入点</button>\n" +
         "                                    </div>\n" +
         "                                </div>\n" +
         "                                <div class=\"layui-form-item  fastinput\">\n" +
         "                                    <label class=\"layui-form-label\">用户名</label>\n" +
         "                                    <div class=\"layui-input-block\">\n" +
         "                                        <input id=\"networkMountpointUse\" type=\"text\" name=\"networkMountpointUse\" required\n" +
-        "                                               lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+        "                                               lay-verify=\"required\" placeholder=\"请输入用户名\"\n" +
+        "                                               autocomplete=\"off\" class=\"layui-input\">\n" +
+        "                                    </div>\n" +
+        "                                </div>\n" +
+        "                                <div class=\"layui-form-item  fastinput\">\n" +
+        "                                    <label class=\"layui-form-label\">密码</label>\n" +
+        "                                    <div class=\"layui-input-block\">\n" +
+        "                                        <input id=\"networkMountpointPass\" type=\"text\" name=\"networkMountpointPass\" required\n" +
+        "                                               lay-verify=\"required\" placeholder=\"请输入密码\"\n" +
+        "                                               autocomplete=\"off\" class=\"layui-input\">\n" +
+        "                                    </div>\n" +
+        "                                </div>\n" +
+        "                            </div>";
+
+    var rtkcorecontent= " <div style=\"display: flex;margin-top: 30px;margin-bottom: 20px\">\n" +
+        "                            <div class=\"layui-form-item  fastinput\">\n" +
+        "                                <label class=\"layui-form-label\">通信协议</label>\n" +
+        "                                <div class=\"layui-input-block\">\n" +
+        "                                    <select id=\"networkMode\" name=\"networkMode\" lay-verify=\"required\">\n" +
+        "                                        <option value=\"NTRIP\">NTRIP</option>\n" +
+        "                                        <option value=\"PPP\">PPP</option>\n" +
+        "                                    </select>\n" +
+        "                                </div>\n" +
+        "                            </div></div>\n" +
+        "                            <div style=\"display: flex;margin-top: 30px\">\n" +
+        "                                <div class=\"layui-form-item  fastinput\">\n" +
+        "                                    <label class=\"layui-form-label\">IP地址</label>\n" +
+        "                                    <div class=\"layui-input-block\">\n" +
+        "                                        <input id=\"networkAddress\" type=\"text\" name=\"networkAddress\" required\n" +
+        "                                               lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
         "                                               autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                    </div>\n" +
         "                                </div>\n" +
         "                                <div class=\"layui-form-item  fastinput\">\n" +
         "                                    <label class=\"layui-form-label\">端口</label>\n" +
         "                                    <div class=\"layui-input-block\">\n" +
-        "                                        <input id=\"networkMountpointPass\" type=\"text\" name=\"networkMountpointPass\" required\n" +
+        "                                        <input id=\"networkPort\" type=\"text\" name=\"networkPort\" required\n" +
         "                                               lay-verify=\"required\" placeholder=\"请输入端口\"\n" +
+        "                                               autocomplete=\"off\" class=\"layui-input\">\n" +
+        "                                    </div>\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                            <div style=\"display: flex;margin-top: 30px\">\n" +
+        "                                <div class=\"layui-form-item  fastinput\">\n" +
+        "                                    <label class=\"layui-form-label\">接入点</label>\n" +
+        "                                    <div class=\"layui-input-block\" style=\"display: flex\">\n" +
+        "                                        <select id=\"networkMountpoint\" name=\"networkMountpoint\" lay-verify=\"required\">\n" +
+        "                                            <option value=\"0\">关闭</option>\n" +
+        "                                            <option value=\"0.3\">0.3度</option>\n" +
+        "                                            <option value=\"0.5\">0.5度</option>\n" +
+        "                                        </select>\n" +
+        "                                        <button type='button' class=\"layui-btn btn_primary\">获取接入点</button>\n" +
+        "                                    </div>\n" +
+        "                                </div>\n" +
+        "                                <div class=\"layui-form-item  fastinput\">\n" +
+        "                                    <label class=\"layui-form-label\">用户名</label>\n" +
+        "                                    <div class=\"layui-input-block\">\n" +
+        "                                        <input id=\"networkMountpointUse\" type=\"text\" name=\"networkMountpointUse\" required\n" +
+        "                                               lay-verify=\"required\" placeholder=\"请输入用户名\"\n" +
+        "                                               autocomplete=\"off\" class=\"layui-input\">\n" +
+        "                                    </div>\n" +
+        "                                </div>\n" +
+        "                                <div class=\"layui-form-item  fastinput\">\n" +
+        "                                    <label class=\"layui-form-label\">密码</label>\n" +
+        "                                    <div class=\"layui-input-block\">\n" +
+        "                                        <input id=\"networkMountpointPass\" type=\"text\" name=\"networkMountpointPass\" required\n" +
+        "                                               lay-verify=\"required\" placeholder=\"请输入密码\"\n" +
         "                                               autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                    </div>\n" +
         "                                </div>\n" +
@@ -1317,7 +1495,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         "                                </select>\n" +
         "                            </div>\n" +
         "                        </div>\n" +
-        "                        <div class=\"layui-form-item  fastinput\">\n" +
+        "                        <div class=\"layui-form-item  fastinput\" style='margin-top: 30px'>\n" +
         "                            <label class=\"layui-form-label\">数据类型</label>\n" +
         "                            <div class=\"layui-input-block\">\n" +
         "                                <select id=\"rawBackGnssData\" name=\"rawBackGnssData\" lay-verify=\"required\">\n" +

@@ -7,6 +7,7 @@ import com.webmonitor.core.idal.IStaffData;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.StaffDataEntity;
 import com.webmonitor.core.util.MD5Utils;
+import com.webmonitor.core.util.Tools;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -106,7 +107,7 @@ public class StaffDataMysqlDAL implements IStaffData {
     }
 
     /**获取用户列表**/
-    public List<StaffDataEntity> getAllCustomByPage(int pageno,int limit){
+    public Page<StaffDataEntity> getAllCustomByPage(int pageno,int limit){
         String sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber";
         List<StaffDataEntity> list=new ArrayList<>();
         Page<Record> record= Db.paginate(pageno,limit,"select a.*,b.agentName",sql);
@@ -131,7 +132,7 @@ public class StaffDataMysqlDAL implements IStaffData {
             staffDataEntity.setRoleType(RoleType.getTypeName(type));
             list.add(staffDataEntity);
         }
-        return list;
+        return new Page<StaffDataEntity>(list,record.getPageNumber(), record.getPageSize(), record.getTotalPage(),record.getTotalRow());
     }
 
     /**根据类别查询用户数目**/
@@ -193,14 +194,54 @@ public class StaffDataMysqlDAL implements IStaffData {
     }
 
     @Override
-    public Page<StaffDataEntity> searchCustomByParam(String content, String agentnum, String roletype, int pageno, int limit) {
-        String sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where a.iRoleType="+roletype;
-        String test="";
-        if(content!=null&&!content.isEmpty()){
-            sql=sql+" and a.uAccountNum like '%"+content+"%' ";
-        }if(!agentnum.isEmpty()){
-            sql=sql+" and a.agentNumber='"+agentnum+"' ";
+    public Page<StaffDataEntity> searchCustomByParam(String content,String agentnum, String roletype, int pageno, int limit) {
+        String sql="";
+        switch(roletype){
+            case "0":
+                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber";
+                if(agentnum!=null){
+                    sql=sql+" where a.agentNumber="+agentnum;
+                }
+                break;
+            case "1":
+                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where b.agentName like '%"+content+"%'";
+                break;
+            case "2":
+                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where a.uAccountNum like '%"+content+"%'";
+                if(agentnum!=null){
+                    sql=sql+" and a.agentNumber="+agentnum;
+                }
+                break;
         }
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName",sql);
+        List<Record> recordList = page.getList();
+        List<StaffDataEntity> rslist = new ArrayList<>();
+        for (Record record : recordList) {
+            StaffDataEntity staffDataEntity=new StaffDataEntity();
+            staffDataEntity.setId(record.getInt("id"));
+            staffDataEntity.setAgentName(record.getStr("agentName"));
+            staffDataEntity.setAgentNumber(record.getStr("agentNumber"));
+            staffDataEntity.setuAccountNum(record.getStr("uAccountNum"));
+            staffDataEntity.setuPassword(record.getStr("uPassword"));
+            staffDataEntity.setcDept(record.getStr("cDept"));
+            staffDataEntity.setuRealName(record.getStr("uRealName"));
+            staffDataEntity.setiRoleType(record.getInt("iRoleType"));
+            if(record.getStr("groupAssemble")!=null&&!record.getStr("groupAssemble").equals("")){
+                String projectlist=record.getStr("groupAssemble").replace('@',',');
+                staffDataEntity.setGroupAssemble(projectlist);
+            }else{
+                staffDataEntity.setGroupAssemble("");
+            }
+            int type=record.getInt("iRoleType");
+            staffDataEntity.setRoleType(RoleType.getTypeName(type));
+            rslist.add(staffDataEntity);
+        }
+        return new Page<StaffDataEntity>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+    }
+
+    @Override
+    public Page<StaffDataEntity> getCustomByComId(String agentnum,int pageno,int limit) {
+        String sql="from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where a.agentNumber="+agentnum;
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName",sql);
         List<Record> recordList = page.getList();
         List<StaffDataEntity> rslist = new ArrayList<>();

@@ -17,7 +17,7 @@ layui.define(['form','drawer','table'], function (exports) {
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
             width: "600px", //r、l抽屉可以设置宽度
             content: $("#window"),
-            btn: ['<i class="layui-icon">&#xe615;</i>提交修改', '重置'],
+            btn: ['<i class="layui-icon">&#xe615;</i>提交修改', '取消'],
             success :function (layero, index) {
                 renderlayerTable();
             },
@@ -198,7 +198,7 @@ layui.define(['form','drawer','table'], function (exports) {
             },
             async:false,
             success:function () {
-                layer.alert("修改成功");
+                layer.alert("关联成功");
             }
         })
     }

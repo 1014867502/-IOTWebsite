@@ -139,8 +139,8 @@
 
         <div class="layui-form-item" >
             <div class="layui-input-block">
-                <button id="sumbit" class="layui-btn" lay-submit lay-filter="formDemo1">提交</button>
-                <button id="reset" type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button id="sumbit" type="button" class="layui-btn" lay-submit lay-filter="formDemo1">提交</button>
+                <button id="reset" type="reset" class="layui-btn">重置</button>
             </div>
         </div>
     </form>
@@ -202,8 +202,8 @@
 
         <div class="layui-form-item" >
             <div class="layui-input-block">
-                <button  class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
-                <button  type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button  type="button" class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
+                <button  type="reset" class="layui-btn ">重置</button>
             </div>
         </div>
     </form>
@@ -214,29 +214,6 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">用户列表</div>
-            </div>
-            <div class="layui-card" style="display: flex ;smargin: auto;">
-                <ul style="display: flex ;margin: auto;">
-                    <li class="little">
-                        <div>用户总数量</div>
-                        <div id="customers" style="font-size: 20px"></div>
-                    </li>
-                    <li class="little">
-                        <div>普通用户数量</div>
-                        <div id="Ordinaryusers" style="font-size: 20px"></div>
-                    </li>
-                    <li class="little">
-                        <div>供销商管理员数量</div>
-                        <div id="comadmins" style="font-size: 20px"></div>
-                    </li>
-                </ul>
-                <div style="margin: auto">
-                    <div style="margin: auto;display: flex">
-                        <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>添加用户</button>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-card">
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                     <div class="layui-form-item" style="text-align: center">
                         <!--                        <div class="layui-input-inline">-->
@@ -244,25 +221,50 @@
                         <!--                        </div>-->
                         <div class="layui-inline">
                             <select id="searchtype" name="searchtype" lay-verify="" lay-filter="searchtype">
-                                <option value="0">普通用户</option>
-                                <option value="1">供销商管理员</option>
-                                <option value="2">超级管理员</option>
+                                <option value="0">全部</option>
+                                <option value="1">公司</option>
+                                <option value="2">账号</option>
                             </select>
                         </div>
+                        <!--                        <div class="layui-inline">-->
+                        <!--                            <div id="companylistsearch" class="xm-select-project" style="width: 200px" ></div>-->
+                        <!--                        </div>-->
                         <div class="layui-inline">
-                            <div id="companylistsearch" class="xm-select-project" style="width: 200px" ></div>
+                            <input type="text" class="layui-input" lay-verify="search" name="account" id="account" placeholder=" 请输入查询内容 " >
                         </div>
                         <div class="layui-inline">
-                            <input type="text" class="layui-input" name="account" id="account" placeholder=" 请输入用户账号 " >
-                        </div>
-                        <div class="layui-inline">
-                            <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
+                            <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
                                     id="datasumbit" lay-filter="LAY-app-contlist-search">
                                 <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
                             </button>
                         </div>
+                        <div class="layui-inline">
+                            <div style="margin: auto">
+                                <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>添加用户</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+<!--            <div class="layui-card" style="display: flex ;smargin: auto;">-->
+<!--                <ul style="display: flex ;margin: auto;">-->
+<!--                    <li class="little">-->
+<!--                        <div>用户总数量</div>-->
+<!--                        <div id="customers" style="font-size: 20px"></div>-->
+<!--                    </li>-->
+<!--                    <li class="little">-->
+<!--                        <div>普通用户数量</div>-->
+<!--                        <div id="Ordinaryusers" style="font-size: 20px"></div>-->
+<!--                    </li>-->
+<!--                    <li class="little">-->
+<!--                        <div>供销商管理员数量</div>-->
+<!--                        <div id="comadmins" style="font-size: 20px"></div>-->
+<!--                    </li>-->
+<!--                </ul>-->
+
+<!--            </div>-->
+            <div class="layui-card">
+
             </div>
             <div class="layui-card">
                 <div class="layui-card-body">

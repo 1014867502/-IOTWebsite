@@ -226,7 +226,7 @@
                 <input type="text" class="layui-input" name="SN" id="SN2" placeholder=" 请输入设备sn号 " dis>
             </div>
             <div class="layui-inline">
-                <button class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
+                <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
                         id="datasumbit2" lay-filter="LAY-app-contlist-search">
                     <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
                 </button>
@@ -256,25 +256,8 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">所属公司</label>
             <div class="layui-input-block">
-                <div id="companylistadd" class="xm-select-project" style="width: 70%"></div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">状态</label>
-            <div class="layui-input-block">
-                <div style="width: 70%">
-                    <select id="onlinestate" name="onlineState" lay-filter="type" style="width: 70%">
-                        <option value="0">离线</option>
-                        <option value="1">在线</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
+                <button type="button" class="layui-btn" lay-submit lay-filter="formDemo2">添加设备</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
@@ -358,6 +341,7 @@
                             <select id="stats" name="stats" lay-verify="" lay-filter="stats">
                                 <option value="1">在线</option>
                                 <option value="0">离线</option>
+                                <option value="2">全部</option>
                             </select>
                         </div>
                         <div class="layui-inline">

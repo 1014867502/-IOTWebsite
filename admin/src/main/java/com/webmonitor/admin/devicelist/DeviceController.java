@@ -10,6 +10,8 @@ import com.webmonitor.core.bll.AgentDataService;
 import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.*;
+import com.webmonitor.core.model.userbase.DeviceSensorList;
+import com.webmonitor.core.model.userbase.ExportGNSSWord;
 import com.webmonitor.core.util.OrderConstants;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import com.webmonitor.core.vo.Result;
@@ -219,13 +221,19 @@ public class DeviceController  extends BaseController {
         String[] projects=new String[20];
         String state=getPara("state");
         StaffData currentuser = StaffService.me.getStaffById(userid);
+        String agentnum=(getPara("agentNumber")!=null?getPara("agentNumber"):currentuser.getAgentNumber());
         String authority = currentuser.getGroupAssemble();
         if(authority.length()>0){
             projects=authority.split("@");
         }
         try{
-            Page<AgentData> agentDataList=AgentDataService.me.searchDeviceByParam(content,projects,state,pageno,limit);
-            result.success(agentDataList);
+            if(state.equals("3")){
+                Page<AgentData> agentDataList= AgentDataService.me.getDevicelistByParam(pageno,limit,currentuser.getUAccountNum());
+                result.success(agentDataList);
+            }else{
+                Page<AgentData> agentDataList=AgentDataService.me.searchDeviceByParam(currentuser.getIRoleType().toString(),content,agentnum,projects,state,pageno,limit);
+                result.success(agentDataList);
+            }
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }
@@ -233,6 +241,24 @@ public class DeviceController  extends BaseController {
     }
 
     /**根据不同的条件筛选设备**/
+    public void searchDeviceByCom(){
+        Result<Page<AgentData>> result=Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        int pageno = getParaToInt("page", 1);
+        int limit = getParaToInt("limit", 50);
+        String content=getPara("sn");
+        String agentnum=getPara("agentNumber");
+        String state=getPara("state");
+        try{
+            Page<AgentData> agentDataList=AgentDataService.me.searchDeviceByCom(content,agentnum,state,pageno,limit);
+            result.success(agentDataList);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**根据不同的条件筛选设备(项目页下的搜索)**/
     public void findDevice(){
         Result<Page<AgentData>> result=Result.newOne();
         String userid = getCookie(IndexService.me.accessUserId);
@@ -292,6 +318,77 @@ public class DeviceController  extends BaseController {
         AgentDataDao agentDataDao=AgentDataDao.dao.findFirst("select * from agent_data where machineSerial='"+machinesn+"'");
         result.success(agentDataDao);
         renderJson(result);
+    }
+
+    /**修改设备的公司归属**/
+    public void changeDeviceAgentBySerial(){
+        Result result=Result.newOne();
+        String machinesn=getPara("machineserial");
+        String agentnum=getPara("agentnumber");
+        try{
+            DeviceListService.me.changeDeviceAgentBySerial(machinesn,agentnum);
+            result.success("成功");
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**获取设备外接传感器列表**/
+    public void getDeviceSensorList(){
+        Result<Page<DeviceSensorList>> result=Result.newOne();
+        String machinesn=getPara("machineserial");
+        int pageno=getParaToInt("curr",1);
+        int limit=getParaToInt("nums",6);
+        try{
+            Page<DeviceSensorList> deviceSensorListPage=DeviceListService.me.getDeviceSensorList(machinesn,pageno,limit);
+            result.success(deviceSensorListPage);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**添加设备传感器**/
+    public void addDeviceSensor(){
+        Gson gson=new Gson();
+        Result result=Result.newOne();
+        String data=getPara("json");
+        String machinesn=getPara("machinesn");
+        DeviceSensorList deviceSensorList= gson.fromJson(data, new TypeToken<DeviceSensorList>(){}.getType());
+        try{
+            DeviceListService.me.addSensorByData(deviceSensorList,machinesn);
+            result.success("成功");
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**删除设备传感器**/
+    public void delDeviceSensor(){
+        Gson gson=new Gson();
+        Result result=Result.newOne();
+        String data=getPara("json");
+        String machinesn=getPara("machineserial");
+        DeviceSensorList deviceSensorList= gson.fromJson(data, new TypeToken<DeviceSensorList>(){}.getType());
+        try{
+            DeviceListService.me.delSensorByData(deviceSensorList,machinesn);
+            result.success("成功");
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**获取设备模板信息(所有)**/
+    public void getAllTemplates(){
+
+    }
+
+    /**获取设备模板信息（公司）**/
+    public void getTemplateByCom(){
+
     }
 
 }

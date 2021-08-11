@@ -28,11 +28,10 @@ public class CustomerController extends BaseController {
     @Remark("用户列表")
     public void list() {
         Result result=Result.newOne();
-        List<StaffDataEntity> list=new ArrayList<>();
         int pageno = getParaToInt("page", 1);
         int limit = getParaToInt("limit", 50);
         try{
-            list=srv.getAllCustom(pageno,limit);
+            Page<StaffDataEntity>  list=srv.getAllCustom(pageno,limit);
             result.success(list);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -195,18 +194,34 @@ public class CustomerController extends BaseController {
 
     /**用户条件查询**/
     public void searchCustomByParam(){
-        String account=getPara("account");
-        String roletype=getPara("roletype");
-        String comid=getPara("agentNumber");
+        String account=getPara("content");
+        String searchtype=getPara("searchtype");
+        String agentnum=getPara("agentnumber");
         int pageno=getParaToInt("page",1);
         int limit =getParaToInt("limit",50);
         Result<Page<StaffDataEntity>> result=Result.newOne();
         try{
-            Page<StaffDataEntity> customlist=CustomerService.me.searchCustomByParam(account,comid,roletype,pageno,limit);
+            Page<StaffDataEntity> customlist=CustomerService.me.searchCustomByParam(account,agentnum,searchtype,pageno,limit);
             result.success(customlist);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }
         renderJson(result);
+    }
+
+    /**按公司编号查找用户**/
+    public void getCustomByComid(){
+        String agentnum=getPara("agentNumber");
+        int pageno=getParaToInt("page",1);
+        int limit =getParaToInt("limit",50);
+        Result<Page<StaffDataEntity>> result=Result.newOne();
+        try{
+            Page<StaffDataEntity> customlist=CustomerService.me.getCustomByComId(agentnum,pageno,limit);
+            result.success(customlist);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+
     }
 }

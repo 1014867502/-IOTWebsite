@@ -10,14 +10,11 @@
     <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
     <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
     <style type="text/css">
-        .layui-form-checked span, .layui-form-checked:hover span {
-            background-color: #FF5722;
+        .layui-form-checked[lay-skin=primary] i {
+            border-color: #1e9fff !important;
+            background-color: #1e9fff;
+            color: #FFFF;
         }
-
-        .layui-form-checked i, .layui-form-checked:hover i {
-            color: #FF5722;
-        }
-
         .layui-btn.onlinebtn {
             background-color: #009688;
             color: #FFFFFF;
@@ -152,11 +149,33 @@
         width: 100px;
         padding: 9px 5px;
     }
+    legend {
+        font-size: 12px;
+        font-weight: inherit;
+        color: #03A9F4;
+    }
 </style>
 <body>
+<div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
+    <form class="layui-form" id="book" method="post" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">模板名称</label>
+            <div class="layui-input-block">
+                <input type="text" id="templatename"  name="templatename" lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding-top: 30px;text-align: center">
+            <div class="layui-input-block" style="margin-left: 0px!important;">
+                <button class="layui-btn" type="button"  lay-submit lay-filter="example">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="layui-fluid" style="padding: 0px!important;">
     <div class="layui-row layui-col-space15" style="font-weight: bold">
-        <form class="layui-form" action="">
+        <form class="layui-form" action="" lay-filter="formDemo">
             <div class="layui-card">
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
                     解算设置
@@ -182,7 +201,7 @@
                         <div class="layui-form-item fastinput">
                             <label class="layui-form-label">测站编号</label>
                             <div class="layui-input-block">
-                                <input type="text" id="machineSerial" name="machineSerial" required
+                                <input type="text" id="rawName" name="rawName" required
                                        lay-verify="required" placeholder="请输入标题"
                                        autocomplete="off" class="layui-input">
                             </div>
@@ -237,7 +256,8 @@
             <div class="layui-form-item" style="padding-top: 30px;text-align: center">
                 <div class="layui-input-block" style="margin-left: 0px!important;">
                     <button type="button" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <button id="savemodel" type="button" class="layui-btn">保存为模板</button>
+                    <button id="reset" type="button" class="layui-btn ">重新获取数据</button>
                 </div>
             </div>
         </form>

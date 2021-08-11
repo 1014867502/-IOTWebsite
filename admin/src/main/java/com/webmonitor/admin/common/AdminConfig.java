@@ -35,6 +35,7 @@ import com.webmonitor.admin.overview.OverviewController;
 
 import com.webmonitor.admin.projects.ProjectController;
 import com.webmonitor.admin.Customer.CustomerController;
+import com.webmonitor.admin.template.TemplateController;
 import com.webmonitor.core.config.JfinalCoreConfig;
 import com.webmonitor.core.config.kit.StartInit;
 import com.webmonitor.core.model._MappingKit;
@@ -88,6 +89,7 @@ public class AdminConfig extends JfinalCoreConfig {
         me.add("/custom", CustomerController.class);
         me.add("/company", CompanyController.class);
         me.add("/project", ProjectController.class);
+        me.add("/template", TemplateController.class);
         //me.add("/permission", PermissionController.class);
         //业务路由
     }

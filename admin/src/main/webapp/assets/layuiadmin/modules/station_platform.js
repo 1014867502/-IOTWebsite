@@ -8,18 +8,27 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         , form = layui.form
 
     var locatedata;
+    var layerindex;
 
     getDeviceSetting(machinesn);
+
+    $("#reset").click(function () {
+        getDeviceSetting(machinesn);
+    })
+    $("#savemodel").click(function () {
+        saveModel();
+        addModel();
+    })
 
     form.on('switch(onenet_enable)', function (data) {
         if (this.checked) {
             document.getElementById("onenetcontent").innerHTML = onenetcontent;
             if(locatedata.oneNetMode!=null){
                 onenetshow(locatedata.oneNetMode);
+                onenetflush();
             }else{
                 onenetshow("0");
             }
-            getDeviceSetting(machinesn);
         } else {
             document.getElementById("onenetcontent").innerHTML = "";
         }
@@ -29,7 +38,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     form.on('switch(dz_iot_enable)', function (data) {
         if (this.checked) {
             document.getElementById("dzcontent").innerHTML =dznetcontent;
-            getDeviceSetting(machinesn);
+            dzIotflush();
         } else {
             document.getElementById("dzcontent").innerHTML = "";
         }
@@ -48,9 +57,61 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     form.on('submit(formDemo)',function (data) {
         let test=data.field;
+        let jsondata=datatranform(test);
+        let stringtest=JSON.stringify(jsondata);
+        $.ajax({
+            url:'/devicelist/editSetting',
+            data:{
+                setting:stringtest,
+                machinesn:machinesn
+            },
+            success:function (data) {
+                getDeviceSetting(machinesn);
+                alert(data.data);
+            }
+        })
+    })
+
+    //提交模板
+    form.on('submit(example)',function () {
+        debugger
+        let setting=parent.testmodel
+        let jsondata=setting.compute.substring(0,setting.compute.length-1)+","+setting.locate.substring(1,setting.locate.length-1)+","
+            +setting.plaform.substring(1,setting.plaform.length-1)+setting.auxiliary.substring(1,setting.auxiliary.length);
+        let data1 = form.val("example");
+        $.ajax({
+            url:'/template/addTemplate',
+            data:{
+                json:jsondata,
+                machinesn:machinesn,
+                templatename:data1.templatename,
+                type:"2"
+            },
+            async:false,
+            success:function () {
+                layer.msg("提交成功");
+            }
+        })
+        layer.close(layerindex);
+    })
+
+    /**添加模组**/
+    function addModel(){
+        layer.open({
+            type: 1
+            ,id: 'layerDemo' //防止重复弹出
+            , title: ['保存模板']
+            , area: ['300px', '300px']
+            , content: $("#window")
+            , success: function (layero, index) {
+                layerindex=index;
+            },
+        });
+    }
+
+    //将表格数据转化成类
+    function datatranform(test){
         let jsondata={};
-
-
         if(test.dz_iot_enable=="on"){
             jsondata.dzIotEnabled=1;
             if(test.iot_gnss_data=="on"){
@@ -71,8 +132,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         }else{
             jsondata.dzIotEnabled=0;
         }
-
-
         if(test.onenet_enable=="on"){
             jsondata.oneNetEnabled=1;
             jsondata.oneNetMode=test.onenet_mode;
@@ -96,7 +155,6 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         }else{
             jsondata.oneNetEnabled=0;
         }
-
         jsondata.cqIotEnabled=test.chongqing_mode;
         switch(test.chongqing_mode){
             case "0":
@@ -111,19 +169,8 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 jsondata.cqIotKey=test.chongqing_iot_key;
                 break;
         }
-        let stringtest=JSON.stringify(jsondata);
-        $.ajax({
-            url:'/devicelist/editSetting',
-            data:{
-                setting:stringtest,
-                machinesn:machinesn
-            },
-            success:function (data) {
-                getDeviceSetting(machinesn);
-                alert(data.data);
-            }
-        })
-    })
+        return jsondata;
+    }
 
     //onenet平台的动态变化
     function onenetshow(select) {
@@ -138,6 +185,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 break;
             case "2":
                 document.getElementById("onenetcontent1").innerHTML = productid + productkey;
+                document.getElementById("")
                 document.getElementById("onenetcontent2").innerHTML = "";
                 break;
         }
@@ -178,6 +226,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                         document.getElementById("onenetcontent").innerHTML = onenetcontent;
                         onenetshow(device.oneNetMode);
                 } else {
+                    $("#onenet_enable").prop('checked',false);
                         document.getElementById("onenetcontent").innerHTML = "";
                 }
                 $("#onenet_id").val(device.oneNetId);
@@ -189,8 +238,8 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 if (device.dzIotEnabled>0) {
                     $("#dz_iot_enable").prop('checked',true);
                     document.getElementById("dzcontent").innerHTML =dznetcontent;
-
                 } else {
+                    $("#dz_iot_enable").prop('checked',false);
                     document.getElementById("dzcontent").innerHTML = "";
                 }
                 $("#iot_ip").val(device.dzIotIp);
@@ -215,12 +264,53 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 $("#chongqing_iot_id").val(device.cqIotId);
                 $("#chongqing_iot_key").val(device.cqIotKey);
                 $("#chongqing_iot_user").val(device.cqIotUser);
-
+                saveModel();
                 form.render();
             }
         })
     }
 
+    /**保存模组**/
+    function saveModel(){
+        debugger
+        let data1 = form.val("formDemo");
+        let jsondata=datatranform(data1);
+        delete jsondata.oneNetMode;
+        delete jsondata.oneNetId;
+        delete jsondata.oneNetUser;
+        delete jsondata.onenet_key;
+        delete jsondata.oneNetKey;
+        delete jsondata.oneNetGnssData;
+        delete jsondata.dzIotKey;
+        delete jsondata.dzIotId;
+        parent.testmodel.plaform=JSON.stringify(jsondata);
+    }
+
+    function onenetflush() {
+        $("#onenet_mode").find("option[value=" + locatedata.oneNetMode + "]").prop("selected", true);
+        $("#onenet_id").val((locatedata.oneNetId!=null)?locatedata.oneNetId:"");
+        $("#onenet_user").val((locatedata.oneNetUser!=null)?locatedata.oneNetUser:"");
+        $("#onenet_key").val((locatedata.oneNetKey!=null)?locatedata.oneNetKey:"");
+        $("#onenet_data").val((locatedata.oneNetGnssData!=null)?locatedata.oneNetGnssData:"");
+    }
+
+    function dzIotflush() {
+        $("#iot_ip").val(locatedata.dzIotIp);
+        $("#iot_port").val(locatedata.dzIotPort);
+        $("#iot_id").val(locatedata.dzIotId);
+        $("#iot_key").val(locatedata.dzIotKey);
+        $("#iot_http").val(locatedata.dzIotHttp);
+        if(locatedata.dzIotGnssData>0){
+            $("#iot_gnss_data").prop('checked',true);
+        }else{
+            $("#iot_gnss_data").prop('checked',false);
+        }
+        if(locatedata.dzIotRtkResult>0){
+            $("#iot_rtk_result").prop('checked',true);
+        }else{
+            $("#iot_rtk_result").prop('checked',false);
+        }
+    }
 
     var onenetcontent = " <div class=\"layui-form-item  fastinput\" style=\"margin-top: 30px;display: flex\" >\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px 10px;\">模式</label>\n" +
@@ -315,7 +405,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label  \">设备KEY</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <input id='iot_key' type=\"text\" name=\"iot_key\" required lay-verify=\"required\"\n" +
-        "                                           placeholder=\"请输入ID\"\n" +
+        "                                           placeholder=\"请输入KEY\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
         "                            </div>\n" +
@@ -323,7 +413,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label  \">HTTP参数</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <input id='iot_http' type=\"text\" name=\"iot_http\" required lay-verify=\"required\"\n" +
-        "                                           placeholder=\"请输入ID\"\n" +
+        "                                           placeholder=\"请输入http参数\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
         "                            </div>\n" +

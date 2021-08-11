@@ -35,12 +35,10 @@ layui.define(['form','drawer','table'], function (exports) {
                 return true;
             }
         }
-
-        ,pass: [
+        ,pass:[
             /^[\S]{6,12}$/
             ,'密码必须6到12位，且不能出现空格'
         ],
-
         confirmpass:function (value) {
             if($('input[name=uPassword]').val()!=value)
                 return "两次密码输入不一致";
@@ -80,11 +78,16 @@ layui.define(['form','drawer','table'], function (exports) {
             if(judge!=null&&value!=judge.uAccountNum){
                 return "已存在当前账号，请重新输入";
             }
+        },
+        search:function (value) {
+            let searchtype = $("#searchtype").val();
+            if(searchtype!=0&&value==""){
+                return "查询内容不得为空，请重新输入";
+            }
         }
     });
 
     form.on('select(type)',function(data){
-        debugger
         let type=data.value;
         newtype=type;
         if(type=="0"){
@@ -116,7 +119,6 @@ layui.define(['form','drawer','table'], function (exports) {
         }
     });
 
-
     form.on('submit(formDemo1)', function(data){
         let json=data.field;
         let company=companylist.getValue();
@@ -131,6 +133,7 @@ layui.define(['form','drawer','table'], function (exports) {
             },
             async:false,
             success:function (data) {
+                renderTable();
                 layer.msg('提交成功');
             }
         })
@@ -155,6 +158,7 @@ layui.define(['form','drawer','table'], function (exports) {
             },
             async:false,
             success:function (data) {
+                renderTable();
                 layer.msg('提交成功');
             }
         })
@@ -169,7 +173,6 @@ layui.define(['form','drawer','table'], function (exports) {
             width: "600px", //r、l抽屉可以设置宽度
             content: $("#window"),
             success :function (layero, index) {
-                renderlayerTable();
                 getcompanylist();
                 layerindex=index;
             },
@@ -200,21 +203,12 @@ layui.define(['form','drawer','table'], function (exports) {
         }
         form.render();
     }
-
     //监听查询
     $("#datasumbit").on('click', function () {
-        let agentnum=companylistfind.getValue();
-        let roletype = $("#searchtype").val();
+        let searchtype = $("#searchtype").val();
         let input = $("#account").val();
-        let id=projectid ,sn, snreal;
-        if (typeof (id) == "undefined") {
-            layer.msg("项目不能为空");
+        if(searchtype!=0&&input==""){
             return;
-        } else if ((input.length == 0 || input == null) && (!roletype == 2)) {
-            layer.msg("输入不能为空");
-            return;
-        } else {
-            snreal = input;
         }
         table.render({
             elem: '#table-form'
@@ -223,7 +217,7 @@ layui.define(['form','drawer','table'], function (exports) {
             , height:'full-200'
             , totalRow: true
             , url: '/custom/searchCustomByParam'
-            , where: {'agentNumber': agentnum[0].value, 'account': snreal, 'roletype': roletype}
+            , where: { 'content': input, 'searchtype': searchtype}
             , cols: [[
                 {field: 'id', title: "序号", align: 'center'}
                 , {field: 'agentName', title: "隶属公司", align: 'center'}
@@ -249,10 +243,8 @@ layui.define(['form','drawer','table'], function (exports) {
         });
     });
 
-
-
     renderTable();
-    getcompanylistsearch();
+    // getcompanylistsearch();
     //表格刷新
     function renderTable(){
         var stats = $("#stats").val();
@@ -280,7 +272,7 @@ layui.define(['form','drawer','table'], function (exports) {
                     "code": res.code,
                     "msg": res.msg,
                     "count": res.data == null ? 0 : res.data.totalRow,
-                    "data": res.data == null ? {} : res.data
+                    "data": res.data == null ? {} : res.data.list
                 };
             }
         });
@@ -319,40 +311,6 @@ layui.define(['form','drawer','table'], function (exports) {
 
     });
 
-    function renderlayerTable(){
-        var stats2 = $("#stats2").val();
-        table2.render({
-            elem: '#table3'
-            , title: 'logdata'
-            , totalRow: true
-            , height:'full-300'
-            , url: '/devicelist/searchUnconnectDev'
-            , where: {'agentnum':agentNumber,'content':"",'type':stats2}
-            , cols: [[
-                {type:'checkbox'}
-                , {field: 'machineSerial', title: "设备sn号", align: 'center'}
-                ,{ fixed: 'onlineState', title:"状态", align:'center', toolbar: '#statusdemo'}
-                , {field: 'machineName', title: "设备名称", align: 'center'}
-            ]]
-            , limit: 20 //每页默认显示的数量
-            , limits: [50, 100, 200]
-            , page: true
-            , parseData: function (res) {
-                return {
-                    "code": res.code,
-                    "msg": res.msg,
-                    "count": res.data == null ? 0 : res.data.totalRow,
-                    "data": res.data == null ? {} : res.data.list
-                };
-            },done: function () {
-                table2.on('checkbox(table3)', function(obj){
-                    let checkStatus = table2.checkStatus('table3')
-                        ,data = checkStatus.data;
-                    connectdevice=JSON.stringify(data);
-                });
-            }
-        });
-    }
 
     /**获取项目列表(添加用户)**/
     function getprojectlist(id){
@@ -436,6 +394,9 @@ layui.define(['form','drawer','table'], function (exports) {
             layVerify: 'required',
             radio:true,
             clickClose:true,
+            theme: {
+                color: '#01AAED',
+            },
             layVerType: 'msg',
             model:{
                 label:{
@@ -475,6 +436,9 @@ layui.define(['form','drawer','table'], function (exports) {
             layVerify: 'required',
             radio:true,
             clickClose:true,
+            theme: {
+                color: '#01AAED',
+            },
             layVerType: 'msg',
             initValue: [init],
             model:{
@@ -489,7 +453,6 @@ layui.define(['form','drawer','table'], function (exports) {
                 }
             },
             on: function(data){
-                debugger
                 let change = data.change[0];
                 if(edittype=="0"){
                     initprojectlist(change.value,"");
@@ -501,7 +464,6 @@ layui.define(['form','drawer','table'], function (exports) {
 
     /**加载项目列表**/
     function loadprojectlist(json){
-        debugger
         var arrData = [];
         var selectSn ="";
         for(var i=0;i<json.length;i++){
@@ -517,6 +479,9 @@ layui.define(['form','drawer','table'], function (exports) {
                 show: true,
             },
             data: arrData,
+            theme: {
+                color: '#01AAED',
+            },
             layVerType: 'msg',
             model:{
                 label:{
@@ -550,6 +515,9 @@ layui.define(['form','drawer','table'], function (exports) {
             radio:true,
             clickClose:true,
             initValue:[1],
+            theme: {
+                color: '#01AAED',
+            },
             layVerType: 'msg',
             model:{
                 label:{
@@ -566,16 +534,16 @@ layui.define(['form','drawer','table'], function (exports) {
     }
 
     /**加载项目列表(初始化)**/
-    function initloadprojectlist(json){
+    function initloadprojectlist(json,init){
+
         var arrData = [];
-        let proidinit=[];
+        let proidinit=init.split(',');
         for(var i=0;i<json.length;i++){
             var item = json[i];
             var jsonStr = {};
             jsonStr.name = item.progroupname;
             jsonStr.value = item.projectid;
             arrData.push(jsonStr);
-            proidinit.push(item.projectid);
         }
         projectlist = xmSelect.render({
             el: '#projectlist2',
@@ -584,6 +552,9 @@ layui.define(['form','drawer','table'], function (exports) {
             },
             data: arrData,
             layVerType: 'msg',
+            theme: {
+                color: '#01AAED',
+            },
             initValue: proidinit,
             model:{
                 label:{
@@ -599,8 +570,6 @@ layui.define(['form','drawer','table'], function (exports) {
         })
     }
 
-
-
     /**获取各类别用户数量**/
     function getCustomCount(){
         $.ajax({
@@ -615,6 +584,6 @@ layui.define(['form','drawer','table'], function (exports) {
         })
     }
 
-    getCustomCount();
+    // getCustomCount();
     exports('customermanage',{})
 });

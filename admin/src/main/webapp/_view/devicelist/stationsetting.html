@@ -138,6 +138,8 @@
 
 </style>
 <body>
+
+
 <div class="layui-fluid" style="padding: 0px">
     <div class="layui-tab">
         <ul class="layui-tab-title" style="color: #1e9fff;background-color: #FFF;border-color:#FFF;">
@@ -177,7 +179,8 @@
 <script>
     var agentnum = "#(agentNum)";
     var machinesn="#(machinedata)";
-
+    var testmodel={};//详细模板数据
+    var fastmodel="";//快速设置模板
     src();
     function src() {
         document.getElementById("iframe_compute").src="/devicelist/stationcompute?machinesn="+machinesn;

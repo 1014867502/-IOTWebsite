@@ -129,6 +129,5 @@ public class RoleController extends BaseController {
         StaffData currentuser= StaffService.me.getStaffByName(id);
         result.success(RoleType.getString(currentuser.getIRoleType()));
         renderJson(result);
-
     }
 }

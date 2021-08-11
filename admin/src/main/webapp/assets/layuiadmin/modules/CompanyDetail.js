@@ -20,7 +20,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     getDeviceCounts();
     getDetailProject();
     adaptauthority();
-    getCompanyListByRole();
+    // getCompanyListByRole();
 
     function getDetailProject(){
         $.ajax({
@@ -61,7 +61,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
             width: "600px", //r、l抽屉可以设置宽度
             content: $("#window"),
-            btn: ['<i class="layui-icon">&#xe615;</i>提交修改', '重置'],
+            btn: ['<i class="layui-icon">&#xe615;</i>提交修改', '取消'],
             success :function (layero, index) {
                 renderlayerTable();
             },
@@ -85,7 +85,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             width: "600px", //r、l抽屉可以设置宽度
             content: $("#addprowindow"),
             success :function (layero, index) {
-                getCompanyListadd();
+                // getCompanyListadd();
                 layerindex=index;
             },
         });
@@ -117,10 +117,10 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , title: 'logdata'
             , height:'full-200'
             , totalRow: true
-            , url: '/devicelist/searchDevice'
+            , url: '/devicelist/searchDeviceByCom'
             , where: {'agentNumber': agentnum, 'sn': snreal, 'state': stats}
             , cols: [[
-                {field: 'id', title: "序号", align: 'center'}
+                {field: 'agentName', title: "所属公司", align: 'center'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
                 , {field: 'createTime', title: "登录时间", align: 'center'}
@@ -167,8 +167,8 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     form.on('submit(formDemo2)', function(data){
         let json=data.field;
-        let company=companylistadd.getValue();
-        json.agentNumber=company[0].value;
+        json.agentNumber=agentnum;
+        json.onlineState=0;
         let jsondata=JSON.stringify(json);
         $.ajax({
             url:'/devicelist/addDevice',
@@ -187,7 +187,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     //每行记录的按钮事件
     table.on('tool(table-from)', function (obj) {
         var data = obj.data;
-        debugger
+
         if (obj.event === 'echarts') {
             location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
         }else if(obj.event === 'edit'){
@@ -289,7 +289,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             },
             async:false,
             success:function () {
-                layer.alert("修改成功");
+                layer.alert("关联成功");
             }
         })
     }
