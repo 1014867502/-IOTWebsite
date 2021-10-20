@@ -6,13 +6,18 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.webmonitor.admin.common.kit.I18nKit;
+import com.webmonitor.core.bll.StaffService;
+import com.webmonitor.core.idal.IStaffData;
 import com.webmonitor.core.model.Account;
+import com.webmonitor.core.model.LoginInfo;
 import com.webmonitor.core.model.Session;
 import com.webmonitor.core.util.MD5Utils;
 import com.webmonitor.core.util.Tools;
 import com.webmonitor.core.util.exception.BusinessException;
 import com.webmonitor.core.vo.Result;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +35,7 @@ public class Index_GeoService {
         userName = userName.trim();
         password = password.trim();
         Account loginAccount = getGeoAccount(userName);
+
         if (loginAccount == null) {
             String tip = I18nKit.getI18nStr("error_usernamepassword_incorrect");
             throw new BusinessException(tip);

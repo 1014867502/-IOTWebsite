@@ -1,0 +1,274 @@
+<!--下发命令页面-->
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("GNSS位移统计")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style type="text/css">
+        .layui-form-checked span, .layui-form-checked:hover span {
+            background-color: #FF5722;
+        }
+
+        .layui-form-checked i, .layui-form-checked:hover i {
+            color: #FF5722;
+        }
+
+        .layui-btn.onlinebtn {
+            background-color: #009688;
+            color: #FFFFFF;
+        }
+
+        .layui-btn.offlinebtn {
+            background-color: #ff0000;
+            color: #FFFFFF;
+        }
+
+        .layui-card-body.layui-layout-box {
+            width: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            /*border-style: solid;*/
+            background-color: #1e9fff;
+            /*!*border-image: url(/img/bg.png) 4 4 4 4 fill round;*!*/
+            /*border-image: url(/img/bg.png) 4 4 4 4 fill stretch;*/
+            box-sizing: border-box;
+            /*height: calc(100% - 42px);*/
+            height: 130px;
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .data {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+        }
+
+        .layadmin-carousel.history {
+            height: 400px !important;
+        }
+
+        .iconcard {
+            display: flex;
+            height: 100px;
+            width: 282px;
+            margin: auto;
+            justify-content: space-evenly;
+            align-items: center;
+            overflow: hidden;
+            background-color: #ffFFFF;
+            border: 2px solid #ffFFFF;
+            box-shadow: 0 0 16px 9px #e8eaf0;
+        }
+
+        .icontitle {
+            font-size: 14px;
+            color: #a0a9a6;
+        }
+
+        .iconcontent {
+            font-size: 24px;
+            margin-top: 12px;
+        }
+
+        .cardcontent {
+            height: 300px;
+            margin-right: 0.5%;
+            align-items: center;
+            overflow: hidden;
+            background-color: #ffFFFF;
+            border: 2px solid #ffFFFF;
+            box-shadow: 0px 0px 7px 1px #e8eaf0;
+        }
+
+        .tableindex {
+            width: 50%;
+            text-align: right;
+            background-color: #EEEEEE;
+            color: #333333;
+            padding-right: 1px;
+            border: 1px solid #B3B3B3;;
+            margin: 0px -1px -1px 0px;
+        }
+
+        .tablecontent {
+            width: 50%;
+            border: 1px solid #B3B3B3;
+            padding: 7px 19px;
+            margin: 0px -1px -1px 0px;
+        }
+    </style>
+</head>
+<body>
+
+<style>
+    .header-Data {
+        width: 100%;
+        justify-content: left;
+        display: flex;
+        align-items: stretch;
+    }
+
+    .header-Data-content {
+        height: 300px;
+        width: 25%;
+        /*justify-content: center;*/
+        margin-right: 0.5%;
+        display: flex;
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        border: 2px solid #ffFFFF;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .header-Data-map {
+        height: 363px;
+        width: 25%;
+        /*justify-content: center;*/
+        margin-right: 0.5%;
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        border: 2px solid #ffFFFF;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .header-Data-contentEx {
+        width: 50%;
+        /*justify-content: center;*/
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .body-content {
+        margin-bottom: 1%
+    }
+
+    #map {
+        height: 100%;
+        width: 100%;
+    }
+
+    .untreated {
+        background-color: #FF5722;
+    }
+
+    .treated {
+        background-color: #01AAED;
+    }
+</style>
+
+<!-- 遮罩层 -->
+<div id="cover"
+     style="background: #000; position: absolute; left: 0px; top: 0px; width: 100%; filter: alpha(opacity=30); opacity: 0.3; display: none; z-index: 2 "></div>
+
+
+<div class="layui-fluid" style="background-color: #F0F5FA">
+    <div class="layui-row layui-col-space15" style="height: 827px;">
+        <div style="width: 100%;height: 100%;">
+            <div class="cardcontent" style="height: 100%;">
+                <div class="layui-card">
+                    <form class="layui-form" action="">
+                        <div class="layui-card-header">下发命令</div>
+                        <div class="layui-card-body">
+                            <div style="width: 100%;height: 100%;">
+                                <textarea id="text" style="resize: none;height: 87%;" name="order" required=""
+                                          lay-verify="required" placeholder="请输入" class="layui-textarea"></textarea>
+                                <div style="margin-top: 10px;text-align: right">
+                                    <div style="display: flex">
+                                        <div id="orderlist" class="xm-select-demo" style="width: 70%" ></div>
+                                        <button id="btn" type="button" class="layui-btn" lay-submit=""
+                                                lay-filter="formDemo">发送命令
+                                        </button>
+                                        <span style="color: #e82323" id="warn"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card" style="width: 100%;height: 100%;">
+                        <div class="layui-card-header">设备返回信息<span id="online" style=" color: #e82323"></span></div>
+                        <div class="layui-card-body" style="height: 76%;">
+                            <div style="width: 100%;height: 85%;">
+                            <textarea id="returninform" style="resize: none;height: 100%;" disabled="" name="inform"
+                                      class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+    var machinedata = parent.window.document.getElementsByName("iframe_a")[0].getAttribute('machinesn');
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'device_order']);
+</script>
+</body>
+</html>

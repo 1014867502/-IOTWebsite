@@ -2,23 +2,32 @@ package com.webmonitor.admin.devicelist;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.core.dal.AgentDataMysqlDAL;
 import com.webmonitor.core.dal.CacheMysqlDAL;
 import com.webmonitor.core.idal.IAgentData;
 import com.webmonitor.core.idal.ICache;
-import com.webmonitor.core.model.AgentData;
-import com.webmonitor.core.model.AgentDataDao;
-import com.webmonitor.core.model.MachineData;
-import com.webmonitor.core.model.MachineInfoEntity;
+import com.webmonitor.core.model.*;
 import com.webmonitor.core.model.userbase.DeviceSensorList;
 import com.webmonitor.core.util.OrderConstants;
 import com.webmonitor.core.util.Tools;
+import com.webmonitor.core.util.exception.ExceptionUtil;
 import net.sf.ehcache.search.expression.Or;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 public class DeviceListService {
     public static final DeviceListService me = new DeviceListService();
@@ -71,7 +80,7 @@ public class DeviceListService {
     }
 
 
-    public static boolean checkObjAllFieldsIsNull(String machineserial,Object object) {
+    public static boolean  checkObjAllFieldsIsNull(String machineserial,Object object) {
         String username="";
         String userpass="";
         if (null == object) {
@@ -114,6 +123,66 @@ public class DeviceListService {
         }
     }
 
+    /**获取设备更新状态**/
+    public UpdateData getUpdateState(String machineSerial){
+        UpdateData updateData=UpdateData.dao.findFirst("select * from update_data where machineSerial='"+machineSerial+"'");
+        return updateData;
+    }
+
+
+    /**获取设备更新详情**/
+    public String getDeviceUpdateDetail(String machineSerial){
+        MachineData machineData=MachineData.dao.findFirst("select * from machine_data where machineSerial='"+machineSerial+"'");
+        String version="";
+        UpdateData updateData=UpdateData.dao.findFirst("select * from update_data order by updateTime desc limit 0,1");
+        String time="";
+        if(updateData!=null){
+            time=updateData.getUpdateTime()==null?"":updateData.getUpdateTime();
+        }
+        version=machineData.getFirmwareVer()==null?"":machineData.getFirmwareVer();
+        return time+","+version;
+
+    }
+
+    /**判断设备是否是最新版本**/
+    public boolean isLatestVersion(String machineSerial){
+        MachineData machineData=MachineData.dao.findFirst("select * from machine_data where machineSerial='"+machineSerial+"'");
+        String version=machineData.getFirmwareVer().substring(4);
+        VersionData versionData=VersionData.dao.findFirst("select * from version_data where versionType=4");
+        String latest=versionData.getVersionCode().toString();
+        if(version.contains(latest)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**判断设备是否在线**/
+    public boolean isDeviceOnline(String machineserial){
+        boolean result=false;
+        MachineData machineData=MachineData.dao.findFirst("select * from machine_data where machineSerial='"+machineserial+"'");
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
+//        if(machineData.getUpdateTime()!=null) {
+//            try {
+//                Date date = simpleDateFormat.parse(machineData.getUpdateTime().replace('/', '-'));
+//                Date now = new Date();
+//                long ts = now.getTime() - date.getTime();
+//                int time = (int) (ts / 3600000);//超过一小时就视作离线
+//                if (time > 0) {
+//                    result=false;
+//                } else {
+//                   result=true;
+//                }
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
+        if(machineData.getConnectState()==1){
+            result=true;
+        }
+        return result;
+    }
+
     /**添加新设备**/
     public void addDevice(AgentData agentData){
         String state=String.valueOf(agentData.getOnlineState());
@@ -134,6 +203,125 @@ public class DeviceListService {
     public void delSensorByData(DeviceSensorList deviceSensorList,String machineserial){
         dal.delSensorByData(deviceSensorList,machineserial);
     }
+
+    /**获取设备的更新信息**/
+    public Page<UpdateData> getUpdateDataBySerial(String machineserial,int pageno,int limit){
+        return dal.getDeviceUpdatelog(machineserial, pageno, limit);
+    }
+
+//    /**执行上传文件(可自选)**/
+//    public String excuteUpload(HashMap<String,Integer> agentFile,File file){
+//        try {
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"GBK"));//换成你的文件名
+//            String head=reader.readLine();//第一行信息，为标题信息，不用,如果需要，注释掉
+//            String[] heads=head.split(",");
+//            boolean columsbool=true;
+//            String line = null;
+//            while((line=reader.readLine())!=null){
+//                String colums="";//插入语句的列名
+//                String insertvalue="";//插入语句的数值
+//                String[] values=line.split(",");
+//                for(Map.Entry<String,Integer>entry:agentFile.entrySet()){
+//                    colums+=","+entry.getKey();
+//                   insertvalue+=",'"+values[entry.getValue()].replace('/','-')+"'";
+//                }
+//                insertvalue=insertvalue.substring(1,insertvalue.length());
+//                colums=colums.substring(1,colums.length());
+//                columsbool=false;
+//                String sql="REPLACE INTO  agent_data  "+"(" + colums + ",ProGroupId)VALUES(" + insertvalue+ ",'0')";
+//                Db.query(sql);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "文件上传失败";
+//        }
+//        return "文件上传成功！";
+//    }
+
+
+
+    public Map<String, Object> XYZToBLH(double SourceX, double SourceY, double SourceZ){
+        Map<String, Object> map = new HashMap<String, Object>();
+        double destinationB=0,destinationL=0,destinationH=0;
+        double da = 6378137.0;
+        double df = 298.257223563;
+
+        double e2;
+        double A,F;
+        double N;
+        F=1.0/df;
+        A=da;
+        e2 = 2 * F - F * F;
+        double dl=Math.atan2(SourceY, SourceX);
+        destinationL=dl;
+
+        double b1,b2,h1,h2;
+        h1=Math.sqrt(Math.pow(SourceX,2)+Math.pow(SourceY,2)+Math.pow(SourceZ,2))-A;
+        b1=Math.atan2((SourceZ/Math.sqrt(SourceX*SourceX+SourceY*SourceY)),(1.-e2*A/(A+h1)));
+
+        if (Math.abs(SourceZ) < 1E-4)
+        {
+            destinationB = 0;
+            destinationL = 0;
+            destinationH = 0;
+            map.put("DesB",destinationB);
+            map.put("DesL",destinationL);
+            map.put("DesH",destinationH);
+            return map;
+        }
+
+        do
+        {
+            N=A/(Math.sqrt(1.-e2*Math.sin(b1)*Math.sin(b1)));
+            h2=h1;b2=b1;
+            h1=SourceZ/Math.sin(b1)-N*(1-e2);
+            b1=Math.atan2((SourceZ/Math.sqrt(SourceX*SourceX+SourceY*SourceY)),(1.-e2*N/(N+h1)));
+
+        }while(Math.abs(b2-b1)>Math.pow(10.0,-11)||Math.abs(h2-h1)>Math.pow(10.0,-5));
+
+        destinationB=b1;
+        N=A/(Math.sqrt(1.-e2*Math.sin(b1)*Math.sin(b1)));
+        destinationH=SourceZ/Math.sin(b1)-N*(1-e2);
+        destinationB = destinationB*180.0/Math.PI;
+        destinationL = destinationL*180.0/Math.PI;
+        map.put("DesB",destinationB);
+        map.put("DesL",destinationL);
+        map.put("DesH",destinationH);
+        return map;
+    }
+
+    /**大地坐标转xyz**/
+    public Map<String, Object> WGS84_BLHtoXYZ(double dB, double dL , double dH)
+    {
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        double XYZCorX,XYZCorY,XYZCorZ;
+        double DB,DL;
+
+        double e2;
+        double cosb, sinb;
+        double F;
+        double N;
+
+        F = 1.0 / 298.257223563;
+        DB = dB * Math.PI / 180.0;
+        DL = dL * Math.PI / 180.0;
+        e2 = 2 * F - F * F;
+        cosb = Math.cos(DB); sinb = Math.sin(DB);
+        N = 6378137.0 / (Math.sqrt(1.0- e2 * sinb * sinb));
+        XYZCorX = (N + DB) * cosb * Math.cos(DL);
+        XYZCorY = (N + dH) * cosb * Math.sin(DL);
+        XYZCorZ= (N * (1.0 - e2) + dH) * sinb;
+
+        map.put("EcefX",XYZCorX);
+        map.put("EcefY",XYZCorY);
+        map.put("EcefZ",XYZCorZ);
+
+        return  map;
+    }
+
+
 
     public static String getOrder(String order){
         String realorder="";
@@ -426,6 +614,12 @@ public class DeviceListService {
                 break;
             case "dzIotHttp":
                 realorder=OrderConstants.DZ_IOT_HTTP_Order;
+                break;
+            case "ntripArg":
+                realorder=OrderConstants.RAW_NTRIP_ARG;
+                break;
+            case "secondArg":
+                realorder=OrderConstants.RAW_SECOND_NTRIP_ARG;
         }
         return realorder;
     }

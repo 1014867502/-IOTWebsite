@@ -23,6 +23,7 @@
             color: #FFFFFF;
         }
 
+
         .layui-btn.offlinebtn {
             background-color: #ff0000;
             color: #FFFFFF;
@@ -100,9 +101,17 @@
 <body>
 
 <style>
+
+    .layui-btn:hover {
+        opacity: .8;
+        filter: alpha(opacity=80);
+        color: #ffffff;
+        background-color: #1e9fff;
+    }
+
     .header-Data {
         width: 100%;
-        justify-content: left;
+        justify-content: center;
         display: flex;
         align-items: stretch;
     }
@@ -154,11 +163,19 @@
     }
 
     .untreated {
-        background-color: #FF5722;
+        border: solid 0.5px;
+        height: 27px;
+        color: #FF5722;
+        width: 30%;
+        /*background-color: #FF5722;*/
     }
 
     .treated {
-        background-color: #01AAED;
+        border: solid 0.5px;
+        height: 27px;
+        color: #01AAED;
+        width: 30%;
+        /*background-color: #01AAED;*/
     }
 
     body {
@@ -180,58 +197,69 @@
 
     .indexcard {
         display: flex;
-        width: 480px;
-        margin-left: 8px;
-        padding-right: 8px;
-        height: 180px;
+        width: 297px;
+        margin-left: 4%;
+        padding-right: 21px;
+        height: 144px;
         background-color: #fffefe;
-        box-shadow: 0 0 6px -1px #9F9F9F;
+        box-shadow: 0 0 6px -1px #9f9f9f;
     }
+
     .devicecard {
         width: 50%;
         text-align: center;
         margin: auto;
     }
+
     .layui-form-checked[lay-skin=primary] i {
         border-color: #1e9fff !important;
         background-color: #1e9fff;
         color: #fff;
     }
+
     .layui-laypage .layui-laypage-curr .layui-laypage-em {
-         position: absolute;
-         left: -1px;
-         top: -1px;
-         padding: 1px;
-         width: 100%;
-         height: 100%;
-         background-color: #1e9fff;
-     }
+        position: absolute;
+        left: -1px;
+        top: -1px;
+        padding: 1px;
+        width: 100%;
+        height: 100%;
+        background-color: #1e9fff;
+    }
+    .sninput{
+        border-radius: 6px 0px 0px 6px;
+    }
+    .searchbtn{
+        background-color: #FFFFFF;
+        color: #01AAED;
+        border: 1px solid #01AAED;
+        border-radius: 0px 6px 6px 0px;
+    }
 </style>
 
 <div class="site-text" style="margin: 5%; display: none" id="devicechangewindow" target="test123">
-        <div class="layui-form-item">
-            <label class="layui-form-label">迁移至</label>
-            <div class="layui-input-block">
-                <div id="companylist" class="xm-select-project" style="width: auto" ></div>
-            </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">迁移至</label>
+        <div class="layui-input-block">
+            <div id="companylist" class="xm-select-project" style="width: auto"></div>
         </div>
+    </div>
     </form>
 </div>
 
 
-<!--//关联设备弹窗-->
+<!--//选择模板弹窗-->
 <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
     <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
         <div class="layui-form-item" style="margin: auto">
-            <div class="layui-inline" style="width: 160px">
-                <select id="stats2" name="stats" lay-verify="" lay-filter="stats">
-                    <option value="2">全部</option>
-                    <option value="0">设备ID</option>
-                    <option value="1">设备名称</option>
+            <div class="layui-inline" style="width: 160px" id="templateselect">
+                <select id="templatetype" name="stats" lay-verify="" lay-filter="templatetype">
+                    <option value="0" selected>全部</option>
+                    <option value="1">模板名字</option>
                 </select>
             </div>
             <div class="layui-inline">
-                <input type="text" class="layui-input" name="SN" id="SN2" placeholder=" 请输入设备sn号 " dis>
+                <input type="text" class="layui-input" name="SN" id="SN2" placeholder=" 请输入设备sn号 ">
             </div>
             <div class="layui-inline">
                 <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
@@ -252,13 +280,15 @@
         <div class="layui-form-item">
             <label class="layui-form-label">设备名称</label>
             <div class="layui-input-block">
-                <input id="machinname" style="width: 70%" type="text" name="machineName"  lay-verify="editaccount|required" placeholder="请输入设备名" autocomplete="off" class="layui-input">
+                <input id="machinname" style="width: 70%" type="text" name="machineName"
+                       lay-verify="editaccount|required" placeholder="请输入设备名" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">设备编号</label>
             <div class="layui-input-block">
-                <input id="machineserial" style="width: 70%" type="text" name="machineSerial"  lay-verify="required|confirmserial" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
+                <input id="machineserial" style="width: 70%" type="text" name="machineSerial"
+                       lay-verify="required|confirmserial" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -267,133 +297,230 @@
                 <div id="companylistadd" class="xm-select-project" style="width: 70%"></div>
             </div>
         </div>
-<!--        <div class="layui-form-item">-->
-<!--            <label class="layui-form-label">状态</label>-->
-<!--            <div class="layui-input-block">-->
-<!--                <div style="width: 70%">-->
-<!--                    <select id="onlinestate" name="onlineState" lay-filter="type" style="width: 70%">-->
-<!--                        <option value="0">离线</option>-->
-<!--                        <option value="1">在线</option>-->
-<!--                    </select>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-        <div class="layui-form-item" >
+        <!--        <div class="layui-form-item">-->
+        <!--            <label class="layui-form-label">状态</label>-->
+        <!--            <div class="layui-input-block">-->
+        <!--                <div style="width: 70%">-->
+        <!--                    <select id="onlinestate" name="onlineState" lay-filter="type" style="width: 70%">-->
+        <!--                        <option value="0">离线</option>-->
+        <!--                        <option value="1">在线</option>-->
+        <!--                    </select>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
-                <button  type="reset" class="layui-btn ">取消</button>
+                <button type="reset" class="layui-btn ">取消</button>
             </div>
         </div>
     </form>
 </div>
 
 <script type="text/html" id="statusdemo">
-    <button class="layui-btn layui-btn-primary layui-btn-xs" style="background-color: #f19038;color: #F1F1F1">未关联</button>
+    <button class="layui-btn layui-btn-primary layui-btn-xs" style="background-color: #f19038;color: #F1F1F1">未关联
+    </button>
 </script>
 
+<!--//批量添加设备弹窗-->
+<div class="site-text" style="margin: 5%; display: none" id="addswindow" target="test1234">
+    <div style="display: flex">
+        <h1>批量添加设备</h1>
+        <div id="uploadchoose"></div>
+        <span style="margin-top: 10px;">（仅支持csv文件）</span>
+    </div>
+    <div class="layui-upload-list" style="width: 100%;">
+        <table class="layui-table">
+            <colgroup>
+                <col width="260">
+                <col width="150">
+                <col width="260">
+                <col width="150">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>文件名</th>
+                <th>大小</th>
+                <th>上传进度</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="demoList"></tbody>
+        </table>
+    </div>
+    <div style="text-align: center"><button type="button" class="layui-btn layui-btn-normal" id="uploadBtn"><i class="layui-icon"></i>上传文件</button></div>
+
+    <div id="sqlprogress" style="display: none;margin-top:10px" class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="sqlprogress">
+        <div class="layui-progress-bar layui-bg-blue" ></div>
+    </div>
+<!--    <div id="columwindow" style="display: none">-->
+<!--        <div style="display: flex">-->
+<!--            <h1>数据库对应文件导入列名</h1>-->
+<!--        </div>-->
+<!--        <div class="layui-upload-list" style="width: 100%;">-->
+<!--            <form class="layui-form" action="">-->
+<!--                <div class="layui-form">-->
+<!--                    <table class="layui-table">-->
+<!--                        <colgroup>-->
+<!--                            <col width="150">-->
+<!--                            <col width="300">-->
+<!--                            <col>-->
+<!--                        </colgroup>-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>数据列名</th>-->
+<!--                            <th>导入文件列名</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr>-->
+<!--                            <td id="snnum">SN号</td>-->
+<!--                            <td>-->
+<!--                                <select name="machineSerial" id="machinesn" required >-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td id="devicename">设备名称</td>-->
+<!--                            <td>-->
+<!--                                <select name="machineName" id="machinename" required >-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td id="comnum">公司编号</td>-->
+<!--                            <td>-->
+<!--                                <select name="agentNumber" id="agentnumber" required >-->
+<!--                                </select>-->
+<!--                            </td>-->
+
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td id="devicedate">日期</td>-->
+<!--                            <td>-->
+<!--                                <select name="createTime" id="createtime" required >-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </div>-->
+<!--                <div style="text-align: center">-->
+<!--                        <button type="button" class="layui-btn" lay-submit lay-filter="uploadsumbit">提交修改</button>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+
+</div>
 
 
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
-<!--        <div class="layui-col-md12 layui-card" id="projectheader"-->
-<!--             style="height: auto;background-color: #f8f8f8;box-shadow: 0 0 6px 3px #c9c9c9;display: flex">-->
-<!--            <div style="margin: auto;">-->
-<!--                <div class="projectname" id="projectname"></div>-->
-<!--                <div style="display: flex;justify-content:space-between;margin-top: 10px;color: #00f0ff;width: 150px">-->
-<!--                    <span><a style='color: #00f0ff' href='' target="_parent">编辑</a></span>-->
-<!--                    <span class='delete'>详情</span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div style="display: flex;margin: auto;">-->
-<!--                <ul style="display: flex ;margin: auto;">-->
-<!--                    <li class="little">-->
-<!--                        <div>所属公司</div>-->
-<!--                        <div style="font-size: 20px" id="comname"></div>-->
-<!--                    </li>-->
-<!--                    <li class="little">-->
-<!--                        <div>设备数量</div>-->
-<!--                        <div id="devicenum" style="font-size: 20px"></div>-->
-<!--                    </li>-->
-<!--                    <li class="little">-->
-<!--                        <div>创建时间</div>-->
-<!--                        <div id="createtime"></div>-->
-<!--                    </li>-->
+        <!--        <div class="layui-col-md12 layui-card" id="projectheader"-->
+        <!--             style="height: auto;background-color: #f8f8f8;box-shadow: 0 0 6px 3px #c9c9c9;display: flex">-->
+        <!--            <div style="margin: auto;">-->
+        <!--                <div class="projectname" id="projectname"></div>-->
+        <!--                <div style="display: flex;justify-content:space-between;margin-top: 10px;color: #00f0ff;width: 150px">-->
+        <!--                    <span><a style='color: #00f0ff' href='' target="_parent">编辑</a></span>-->
+        <!--                    <span class='delete'>详情</span>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--            <div style="display: flex;margin: auto;">-->
+        <!--                <ul style="display: flex ;margin: auto;">-->
+        <!--                    <li class="little">-->
+        <!--                        <div>所属公司</div>-->
+        <!--                        <div style="font-size: 20px" id="comname"></div>-->
+        <!--                    </li>-->
+        <!--                    <li class="little">-->
+        <!--                        <div>设备数量</div>-->
+        <!--                        <div id="devicenum" style="font-size: 20px"></div>-->
+        <!--                    </li>-->
+        <!--                    <li class="little">-->
+        <!--                        <div>创建时间</div>-->
+        <!--                        <div id="createtime"></div>-->
+        <!--                    </li>-->
 
-<!--                </ul>-->
-<!--            </div>-->
-<!--        </div>-->
+        <!--                </ul>-->
+        <!--            </div>-->
+        <!--        </div>-->
         <div class="header-Data">
-            <div style="display: flex;max-width: 1440px;margin-left: auto;margin-right: auto;">
-                <div class="indexcard">
-                    <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
-                        <img width="55px" src="/assets/images/icon_devicesum.png"/>
-                        <div style="font-size: 18px;margin-top: 10px">项目设备总数</div>
-                    </div>
-                    <div class="devicecard" id="sumnum" style="font-size: 20px;">
-
-                    </div>
+            <!--            <div style="display: flex;max-width: 1440px;margin-left: auto;margin-right: auto;">-->
+            <div class="indexcard">
+                <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
+                    <img width="55px" src="/assets/images/icon_devicesum.png"/>
+                    <div style="font-size: 18px;margin-top: 10px">项目设备总数</div>
                 </div>
-                <div class="indexcard">
-                    <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
-                        <img width="55px" src="/assets/images/icon_deviceonline.png">
-                        <div style="font-size: 18px;margin-top: 10px">项目设备在线数</div>
-                    </div>
-                    <div class="devicecard" id="onlinenum" style="font-size: 20px;">
-
-                    </div>
-
-                </div>
-                <div class="indexcard">
-                    <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
-                        <img width="55px" src="/assets/images/icon_deviceout.png">
-                        <div style="font-size: 18px;margin-top: 10px">项目设备离线数</div>
-                    </div>
-                    <div class="devicecard" id="outnum" style="font-size: 20px;">
-
-                    </div>
+                <div class="devicecard" id="sumnum" style="font-size: 20px;">
                 </div>
             </div>
+            <div class="indexcard">
+                <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
+                    <img width="55px" src="/assets/images/icon_deviceonline.png">
+                    <div style="font-size: 18px;margin-top: 10px">项目设备在线数</div>
+                </div>
+                <div class="devicecard" id="onlinenum" style="font-size: 20px;">
+
+                </div>
+
+            </div>
+            <div class="indexcard">
+                <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
+                    <img width="55px" src="/assets/images/icon_deviceout.png">
+                    <div style="font-size: 18px;margin-top: 10px">项目设备离线数</div>
+                </div>
+                <div class="devicecard" id="outnum" style="font-size: 20px;">
+
+                </div>
+            </div>
+            <!--            </div>-->
         </div>
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">设备表格</div>
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
-                    <div class="layui-form-item" style="margin: auto">
-                        <div class="layui-inline" id="select">
-                            <select id="stats" name="stats" lay-verify="" lay-filter="stats">
-                                <option value="1">在线</option>
-                                <option value="0">离线</option>
-                                <option value="3">全部</option>
-                            </select>
+                    <div class="layui-form-item" style="margin: auto;width: 100%;display: flex">
+                        <div class="layui-inline" style="width: 20%;margin-top: 3px;">
+                            <div id="company" class="xm-select-demo" ></div>
                         </div>
-                        <div class="layui-inline">
-                            <input type="text" class="layui-input" name="SN" id="SN" placeholder=" 请输入设备sn号 ">
+                        <div class="layui-inline" style="width: 15%;margin-top: 3px;">
+                            <div id="comproject" class="xm-select-demo" ></div>
                         </div>
-                        <div class="layui-inline">
-                            <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
-                                    id="datasumbit" lay-filter="LAY-app-contlist-search">
-                                <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
+                        <div class="layui-inline" style="width: 10%;margin-top: 3px;">
+                            <div id="online" class="xm-select-demo" ></div>
+                        </div>
+                        <div class="layui-inline" style="width: 20%;margin-top: 3px;">
+                            <div style="display: flex">
+                                <input type="text" class="layui-input sninput" name="SN" id="SN" placeholder=" 请输入设备sn号 ">
+                                <button type="button" class="layui-btn searchbtn" lay-submit data-type="reload"
+                                        id="datasumbit" lay-filter="LAY-app-contlist-search">搜索
+                                </button>
+                            </div>
+                        </div>
+<!--                        <div class="layui-inline">-->
+                            <!--                            <div id="addequip" >-->
+                            <!--                                <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"-->
+                            <!--                                        id="selectall" lay-filter="LAY-app-contlist-search">-->
+                            <!--                                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询全部</i>-->
+                            <!--                                </button>-->
+                            <!--                            </div>-->
+<!--                        </div>-->
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn" id="add_device2"><img
+                                    src="/assets/images/icon_add_device_28.png"/>添加设备
                             </button>
                         </div>
-                        <div class="layui-inline">
-<!--                            <div id="addequip" >-->
-<!--                                <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"-->
-<!--                                        id="selectall" lay-filter="LAY-app-contlist-search">-->
-<!--                                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询全部</i>-->
-<!--                                </button>-->
-<!--                            </div>-->
-
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn" id="add_device3"><img
+                                    src="/assets/images/icon_add_device_28.png"/>批量添加设备
+                            </button>
                         </div>
-                        <div class="layui-inline">
-                            <button type="button" class="layui-btn" id="add_device2"><img src="/assets/images/icon_add_device_28.png"/>添加设备</button>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn" id="add_device"><img
+                                    src="/assets/images/icon_add_device_28.png"/>配置设备
+                            </button>
                         </div>
-
                     </div>
-<!--                    <div style="margin: auto;display: flex">-->
-<!--                        <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>关联设备</button>-->
-<!--                    </div>-->
-
-
                 </div>
                 <div class="layui-card-body">
                     <table class="layui-hide" id="table-form" lay-filter="table-from"></table>
@@ -412,16 +539,22 @@
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script type="text/html" id="table-online-state">
     {{ d.onlineState == 1 ? '
-    <button class="layui-btn layui-btn-sm treated">在线</button>'
+    <div class="treated">在线</div>'
     : '
-    <button class="layui-btn layui-btn-sm untreated">离线</button>' }}
+    <div class="untreated">离线</div>' }}
+</script>
+<script type="text/html" id="modeltype">
+    {{ d.type == 1 ? '
+    <div class="treated" style="width: 60%">快速设置</div>'
+    : '
+    <div class="untreated" style="width: 60%">详细设置</div>' }}
 </script>
 
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
 
 <script>
     var userid = parent.window.document.getElementsByName("homepageiframe")[0].getAttribute('userid');
-    var type="#(type)";
+    var type = "#(type)";
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

@@ -97,6 +97,8 @@ public class IndexController extends BaseController {
 
     @Remark("修改密码页")
     public void password() {
+        String userid=getLoginAccount().getUserName();
+        setAttr("userid",userid);
         render("password.html");
     }
 

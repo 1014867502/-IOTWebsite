@@ -13,6 +13,7 @@ import com.webmonitor.core.model.userbase.ExportGNSSWord;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import com.webmonitor.core.vo.Result;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectController extends BaseController {
@@ -31,11 +32,25 @@ public class ProjectController extends BaseController {
     /**根据用户id获取对应的项目列表**/
     public void getProjectsById(){
         String useid=getLoginAccount().getUserName();
-        Result<Page<Object>> result=Result.newOne();
-        int pageno=getParaToInt("pageno",1);
+        Result<List<BaseProjects>> result=Result.newOne();
+        List<BaseProjects> projectsData=new ArrayList<>();
+        int pageno=getParaToInt("page",1);
         int limit=getParaToInt("limit",50);
         try{
-            Page<Object> page= ProjectService.me.getProjectsById(useid,pageno,limit);
+            projectsData= ProjectService.me.getProjectlistById(useid);
+            result.success(projectsData);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /**根据项目id获取对应的项目**/
+    public void getProjectById(){
+        String groupid=getLoginAccount().getUserName();
+        Result<BaseProjects> result=Result.newOne();
+        try{
+            BaseProjects page= ProjectService.me.getProjectById(groupid);
             result.success(page);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result, e);
@@ -54,12 +69,15 @@ public class ProjectController extends BaseController {
             ExceptionUtil.handleThrowable(result,e);
         }
         renderJson(result);
+
     }
+
+    /**根据用户id获取用户对应的**/
 
     public void getAllDeviceByGroupid(){
         String groupid=getPara("progroupid");
         Result<Page<AgentData>> result=Result.newOne();
-        int pageno=getParaToInt("pageno",1);
+        int pageno=getParaToInt("page",1);
         int limit=getParaToInt("limit",50);
         try{
             Page<AgentData> proDevCount= DeviceListService.me.getAllDeviceByGroupid(groupid,pageno,limit);
@@ -95,7 +113,7 @@ public class ProjectController extends BaseController {
 
     /**根据公司获取分页的项目列表**/
     public void getProjectPageByComId(){
-        int pageno=getParaToInt("pageno",1);
+        int pageno=getParaToInt("page",1);
         int limit=getParaToInt("limit",5);
         String agentnum=getPara("agentnum");
         Result<Page<BaseProjects>> result=Result.newOne();
@@ -109,6 +127,18 @@ public class ProjectController extends BaseController {
     }
 
     public void getProjectByName(){
+        String name=getPara("name");
+        Result result=Result.newOne();
+        try{
+            BaseProjects baseProjects=ProjectService.me.getProjectByName(name);
+            result.success(baseProjects);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    public void getProjectByGroupId(){
         String name=getPara("name");
         Result result=Result.newOne();
         try{

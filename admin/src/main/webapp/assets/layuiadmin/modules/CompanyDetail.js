@@ -93,7 +93,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     /*旗下项目管理跳转*/
     $("#projectmanage").click(function () {
-        location.href="/manage/companyprojects?agentnum="+agentnum;
+        location.href="/manage/companyprojects?agentnum="+agentnum+"&agentname="+agentName;
     })
 
     //监听页面表格查询
@@ -289,6 +289,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             },
             async:false,
             success:function () {
+                getDeviceCounts();
                 layer.alert("关联成功");
             }
         })
@@ -333,7 +334,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     /**根据权限显示不同页面内容**/
     function adaptauthority(){
         $.ajax({
-            url:'/role/getauthorById',
+            url:'/custom/getauthorById',
             async:false,
             success:function (data) {
                 switch (data.data) {
@@ -378,6 +379,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             theme: {
                 color: '#01AAED',
             },
+            empty: '呀, 没有数据呢',
             model: {
                 label: {
                     type: 'block',
@@ -418,6 +420,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             el: '#companylistadd',
             radio: true,
             data: arrData,
+            empty: '呀, 没有数据呢',
             theme: {
                 color: '#01AAED',
             },

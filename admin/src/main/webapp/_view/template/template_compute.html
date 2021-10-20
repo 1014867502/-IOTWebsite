@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("GNSS位移统计")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style type="text/css">
+        .layui-form-checked[lay-skin=primary] i {
+            border-color: #1e9fff !important;
+            background-color: #1e9fff;
+            color: #FFFF;
+        }
+        .layui-btn.onlinebtn {
+            background-color: #009688;
+            color: #FFFFFF;
+        }
+
+        .layui-btn.offlinebtn {
+            background-color: #ff0000;
+            color: #FFFFFF;
+        }
+
+        .layui-card-body.layui-layout-box {
+            width: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            /*border-style: solid;*/
+            background-color: #1e9fff;
+            /*!*border-image: url(/img/bg.png) 4 4 4 4 fill round;*!*/
+            /*border-image: url(/img/bg.png) 4 4 4 4 fill stretch;*/
+            box-sizing: border-box;
+            /*height: calc(100% - 42px);*/
+            height: 130px;
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .data {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+        }
+
+        .layadmin-carousel.history {
+            height: 400px !important;
+        }
+    </style>
+</head>
+<style>
+    .fastinput {
+        width: 400px;
+    }
+
+    .btn_primary {
+        border-color: #1e9fff;
+        background-color: #F1F1F1;
+        color: #1e9fff;
+
+    }
+
+    .btn_primary:hover {
+        background-color: #1e9fff;
+        color: #F1F1F1;
+    }
+
+    .layui-form-radio > i:hover, .layui-form-radioed > i {
+        color: #1e9fff;
+    }
+
+    .layui-form-label {
+        float: left;
+        display: block;
+        padding: 9px 15px;
+        width: 80px;
+        font-weight: bold;
+        line-height: 20px;
+        text-align: right;
+    }
+
+    .layui-form-onswitch {
+        border-color: #1e9fff;
+        background-color: #1e9fff;
+    }
+
+    .layui-form-select dl dd.layui-this {
+        background-color: #1e9fff;
+        color: #fff;
+    }
+
+    .circle {
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        background-color: #1e9fff;
+        margin-top: 7px;
+        margin-right: 6px;
+        /* 宽度和高度需要相等 */
+    }
+
+    .basecoreindex {
+        width: 100px;
+        padding: 9px 5px;
+    }
+    legend {
+        font-size: 12px;
+        font-weight: inherit;
+        color: #03A9F4;
+    }
+</style>
+<body>
+<div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
+    <form class="layui-form" id="book" method="post" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">模板名称</label>
+            <div class="layui-input-block">
+                <input type="text" id="templatename"  name="templatename" lay-verify="required|templatename" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding-top: 30px;text-align: center">
+            <div class="layui-input-block" style="margin-left: 0px!important;">
+                <button class="layui-btn" type="button"  lay-submit lay-filter="example">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="layui-fluid" style="padding: 0px!important;">
+    <div class="layui-row layui-col-space15" style="font-weight: bold">
+        <form class="layui-form" action="" id="formDemo" lay-filter="formDemo">
+            <div class="layui-card">
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                    解算设置
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">解算模式</label>
+                        <div class="layui-input-block">
+                            <input type="radio" lay-filter="compute" name="rawSolution" value="0" title="前端解算" checked>
+                            <input type="radio" lay-filter="compute" name="rawSolution" value="1" title="后端解算">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">测站类型</label>
+                        <div class="layui-input-block">
+                            <input type="radio" lay-filter="station" name="rawMode" value="2" title="基准站" checked>
+                            <input type="radio" lay-filter="station" name="rawMode" value="0" title="监测站">
+                        </div>
+                    </div>
+
+
+                    <div style="display: flex">
+                        <div class="layui-form-item fastinput">
+                            <label class="layui-form-label">测站编号</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="rawName" name="rawName" required
+                                       lay-verify="required" placeholder="请输入标题"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div id="timerecord">
+
+                        </div>
+                        <div class="layui-form-item  fastinput">
+                            <label class="layui-form-label">采样频率</label>
+                            <div class="layui-input-block">
+                                <select id="selectList" name="rawRate" lay-verify="required">
+                                    <option value="1000">1s</option>
+                                    <option value="5000">5s</option>
+                                    <option value="10000">10s</option>
+                                    <option value="15000">15s</option>
+                                    <option value="30000">30s</option>
+                                    <option value="60000">60s</option>
+                                    <option value="200">5Hz</option>
+                                    <option value="100">10Hz</option>
+                                    <option value="50">20Hz</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="basechange">
+                    </div>
+
+                    <div id="basestation">
+                    </div>
+
+                    <div id="devicestatus">
+                    </div>
+
+                    <div id="statusresult">
+                    </div>
+
+                    <div id="observedata">
+                    </div>
+
+                    <div id="basedownload">
+
+                    </div>
+                    <div id="basefilereturn"></div>
+                </div>
+            </div>
+            <div id="rtksetting">
+            </div>
+            <div id="rawdatareturn" style="margin-top:16px ">
+
+            </div>
+            <div class="layui-form-item" style="padding-top: 30px;text-align: center">
+                <div class="layui-input-block" style="margin-left: 0px!important;">
+                    <button type="button" class="layui-btn" id="changename" >修改模板名称</button>
+                    <button id="savemodel" type="button" class="layui-btn">保存当前模板</button>
+                    <button id="reset" type="button" class="layui-btn ">刷新</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+    var templatename  = "#(templatename)";
+    var machinesn = "#(machinesn)";
+
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'template_compute']);
+</script>
+</body>
+</html>

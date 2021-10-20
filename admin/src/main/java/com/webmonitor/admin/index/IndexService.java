@@ -6,13 +6,17 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.webmonitor.admin.common.kit.I18nKit;
+import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.model.Account;
 import com.webmonitor.core.model.Session;
+import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.util.MD5Utils;
 import com.webmonitor.core.util.Tools;
 import com.webmonitor.core.util.exception.BusinessException;
 import com.webmonitor.core.vo.Result;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 //这里是登录方法的服务层
@@ -34,6 +38,22 @@ public class IndexService {
         userName = userName.trim();
         password = password.trim();
         Account loginAccount = getGeoAccount(userName);
+        if(loginAccount==null){
+            String tip = I18nKit.getI18nStr("error_account_account");
+            throw new BusinessException(tip);
+        }
+        String time= StaffService.me.getStaffByName(userName).getAccountTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+        try {
+                Date accounttime=df.parse(time);
+                Date nowtime=new Date();
+                if(accounttime.getTime()<nowtime.getTime()){
+                    String tip = I18nKit.getI18nStr("error_login_outdate");
+                    throw new BusinessException(tip);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         if (loginAccount == null) {
             String tip = I18nKit.getI18nStr("error_usernamepassword_incorrect");
             throw new BusinessException(tip);
@@ -141,7 +161,7 @@ public class IndexService {
     }
 
     public Account getGeoAccount(String userid){
-        String sql = "SELECT * from staff_data where uAccountNum='"+userid+"'";
+        String sql = "SELECT * from staff_data where uAccountNum='"+userid+"' and iRoleType!=3";
         Record record = Db.findFirst(sql);
         if (!Tools.isEmpty(record)){
             Account account = new Account();

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    #@meta("主页")
+    #@meta("供销商管理员用户管理员页面")
     <script src="/assets/lib/xm-select.js"></script>
 </head>
 <body class="layui-layout-body">
@@ -94,7 +94,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">登录密码</label>
+            <label class="layui-form-label">修改密码</label>
             <div class="layui-input-block">
                 <input style="width: 70%" type="password" name="uPassword" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
@@ -130,6 +130,15 @@
                 </div>
             </div>
         </div>
+        <div id="datekeep" class="layui-form-item">
+            <label class="layui-form-label">账号时限</label>
+            <div class="layui-input-block">
+                <div style="width: 70%">
+                    <input type="text" class="layui-input" lay-verify="required" name="accounttime" id="datasave" placeholder="请输入账号到期时间">
+                </div>
+                <span id="datetip"></span>
+            </div>
+        </div>
 
         <div class="layui-form-item" >
             <div class="layui-input-block">
@@ -146,7 +155,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">账号名</label>
             <div class="layui-input-block">
-                <input id="uaccountnum" style="width: 70%" type="text" name="uAccountNum"  lay-verify="editaccount|required" placeholder="请输入账号" autocomplete="off" class="layui-input">
+                <input id="uaccountnum" style="width: 70%" type="text" name="uAccountNum" disabled lay-verify="editaccount|required" placeholder="请输入账号" autocomplete="off" class="layui-input layui-disabled">
             </div>
         </div>
         <div class="layui-form-item">
@@ -156,7 +165,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">登录密码</label>
+            <label class="layui-form-label">修改密码</label>
             <div class="layui-input-block">
                 <input id="upassword" style="width: 70%" type="password" name="editPassword"  placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
@@ -184,6 +193,15 @@
                 </div>
             </div>
         </div>
+        <div id="datechange" class="layui-form-item">
+            <label class="layui-form-label">账号时限</label>
+            <div class="layui-input-block">
+                <div style="width: 70%">
+                    <input type="text" class="layui-input"  lay-verify="required" name="accounttime" id="dataedit" placeholder="请输入账号到期时间">
+                </div>
+                <span id="edittip"></span>
+            </div>
+        </div>
 <!--        <div class="layui-form-item">-->
 <!--            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">所属公司</label>-->
 <!--            <div class="layui-input-block">-->
@@ -197,7 +215,7 @@
         <div class="layui-form-item" >
             <div class="layui-input-block">
                 <button  type="button" class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
-                <button  type="reset" class="layui-btn ">重置</button>
+<!--                <button  type="reset" class="layui-btn ">重置</button>-->
             </div>
         </div>
     </form>
@@ -274,8 +292,10 @@
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
 <script type="text/html" id="barDemo">
+    {{ d.roleType != "超级管理员" ? '
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>'
+    : '' }}
 </script>
 
 <script>

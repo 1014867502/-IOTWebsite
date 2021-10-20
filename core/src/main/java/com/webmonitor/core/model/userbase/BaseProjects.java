@@ -8,7 +8,7 @@ public class BaseProjects {
     private String projectid;
     private String progroupname;
     private int devicenum;
-    private Date createtime;
+    private String createtime;
     private String agentname;
     private String agentnumber;
 
@@ -60,11 +60,11 @@ public class BaseProjects {
         this.devicenum = devicenum;
     }
 
-    public Date getCreatetime() {
+    public String getCreatetime() {
         return createtime;
     }
 
-    public void setCreatetime(Date createtime) {
+    public void setCreatetime(String createtime) {
         this.createtime = createtime;
     }
 }

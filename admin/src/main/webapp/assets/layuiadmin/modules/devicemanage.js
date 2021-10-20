@@ -198,6 +198,7 @@ layui.define(['form','drawer','table'], function (exports) {
             },
             async:false,
             success:function () {
+                getDeviceCounts();
                 layer.alert("关联成功");
             }
         })

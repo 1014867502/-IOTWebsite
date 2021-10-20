@@ -125,4 +125,17 @@ public class CompanyController extends BaseController {
         }
         renderJson(result);
     }
+
+    public void deleteCom(){
+        String agentnum=getPara("agentnum");
+        Result<String> result=Result.newOne();
+        try{
+            if(CompanyService.me.deletagentByNum(agentnum)>0){
+                result.success("ok");
+            }
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
 }

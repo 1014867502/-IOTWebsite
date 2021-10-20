@@ -226,6 +226,15 @@ public class Tools {
             throw new RuntimeException("Can not parse the parameter \"" + str + "\" to Date value.");
         }
     }
+    public static Date toDateTime(String str) {
+        try {
+            if (str == null || "".equals(str.trim()))
+                return new Date();
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(str.trim());
+        } catch (Exception e) {
+            throw new RuntimeException("Can not parse the parameter \"" + str + "\" to Date value.");
+        }
+    }
 
     public static String today() {
         Date date=new Date();

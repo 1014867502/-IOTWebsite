@@ -169,23 +169,33 @@
 
 </style>
 <body>
-<div class="layui-fluid">
+<div class="layui-fluid" style="background-color:#F0F5FA;">
     <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
-        <div style="width:100%">
+        <div style="width:100%;margin-top: 5px;margin-bottom: 10px">
             <div class="layui-card" style="display: flex">
+                <div style="margin-top: 16px;margin-left: 10px;">
+                    <div id="devicename" style="font-weight: bold;font-size: 24px;"></div>
+                    <div style="font-size: 24px;font-weight: bold;">设备设置</div>
+                </div>
                 <ul style="display: flex ;margin: auto;height: 100px" id="menu">
+                    <li class="little" id="deviceinfo">
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="deviceinfo1" class="icon" style="background: url(/assets/images/deviceinform_black.png) no-repeat center;"></i></i></div>
+                        <div>设备信息</div>
+                    </li>
                     <li class="little" id="fastsetting"  >
                         <div style="display: flex;justify-content: center;" id="fastsetting2"><i  class="icon" ><i id="fastsetting1"  class="icon" style="background: url(/assets/images/icon-zhinan.png) no-repeat center;"></i></i></div>
                         <div>快速设置</div>
                     </li>
-<!--                    <li class="little" id="deviceinfo">-->
-<!--                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="deviceinfo1" class="icon" style="background: url(/assets/images/deviceinform_black.png) no-repeat center;"></i></i></div>-->
-<!--                        <div>设备信息</div>-->
-<!--                    </li>-->
+
                     <li class="little" id="devicesetting">
                         <div style="display: flex;justify-content: center;"><i class="icon"><i id="devicesetting1" class="icon" style="background: url(/assets/images/testsetting_black.png) no-repeat center;"></i></i></div>
                         <div>测站设置</div>
                     </li>
+                    <li class="little" id="deviceorder">
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="deviceorder1" class="icon" style="background: url(/assets/images/datadownload_black.png) no-repeat center;"></i></i></div>
+                        <div>下发命令</div>
+                    </li>
+
 <!--                    <li class="little" id="internetset">-->
 <!--                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="internetset1" class="icon" style="background: url(/assets/images/netsetting_black.png) no-repeat center;"></i></i></div>-->
 <!--                        <div>网络设置</div>-->
@@ -194,17 +204,22 @@
 <!--                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="download1" class="icon" style="background: url(/assets/images/datadownload_black.png) no-repeat center;"></i></i></div>-->
 <!--                        <div>数据下载</div>-->
 <!--                    </li>-->
-<!--                    <li class="little" id="other">-->
-<!--                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="other1" class="icon" style="background: url(/assets/images/othersetting_black.png) no-repeat center;"></i></i></div>-->
-<!--                        <div>其他设置</div>-->
-<!--                    </li>-->
+                    <li class="little" id="other">
+                        <div style="display: flex;justify-content: center;"><i class="icon"><i id="other1" class="icon" style="background: url(/assets/images/othersetting_black.png) no-repeat center;"></i></i></div>
+                        <div>其他设置</div>
+                    </li>
                 </ul>
+                <div style="margin-top: 31px;margin-right: 2%;">
+                    <div id="return" style="font-weight: bold;font-size: 24px;">
+                        <a lay-href="javascript:history.go(-1)"  lay-tips="返回上一页" lay-direction="2"><i class="layui-icon layui-icon-return" style="font-size: 30px; color: #1E9FFF;"></i></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div style="width: 100%;">
-        <iframe id="iframe_a" src="/devicelist/fastsetting" frameborder="0" machinesn="#(machinedata)" name="iframe_a" onload="this.height=iframe_a.document.body.scrollHeight"
-                width="100%" scrolling="no" frameborder="0" style="height: 1200px"></iframe>
+        <iframe id="iframe_a" src="/devicelist/deviceinform" frameborder="0" machinesn="#(machinedata)" name="iframe_a" onload="this.height=iframe_a.document.body.scrollHeight"
+                width="100%" scrolling="no" frameborder="0" style="height: 869px;background-color: #7ca7d2;"></iframe>
     </div>
 </div>
 </div>
@@ -220,6 +235,8 @@
     }).extend({
         index: 'lib/index' //主入口模块
     }).use(['index','devicesetting']);
+
+    var updatefinsih=false;
 
     function  iframechange() {
         var iframes = document.getElementsByTagName('iframe_a');

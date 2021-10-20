@@ -45,6 +45,14 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 return "已存在当前名称，请重新输入";
             }
         }
+        , Lon: [
+            /^(((\d|[1-9]\d|1[1-7]\d|0)\.\d{0,2})|(\d|[1-9]\d|1[1-7]\d|0{1,3})|180\.0{0,2}|180)$/
+            , '经度输入有误'
+        ]
+        , Lat: [
+            /^([0-8]?\d{1}\.\d{2}|90\.0{2}|[0-8]?\d{1}|90)$/
+            , '纬度输入有误'
+        ]
     });
 
     form.on('submit(formDemo)', function(data){
@@ -55,6 +63,8 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             data:{
                 comid:company[0].value,
                 projectname:json.projectname,
+                prolongitude:json.prolongitude,
+                prolatitude:json.prolatitude,
                 userid:userid
             },
             async:false,
@@ -63,7 +73,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             }
         })
         layer.close(layerindex);
-        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        getProjectCount();
     });
 
 
@@ -88,6 +98,8 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                     el: '#demo2',
                     radio: true,
                     clickClose: true,
+                     layVerify: 'required',
+                     empty: '呀, 没有数据呢',
                     data:arrData
                 });
                 layerindex=index;
@@ -99,13 +111,10 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     function usercreateproject(){
         let company=getCurrentCompany();
         let arrData=[];
-        for (var i = 0; i < company.length; i++) {
-            var item = company[i];
-            var jsonStr = {};
-            jsonStr.name = item.agentName;
-            jsonStr.value = item.agentNumber;
-            arrData.push(jsonStr);
-        }
+        let jsonStr={};
+        jsonStr.name = company.agentName;
+        jsonStr.value = company.agentNumber;
+        arrData.push(jsonStr);
         drawer.render({
             title: '添加项目',  //标题
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
@@ -113,9 +122,14 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             content: $("#window"),
             success: function (layero, index) {
                 demo = xmSelect.render({
-                    el: '#demo2',
+                    el: '#demo',
                     radio: true,
+                    theme: {
+                        color: '#01AAED',
+                    },
+                    layVerify: 'required',
                     clickClose: true,
+                    empty: '呀, 没有数据呢',
                     data:arrData
                 });
                 layerindex=index;
@@ -178,7 +192,12 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                     thisNode.innerHTML = "";
                 }
                 projectlist = data.data.list;
-                showProjects(projectlist);
+                if(projectlist.length>0){
+                    showProjects(projectlist);
+                }else{
+
+                }
+
             }
         });
     }
@@ -195,7 +214,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 "                                <div class=\"projectname\">" + item.progroupname+ "</div>\n" +
                 "                                <div style=\"display: flex;justify-content: space-between;padding-top: 10px;margin:auto;color: #00f0ff;width: 150px\">\n" +
                 "                                    <span><a style='color: #00f0ff' href='/project/projectdetail?progroupid="+item.projectid+"&&agentnum="+item.agentnumber+"'>编辑</a></span>\n" +
-                "                                    <span class='delete' id='"+item.progroupname+"'>删除</span>\n" +
+                "                                    <span class='delete' id='"+item.projectid+"'>删除</span>\n" +
                 "                                </div>\n" +
                 "                            </div>\n" +
                 // "                            <div style=\"display: flex;margin: auto;\">\n" +
@@ -232,9 +251,10 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 ,btnAlign: 'c' //按钮居中
                 ,shade: 0 //不显示遮罩
                 ,yes: function(){
+                    deletproject(val);
                     layer.closeAll();
                 },btn1: function (index, layero) {
-                    deletproject(val);
+
                 },
                 btn2: function (index, layero) {
                     layer.close(index);

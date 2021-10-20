@@ -81,4 +81,28 @@ public abstract class BaseStaffData<M extends BaseStaffData<M>> extends Model<M>
 		return getStr("groupAssemble");
 	}
 
+	public void setUAddress(java.lang.String uAddress) {
+		set("uAddress", uAddress);
+	}
+	
+	public java.lang.String getUAddress() {
+		return getStr("uAddress");
+	}
+
+	public void setUPhoneNum(java.lang.String uPhoneNum) {
+		set("uPhoneNum", uPhoneNum);
+	}
+	
+	public java.lang.String getUPhoneNum() {
+		return getStr("uPhoneNum");
+	}
+
+	public void setAccountTime(java.lang.String AccountTime) {
+		set("AccountTime", AccountTime);
+	}
+	
+	public java.lang.String getAccountTime() {
+		return get("AccountTime");
+	}
+
 }

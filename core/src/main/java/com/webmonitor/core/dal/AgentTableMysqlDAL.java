@@ -117,4 +117,10 @@ public class AgentTableMysqlDAL implements IAgent {
         agentTable.save();
     }
 
+    /**删除公司**/
+    public int deletCompany(String agentNumber){
+        int delete=Db.delete("delete from agent_table where agentNumber = ?", agentNumber);
+        return delete;
+    }
+
 }

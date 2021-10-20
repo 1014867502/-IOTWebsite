@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    #@meta("GNSS位移统计")
+    #@meta("项目详情页面")
     <script src="/assets/lib/xm-select.js"></script>
     <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
     <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
@@ -154,13 +154,20 @@
     }
 
     .untreated {
-        background-color: #FF5722;
+        color:  #FF5722;
+        width: 30%;
+        border: solid 0.5px;
+        height: 27px;
+        /*background-color: #FF5722;*/
     }
 
     .treated {
-        background-color: #01AAED;
+        color:  #01AAED;
+        width: 30%;
+        border: solid 0.5px;
+        height: 27px;
+        /*background-color: #01AAED;*/
     }
-
     body {
         min-width: 1000px;
     }
@@ -180,12 +187,12 @@
 
     .indexcard {
         display: flex;
-        width: 480px;
-        margin-left: 8px;
-        padding-right: 8px;
-        height: 180px;
+        width: 297px;
+        margin-left: 4%;
+        padding-right: 21px;
+        height: 144px;
         background-color: #fffefe;
-        box-shadow: 0 0 6px -1px #9F9F9F;
+        box-shadow: 0 0 6px -1px #9f9f9f;
     }
     .devicecard {
         width: 50%;
@@ -256,6 +263,11 @@
             <div style="width: 40%">
                 <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>关联设备</button>
             </div>
+            <div style="margin-top: 5px;margin-right: 10%;">
+                <div id="return" style="font-weight: bold;font-size: 24px;">
+                    <a lay-href="javascript:history.go(-1)"  lay-tips="返回上一页" lay-direction="2"><i class="layui-icon layui-icon-return" style="font-size: 30px; color: #1E9FFF;"></i></a>
+                </div>
+            </div>
         </div>
         <div class="header-Data">
             <div style="display: flex;max-width: 1440px;margin-left: auto;margin-right: auto;">
@@ -299,9 +311,9 @@
 <!--                        </div>-->
                         <div class="layui-inline">
                             <select id="stats" name="stats" lay-verify="" lay-filter="stats">
+                                <option value="2">全部</option>
                                 <option value="1">在线</option>
                                 <option value="0">离线</option>
-                                <option value="2">全部</option>
                             </select>
                         </div>
                         <div class="layui-inline">
@@ -334,9 +346,9 @@
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script type="text/html" id="table-online-state">
     {{ d.onlineState == 1 ? '
-    <button class="layui-btn layui-btn-sm treated">在线</button>'
+    <div class="treated">在线</div>'
     : '
-    <button class="layui-btn layui-btn-sm untreated">离线</button>' }}
+    <div class="untreated">离线</div>' }}
 </script>
 
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>

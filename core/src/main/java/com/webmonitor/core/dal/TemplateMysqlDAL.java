@@ -1,9 +1,12 @@
 package com.webmonitor.core.dal;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.core.idal.ITemplate;
+import com.webmonitor.core.model.MachineInfoEntity;
 import com.webmonitor.core.model.TemplateData;
 import com.webmonitor.core.model.base.BaseProject;
 import com.webmonitor.core.model.userbase.Templates;
@@ -12,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TemplateMysqlDAL implements ITemplate {
+
     /**获取模板列表（全部）**/
     @Override
     public Page<Templates> getAllTemplate(int pageno,int limit) {
@@ -83,7 +87,7 @@ public class TemplateMysqlDAL implements ITemplate {
     public Boolean updateTemplateByName(Templates templates) {
         Boolean result=false;
         try{
-            Db.update("update template_data set templateOrder = ? where id=?",templates.getTemplateOrder(),templates.getId());
+            Db.update("update template_data set templateOrder = ? where templateName=?",templates.getTemplateOrder(),templates.getTemplateName());
             result=true;
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -127,7 +131,7 @@ public class TemplateMysqlDAL implements ITemplate {
     }
 
    /**搜索模板（公司）**/
-   public Page<Templates> searchTemplateByCom(String agentnum,String type,String content ,int pageno,int limit){
+   public Page<Templates> searchTemplateByCom(String type,String agentnum,String content ,int pageno,int limit){
        String sql = "  from template_data a left join agent_table b on a.agentNumber=b.agentNumber where b.agentNumber="+agentnum;
        switch(type){
            case "0":
@@ -152,4 +156,9 @@ public class TemplateMysqlDAL implements ITemplate {
        }
        return new Page<Templates>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
    }
+
+    @Override
+    public boolean excuteTemplate(String machineserial, String templateName) {
+       return false;
+    }
 }

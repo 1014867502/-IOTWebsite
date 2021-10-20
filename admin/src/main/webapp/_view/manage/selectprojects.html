@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    #@meta("后台主页")
+    #@meta("供销商和普通用户的项目管理页面")
     <script src="/assets/lib/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
     <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
@@ -107,11 +107,23 @@
 <body>
 
 <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
-    <form class="layui-form" id="devicedata" method="post" lay-filter="example">
+    <form class="layui-form" id="devicedata" method="post" lay-filter="formDemo">
         <div class="layui-form-item">
             <label class="layui-form-label">项目名称</label>
             <div class="layui-input-block">
                 <input style="width: 70%" type="text" name="projectname" required  lay-verify="required|editname" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目经度</label>
+            <div class="layui-input-block">
+                <input style="width: 70%" type="text" name="prolongitude" lay-verify="Lon|required" placeholder="请输入经度"  class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目纬度</label>
+            <div class="layui-input-block">
+                <input style="width: 70%" type="text" name="prolatitude" lay-verify="Lat|required" placeholder="请输入纬度"  class="layui-input">
             </div>
         </div>
         <div class="layui-form-item" style="display: flex">
@@ -157,11 +169,12 @@
                     </li>
                 </ul>
                 <div style="margin: auto">
-                    <div style="margin: auto;display: flex;margin-top: 10px;margin-bottom: 10px;">
-                        <button type="button" class="layui-btn" id="add_device"><img
-                                src="/assets/images/icon_add_device_28.png"/>添加项目
-                        </button>
-                    </div>
+<!--                    <div style="margin: auto;display: flex;margin-top: 10px;margin-bottom: 10px;">-->
+<!--                        <button type="button" class="layui-btn" id="add_device"><img-->
+<!--                                src="/assets/images/icon_add_device_28.png"/>添加项目-->
+<!--                        </button>-->
+
+<!--                    </div>-->
                 </div>
             </div>
         </div>
@@ -182,8 +195,8 @@
 <script src="/assets/lib/loadlanguage.js"></script>
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script>
-    var progroupid="(#progroupid)";
-    var userid="(#userid)";
+    var progroupid="#(progroupid)";
+    var userid="#(userid)";
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

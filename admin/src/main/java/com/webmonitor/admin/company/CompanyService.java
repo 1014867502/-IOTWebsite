@@ -44,6 +44,8 @@ public class CompanyService {
         return dal.getAgentTableById(comid);
     }
 
+    /**删除**/
+    public int deletagentByNum(String agentNumber){ return dal.deletCompany(agentNumber);}
 
     /**根据项目id查找公司列表**/
     public List<AgentTable> getAgentTableByProgroupid(String author){

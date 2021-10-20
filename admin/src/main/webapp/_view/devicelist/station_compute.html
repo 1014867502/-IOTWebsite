@@ -154,14 +154,27 @@
         font-weight: inherit;
         color: #03A9F4;
     }
+    xm-select > .xm-tips {
+        color: #999999;
+        padding: 0 10px;
+        position: absolute;
+        display: none;
+        height: 100%;
+        align-items: center;
+    }
 </style>
 <body>
+<!-- 遮罩层 -->
+<div id="cover"
+     style="background: #000; position: absolute; left: 0px; top: 0px; width: 100%; filter: alpha(opacity=30); opacity: 0.3; display: none; z-index: 2 "></div>
+
+
 <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
     <form class="layui-form" id="book" method="post" lay-filter="example">
         <div class="layui-form-item">
             <label class="layui-form-label">模板名称</label>
             <div class="layui-input-block">
-                <input type="text" id="templatename"  name="templatename" lay-verify="required" autocomplete="off"
+                <input type="text" id="templatename"  name="templatename" lay-verify="required|templatename" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
@@ -175,7 +188,7 @@
 
 <div class="layui-fluid" style="padding: 0px!important;">
     <div class="layui-row layui-col-space15" style="font-weight: bold">
-        <form class="layui-form" action="" lay-filter="formDemo">
+        <form class="layui-form" action="" id="formDemo" lay-filter="formDemo">
             <div class="layui-card">
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
                     解算设置
@@ -184,8 +197,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">解算模式</label>
                         <div class="layui-input-block">
-                            <input type="radio" lay-filter="compute" name="compute" value="0" title="前端解算" checked>
-                            <input type="radio" lay-filter="compute" name="compute" value="1" title="后端解算">
+                            <input type="radio" lay-filter="compute" name="rawSolution" value="0" title="前端解算" checked>
+                            <input type="radio" lay-filter="compute" name="rawSolution" value="1" title="后端解算">
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -255,9 +268,9 @@
             </div>
             <div class="layui-form-item" style="padding-top: 30px;text-align: center">
                 <div class="layui-input-block" style="margin-left: 0px!important;">
-                    <button type="button" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button id="computesumbit" type="button" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
                     <button id="savemodel" type="button" class="layui-btn">保存为模板</button>
-                    <button id="reset" type="button" class="layui-btn ">重新获取数据</button>
+                    <button id="reset" type="button" class="layui-btn ">刷新</button>
                 </div>
             </div>
         </form>

@@ -23,4 +23,7 @@ public interface IAgent {
     /**根据名称查询**/
     AgentTable getAgentTableByName(String comname);
 
+    /**删除**/
+    int deletCompany(String agentNumber);
+
 }

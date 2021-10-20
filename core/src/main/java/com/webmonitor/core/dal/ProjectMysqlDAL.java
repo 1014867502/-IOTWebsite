@@ -29,7 +29,7 @@ public class ProjectMysqlDAL implements IProject {
         for(Record item:record){
             BaseProjects baseProjects=new BaseProjects();
             baseProjects.setId(item.getStr("id"));
-            baseProjects.setCreatetime(item.getDate("createTime"));
+            baseProjects.setCreatetime(item.getStr("createTime"));
             baseProjects.setAgentname(item.getStr("agentName"));
             baseProjects.setProjectid(item.getStr("proGroupId"));
             baseProjects.setProgroupname(item.getStr("proGroupName"));
@@ -49,7 +49,7 @@ public class ProjectMysqlDAL implements IProject {
         Record record= Db.findFirst(sql);
         BaseProjects baseProjects=new BaseProjects();
         baseProjects.setId(record.getStr("id"));
-        baseProjects.setCreatetime(record.getDate("createTime"));
+        baseProjects.setCreatetime(record.getStr("createTime"));
         baseProjects.setAgentname(record.getStr("agentName"));
         baseProjects.setProjectid(record.getStr("proGroupId"));
         baseProjects.setProgroupname(record.getStr("proGroupName"));
@@ -60,6 +60,7 @@ public class ProjectMysqlDAL implements IProject {
         return baseProjects;
     }
 
+
     @Override
     public BaseProjects getProjectByName(String projectname) {
         String sql="select a.*, b.agentName from projects_data a ,agent_table b where a.agentNumber=b.agentNumber" +
@@ -67,7 +68,7 @@ public class ProjectMysqlDAL implements IProject {
         Record record= Db.findFirst(sql);
         BaseProjects baseProjects=new BaseProjects();
         baseProjects.setId(record.getStr("id"));
-        baseProjects.setCreatetime(record.getDate("createTime"));
+        baseProjects.setCreatetime(record.getStr("createTime"));
         baseProjects.setAgentname(record.getStr("agentName"));
         baseProjects.setProjectid(record.getStr("proGroupId"));
         baseProjects.setProgroupname(record.getStr("proGroupName"));
@@ -87,7 +88,7 @@ public class ProjectMysqlDAL implements IProject {
         for(Record item:record){
             BaseProjects baseProjects=new BaseProjects();
             baseProjects.setId(item.getStr("id"));
-            baseProjects.setCreatetime(item.getDate("createTime"));
+            baseProjects.setCreatetime(item.getStr("createTime"));
             baseProjects.setAgentname(item.getStr("agentName"));
             baseProjects.setProjectid(item.getStr("proGroupId"));
             baseProjects.setProgroupname(item.getStr("proGroupName"));
@@ -108,7 +109,7 @@ public class ProjectMysqlDAL implements IProject {
         for(Record item:record){
             BaseProjects baseProjects=new BaseProjects();
             baseProjects.setId(item.getStr("id"));
-            baseProjects.setCreatetime(item.getDate("createTime"));
+            baseProjects.setCreatetime(item.getStr("createTime"));
             baseProjects.setAgentname(item.getStr("agentName"));
             baseProjects.setProjectid(item.getStr("proGroupId"));
             baseProjects.setProgroupname(item.getStr("proGroupName"));
@@ -130,7 +131,7 @@ public class ProjectMysqlDAL implements IProject {
         for(Record item:record){
             BaseProjects baseProjects=new BaseProjects();
             baseProjects.setId(item.getStr("id"));
-            baseProjects.setCreatetime(item.getDate("createTime"));
+            baseProjects.setCreatetime(item.getStr("createTime"));
             baseProjects.setAgentnumber(item.getStr("agentNumber"));
             baseProjects.setAgentname(item.getStr("agentName"));
             baseProjects.setProjectid(item.getStr("proGroupId"));
@@ -152,7 +153,7 @@ public class ProjectMysqlDAL implements IProject {
         for(Record item:record){
             BaseProjects baseProjects=new BaseProjects();
             baseProjects.setId(item.getStr("id"));
-            baseProjects.setCreatetime(item.getDate("createTime"));
+            baseProjects.setCreatetime(item.getStr("createTime"));
             baseProjects.setAgentnumber(item.getStr("agentNumber"));
             baseProjects.setAgentname(item.getStr("agentName"));
             baseProjects.setProjectid(item.getStr("proGroupId"));
@@ -185,18 +186,18 @@ public class ProjectMysqlDAL implements IProject {
     }
 
     @Override
-    public void addProject(String userid,String comid, String projectname) {
+    public void addProject(String userid,String comid, String projectname,String proLatitude,String proLongitude) {
         int id=1;
         ProjectsData projectsData=ProjectsData.dao.findFirst("SELECT * FROM projects_data  ORDER BY Id DESC limit 0,1");
         if(projectsData!=null){
-            id=projectsData.getProGroupId()+1;
+            id=projectsData.getId()+1;
         }
         String sid=String.valueOf(id);
         Date date=new Date();
         DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
         String time=format.format(date);
         Record group=new Record().set("proGroupId",id).set("proGroupName",projectname)
-                .set("agentNumber",comid).set("createTime",time);
+                .set("agentNumber",comid).set("createTime",time).set("proLongitude",proLongitude).set("proLatitude",proLatitude);
         Db.save("projects_data",group);
         staffService.updateauthor(userid,sid);
     }
@@ -204,9 +205,9 @@ public class ProjectMysqlDAL implements IProject {
 
     @Override
     public void deleteProject(String Projectid) {
-        Record group=new Record().set("proGroupId",Projectid);
-        Db.delete("projects_data",group);
-        Db.delete("delete from agent_data where proGroupId="+Projectid);
+        Db.delete("delete from projects_data where proGroupId="+Projectid);
+       Db.update("update agent_data set proGroupId = 0,agentNumber=1 where proGroupId=?",Projectid);
+
     }
 
 
@@ -251,5 +252,22 @@ public class ProjectMysqlDAL implements IProject {
             projectsData.add(projectsData1);
         }
         return new Page<Object>(Collections.singletonList(projectsData),pageno,limit,(author.length/limit)+1 , author.length);
+    }
+
+    public List<BaseProjects> getProjectlistById(String userid){
+        StaffData staffData=staffService.getStaffByName(userid);
+        List<BaseProjects> projectsData=new ArrayList<>();
+        if(staffData.getIRoleType()==0) {
+            String[] author = staffData.getGroupAssemble().split("@");
+            for (int i = 0; i < author.length; i++) {
+                BaseProjects projectsData1 = getProjectById(author[i]);
+                projectsData.add(projectsData1);
+            }
+        }
+        else{
+            String comid = staffData.getAgentNumber();
+            projectsData = getProjectsByComId(comid);
+        }
+        return projectsData;
     }
 }

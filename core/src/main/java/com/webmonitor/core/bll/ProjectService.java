@@ -56,6 +56,11 @@ public class ProjectService {
         return dal.getProjectsByComIdPageDataO(comid,pageno,limit);
     }
 
+    /**根据用户id获取对应的项目列表**/
+    public List<BaseProjects> getProjectlistById(String userid){
+        return dal.getProjectlistById(userid);
+    }
+
 
     /**根据用户身份返回项目数量**/
     public int getProjectCountByRight(String type,String comid){
@@ -70,8 +75,8 @@ public class ProjectService {
         dal.editproject(projectid,comid,projectname);
     }
 
-    public void addProject(String userid,String comid,String projectname){
-        dal.addProject(userid,comid,projectname);
+    public void addProject(String userid,String comid,String projectname,String proLatitude,String proLongitude){
+        dal.addProject(userid,comid,projectname,proLatitude,proLongitude);
     }
 
 
@@ -83,6 +88,5 @@ public class ProjectService {
         proDevCount.setOutcount(dal.getProDevOutCountById(projectid));
         return proDevCount;
     }
-
 
 }

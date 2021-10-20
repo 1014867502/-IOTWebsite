@@ -1,9 +1,7 @@
 package com.webmonitor.core.idal;
 
 import com.jfinal.plugin.activerecord.Page;
-import com.webmonitor.core.model.AgentData;
-import com.webmonitor.core.model.AgentDataDao;
-import com.webmonitor.core.model.ProDevCount;
+import com.webmonitor.core.model.*;
 import com.webmonitor.core.model.userbase.DeviceSensorList;
 import com.webmonitor.core.model.userbase.Templates;
 
@@ -40,6 +38,9 @@ public interface IAgentData {
 
     /**根据参数查找未关联设备**/
     Page<AgentDataDao> searchOutDeviceByParam(String agentnum,String content, int pageno, int limit, String type, String role);
+
+    /**根据设备serial码获取设备相关信息**/
+    AgentData getDeviceDetailBySn(String machineserial);
 
     /**取消关联设备（项目）**/
     void deleteDeviceBySerial(String sn);
@@ -80,5 +81,9 @@ public interface IAgentData {
     /**删除设备的传感器**/
     void delSensorByData(DeviceSensorList deviceSensorList,String machineserial);
 
+    /**获取设备的更新记录**/
+    Page<UpdateData> getDeviceUpdatelog(String machineserial,int pageno,int limit);
 
+    /**首页上的搜索框**/
+    Page<AgentData> seekDeviceByParam(StaffData currentuser, String content, String agentnum, String projectid, String state, int pageno, int limit);
 }

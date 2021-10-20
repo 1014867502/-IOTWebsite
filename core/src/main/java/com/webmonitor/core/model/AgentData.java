@@ -12,6 +12,7 @@ public class AgentData {
     private Date createTime;
     private String agentName;
     private int progroupid;
+    private String proGroupName;
 
     public int getId() {
         return id;
@@ -77,5 +78,13 @@ public class AgentData {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getProGroupName() {
+        return proGroupName;
+    }
+
+    public void setProGroupName(String proGroupName) {
+        this.proGroupName = proGroupName;
     }
 }

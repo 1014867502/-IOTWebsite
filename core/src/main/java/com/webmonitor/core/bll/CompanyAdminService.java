@@ -12,7 +12,8 @@ public class CompanyAdminService {
 
     /**获取所有设备**/
     public String getAllDevice(String agentnumber){
-        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.agentNumber="+agentnumber;
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.agentNumber="+agentnumber
+                +" order by b.updateTime desc";
         return sql;
     }
 

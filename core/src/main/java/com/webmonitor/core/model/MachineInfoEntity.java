@@ -178,6 +178,7 @@ public class MachineInfoEntity {
     private String networkMountpointUse;
     private String networkMountpointPass;
     private String networkUploadGga;
+    private String ntripArg;
     private String coordcvtEnabled;
     private String coordcvtSrcDatum;
     private String coordcvtDstDatum;
@@ -195,6 +196,7 @@ public class MachineInfoEntity {
     private String rawBackUser;
     private String rawBackPass;
     private String rawBackBaud;
+    private String rawSolution;
     private String dzIotRtkResult;
     private String moveWarnMems;
     private String ntrIpBase;
@@ -204,6 +206,15 @@ public class MachineInfoEntity {
     private String baseHeight;
     private String oneNetMode;
     private String accessKey;
+    private String secondArg;
+    private String secondNtripBase;
+    private String gpsSerial;
+    private String gpsModel;
+    private String gpsFirmwareVer;
+    private String gpsEleMask;
+    private String gpsBeiDou;
+    private String glonass;
+    private String gaLileo;
     public MachineInfoEntity(Long _id, String machineSerial, String machineModel,
             String mcuVer, String firmwareVer, String puwerLever, String extVoltage,
             String insideSpace, String dataLink, String timeZone, String rtkPos,
@@ -1012,6 +1023,27 @@ public class MachineInfoEntity {
     public void setMoveALiYunSms(String moveALiYunSms) {
         this.moveALiYunSms = moveALiYunSms;
     }
+    public String getNtripArg() { return ntripArg; }
+    public void setNtripArg(String ntripArg) { this.ntripArg = ntripArg; }
+    public String getRawSolution() { return rawSolution; }
+    public void setRawSolution(String rawSolution) { this.rawSolution = rawSolution; }
+    public String getSecondArg() { return secondArg; }
+    public void setSecondArg(String secondArg) { this.secondArg = secondArg; }
+    public String getSecondNtripBase() { return secondNtripBase; }
+    public void setSecondNtripBase(String secondNtripBase) { this.secondNtripBase = secondNtripBase; }
 
-
+    public String getGpsSerial() { return gpsSerial; }
+    public void setGpsSerial(String gpsSerial) { this.gpsSerial = gpsSerial; }
+    public String getGpsModel() { return gpsModel; }
+    public void setGpsModel(String gpsModel) { this.gpsModel = gpsModel; }
+    public String getGpsFirmwareVer() { return gpsFirmwareVer; }
+    public void setGpsFirmwareVer(String gpsFirmwareVer) { this.gpsFirmwareVer = gpsFirmwareVer; }
+    public String getGpsEleMask() { return gpsEleMask; }
+    public void setGpsEleMask(String gpsEleMask) { this.gpsEleMask = gpsEleMask; }
+    public String getGpsBeiDou() { return gpsBeiDou; }
+    public void setGpsBeiDou(String gpsBeiDou) { this.gpsBeiDou = gpsBeiDou; }
+    public String getGlonass() { return glonass; }
+    public void setGlonass(String glonass) { this.glonass = glonass; }
+    public String getGaLileo() { return gaLileo; }
+    public void setGaLileo(String gaLileo) { this.gaLileo = gaLileo; }
 }

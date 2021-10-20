@@ -155,6 +155,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                         sn:data.machineSerial
                     },
                     done:function (res) {
+                        getDeviceCounts();
                         renderTable();
                         return false;
                     }
@@ -244,6 +245,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             },
             async:false,
             success:function () {
+                getDeviceCounts();
                 layer.alert("关联成功");
             }
         })
@@ -288,7 +290,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     /**根据权限显示不同页面内容**/
     function adaptauthority(){
         $.ajax({
-            url:'/role/getauthorById',
+            url:'/custom/getauthorById',
             async:false,
             success:function (data) {
                 switch (data.data) {
@@ -337,6 +339,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         Devicelist = xmSelect.render({
             el: '#companylist',
             radio: true,
+            empty: '呀, 没有数据呢',
             data: arrData,
             theme: {
                 color: '#01AAED',

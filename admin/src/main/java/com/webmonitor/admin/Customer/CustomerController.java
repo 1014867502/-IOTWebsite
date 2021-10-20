@@ -4,15 +4,20 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
+import com.webmonitor.admin.common.kit.I18nKit;
 import com.webmonitor.admin.permission.PermissionService;
 import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.config.annotation.Remark;
 import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.*;
 import com.webmonitor.core.model.userbase.CustomCount;
+import com.webmonitor.core.util.MD5Utils;
+import com.webmonitor.core.util.exception.BusinessException;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import com.webmonitor.core.vo.Result;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,10 +33,11 @@ public class CustomerController extends BaseController {
     @Remark("用户列表")
     public void list() {
         Result result=Result.newOne();
+        String userid=getPara("userid");
         int pageno = getParaToInt("page", 1);
         int limit = getParaToInt("limit", 50);
         try{
-            Page<StaffDataEntity>  list=srv.getAllCustom(pageno,limit);
+            Page<StaffDataEntity>  list=srv.getAllCustom(userid,pageno,limit);
             result.success(list);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -47,6 +53,11 @@ public class CustomerController extends BaseController {
     @Remark("添加新用户")
     public void save() {
         String staffjson=getPara("json");
+//        try {
+//           staffjson=new String(getPara("json").getBytes("8859_1"), "utf8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
         String select=getPara("select");
         select=(select==null)?"":select;
         select=select.replace(',','@');
@@ -63,7 +74,13 @@ public class CustomerController extends BaseController {
 
     @Remark("用户资料编辑")
     public void edit() {
+
         String staffjson=getPara("json");
+//        try {
+//            staffjson=new String(getPara("json").getBytes("8859_1"), "utf8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
         Result<String> result = Result.newOne();
         String select=getPara("select");
         select=(select==null)?"":select;
@@ -197,11 +214,12 @@ public class CustomerController extends BaseController {
         String account=getPara("content");
         String searchtype=getPara("searchtype");
         String agentnum=getPara("agentnumber");
+        String userid=getPara("userid");
         int pageno=getParaToInt("page",1);
         int limit =getParaToInt("limit",50);
         Result<Page<StaffDataEntity>> result=Result.newOne();
         try{
-            Page<StaffDataEntity> customlist=CustomerService.me.searchCustomByParam(account,agentnum,searchtype,pageno,limit);
+            Page<StaffDataEntity> customlist=CustomerService.me.searchCustomByParam(account,agentnum,userid,searchtype,pageno,limit);
             result.success(customlist);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -212,16 +230,53 @@ public class CustomerController extends BaseController {
     /**按公司编号查找用户**/
     public void getCustomByComid(){
         String agentnum=getPara("agentNumber");
+        String userid=getPara("userid");
         int pageno=getParaToInt("page",1);
         int limit =getParaToInt("limit",50);
         Result<Page<StaffDataEntity>> result=Result.newOne();
         try{
-            Page<StaffDataEntity> customlist=CustomerService.me.getCustomByComId(agentnum,pageno,limit);
+            Page<StaffDataEntity> customlist=CustomerService.me.getCustomByComId(agentnum,userid,pageno,limit);
             result.success(customlist);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }
         renderJson(result);
 
+    }
+
+    /**普通用户修改登录密码**/
+    public void changePassword(){
+        Result<String> result=Result.newOne();
+        String newpassword=getPara("newpassword");
+        String userid=getPara("userid");
+        try{
+            StaffData staffData= StaffService.me.getStaffByName(userid);
+            String code= MD5Utils.md5(newpassword)+"0";
+            staffData.setUPassword(code);
+            staffData.update();
+            result.success("success");
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**判断当前密码是否正确**/
+    public void isCorrectPassword(){
+        Result<String> result=Result.newOne();
+        String oldpassword=getPara("oldpassword");
+        String userid=getPara("userid");
+        try{
+            StaffData staffData=StaffService.me.getStaffByName(userid);
+            String hashedPass = MD5Utils.md5(oldpassword)+"0";
+            if (staffData.getUPassword().equals(hashedPass) == false) {
+                result.success("error");
+            }else{
+                result.success("success");
+            }
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
     }
 }

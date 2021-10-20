@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("GNSS位移统计")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style type="text/css">
+        .layui-form-checked span, .layui-form-checked:hover span {
+            background-color: #FF5722;
+        }
+
+        .layui-form-checked i, .layui-form-checked:hover i {
+            color: #FF5722;
+        }
+
+        .layui-btn.onlinebtn {
+            background-color: #009688;
+            color: #FFFFFF;
+        }
+
+        .layui-btn.offlinebtn {
+            background-color: #ff0000;
+            color: #FFFFFF;
+        }
+
+        .layui-card-body.layui-layout-box {
+            width: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            /*border-style: solid;*/
+            background-color: #1e9fff;
+            /*!*border-image: url(/img/bg.png) 4 4 4 4 fill round;*!*/
+            /*border-image: url(/img/bg.png) 4 4 4 4 fill stretch;*/
+            box-sizing: border-box;
+            /*height: calc(100% - 42px);*/
+            height: 130px;
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .data {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+        }
+
+        .layadmin-carousel.history {
+            height: 400px !important;
+        }
+
+        .iconcard {
+            display: flex;
+            height: 100px;
+            width: 282px;
+            justify-content: space-evenly;
+            align-items: center;
+            overflow: hidden;
+            background-color: #ffFFFF;
+            border: 2px solid #ffFFFF;
+            box-shadow: 0 0 16px 9px #e8eaf0;
+        }
+
+        .icontitle {
+            font-size: 14px;
+            color: #a0a9a6;
+        }
+
+        .iconcontent {
+            font-size: 24px;
+            margin-top: 12px;
+        }
+
+        .cardcontent {
+            height: 300px;
+            margin-right: 0.5%;
+            align-items: center;
+            overflow: hidden;
+            background-color: #ffFFFF;
+            border: 2px solid #ffFFFF;
+            box-shadow: 0px 0px 7px 1px #e8eaf0;
+        }
+
+        .tableindex {
+            width: 50%;
+            text-align: right;
+            background-color: #EEEEEE;
+            color: #333333;
+            padding-right: 1px;
+            border: 1px solid #B3B3B3;;
+            margin: 0px -1px -1px 0px;
+        }
+
+        .tablecontent {
+            width: 50%;
+            border: 1px solid #B3B3B3;
+            padding: 7px 19px;
+            margin: 0px -1px -1px 0px;
+        }
+    </style>
+</head>
+<body>
+
+<style>
+    .header-Data {
+        width: 100%;
+        justify-content: left;
+        display: flex;
+        align-items: stretch;
+    }
+
+    .header-Data-content {
+        height: 300px;
+        width: 25%;
+        /*justify-content: center;*/
+        margin-right: 0.5%;
+        display: flex;
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        border: 2px solid #ffFFFF;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .header-Data-map {
+        height: 363px;
+        width: 25%;
+        /*justify-content: center;*/
+        margin-right: 0.5%;
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        border: 2px solid #ffFFFF;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .header-Data-contentEx {
+        width: 50%;
+        /*justify-content: center;*/
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .body-content {
+        margin-bottom: 1%
+    }
+
+    #map {
+        height: 100%;
+        width: 100%;
+    }
+
+    .untreated {
+        background-color: #FF5722;
+    }
+
+    .treated {
+        background-color: #01AAED;
+    }
+</style>
+
+<div class="layui-fluid" style="background-color: #F0F5FA;padding:0 0px">
+    <div class="layui-row layui-col-space15">
+        <div class="header-Data" style="padding: 0 0px;">
+            <div class="iconcard">
+                <div><img src="/assets/images/icon_nettype.png"/></div>
+                <div>
+                    <div class="icontitle">网络类型</div>
+                    <div class="iconcontent" id="apntype">移动4G</div>
+                </div>
+            </div>
+            <div class="iconcard" style="margin: auto">
+                <div><img id="connectimg" src="/assets/images/icon_link.png"/></div>
+                <div>
+                    <div class="icontitle">网络状态</div>
+                    <div class="iconcontent" id="connect">已连接</div>
+                </div>
+            </div>
+            <div class="iconcard" style="margin: auto">
+                <div><img id="iconsignal" src="/assets/images/icon_signal_strong.png"/></div>
+                <div>
+                    <div class="icontitle">信号强度</div>
+                    <div class="iconcontent" id="signallevel">强</div>
+                </div>
+            </div>
+            <div class="iconcard">
+                <div><img src="/assets/images/icon_localip.png"/></div>
+                <div>
+                    <div class="icontitle">本机IP</div>
+                    <div class="iconcontent" id="localIP">192.168.10.2</div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex">
+            <div style="width: 50%">
+                <div class="cardcontent" style="height: 250px">
+                    <div class="layui-card" style="width: 100%">
+                        <div class="layui-card-header">设备信息</div>
+                        <div class="layui-card-body">
+                            <div style="width: 100%;height: 300px">
+                                <div class="body-content" id="project"></div>
+                                <div class="body-content"><b>设备sn码：</b><span id="sncode">MG134580321</span><br></div>
+                                <div class="body-content" id="company"></div>
+                                <div class="body-content"><b>在线状态：</b><span id="online">在线</span><br></div>
+                                <div class="body-content"><b>最后连接时间：</b><span id="connecttime"></span><br></div>
+                                <div class="body-content"><b>设备位置（经纬度）：</b><span id="latlon"></span><br></div>
+                                <!--                            <div class="body-content"><b>站点地址：</b><span id="address">深圳市</span><br></div>-->
+                                <!--                            <div class="body-content"><b>负责人：</b><span id="resman">张山</span><br></div>-->
+                                <!--                            <div class="body-content"><b>联系电话：</b><span id="tel">131246832165</span></div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="mid-one" class="cardcontent" style="height: 465px;margin-top: 10px">
+                    <div class="layui-card" style="width: 100%">
+                        <div class="layui-card-header">设备位置</div>
+                        <div class="layui-card-body" style="height: 460px">
+                            <div id='map' style="height: 400px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 50%;margin-left: 10px">
+                <div class="cardcontent" style="height: 727px">
+                    <div class="layui-card">
+                        <form class="layui-form" action="">
+                            <div class="layui-card-header">设备详情</div>
+                            <div class="layui-card-body">
+                                <div>
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 7px 11px;">仪器串号</div>
+                                        </div>
+                                        <div class="tablecontent" id="serial"></div>
+                                    </div>
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 7px 11px;">仪器型号</div>
+                                        </div>
+                                        <div class="tablecontent" id="model"></div>
+                                    </div>
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 7px 11px;">固件版本</div>
+                                        </div>
+                                        <div class="tablecontent" id="gpsfirmwareVer"></div>
+                                    </div>
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 7px 11px;">GNSS版本</div>
+                                        </div>
+                                        <div class="tablecontent" id="gpsmodel"></div>
+                                    </div>
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 7px 11px;">GNSS固件版本</div>
+                                        </div>
+                                        <div class="tablecontent"id="firmwareVer"></div>
+                                    </div>
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 7px 11px;">MCU版本</div>
+                                        </div>
+                                        <div class="tablecontent" id="mcu"></div>
+                                    </div>
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 7px 11px;">硬件版本</div>
+                                        </div>
+                                        <div class="tablecontent" id="hardware"></div>
+                                    </div>
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 7px 11px;">电池电量</div>
+                                        </div>
+                                        <div class="tablecontent" id="powerlevel"></div>
+                                    </div>
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 7px 11px;">外接电源电压</div>
+                                        </div>
+                                        <div class="tablecontent" id="voltage"></div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 20px">
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 14px 11px;">时区</div>
+                                        </div>
+                                        <div class="tablecontent" id="timezone" style="padding-top: 13px;">
+                                        </div>
+                                    </div>
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 7px 11px;">可用存储空间</div>
+                                        </div>
+                                        <div class="tablecontent" id="space"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script type="text/html" id="table-online-state">
+    {{ d.state === 1 ? '
+    <button class="layui-btn layui-btn-sm treated">已处理</button>'
+    : '
+    <button class="layui-btn layui-btn-sm untreated">未处理</button>' }}
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+    var machinedata = parent.window.document.getElementsByName("iframe_a")[0].getAttribute('machinesn');
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'device_info']);
+</script>
+</body>
+</html>

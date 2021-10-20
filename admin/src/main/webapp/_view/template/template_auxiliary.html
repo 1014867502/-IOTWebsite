@@ -1,0 +1,368 @@
+<!--站点设置的辅助功能-->
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("测站设置的坐标设置")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style type="text/css">
+        .layui-form-checked span, .layui-form-checked:hover span {
+            background-color: #FF5722;
+        }
+
+        .layui-form-checked i, .layui-form-checked:hover i {
+            color: #FF5722;
+        }
+
+        .layui-btn.onlinebtn {
+            background-color: #009688;
+            color: #FFFFFF;
+        }
+
+        .layui-btn.offlinebtn {
+            background-color: #ff0000;
+            color: #FFFFFF;
+        }
+
+        .layui-card-body.layui-layout-box {
+            width: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            /*border-style: solid;*/
+            background-color: #1e9fff;
+            /*!*border-image: url(/img/bg.png) 4 4 4 4 fill round;*!*/
+            /*border-image: url(/img/bg.png) 4 4 4 4 fill stretch;*/
+            box-sizing: border-box;
+            /*height: calc(100% - 42px);*/
+            height: 130px;
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .data {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+        }
+
+        .layadmin-carousel.history {
+            height: 400px !important;
+        }
+    </style>
+</head>
+<style>
+    .fastinput {
+        width: 400px;
+    }
+
+    .btn_primary {
+        border-color: #1e9fff;
+        background-color: #F1F1F1;
+        color: #1e9fff;
+
+    }
+
+    .btn_primary:hover {
+        background-color: #1e9fff;
+        color: #F1F1F1;
+    }
+
+    .layui-form-radio > i:hover, .layui-form-radioed > i {
+        color: #1e9fff;
+    }
+
+    .layui-form-label {
+        float: left;
+        display: block;
+        padding: 9px 15px;
+        width: 80px;
+        font-weight: bold;
+        line-height: 20px;
+        text-align: right;
+    }
+
+    .layui-form-onswitch {
+        border-color: #1e9fff;
+        background-color: #1e9fff;
+    }
+
+    .layui-form-select dl dd.layui-this {
+        background-color: #1e9fff;
+        color: #fff;
+    }
+
+    .circle {
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        background-color: #1e9fff;
+        margin-top: 7px;
+        margin-right: 6px;
+        /* 宽度和高度需要相等 */
+    }
+
+    .basecoreindex {
+        width: 100px;
+        padding: 9px 5px;
+    }
+
+    .layui-form-checked span, .layui-form-checked:hover span {
+        background-color:#1e9fff !important;
+    }
+    .layui-form-checked i, .layui-form-checked:hover i {
+        color: #1e9fff;
+    }
+
+
+</style>
+<body>
+<div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
+    <form class="layui-form" id="book" method="post" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">模板名称</label>
+            <div class="layui-input-block">
+                <input type="text" id="templatename"  name="templatename" lay-verify="required|templatename" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding-top: 30px;text-align: center">
+            <div class="layui-input-block" style="margin-left: 0px!important;">
+                <button class="layui-btn" type="button"  lay-submit lay-filter="example">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--//添加传感器弹窗-->
+<div class="site-text" style="margin: 5%; display: none" id="addprowindow" target="test1234">
+    <form class="layui-form" action=""  lay-filter="formDemo">
+        <div class="layui-form-item">
+            <label class="layui-form-label">传感器编号</label>
+            <div class="layui-input-block">
+                <input id="machinname" style="width: 70%" type="text" name="sn"
+                       lay-verify="editaccount|required" placeholder="SN码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">间隔</label>
+            <div class="layui-input-block">
+                <div style="width: 70%">
+                    <select id="sensor_interval" name="interval"  style="width: 70%">
+                        <option value="10">10秒</option>
+                        <option value="30">30秒</option>
+                        <option value="60">一分钟</option>
+                        <option value="300">五分钟</option>
+                        <option value="900">15分钟</option>
+                        <option value="1800">30分钟</option>
+                        <option value="3600" selected>一小时</option>
+                        <option value="7200">2小时</option>
+                        <option value="14400">4小时</option>
+                        <option value="21600">6小时</option>
+                        <option value="28800">8小时</option>
+                        <option value="43200">12小时</option>
+                        <option value="86400">24小时</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">传感器类型</label>
+            <div class="layui-input-block">
+                <div style="width: 70%">
+                    <select id="sensor_type" name="type" lay-filter="type" style="width: 70%">
+                        <option value="LF">LF:裂缝计</option>
+                        <option value="YL">YL:雨量计</option>
+                        <option value="HS">HS:土壤水分计</option>
+                        <option value="QJ">QJ:倾角计</option>
+                        <option value="NW">NW:泥位计</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">电压</label>
+            <div class="layui-input-block">
+                <div style="width: 70%">
+                    <select id="sensor_voltage" name="voltage"  style="width: 70%">
+                        <option value="12">12V</option>
+                        <option value="5">5V</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">传感器厂家</label>
+            <div class="layui-input-block" >
+                <div style="width: 70%">
+                    <select  id="sensor_vender"   name="vender" required lay-filter="company" lay-verify="required">
+                        <option value="1">深圳米朗</option>
+                        <option value="2">湘银河</option>
+                        <option value="3">南京葛南</option>
+                        <option value="4">北京基康</option>
+                        <option value="5">航空惯性</option>
+                        <option value="6">北斗云</option>
+                        <option value="7">上海建岩</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">串口波特率</label>
+            <div class="layui-input-block">
+                <div style="width: 70%">
+                    <select id="sensor_baud" name="bruad"  style="width: 70%">
+                        <option value="4800">4800 bps</option>
+                        <option value="9600" selected>9600 bps</option>
+                        <option value="19200">19200 bps</option>
+                        <option value="38400">38400 bps</option>
+                        <option value="57600">57600 bps</option>
+                        <option value="115200">115200 bps</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">查询命令</label>
+            <div class="layui-input-block">
+                <input id="sensor_cmd" style="width: 70%" type="text" name="cmd" required
+                       lay-verify="required" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">基准值</label>
+            <div class="layui-input-block">
+                <input id="sensor_ref" style="width: 70%" type="text" name="ref" required
+                       lay-verify="required" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit lay-filter="addSensor">提交修改</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="layui-fluid" style="padding: 0px;">
+    <div class="layui-row layui-col-space15" style="font-weight: bold">
+        <form class="layui-form" action="" id="formDemo2" lay-filter="formDemo2">
+            <div class="layui-card">
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                    外接传感器
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form-item">
+                        <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
+                        <div class="layui-input-block">
+                            <input id="sensor_enable" lay-filter="sensor_enable" type="checkbox" name="sensor_enable" lay-skin="switch">
+                        </div>
+                        <div id="connectsensor"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                    定时开关机
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form-item">
+                        <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
+                        <div class="layui-input-block">
+                            <input id="scheduler_enable" lay-filter="scheduler_enable" type="checkbox" name="scheduler_enable" lay-skin="switch">
+                        </div>
+                        <div id="timeswitch"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                    触发报警（位移&MEMS&倾斜）
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form-item">
+                        <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
+                        <div class="layui-input-block">
+                            <input id="move_warn_enable" lay-filter="move_warn_enable" type="checkbox" name="move_warn_enable" lay-skin="switch">
+                        </div>
+                        <div id="warning"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding-top: 30px;text-align: center">
+                <div class="layui-input-block" style="margin-left: 0px!important;">
+                    <button class="layui-btn" type="button" id="changename">修改当前模板名</button>
+                    <button id="savemodel" type="button" class="layui-btn">保存当前模板</button>
+                    <button id="reset" type="button" class="layui-btn ">刷新</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+    var templatename = "#(templatename)";
+    var machinesn = "#(machinesn)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'template_auxiliary']);
+</script>
+</body>
+</html>

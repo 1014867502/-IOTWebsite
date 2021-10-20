@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    #@meta("后台主页")
+    #@meta("供销商旗下的项目页面")
     <script src="/assets/lib/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
     <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
@@ -111,7 +111,19 @@
         <div class="layui-form-item">
             <label class="layui-form-label">项目名称</label>
             <div class="layui-input-block">
-                <input style="width: 70%" type="text" name="projectname" required  lay-verify="required|editname" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input style="width: 70%" type="text" name="projectName"  lay-verify="required|editname" placeholder="请输入名称"  class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目经度</label>
+            <div class="layui-input-block">
+                <input style="width: 70%" type="text" name="prolongitude" lay-verify="Lon|required" placeholder="请输入经度"  class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目纬度</label>
+            <div class="layui-input-block">
+                <input style="width: 70%" type="text" name="prolatitude" lay-verify="Lat|required" placeholder="请输入纬度"  class="layui-input">
             </div>
         </div>
 <!--        <div class="layui-form-item" style="display: flex">-->
@@ -150,17 +162,23 @@
     <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
         <div style="width:100%" id="list">
             <div class="layui-card" style="display: flex">
-                <ul style="display: flex ;margin: auto;">
+                <ul style="display: flex ;margin: auto;font-size: 30px;font-weight: bold;">
+                    #(agentName)
 <!--                    <li class="little">-->
 <!--                        <div>项目数量</div>-->
 <!--                        <div id="projectcount" style="font-size: 20px"></div>-->
 <!--                    </li>-->
                 </ul>
-                <div style="margin: auto">
-                    <div style="margin: auto;display: flex;margin-top: 10px;margin-bottom: 10px;">
-                        <button type="button" class="layui-btn" id="add_device"><img
-                                src="/assets/images/icon_add_device_28.png"/>添加项目
-                        </button>
+                <div style="margin-right: 9%">
+<!--                    <div style="margin: auto;display: flex;margin-top: 10px;margin-bottom: 10px;">-->
+<!--                        <button type="button" class="layui-btn" id="add_device"><img-->
+<!--                                src="/assets/images/icon_add_device_28.png"/>添加项目-->
+<!--                        </button>-->
+<!--                    </div>-->
+                </div>
+                <div style="margin-top: 13px;margin-right: 10%;">
+                    <div id="return" style="font-weight: bold;font-size: 24px;">
+                        <a lay-href="javascript:history.go(-1)"  lay-tips="返回上一页" lay-direction="2"><i class="layui-icon layui-icon-return" style="font-size: 30px; color: #1E9FFF;"></i></a>
                     </div>
                 </div>
             </div>
@@ -183,6 +201,7 @@
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script>
     var agentNum="#(agentNum)";
+    var agentName="#(agentName)";
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

@@ -3,7 +3,9 @@ package com.webmonitor.admin.devicelist;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.jfinal.i18n.Res;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.upload.UploadFile;
 import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.index.IndexService;
 import com.webmonitor.core.bll.AgentDataService;
@@ -12,17 +14,31 @@ import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.*;
 import com.webmonitor.core.model.userbase.DeviceSensorList;
 import com.webmonitor.core.model.userbase.ExportGNSSWord;
-import com.webmonitor.core.util.OrderConstants;
+import com.webmonitor.core.util.*;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import com.webmonitor.core.vo.Result;
+import net.sf.ehcache.util.PropertyUtil;
 
+import java.awt.*;
+import java.io.*;
 import java.lang.reflect.Field;
+import java.net.URLDecoder;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import static com.webmonitor.core.util.SocketTools.getIpAddress;
+
+
 
 
 /**控制与设备数据相关操作**/
 public class DeviceController  extends BaseController {
+
+   static HashMap<String,SocketClient> socketClientHashMap=new HashMap<String,SocketClient>();//用户的socket连接
+   static HashMap<String,File> FileClientHashMap=new HashMap<>();
+   static HashMap<String,UploadThread> ThreadHashMap=new HashMap<>();//执行线程；
+   private boolean listenFlag=true;
 
     /**设备管理页面**/
     public void devicemanage(){
@@ -74,6 +90,20 @@ public class DeviceController  extends BaseController {
         render("setting.html");
     }
 
+    /**设备详情**/
+    public void deviceinform(){
+        String machinesn=getPara("machinedata");
+        setAttr("machinedata",machinesn);
+        render("device_inform.html");
+    }
+
+    /**设备其他设置**/
+    public void deviceother(){
+        String machinesn=getPara("machinedata");
+        setAttr("machinedata",machinesn);
+        render("device_othersetting.html");
+    }
+
     /**配置页面**/
     public void setting()
     {
@@ -82,6 +112,18 @@ public class DeviceController  extends BaseController {
             String sn = getPara("sn");
             setAttr("machinedata",sn);
             render("setting.html");
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result,e);
+        }
+    }
+
+    /**下发命令页面**/
+    public void deviceorder(){
+        Result result=Result.newOne();
+        try {
+            String sn = getPara("sn");
+            setAttr("machinedata",sn);
+            render("order.html");
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result,e);
         }
@@ -166,8 +208,6 @@ public class DeviceController  extends BaseController {
             ExceptionUtil.handleThrowable(result,e);
         }
         renderJson(result);
-
-
     }
 
     /**修改未关联设备**/
@@ -240,6 +280,29 @@ public class DeviceController  extends BaseController {
         renderJson(result);
     }
 
+    /**搜索设备（首页）**/
+    public void findDeviceByParam(){
+        Result<Page<AgentData>> result=Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        int pageno = getParaToInt("page", 1);
+        int limit = getParaToInt("limit", 50);
+
+        String content=getPara("sn");
+        String state=getPara("state");
+        String projectid=getPara("projectid");
+        String agentnum=getPara("comid");
+        StaffData currentuser = StaffService.me.getStaffById(userid);
+        int roletype=currentuser.getIRoleType();
+        try{
+            Page<AgentData> agentDataList= AgentDataService.me.seekDeviceByParam(currentuser,content,agentnum,projectid,state,pageno,limit);
+            result.success(agentDataList);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+
     /**根据不同的条件筛选设备**/
     public void searchDeviceByCom(){
         Result<Page<AgentData>> result=Result.newOne();
@@ -285,6 +348,8 @@ public class DeviceController  extends BaseController {
         String machine=getPara("machinesn");
         MachineInfoEntity agentDataDao= gson.fromJson(json, new TypeToken<MachineInfoEntity>(){}.getType());
         boolean test=DeviceListService.checkObjAllFieldsIsNull(machine,agentDataDao);
+        SocketTools socketTools=new SocketTools();
+        socketTools.updateSocket(machine);
         if(test){
             result.setMsg("修改成功");
             result.success(machine);
@@ -317,6 +382,15 @@ public class DeviceController  extends BaseController {
         String machinesn=getPara("machineSerial");
         AgentDataDao agentDataDao=AgentDataDao.dao.findFirst("select * from agent_data where machineSerial='"+machinesn+"'");
         result.success(agentDataDao);
+        renderJson(result);
+    }
+
+    /**根据设备serial码获取设备相关信息**/
+    public void getDeviceDetailBySn(){
+        Result result=Result.newOne();
+        String machineserial=getPara("machinesn");
+        AgentData agentData=AgentDataService.me.getDeviceDetailBySn(machineserial);
+        result.success(agentData);
         renderJson(result);
     }
 
@@ -381,14 +455,288 @@ public class DeviceController  extends BaseController {
         renderJson(result);
     }
 
-    /**获取设备模板信息(所有)**/
-    public void getAllTemplates(){
-
+    /**获取设备版本更新信息**/
+    public void getDeviceUpdateLogBySerial(){
+        Result<Page<UpdateData>> result=Result.newOne();
+        String machinesn=getPara("machineserial");
+        int pageno=getParaToInt("page",1);
+        int limit=getParaToInt("limit",50);
+        try{
+            Page<UpdateData> updateDataPage=DeviceListService.me.getUpdateDataBySerial(machinesn,pageno,limit);
+            result.success(updateDataPage);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
     }
 
-    /**获取设备模板信息（公司）**/
-    public void getTemplateByCom(){
+    /**判断是否是最新版本**/
+    public void isLatestVersion(){
+        Result<String> result=Result.newOne();
+        String machinesn=getPara("machinesn");
+        if(DeviceListService.me.isLatestVersion(machinesn)){
+            result.success("ok");
+        }else{
+            result.success("fail");
+        }
+        renderJson(result);
+    }
 
+    /**判断更新状态**/
+    public void updateLatestVersion(){
+        Result<String> result=Result.newOne();
+        String machinesn=getPara("machineserial");
+        try{
+            UpdateData updateData=DeviceListService.me.getUpdateState(machinesn);
+            if(updateData.getUpdateState()!=null&&updateData.getUpdateState()==2){
+                result.success("pending");
+            }else{
+                result.success("finish");
+            }
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**判断设备是否在线**/
+    public void isDeviceOnline(){
+        Result<String> result=Result.newOne();
+        String machinesn=getPara("machineserial");
+        try{
+            if(DeviceListService.me.isDeviceOnline(machinesn)){
+                result.success("online");
+            }else{
+                result.success("fail");
+            }
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**获取设备更新详情**/
+    public void getDeviceUpdateDetail(){
+        Result<String> result=Result.newOne();
+        String machinesn=getPara("machineserial");
+        try{
+            String time=DeviceListService.me.getDeviceUpdateDetail(machinesn);
+            result.success(time);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+            result.success(",");
+        }
+        renderJson(result);
+    }
+
+    /**接受命令**/
+    public void sendorder(){
+        Result<String> result=Result.newOne();
+        String order=getPara("order");
+        String machinesn=getPara("machinesn");
+        String userid = getCookie(IndexService.me.accessUserId);
+        String test="";
+        try{
+//            SocketTools socketTools=new SocketTools();
+//            socketTools.orderSocket(machinesn,order);
+            SocketClient socketClient=socketClientHashMap.get(userid);
+            socketClient.setConnectime(System.currentTimeMillis());
+            socketClient.sendData("AppClient"+userid+"&"+machinesn+"&"+order);
+
+            while((socketClient.realdata==null||socketClient.realdata.equals(""))){
+                TimeUnit.SECONDS.sleep(1);
+                socketClient.setLatesttime(System.currentTimeMillis());
+                if((socketClient.getLatesttime()-socketClient.getConnectime()>10000)){
+                    break;
+                }
+            }
+            if(!socketClient.realdata.equals("")){
+                test=socketClient.realdata;
+                System.out.println(socketClient.realdata);
+            }else{
+                test="设备结果返回超时";
+            }
+            socketClient.realdata="";
+            result.success(test);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+            result.success("设备结果返回超时");
+        }
+        renderJson(result);
+    }
+
+    /**连接socket**/
+    public void condevsocket(){
+        Result<String> result=Result.newOne();
+        String machinesn=getPara("machinesn");
+        String userid = getCookie(IndexService.me.accessUserId);
+        try{
+            if(!socketClientHashMap.containsKey(userid)){
+                SocketClient socketClient=new SocketClient();
+                socketClient.connect(machinesn,userid);
+                socketClientHashMap.put(userid,socketClient);
+            }
+           result.success("成功");
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+            result.success("失败");
+        }
+        renderJson(result);
+    }
+
+    /**关闭socket**/
+    public void closesocket(){
+        Result<String> result=Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        try{
+            SocketClient socketClient=socketClientHashMap.get(userid);
+            socketClient.closeConnect();
+            socketClientHashMap.remove(userid);
+            result.success("成功");
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**返回用户命令**/
+    public void deviceorders() throws IOException {
+        Result<List<DeviceOrder>> result=Result.newOne();
+        String test= Tools.getConfig("获取单片机软件版本");
+        Properties properties = new Properties();
+        InputStream bufferedReader = DeviceController.class.getResourceAsStream("/dev/deviceorderCN.properties");
+        properties.load(bufferedReader);
+        Set<Object> keys = properties.keySet();//返回属性key的集合
+        List<DeviceOrder> list=new ArrayList<>();
+        for(Object key:keys) {
+            DeviceOrder order=new DeviceOrder();
+            order.setName(key.toString());
+            order.setValue(properties.get(key).toString());
+            list.add(order);
+        }
+        result.success(list);
+        renderJson(result);
+    }
+
+    /**经纬度转XYZ**/
+    public void blhtoxyz() {
+        Result<Map<String, Object>> result=Result.newOne();
+        try{
+            double db=Double.parseDouble(getPara("lat"));
+            double dl=Double.parseDouble(getPara("lon"));
+            double dh=Double.parseDouble(getPara("height"));
+            Map<String, Object> xyz = DeviceListService.me.WGS84_BLHtoXYZ(db,dl,dh);
+            result.success(xyz);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**XYZ转经纬度**/
+    public void xyztoblh() {
+        Result<Map<String, Object>> result=Result.newOne();
+        try{
+            double x=Double.parseDouble(getPara("x"));
+            double y=Double.parseDouble(getPara("y"));
+            double z=Double.parseDouble(getPara("z"));
+            Map<String, Object> xyz = DeviceListService.me.XYZToBLH(x,y,z);
+            result.success(xyz);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**接受上传文件**/
+    public void fileupload(){
+        Result<String> result=Result.newOne();
+        String userid=getPara("userid");
+        String uploadPath = "/upload";
+// 文件上传大小设置为20mb,此处不是单个文件大小，是指上传文件总大小
+        String encoding = "utf-8";
+        Integer maxPostSize = 1024 * 1024 * 20;
+        UploadFile uploadFile= getFile("file",uploadPath,maxPostSize,encoding);
+        String fileName=uploadFile.getOriginalFileName();
+        File file=uploadFile.getFile();
+        FileClientHashMap.put(userid+fileName,file);
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            //将字节流转化为字符流，编码指定为文件保存的编码
+            InputStreamReader isr = new InputStreamReader(fis,"GBK");
+            BufferedReader br = new BufferedReader(isr);
+            String columnlist=br.readLine();
+            br.close();
+            isr.close();
+            fis.close();
+            result.success(columnlist);
+        } catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        System.out.println(fileName);
+        renderJson(result);
+    }
+
+    /**根据列名对应表，导入到数据库中**/
+    public void fileinput(){
+        Result<String> result=Result.newOne();
+        String userid=getPara("userid")==null?"":getPara("userid");
+        String stop=getPara("stop")==null?"":getPara("stop");
+        String filename= getPara("filename")==null?"":getPara("filename");
+        try {
+//            String filename= new String(getPara("filename").toString().getBytes("iso8859_1"),"utf-8");
+           if(stop.equals("")) {
+               UploadThread thread=new UploadThread(FileClientHashMap.get(userid+filename),userid+filename);
+               ThreadHashMap.put(userid+filename,thread);
+               String sqlresult=thread.uploadexcute();
+               result.success(sqlresult);
+           }else{
+               UploadThread thread=ThreadHashMap.get(userid+filename);
+               thread.setInterrupted(true);
+               result.success("执行已中止");
+           }
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**删除上传文件**/
+    public void deleteuploadfile(){
+        Result<String> result=Result.newOne();
+        try {
+            String filename= getPara("filename");
+            File file=FileClientHashMap.get(filename);
+            if(file.exists()){
+                FileClientHashMap.remove(filename);
+                ThreadHashMap.get(filename).setInterrupted(true);
+                ThreadHashMap.remove(filename);
+                File file1=new File(file.getAbsolutePath());
+                if(file1.delete()){
+                    result.success("success");
+                }else{
+                    result.success("error");
+                }
+            }else{
+                result.success("error");
+            }
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**获取导入文件执行进度**/
+    public void progressuploadfile(){
+        Result<Integer> result=Result.newOne();
+        try {
+            String filename= getPara("filename");
+            int progress=ThreadHashMap.get(filename).getProgress();
+                result.success(progress);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
     }
 
 }

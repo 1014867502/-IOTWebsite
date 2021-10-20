@@ -6,6 +6,7 @@ import com.webmonitor.core.idal.IAgentData;
 import com.webmonitor.core.model.AgentData;
 import com.webmonitor.core.model.AgentDataDao;
 import com.webmonitor.core.model.ProDevCount;
+import com.webmonitor.core.model.StaffData;
 
 public class AgentDataService {
     public static final AgentDataService me=new AgentDataService();
@@ -14,6 +15,11 @@ public class AgentDataService {
     /**条件查询所有设备**/
     public Page<AgentData> searchDeviceByParam(String role,String content,String agentnum,String[] projectid,String state,int pageno,int limit){
         return dal.searchDeviceByParam(role,content,agentnum, projectid, state, pageno, limit);
+    }
+
+    /**首页上搜索框**/
+    public Page<AgentData> seekDeviceByParam(StaffData currentuser, String content, String agentnum, String projectid, String state, int pageno, int limit){
+        return dal.seekDeviceByParam(currentuser,content,agentnum, projectid, state, pageno, limit);
     }
 
     /**公司详情页上的搜索框**/
@@ -34,6 +40,12 @@ public class AgentDataService {
     public Page<AgentData> getAllDevice(int pageno,int limit){
         return dal.getAllDevice(pageno,limit);
     }
+
+    /**根据设备serial码获取设备相关信息**/
+    public AgentData getDeviceDetailBySn(String machineserial){
+        return  dal.getDeviceDetailBySn(machineserial);
+    }
+
 
     public ProDevCount getDevCount(){
         return dal.getDevCountAdmin();

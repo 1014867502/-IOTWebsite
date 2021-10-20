@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("设备的其他设置页面")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style>
+        .iconcard {
+            display: flex;
+            height: 100px;
+            width: 282px;
+            margin: auto;
+            justify-content: space-evenly;
+            align-items: center;
+            overflow: hidden;
+            background-color: #ffFFFF;
+            border: 2px solid #ffFFFF;
+            box-shadow: 0 0 16px 9px #e8eaf0;
+        }
+        .body-content{
+            margin-top: 10px;
+        }
+        .updatestats-suc{
+            color: #1e9fff;
+        }
+        .updatestats-fai{
+            color: #cc0000;
+        }
+        .updatestats-pend{
+            color: #00cca3;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 遮罩层 -->
+<div id="cover"
+     style="background: #000; position: absolute; left: 0px; top: 0px; width: 100%; filter: alpha(opacity=30); opacity: 0.3; display: none; z-index: 2 "></div>
+
+
+<div class="layui-fluid" style="background-color: #F0F5FA">
+    <div class="layui-row layui-col-space15">
+        <div style="display: flex">
+            <div style="width: 50%">
+                <div class="cardcontent">
+                    <div class="layui-card" style="width: 100%">
+                        <div class="layui-card-header">升级固件</div>
+                        <div class="layui-card-body">
+                            <div style="width: 100%">
+                                <div class="body-content"><b>当前版本号：</b><span id="version"></span><span id="tip"></span><br></div>
+                                <div class="body-content"><b>设备在线状态：</b><span id="connect"></span><br></div>
+                                <div class="body-content"><b>最新更新时间：</b><span id="connecttime"></span><br></div>
+                                <div class="body-content" style="text-align: right;">
+                                    <button type="button" class="layui-btn layui-btn-normal" id="deviceupdate">升级固件</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!--                <div id="mid-one" class="cardcontent" style="height: 465px;margin-top: 10px">-->
+<!--                    <div class="layui-card" style="width: 100%">-->
+<!--                        <div class="layui-card-header">设备控制操作</div>-->
+<!--                        <div class="layui-card-body" style="height: 460px">-->
+<!--                            <div id='map' style="height: 400px"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+            <div style="width: 48%;margin-left: 10px">
+                <div style="height: 727px">
+                    <div class="layui-card" >
+                        <form class="layui-form" action="">
+                            <div class="layui-card-header">固件升级记录</div>
+                            <div class="layui-card-body" style="height:151px;">
+                                <table class="layui-hide" id="update-form" lay-filter="update-from"></table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+<script>
+    var machinedata = parent.window.document.getElementsByName("iframe_a")[0].getAttribute('machinesn');
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'device_othersetting']);
+</script>
+</body>
+</html>

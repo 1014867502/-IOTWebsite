@@ -10,8 +10,10 @@ import com.webmonitor.core.bll.*;
 import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.AgentTable;
 import com.webmonitor.core.model.ProDevCount;
+import com.webmonitor.core.model.ProjectsData;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.userbase.BaseProjects;
+import com.webmonitor.core.util.SocketTools;
 import com.webmonitor.core.util.Tools;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import com.webmonitor.core.vo.Result;
@@ -36,7 +38,9 @@ public class ManagerController extends BaseController {
 
     public void companyprojects(){
         String agentnum=getPara("agentnum");
+        String agentname=getPara("agentname");
         setAttr("agentNum",agentnum);
+        setAttr("agentName",agentname);
         render("companyprojects.html");
     }
 
@@ -69,7 +73,10 @@ public class ManagerController extends BaseController {
         render("sensordata.html");
     }
 
+    /**管理员用户管理页面**/
     public void customermanage() {
+        String userid = getCookie(IndexService.me.accessUserId);
+        setAttr("userid", userid);
         render("customermanage.html");
     }
 
@@ -241,10 +248,13 @@ public class ManagerController extends BaseController {
 
     public void addproject(){
         Result result=Result.newOne();
+        ProjectsData account=getBean(ProjectsData.class);
         String comid=getPara("comid");
         String name=getPara("projectname");
-         String userid = getCookie(IndexService.me.accessUserId);
-        ProjectService.me.addProject(userid,comid,name);
+        String lat=getPara("prolatitude");//纬度
+        String lon=getPara("prolongitude");//经度
+        String userid = getCookie(IndexService.me.accessUserId);
+        ProjectService.me.addProject(userid,comid,name,lon,lat);
         renderJson(result.success("ok"));
     }
 
@@ -315,5 +325,21 @@ public class ManagerController extends BaseController {
             ExceptionUtil.handleThrowable(result,e);
         }
         renderJson(result);
+    }
+
+    /**获取接入点**/
+    public void getConnectPoint(){
+       Result<List<String>> result=Result.newOne();
+       String ip=getPara("ip");
+       String port=getPara("port");
+       int port2=Integer.parseInt(port);
+       try{
+           SocketTools socketTools=new SocketTools();
+           List<String> list=socketTools.getmStreamDetailList(ip,port2);
+           result.success(list);
+       }catch (Throwable e){
+           ExceptionUtil.handleThrowable(result,e);
+       }
+       renderJson(result);
     }
 }

@@ -15,7 +15,7 @@ public class AdminService {
 
     /**查看所有设备**/
     public String getAllDeviceById(int pageno,int limit){
-        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber";
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber order by b.updateTime desc";
         return sql;
     }
 

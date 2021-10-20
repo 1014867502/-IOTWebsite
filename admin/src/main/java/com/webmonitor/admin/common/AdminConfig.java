@@ -10,12 +10,14 @@ import com.jfinal.core.JFinal;
 import com.jfinal.i18n.I18nInterceptor;
 import com.jfinal.json.MixedJsonFactory;
 import com.jfinal.log.Log;
+import com.jfinal.log.Log4jLogFactory;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
 import com.webmonitor.admin.common.assistThread.TimerClearDiskFileThread;
 import com.webmonitor.admin.common.assistThread.TimerClearFileThread;
+import com.webmonitor.admin.common.hander.WebSocketHandler;
 import com.webmonitor.admin.common.interceptor.LoginSessionInterceptor;
 import com.webmonitor.admin.common.kit.APP;
 import com.webmonitor.admin.auth.AuthKit;
@@ -62,15 +64,15 @@ public class AdminConfig extends JfinalCoreConfig {
         StartInit.initConfig(props);
         me.setDevMode(Tools.getConfigBool("devMode", false));
         me.setJsonFactory(MixedJsonFactory.me());
-
-        String uploadpath = Tools.getConfig("app_workspace_path","/");
-
+        me.setLogFactory(new Log4jLogFactory());
+        String uploadpath = Tools.getConfig("app_workspace_path","./");
+        me.setMaxPostSize(1024*1024*1024);
+        me.setEncoding("utf-8");
         if (uploadpath.length()>1)
         {
             File dir = new File(uploadpath);
             dir.mkdirs();
         }
-
         me.setBaseUploadPath(uploadpath);
 
         // 支持 Controller、Interceptor 之中使用 @Inject 注入业务层，并且自动实现 AOP
@@ -196,7 +198,7 @@ public class AdminConfig extends JfinalCoreConfig {
 
     @Override
     public void configHandler(Handlers me) {
-
+        me.add(new WebSocketHandler("^/websocket"));
     }
 
     public void afterJFinalStart() {

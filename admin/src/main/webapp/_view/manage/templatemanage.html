@@ -94,7 +94,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">登录密码</label>
+            <label class="layui-form-label">修改密码</label>
             <div class="layui-input-block">
                 <input style="width: 70%" type="password" name="uPassword" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
@@ -162,7 +162,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">登录密码</label>
+            <label class="layui-form-label">修改密码</label>
             <div class="layui-input-block">
                 <input id="upassword" style="width: 70%" type="password" name="editPassword"  placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
@@ -216,19 +216,12 @@
                 <div class="layui-card-header">模板列表</div>
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                     <div class="layui-form-item" style="text-align: center">
-                        <!--                        <div class="layui-input-inline">-->
-                        <!--                下拉框            <div id="projectlist" class="xm-select-project"></div>-->
-                        <!--                        </div>-->
-                        <div class="layui-inline">
-                            <select id="searchtype" name="searchtype" lay-verify="" lay-filter="searchtype">
-                                <option value="0">全部</option>
-                                <option value="1">公司</option>
-                                <option value="2">模板名称</option>
+                        <div class="layui-inline" id="select">
+                            <select id="stats" name="stats" lay-verify="" lay-filter="stats">
+                                <option value="0" selected>全部</option>
+                                <option value="1">模板名称</option>
                             </select>
                         </div>
-                        <!--                        <div class="layui-inline">-->
-                        <!--                            <div id="companylistsearch" class="xm-select-project" style="width: 200px" ></div>-->
-                        <!--                        </div>-->
                         <div class="layui-inline">
                             <input type="text" class="layui-input" lay-verify="search" name="account" id="account" placeholder=" 请输入查询内容 " >
                         </div>
@@ -238,11 +231,11 @@
                                 <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
                             </button>
                         </div>
-                        <div class="layui-inline">
-                            <div style="margin: auto">
-                                <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>添加模板</button>
-                            </div>
-                        </div>
+<!--                        <div class="layui-inline">-->
+<!--                            <div style="margin: auto">-->
+<!--                                <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>添加模板</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -263,7 +256,7 @@
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
 <script type="text/html" id="table-online-state">
-    {{ d.onlineState == 1 ? '
+    {{ d.type == 1 ? '
     <button class="layui-btn layui-btn-sm treated">快速设置</button>'
     : '
     <button class="layui-btn layui-btn-sm untreated">详细设置</button>' }}

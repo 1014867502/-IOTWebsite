@@ -5,10 +5,7 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.core.bll.*;
 import com.webmonitor.core.idal.IAgentData;
-import com.webmonitor.core.model.AgentData;
-import com.webmonitor.core.model.AgentDataDao;
-import com.webmonitor.core.model.ProDevCount;
-import com.webmonitor.core.model.StaffData;
+import com.webmonitor.core.model.*;
 import com.webmonitor.core.model.userbase.DeviceSensorList;
 import com.webmonitor.core.model.userbase.Templates;
 import com.webmonitor.core.util.Tools;
@@ -17,6 +14,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class AgentDataMysqlDAL implements IAgentData {
 
     public Page<AgentData> getAllDevice(int pageno,int limit){
         String sql=" from agent_data a left join agent_table b on a.agentNumber=b.agentNumber LEFT JOIN agent_table c on a.agentNumber=c.agentNumber ";
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName,c.agentName ",sql);
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName,b.updateTime,c.agentName ",sql+" order by b.updateTime desc");
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -37,7 +35,12 @@ public class AgentDataMysqlDAL implements IAgentData {
             }
             map.setOnlineState(state);
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setCreateTime(record.getDate("createTime"));
+            try{
+                if(record.getStr("updateTime")!=null||record.getStr("updateTime").equals("")){
+                    map.setCreateTime(Tools.toDateTime(record.getStr("updateTime").replace('/','-')));
+                }}catch (Exception e){
+
+            }
             map.setProgroupid(record.getInt("proGroupId"));
             map.setMachineSerial(record.getStr("machineSerial"));
             map.setMachineName(record.getStr("machineName"));
@@ -70,7 +73,7 @@ public class AgentDataMysqlDAL implements IAgentData {
                 sql=sql+" c.agentName like '%"+content+"%'";
                 break;
         }
-        if(projectid[0]!=null&&(!projectid[0].equals("all"))){
+        if(projectid[0]!=null&&(!type.equals("1"))&&(!type.equals("2"))){
             if(projectid.length>1){
                 test=" and (a.proGroupid="+projectid[0];
                 for(int k=0;k<projectid.length;k++){
@@ -85,7 +88,7 @@ public class AgentDataMysqlDAL implements IAgentData {
         if(type.equals("1")){
             sql=sql+" and a.agentNumber="+agentnum;
         }
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,b.updateTime,c.agentName ",sql+" order by b.updateTime desc");
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -99,10 +102,85 @@ public class AgentDataMysqlDAL implements IAgentData {
             map.setOnlineState(state1);
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setCreateTime(Tools.toDate(record.getStr("createTime").replace('/','-')));
+            String test1=record.getStr("updateTime");
+            if(record.getStr("updateTime")==null||record.getStr("updateTime").equals("")){
+
+            }else{
+                map.setCreateTime(Tools.toDateTime(record.getStr("updateTime").replace('/','-')));
+            }
             if(record.getInt("proGroupId")==null){
                 map.setProgroupid(0);
             }else{
+                map.setProgroupid(record.getInt("proGroupId"));
+            }
+            map.setMachineSerial(record.getStr("machineSerial"));
+            map.setMachineName(record.getStr("machineName"));
+            map.setAgentName(record.getStr("agentName"));
+            rslist.add(map);
+        }
+        return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+    }
+
+    /**首页上的搜索框**/
+    public Page<AgentData> seekDeviceByParam(StaffData currentuser,String content,String agentnum,String projectid,String state,int pageno,int limit){
+        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber ";
+        if(!agentnum.equals("all")){
+            sql+=" where a.agentNumber='"+agentnum+"'";
+        }
+        if(!content.equals("")){
+            if(agentnum.equals("all")){
+                sql+=" where a.machineSerial like '%"+content+"%'";
+            }else{
+                sql+=" and a.machineSerial like '%"+content+"%'";
+            }
+        }
+        if(!projectid.equals("all")){
+            sql+=" and a.proGroupId='"+projectid+"'";
+        }else{
+            if(currentuser.getIRoleType()==0){
+                String[] jobs=currentuser.getGroupAssemble().split("@");
+                for(int i=0;i<jobs.length;i++){
+                    if(i!=0) {
+                        sql += " or a.proGroupId='" + jobs[i] + "'";
+                    }else{
+                        sql+=" and (a.proGroupId='"+jobs[i]+"'";
+                    }
+                }
+                sql+=" )";
+            }
+        }
+        if(!state.equals("all")){
+            if(!sql.contains("where")){
+                sql+=" where b.connectState='"+state+"'";
+            }else{
+                sql+=" and b.connectState='"+state+"'";
+            }
+
+        }
+
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,b.updateTime,c.agentName ",sql+" order by b.updateTime desc");
+        List<Record> recordList = page.getList();
+        List<AgentData> rslist = new ArrayList<>();
+        for (Record record : recordList) {
+            AgentData map = new AgentData();
+            int state1 = 0;
+            String connect = "";
+            if (record.getStr("connectState") != null && !record.getStr("connectState").equals("")) {
+                connect = record.getStr("connectState");
+                state1 = Integer.parseInt(connect);
+            }
+            map.setOnlineState(state1);
+            map.setId(record.getInt("id"));
+            map.setAgentNumber(record.getStr("agentNumber"));
+            String test1 = record.getStr("updateTime");
+            if (record.getStr("updateTime") == null || record.getStr("updateTime").equals("")) {
+
+            } else {
+                map.setCreateTime(Tools.toDateTime(record.getStr("updateTime").replace('/', '-')));
+            }
+            if (record.getInt("proGroupId") == null) {
+                map.setProgroupid(0);
+            } else {
                 map.setProgroupid(record.getInt("proGroupId"));
             }
             map.setMachineSerial(record.getStr("machineSerial"));
@@ -136,7 +214,7 @@ public class AgentDataMysqlDAL implements IAgentData {
             case "2"://全部
                 break;
         }
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,b.updateTime,c.agentName ",sql+" order by b.updateTime desc");
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -150,7 +228,12 @@ public class AgentDataMysqlDAL implements IAgentData {
             map.setOnlineState(state1);
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setCreateTime(Tools.toDate(record.getStr("createTime").replace('/','-')));
+            try{
+                if(record.getStr("updateTime")!=null||record.getStr("updateTime").equals("")){
+                    map.setCreateTime(Tools.toDateTime(record.getStr("updateTime").replace('/','-')));
+                }}catch (Exception e){
+
+            }
             if(record.getInt("proGroupId")==null){
                 map.setProgroupid(0);
             }else{
@@ -188,7 +271,7 @@ public class AgentDataMysqlDAL implements IAgentData {
             case "2"://全部
                 break;
         }
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,b.updateTime,c.agentName ",sql+" order by b.updateTime desc");
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -202,7 +285,11 @@ public class AgentDataMysqlDAL implements IAgentData {
             map.setOnlineState(state1);
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setCreateTime(Tools.toDate(record.getStr("createTime").replace('/','-')));
+            try{
+                if(record.getStr("updateTime")!=null||record.getStr("updateTime").equals("")){
+                    map.setCreateTime(Tools.toDateTime(record.getStr("updateTime").replace('/','-')));
+                }}catch (Exception e){
+            }
             if(record.getInt("proGroupId")==null){
                 map.setProgroupid(0);
             }else{
@@ -220,7 +307,7 @@ public class AgentDataMysqlDAL implements IAgentData {
     @Override
     public Page<AgentData> getAllDeviceByComid(String Companyid,int pageno,int limit) {
         String sql="  from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.agentNumber="+Companyid;
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName",sql);
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,b.updateTime,c.agentName",sql+" order by b.updateTime desc");
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -234,7 +321,11 @@ public class AgentDataMysqlDAL implements IAgentData {
             map.setOnlineState(state);
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setCreateTime(Tools.toDate(record.getStr("createTime").replace('/','-')));
+            try{
+                if(record.getStr("updateTime")!=null||record.getStr("updateTime").equals("")){
+                    map.setCreateTime(Tools.toDateTime(record.getStr("updateTime").replace('/','-')));
+                }}catch (Exception e){
+            }
             if(record.getInt("proGroupId")==null){
                 map.setProgroupid(0);
             }else{
@@ -251,7 +342,7 @@ public class AgentDataMysqlDAL implements IAgentData {
     /**查询当前项目旗下的所有设备（分页）**/
     public Page<AgentData> getAllDeviceByGroupid(String Groupid,int pageno,int limit) {
         String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.proGroupId="+Groupid;
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,b.updateTime,c.agentName ",sql+" order by b.updateTime desc");
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -265,7 +356,11 @@ public class AgentDataMysqlDAL implements IAgentData {
             map.setOnlineState(state);
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            map.setCreateTime(Tools.toDate(record.getStr("createTime").replace('/','-')));
+            try{
+                if(record.getStr("updateTime")!=null||record.getStr("updateTime").equals("")){
+                    map.setCreateTime(Tools.toDateTime(record.getStr("updateTime").replace('/','-')));
+                }}catch (Exception e){
+            }
             if(record.getInt("proGroupId")==null){
                 map.setProgroupid(-1);
             }else{
@@ -290,7 +385,6 @@ public class AgentDataMysqlDAL implements IAgentData {
         switch (role){
             case "superadmin":
                 sql=AdminService.me.getAllDeviceById(pageno, limit);
-                select="select a.*,b.connectState ";
                 break;
             case "user":
                 sql= ConsumerService.me.getAllDevice(userid);
@@ -299,7 +393,7 @@ public class AgentDataMysqlDAL implements IAgentData {
                 sql= CompanyAdminService.me.getAllDevice(currentuser.getAgentNumber());
                 break;
         }
-        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,c.agentName ",sql);
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,b.updateTime,c.agentName ",sql);
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
         for (Record record : recordList) {
@@ -314,12 +408,9 @@ public class AgentDataMysqlDAL implements IAgentData {
             map.setOnlineState(state);
             map.setId(record.getInt("id"));
             map.setAgentNumber(record.getStr("agentNumber"));
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
             try {
-                Date date = simpleDateFormat.parse(record.getStr("createTime").replace('/','-'));
-                map.setCreateTime(date);
-            } catch (ParseException e) {
-                e.printStackTrace();
+                map.setCreateTime(Tools.toDateTime(record.getStr("updateTime").replace('/','-')));
+            } catch (Exception e) {
             }
             map.setProgroupid((record.getInt("proGroupId")!=null)?record.getInt("proGroupId"):0);
             map.setMachineSerial(record.getStr("machineSerial"));
@@ -428,7 +519,14 @@ public class AgentDataMysqlDAL implements IAgentData {
         String time=format.format(date);
         Record device=new Record().set("machineSerial",sn).set("machineName",machinename).set("onlineState",Integer.parseInt(state))
                 .set("agentNumber",comid).set("createTime",time).set("proGroupId",0);
+//        MachineData machineData=MachineData.dao.findFirst("select * from machine_data where machineSerial='"+sn+"'");
+//        if(machineData==null){
+//            Record machine=new Record().set("machineSerial",sn).set("connectState",Integer.parseInt(state))
+//                    .set("updateTime",time);
+//            Db.save("machine_data",machine);
+//        }
         Db.save("agent_data",device);
+
     }
 
     @Override
@@ -528,6 +626,41 @@ public class AgentDataMysqlDAL implements IAgentData {
         Db.update("update machine_data set extSensorCmd = ? where machineSerial=?",afterdel,machineserial);
     }
 
+    /**/
+    @Override
+    public Page<UpdateData> getDeviceUpdatelog(String machineserial, int pageno, int limit) {
+        String sql=" from update_data where machineSerial='"+machineserial+"' order by updateTime desc";
+        Page<Record> page = Db.paginate(pageno, limit, "select * ",sql);
+        List<Record> recordList = page.getList();
+        List<UpdateData> rslist = new ArrayList<>();
+        for (Record record : recordList) {
+            UpdateData map = new UpdateData();
+            map.setMachineSerial(record.getStr("machineSerial"));
+            map.setUpdateState(record.getInt("updateState"));
+            map.setUpdateTime(record.getStr("updateTime"));
+            rslist.add(map);
+        }
+        return new Page<UpdateData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+    }
+
+    /**根据设备serial码获取设备相关信息**/
+    public AgentData getDeviceDetailBySn(String machineserial){
+        String sql="select a.*,b.agentName,c.ProGroupName from agent_data a LEFT JOIN agent_table b on a.agentNumber=b.agentNumber LEFT JOIN projects_data c ON a.ProGroupId=c.ProGroupId where a.machineSerial='"+machineserial+"'";
+        Record result=Db.findFirst(sql);
+        AgentData agentData=new AgentData();
+        agentData.setAgentName(result.getStr("agentName")!=null?result.getStr("agentName"):"");
+        if(result.getStr("onlineState")!=null){
+            agentData.setOnlineState(Integer.parseInt(result.getStr("onlineState")));
+        }else {
+            agentData.setOnlineState(0);
+        }
+        agentData.setProgroupid(result.getInt("proGroupId")!=null?result.getInt("proGroupId"):0);
+        agentData.setAgentNumber(result.getStr("agentNumber")!=null?result.getStr("agentNumber"):"");
+        agentData.setMachineName(result.getStr("machineName")!=null?result.getStr("machineName"):"");
+        agentData.setMachineSerial(result.getStr("machineSerial")!=null?result.getStr("machineSerial"):"");
+        agentData.setProGroupName(result.getStr("ProGroupName")!=null?result.getStr("ProGroupName"):"");
+        return agentData;
+    }
 
 
     @Override

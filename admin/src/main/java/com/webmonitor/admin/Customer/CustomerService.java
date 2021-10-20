@@ -5,6 +5,7 @@ import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.admin.common.kit.I18nKit;
+import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.dal.AgentDataMysqlDAL;
 import com.webmonitor.core.dal.StaffDataMysqlDAL;
 import com.webmonitor.core.idal.IAgentData;
@@ -46,12 +47,23 @@ public class CustomerService {
         staffData1.setCDept(staffData.getcDept());
         staffData1.setIAccountType(staffData.getiAccountType());
         staffData1.setIRoleType(staffData.getiRoleType());
+        staffData1.setAccountTime(staffData.getAccounttime());
         String password=staffData.getuPassword();
         String code= MD5Utils.md5(password)+"0";
         staffData1.setUPassword(code);
         staffData1.setURealName(staffData.getuRealName());
         staffData1.setUAccountNum(staffData.getuAccountNum());
-        staffData1.setGroupAssemble(select);
+        switch(staffData1.getIRoleType()){
+            case 0:
+                staffData1.setGroupAssemble(select);
+                break;
+            case 1:
+                staffData1.setGroupAssemble("all");//供销商公司所有项目
+                break;
+            case 2:
+                staffData1.setGroupAssemble("all");//所有项目
+                break;
+        }
         if(staffData1.save()){
             result.success("成功");
         }else{
@@ -67,6 +79,8 @@ public class CustomerService {
         return id != null;
     }
 
+
+
     /**更新用户资料**/
     public Result<String> update(StaffDataEntity staffData,String select) {
         Result<String> result = Result.newOne();
@@ -76,6 +90,7 @@ public class CustomerService {
         staffData1.setCDept(staffData.getcDept());
         staffData1.setIAccountType(staffData.getiAccountType());
         staffData1.setIRoleType(staffData.getiRoleType());
+        staffData1.setAccountTime(staffData.getAccounttime());
         String password=staffData.getuPassword();
         String oldpassword=StaffData.dao.findById(staffData.getId()).getUPassword();
         if(!password.equals("")&&!oldpassword.equals(password)){
@@ -84,7 +99,17 @@ public class CustomerService {
         }
         staffData1.setURealName(staffData.getuRealName());
         staffData1.setUAccountNum(staffData.getuAccountNum());
-        staffData1.setGroupAssemble(select);
+        switch(staffData1.getIRoleType()){
+            case 0:
+                staffData1.setGroupAssemble(select);
+                break;
+            case 1:
+                staffData1.setGroupAssemble("all");//供销商公司所有项目
+                break;
+            case 2:
+                staffData1.setGroupAssemble("all");//所有项目
+                break;
+        }
         if(staffData1.update()){
             result.success("成功");
         }else{
@@ -114,8 +139,8 @@ public class CustomerService {
     }
 
     /**获取所有用户**/
-    public Page<StaffDataEntity> getAllCustom(int pageno,int limit){
-        return dal.getAllCustomByPage(pageno,limit);
+    public Page<StaffDataEntity> getAllCustom(String userid,int pageno,int limit){
+        return dal.getAllCustomByPage(userid,pageno,limit);
     }
 
     /**获取各类别的用户数量**/
@@ -131,14 +156,14 @@ public class CustomerService {
     }
 
     /**搜索用户**/
-    public Page<StaffDataEntity> searchCustomByParam(String content,String agentnum,String roletype,int pageno,int limit){
-        return dal.searchCustomByParam(content,agentnum,roletype, pageno, limit);
+    public Page<StaffDataEntity> searchCustomByParam(String content,String userid ,String agentnum,String roletype,int pageno,int limit){
+        return dal.searchCustomByParam(content,userid,agentnum,roletype, pageno, limit);
     }
 
 
     /**根据公司号查找用户**/
-    public Page<StaffDataEntity> getCustomByComId(String agentnum,int pageno,int limit){
-        return dal.getCustomByComId(agentnum, pageno, limit);
+    public Page<StaffDataEntity> getCustomByComId(String agentnum,String userid,int pageno,int limit){
+        return dal.getCustomByComId(agentnum,userid, pageno, limit);
     }
 
 

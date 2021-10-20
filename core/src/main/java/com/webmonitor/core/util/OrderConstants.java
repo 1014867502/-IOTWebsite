@@ -265,5 +265,7 @@ public class OrderConstants  {
 
     public static String DEVICE_COORDINATES_Z="SET,DEVICE_COORDINATES_Z,";//设置基准坐标，用于计算位移
 
+    public static String RAW_NTRIP_ARG="SET,DEVICE.RAW.NTRIP_ARG,";//NTRIP参数，IP|端口|接入点|用户名|密码(core数据1)
 
+    public static String RAW_SECOND_NTRIP_ARG="SET,DEVICE.RAW.SECOND.NTRIP_ARG,";//第二cores
 }

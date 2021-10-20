@@ -11,6 +11,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     var projectcount;
     var identity="";
     var layerindex;
+    var currentpage=0;
 
 
     getProjectCount();
@@ -37,16 +38,16 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
 
 
     function pagerender(){
-        laypage.render({
-            elem: 'demo7'
-            ,count: projectcount
-            ,limit:5
-            ,layout: ['prev', 'page', 'next','skip']
-            ,theme: '#1E9FFF'
-            ,jump: function(obj){
-                getUserProjects(obj.curr);
-            }
-        });
+            laypage.render({
+                elem: 'demo7'
+                ,count: projectcount
+                ,limit:5
+                ,layout: ['prev', 'page', 'next','skip']
+                ,theme: '#1E9FFF'
+                ,jump: function(obj){
+                    getUserProjects(obj.curr);
+                }
+            });
     }
 
 
@@ -74,6 +75,18 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             async:false,
             success:function (data) {
                 layer.msg('提交成功');
+                getProjectCount();
+                laypage.render({
+                    elem: 'demo7'
+                    ,count:projectcount
+                    ,limit:5
+                    ,curr:currentpage
+                    ,layout: ['prev', 'page', 'next','skip']
+                    ,theme: '#1E9FFF'
+                    ,jump: function(obj){
+                        getUserProjects(obj.curr);
+                    }
+                });
             }
         })
         layer.close(layerindex);
@@ -91,6 +104,18 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             async:false,
             success:function (data) {
                 layer.msg('提交成功');
+                getProjectCount();
+                laypage.render({
+                    elem: 'demo7'
+                    ,count:projectcount
+                    ,limit:5
+                    ,curr:currentpage
+                    ,layout: ['prev', 'page', 'next','skip']
+                    ,theme: '#1E9FFF'
+                    ,jump: function(obj){
+                        getUserProjects(obj.curr);
+                    }
+                });
             }
         })
         layer.close(layerindex);
@@ -114,6 +139,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
 
     //根据页码获取分页信息
     function getUserProjects(no) {
+        currentpage=no;
         $.ajax({
             url: '/manage/getAllCompanyPage',
             data:{
@@ -179,9 +205,10 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 ,btnAlign: 'c' //按钮居中
                 ,shade: 0 //不显示遮罩
                 ,yes: function(){
+                    deletproject(val);
                     layer.closeAll();
                 },btn1: function (index, layero) {
-                    deletproject(val);
+
                 },
                 btn2: function (index, layero) {
                     layer.close(index);
@@ -209,9 +236,9 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     /**删除项目**/
     function deletproject(projectid){
         $.ajax({
-            url:"/manage/deleteproject",
+            url:"/company/deleteCom",
             data:{
-                projectid:projectid
+                agentnum:projectid
             },
             async:false,
             success:function(data){
@@ -220,6 +247,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                     elem: 'demo7'
                     ,count:projectcount
                     ,limit:5
+                    ,curr:currentpage
                     ,layout: ['prev', 'page', 'next','skip']
                     ,theme: '#1E9FFF'
                     ,jump: function(obj){

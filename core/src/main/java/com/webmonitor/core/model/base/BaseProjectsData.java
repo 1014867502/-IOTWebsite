@@ -49,4 +49,20 @@ public abstract class BaseProjectsData<M extends BaseProjectsData<M>> extends Mo
 		return get("createTime");
 	}
 
+	public void setProLongitude(java.lang.String proLongitude) {
+		set("proLongitude", proLongitude);
+	}
+	
+	public java.lang.String getProLongitude() {
+		return getStr("proLongitude");
+	}
+
+	public void setProLatitude(java.lang.String proLatitude) {
+		set("proLatitude", proLatitude);
+	}
+	
+	public java.lang.String getProLatitude() {
+		return getStr("proLatitude");
+	}
+
 }

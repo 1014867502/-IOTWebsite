@@ -12,13 +12,20 @@
         .layui-form-checked i, .layui-form-checked:hover i {
             color:#FF5722;
         }
-        .layui-btn.onlinebtn{
-            background-color: #009688;
-            color: #FFFFFF;
+        .untreated {
+            color:  #FF5722;
+            width: 30%;
+            border: solid 0.5px;
+            height: 27px;
+            /*background-color: #FF5722;*/
         }
-        .layui-btn.offlinebtn{
-            background-color: #ff0000;
-            color: #FFFFFF;
+
+        .treated {
+            color:  #01AAED;
+            width: 30%;
+            border: solid 0.5px;
+            height: 27px;
+            /*background-color: #01AAED;*/
         }
     </style>
 </head>
@@ -47,8 +54,8 @@
                     <table class="layui-hide" id="table-form" lay-filter="table-form"></table>
 
                     <script type="text/html" id="table-online-state">
-                        {{ d.onlinestate === 1 ? '<button class="layui-btn layui-btn-primary layui-btn-xs onlinebtn">在线</button>'
-                        : '<button class="layui-btn layui-btn-primary layui-btn-xs offlinebtn">离线</button>' }}
+                        {{ d.onlinestate === 1 ? '<div class="treated">在线</div>'
+                        : '<div class="untreated">离线</div>' }}
                     </script>
                     <script type="text/html" id="table-toolbar">
 <!--                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">设备详情</a>-->

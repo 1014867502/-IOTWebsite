@@ -1,6 +1,7 @@
 package com.webmonitor.core.idal;
 
 import com.jfinal.plugin.activerecord.Page;
+import com.webmonitor.core.model.base.BaseProject;
 import com.webmonitor.core.model.userbase.BaseProjects;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public interface IProject {
     /**获取用户项目数量,通过判断是否管理员**/
     int getProjectCountById(String type,String comid);
 
-    void addProject(String userid,String comid,String projectname);
+    void addProject(String userid,String comid,String projectname,String proLatitude,String proLongitude);
 
     void deleteProject(String Projectid);
 
@@ -48,4 +49,7 @@ public interface IProject {
 
     /**根据用户id获取对应的项目列表**/
     Page<Object> getProjectsById(String userid,int pageno,int limit);
+
+    /**根据用户id获取对应的项目列表**/
+    List<BaseProjects> getProjectlistById(String userid);
 }

@@ -21,9 +21,16 @@ public class ConsumerService {
     public String getAllDevice(String userid){
         StaffData currentuser= StaffService.me.getStaffByName(userid);
         String[] projects=currentuser.getGroupAssemble().split("@");
-        String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where  a.proGroupId="+projects[0];
-        for(int i=1;i<projects.length;i++){
-            sql=sql+" or a.proGroupId="+projects[i];
+        String sql="";
+        if(!currentuser.getGroupAssemble().isEmpty()){
+            sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where  a.proGroupId="+projects[0];
+            for(int i=1;i<projects.length;i++){
+                sql=sql+" or a.proGroupId="+projects[i];
+            }
+            sql+=" order by b.updateTime desc";
+        }
+        else{
+           sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where  a.proGroupId is NULL  order by b.updateTime desc";
         }
         return sql;
     }
@@ -33,24 +40,35 @@ public class ConsumerService {
         List<AgentTable> agentTables=new ArrayList<>();
         try{
             StaffData staffData=StaffService.me.getStaffByName(Name);
-            String[] projects=staffData.getGroupAssemble().split("@");
-            for(int i=0;i<projects.length;i++){
-               Record record=new Record();
-               AgentTable agentTable=new AgentTable();
-               record= Db.findFirst("SELECT a.* FROM agent_table a,projects_data b where a.agentNumber=b.agentNumber and b.proGroupId="+projects[i]);
-               agentTable.setId(record.getInt("id"));
-               agentTable.setAgentName(record.getStr("agentName"));
-               agentTable.setAgentNumber(record.getStr("agentNumber"));
-               if(agentTables.isEmpty()){
-                   agentTables.add(agentTable);
-               }else{
-                   for(int k=0;k<agentTables.size();k++){
-                       if(!agentTable.getAgentName().equals(agentTables.get(i).getAgentName())){
-                           agentTables.add(agentTable);
-                       }
-                   }
-               }
+            if(staffData.getGroupAssemble().equals("all")){
+                Record record=new Record();
+                AgentTable agentTable=new AgentTable();
+                record= Db.findFirst("SELECT a.* FROM agent_table a,projects_data b where a.agentNumber=b.agentNumber and a.agentNumber='"+staffData.getAgentNumber()+"'");
+                agentTable.setId(record.getInt("id"));
+                agentTable.setAgentName(record.getStr("agentName"));
+                agentTable.setAgentNumber(record.getStr("agentNumber"));
+                agentTables.add(agentTable);
+            }else{
+                String[] projects=staffData.getGroupAssemble().split("@");
+                for(int i=0;i<projects.length;i++){
+                    Record record=new Record();
+                    AgentTable agentTable=new AgentTable();
+                    record= Db.findFirst("SELECT a.* FROM agent_table a,projects_data b where a.agentNumber=b.agentNumber and b.proGroupId="+projects[i]);
+                    agentTable.setId(record.getInt("id"));
+                    agentTable.setAgentName(record.getStr("agentName"));
+                    agentTable.setAgentNumber(record.getStr("agentNumber"));
+                    if(agentTables.isEmpty()){
+                        agentTables.add(agentTable);
+                    }else{
+                        for(int k=0;k<agentTables.size();k++){
+                            if(!agentTable.getAgentName().equals(agentTables.get(i).getAgentName())){
+                                agentTables.add(agentTable);
+                            }
+                        }
+                    }
+                }
             }
+
         }catch (Exception e){
             System.out.println(e.getMessage());
         }

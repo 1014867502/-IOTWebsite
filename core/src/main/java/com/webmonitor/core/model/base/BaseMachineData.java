@@ -17,20 +17,20 @@ public abstract class BaseMachineData<M extends BaseMachineData<M>> extends Mode
 		return getInt("id");
 	}
 
-	public void setSerial(java.lang.String serial) {
-		set("serial", serial);
+	public void setMachineSerial(java.lang.String machineSerial) {
+		set("machineSerial", machineSerial);
 	}
 	
-	public java.lang.String getSerial() {
-		return getStr("serial");
+	public java.lang.String getMachineSerial() {
+		return getStr("machineSerial");
 	}
 
-	public void setModel(java.lang.String model) {
-		set("model", model);
+	public void setMachineModel(java.lang.String machineModel) {
+		set("machineModel", machineModel);
 	}
 	
-	public java.lang.String getModel() {
-		return getStr("model");
+	public java.lang.String getMachineModel() {
+		return getStr("machineModel");
 	}
 
 	public void setHardwareVer(java.lang.String hardwareVer) {
@@ -89,12 +89,12 @@ public abstract class BaseMachineData<M extends BaseMachineData<M>> extends Mode
 		return getStr("extVoltage");
 	}
 
-	public void setSpace(java.lang.String space) {
-		set("space", space);
+	public void setInsideSpace(java.lang.String insideSpace) {
+		set("insideSpace", insideSpace);
 	}
 	
-	public java.lang.String getSpace() {
-		return getStr("space");
+	public java.lang.String getInsideSpace() {
+		return getStr("insideSpace");
 	}
 
 	public void setSdSpace(java.lang.String sdSpace) {
@@ -249,12 +249,12 @@ public abstract class BaseMachineData<M extends BaseMachineData<M>> extends Mode
 		return getStr("secondPort");
 	}
 
-	public void setRate(java.lang.String rate) {
-		set("rate", rate);
+	public void setRawRate(java.lang.String rawRate) {
+		set("rawRate", rawRate);
 	}
 	
-	public java.lang.String getRate() {
-		return getStr("rate");
+	public java.lang.String getRawRate() {
+		return getStr("rawRate");
 	}
 
 	public void setDoubleInv(java.lang.String doubleInv) {
@@ -697,12 +697,12 @@ public abstract class BaseMachineData<M extends BaseMachineData<M>> extends Mode
 		return getStr("networkMountpoint");
 	}
 
-	public void setNetworMountpointPass(java.lang.String networMountpointPass) {
-		set("networMountpointPass", networMountpointPass);
+	public void setNetworkMountpointPass(java.lang.String networkMountpointPass) {
+		set("networkMountpointPass", networkMountpointPass);
 	}
 	
-	public java.lang.String getNetworMountpointPass() {
-		return getStr("networMountpointPass");
+	public java.lang.String getNetworkMountpointPass() {
+		return getStr("networkMountpointPass");
 	}
 
 	public void setNetworkUploadGga(java.lang.String networkUploadGga) {
@@ -794,11 +794,11 @@ public abstract class BaseMachineData<M extends BaseMachineData<M>> extends Mode
 	}
 
 	public void setCoordinatesZ(java.lang.String coordinatesZ) {
-		set("coordinates_Z", coordinatesZ);
+		set("coordinatesZ", coordinatesZ);
 	}
 	
 	public java.lang.String getCoordinatesZ() {
-		return getStr("coordinates_Z");
+		return getStr("coordinatesZ");
 	}
 
 	public void setBaseLon(java.lang.String baseLon) {
@@ -823,6 +823,30 @@ public abstract class BaseMachineData<M extends BaseMachineData<M>> extends Mode
 	
 	public java.lang.String getBaseHeight() {
 		return getStr("baseHeight");
+	}
+
+	public void setPositionLon(java.lang.String positionLon) {
+		set("positionLon", positionLon);
+	}
+	
+	public java.lang.String getPositionLon() {
+		return getStr("positionLon");
+	}
+
+	public void setPositionLat(java.lang.String positionLat) {
+		set("positionLat", positionLat);
+	}
+	
+	public java.lang.String getPositionLat() {
+		return getStr("positionLat");
+	}
+
+	public void setPositionHeight(java.lang.String positionHeight) {
+		set("positionHeight", positionHeight);
+	}
+	
+	public java.lang.String getPositionHeight() {
+		return getStr("positionHeight");
 	}
 
 	public void setRawBackEnabled(java.lang.String rawBackEnabled) {
@@ -889,12 +913,124 @@ public abstract class BaseMachineData<M extends BaseMachineData<M>> extends Mode
 		return getStr("dzIotRtkResult");
 	}
 
+	public void setNtrIpBase(java.lang.String ntrIpBase) {
+		set("ntrIpBase", ntrIpBase);
+	}
+	
+	public java.lang.String getNtrIpBase() {
+		return getStr("ntrIpBase");
+	}
+
+	public void setOneNetMode(java.lang.String oneNetMode) {
+		set("oneNetMode", oneNetMode);
+	}
+	
+	public java.lang.String getOneNetMode() {
+		return getStr("oneNetMode");
+	}
+
+	public void setAccessKey(java.lang.String accessKey) {
+		set("accessKey", accessKey);
+	}
+	
+	public java.lang.String getAccessKey() {
+		return getStr("accessKey");
+	}
+
 	public void setConnectState(java.lang.Long connectState) {
 		set("connectState", connectState);
 	}
 	
-	public java.lang.Long getConnectState() {
-		return getLong("connectState");
+	public java.lang.Integer getConnectState() {
+		return getInt("connectState");
+	}
+
+	public void setUpdateTime(java.lang.String updateTime) {
+		set("updateTime", updateTime);
+	}
+	
+	public java.lang.String getUpdateTime() {
+		return getStr("updateTime");
+	}
+
+	public void setRawSolution(java.lang.String rawSolution) {
+		set("rawSolution", rawSolution);
+	}
+	
+	public java.lang.String getRawSolution() {
+		return getStr("rawSolution");
+	}
+
+	public void setNtripArg(java.lang.String ntripArg) {
+		set("ntripArg", ntripArg);
+	}
+	
+	public java.lang.String getNtripArg() {
+		return getStr("ntripArg");
+	}
+
+	public void setSecondArg(java.lang.String secondArg) {
+		set("secondArg", secondArg);
+	}
+	
+	public java.lang.String getSecondArg() {
+		return getStr("secondArg");
+	}
+
+	public void setSecondNtripBase(java.lang.String secondNtripBase) {
+		set("secondNtripBase", secondNtripBase);
+	}
+	
+	public java.lang.String getSecondNtripBase() {
+		return getStr("secondNtripBase");
+	}
+
+	public void setGpsSerial(java.lang.String gpsSerial) {
+		set("gpsSerial", gpsSerial);
+	}
+	
+	public java.lang.String getGpsSerial() {
+		return getStr("gpsSerial");
+	}
+
+	public void setGpsFirmwareVer(java.lang.String gpsFirmwareVer) {
+		set("gpsFirmwareVer", gpsFirmwareVer);
+	}
+	
+	public java.lang.String getGpsFirmwareVer() {
+		return getStr("gpsFirmwareVer");
+	}
+
+	public void setGpsEleMask(java.lang.String gpsEleMask) {
+		set("gpsEleMask", gpsEleMask);
+	}
+	
+	public java.lang.String getGpsEleMask() {
+		return getStr("gpsEleMask");
+	}
+
+	public void setGpsBeiDou(java.lang.String gpsBeiDou) {
+		set("gpsBeiDou", gpsBeiDou);
+	}
+	
+	public java.lang.String getGpsBeiDou() {
+		return getStr("gpsBeiDou");
+	}
+
+	public void setGlonass(java.lang.String glonass) {
+		set("glonass", glonass);
+	}
+	
+	public java.lang.String getGlonass() {
+		return getStr("glonass");
+	}
+
+	public void setGaLileo(java.lang.String gaLileo) {
+		set("gaLileo", gaLileo);
+	}
+	
+	public java.lang.String getGaLileo() {
+		return getStr("gaLileo");
 	}
 
 }

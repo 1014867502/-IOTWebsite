@@ -10,12 +10,19 @@
         .layui-nav-tree .layui-nav-bar {
             background-color:#e7efef ;
         }
+        .layui-layout-admin .layui-header .layui-nav .layui-nav-more {
+            border-top-color: #333333 !important;
+        }
     </style>
 </head>
 <body class="layui-layout-body">
+
+<div id="homecover"
+     style="background: #000; position: absolute; left: 0px; top: 0px; width: 100%; filter: alpha(opacity=30); opacity: 0.3; display: none; z-index: 2 "></div>
+
 <div id="LAY_app">
     <div class="layui-layout layui-layout-admin">
-        <div class="layui-header" style="background-color: #0E41CC;">
+        <div class="layui-header" style="background-color: #ffFFFF;">
             <!-- 头部区域 -->
             #include("/_view/_common/_header.html")
         </div>
@@ -103,11 +110,13 @@
                             document.getElementById("usermanage").style.display="none";
                             break;
                         case "companyadmin":
+                            document.getElementById("changePassword").style.display="none";
                             document.getElementById("companymanage").style.display="none";
                             document.getElementById("devicemanage").style.display="none";
                             document.getElementById("usermanage2").setAttribute("lay-href","/manage/comusermanage");
                             break;
                         case "superadmin":
+                            document.getElementById("changePassword").style.display="none";
                             document.getElementById("devicemanage").style.display="none";
                             document.getElementById("projectmanage").style.display="none";
                             break;

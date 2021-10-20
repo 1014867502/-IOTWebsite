@@ -12,7 +12,7 @@ public class StaffDataEntity {
     private String RoleType;
     private String iAccountType;
     private String groupAssemble;
-
+    private String accounttime;
 
     public String getRoleType() {
         return RoleType;
@@ -100,5 +100,13 @@ public class StaffDataEntity {
 
     public void setGroupAssemble(String groupAssemble) {
         this.groupAssemble = groupAssemble;
+    }
+
+    public String getAccounttime() {
+        return accounttime;
+    }
+
+    public void setAccounttime(String accounttime) {
+        this.accounttime = accounttime;
     }
 }

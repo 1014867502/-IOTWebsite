@@ -151,9 +151,53 @@ layui.define(['form','drawer','table'], function (exports) {
         return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
     });
 
+    //监听页面表格查询
+    $("#datasumbit").on('click', function () {
+        let stats = $("#stats").val();
+        let input = $("#account").val();
+        let id = 1, sn, snreal;
+        if (typeof (id) == "undefined") {
+            layer.msg("项目不能为空");
+            return;
+        } else if ((input.length == 0 || input == null) && (!stats == 2)) {
+            layer.msg("输入不能为空");
+            return;
+        } else {
+            snreal = input;
+        }
+        table.render({
+            elem: '#table-form'
+            , title: 'logdata'
+            , totalRow: true
+            , height:'full-300'
+            , url: '/template/searchAllTemplate'
+            ,where:{'type':stats,"content":input}
+            , cols: [[
+                {field: 'id', title: "序号", align: 'center'}
+                , {field: 'agentName', title: "隶属公司", align: 'center'}
+                , {field: 'uAccountNum', title: "创建人", align: 'center'}
+                , {field: 'templateName', title: "模板名称", align: 'center'}
+                , {field: 'type', title: "模板类型", align: 'center', templet: '#table-online-state'}
+                , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
+            ]]
+            , limit: 50 //每页默认显示的数量
+            , limits: [50, 100, 200]
+            , id: 'table-form'
+            , page: true
+            , parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "msg": res.msg,
+                    "count": res.data == null ? 0 : res.data.totalRow,
+                    "data": res.data == null ? {} : res.data.list
+                };
+            }
+        });
+    });
+
     renderTable();
-    // getcompanylistsearch();
-    //表格刷新
+    adaptauthority();
+
     function renderTable(){
         var stats = $("#stats").val();
         table.render({
@@ -185,6 +229,8 @@ layui.define(['form','drawer','table'], function (exports) {
         });
     }
 
+
+
     function adaptauthority() {
         $.ajax({
             url: '/custom/getauthorById',
@@ -196,8 +242,14 @@ layui.define(['form','drawer','table'], function (exports) {
                     case "companyadmin":
                         break;
                     case "superadmin":
+                        document.getElementById("select").innerHTML = "<select id=\"stats\" name=\"stats\" lay-verify=\"\" lay-filter=\"stats\">\n" +
+                            "                                <option value=\"0\" selected>全部</option>\n" +
+                            "                                <option value=\"1\">模板名称</option>\n" +
+                            "                                <option value=\"2\">公司</option>\n" +
+                            "                            </select>";
                         break;
                 }
+                form.render("select");
             }
         })
     }
@@ -207,18 +259,7 @@ layui.define(['form','drawer','table'], function (exports) {
         if (obj.event === 'echarts') {
             location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
         }else if(obj.event === 'edit'){
-            drawer.render({
-                title: '修改用户',  //标题
-                offset: 'r',    //r:抽屉在右边、l:抽屉在左边
-                width: "600px", //r、l抽屉可以设置宽度
-                content: $("#editwindow"),
-                success :function (layero, index) {
-                    editwindow(data);
-                    id=data.id;
-                    layerindex=index;
-                },
-
-            });
+            location.href = '/template/setting?templatename=' + data.templateName+"&&type="+data.type;
         } else if (obj.event === 'del') {
             layer.confirm('真的删除行么', function(index){
                 obj.del();
@@ -232,16 +273,6 @@ layui.define(['form','drawer','table'], function (exports) {
             });
         }
     });
-
-
-
-
-
-
-
-
-
-
 
     // getCustomCount();
     exports('templatemanage',{})

@@ -107,8 +107,8 @@ public class StaffDataMysqlDAL implements IStaffData {
     }
 
     /**获取用户列表**/
-    public Page<StaffDataEntity> getAllCustomByPage(int pageno,int limit){
-        String sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber";
+    public Page<StaffDataEntity> getAllCustomByPage(String userid,int pageno,int limit){
+        String sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber ";
         List<StaffDataEntity> list=new ArrayList<>();
         Page<Record> record= Db.paginate(pageno,limit,"select a.*,b.agentName",sql);
         List<Record> recordList=record.getList();
@@ -121,6 +121,7 @@ public class StaffDataMysqlDAL implements IStaffData {
             staffDataEntity.setuPassword(item.getStr("uPassword"));
             staffDataEntity.setcDept(item.getStr("cDept"));
             staffDataEntity.setuRealName(item.getStr("uRealName"));
+            staffDataEntity.setAccounttime(item.getStr("AccountTime"));
             staffDataEntity.setiRoleType(item.getInt("iRoleType"));
             if(item.getStr("groupAssemble")!=null&&!item.getStr("groupAssemble").equals("")){
                 String projectlist=item.getStr("groupAssemble").replace('@',',');
@@ -150,6 +151,7 @@ public class StaffDataMysqlDAL implements IStaffData {
             staffDataEntity.setuPassword(item.getStr("uPassword"));
             staffDataEntity.setcDept(item.getStr("cDept"));
             staffDataEntity.setuRealName(item.getStr("uRealName"));
+            staffDataEntity.setAccounttime(item.getStr("AccountTime"));
             staffDataEntity.setiRoleType(item.getInt("iRoleType"));
             if(item.getStr("groupAssemble")!=null&&!item.getStr("groupAssemble").equals("")){
                 String projectlist=item.getStr("groupAssemble").replace('@',',');
@@ -180,6 +182,7 @@ public class StaffDataMysqlDAL implements IStaffData {
             staffDataEntity.setcDept(item.getStr("cDept"));
             staffDataEntity.setuRealName(item.getStr("uRealName"));
             staffDataEntity.setiRoleType(item.getInt("iRoleType"));
+            staffDataEntity.setAccounttime(item.getStr("AccountTime"));
             if(item.getStr("groupAssemble")!=null&&!item.getStr("groupAssemble").equals("")){
                 String projectlist=item.getStr("groupAssemble").replace('@',',');
                 staffDataEntity.setGroupAssemble(projectlist);
@@ -194,22 +197,22 @@ public class StaffDataMysqlDAL implements IStaffData {
     }
 
     @Override
-    public Page<StaffDataEntity> searchCustomByParam(String content,String agentnum, String roletype, int pageno, int limit) {
+    public Page<StaffDataEntity> searchCustomByParam(String content,String agentnum,String userid, String roletype, int pageno, int limit) {
         String sql="";
         switch(roletype){
             case "0":
-                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber";
+                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber ";
                 if(agentnum!=null){
                     sql=sql+" where a.agentNumber="+agentnum;
                 }
                 break;
             case "1":
-                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where b.agentName like '%"+content+"%'";
+                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where b.agentName like '%"+content+"%' and a.id!="+userid;
                 break;
             case "2":
-                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where a.uAccountNum like '%"+content+"%'";
+                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where a.uAccountNum like '%"+content+"%' and a.id!="+userid;
                 if(agentnum!=null){
-                    sql=sql+" and a.agentNumber="+agentnum;
+                    sql=sql+" and a.agentNumber="+agentnum+" and a.id!="+userid;
                 }
                 break;
         }
@@ -226,6 +229,7 @@ public class StaffDataMysqlDAL implements IStaffData {
             staffDataEntity.setcDept(record.getStr("cDept"));
             staffDataEntity.setuRealName(record.getStr("uRealName"));
             staffDataEntity.setiRoleType(record.getInt("iRoleType"));
+            staffDataEntity.setAccounttime(record.getStr("AccountTime"));
             if(record.getStr("groupAssemble")!=null&&!record.getStr("groupAssemble").equals("")){
                 String projectlist=record.getStr("groupAssemble").replace('@',',');
                 staffDataEntity.setGroupAssemble(projectlist);
@@ -240,7 +244,7 @@ public class StaffDataMysqlDAL implements IStaffData {
     }
 
     @Override
-    public Page<StaffDataEntity> getCustomByComId(String agentnum,int pageno,int limit) {
+    public Page<StaffDataEntity> getCustomByComId(String agentnum,String userid,int pageno,int limit) {
         String sql="from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where a.agentNumber="+agentnum;
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName",sql);
         List<Record> recordList = page.getList();
@@ -255,6 +259,7 @@ public class StaffDataMysqlDAL implements IStaffData {
             staffDataEntity.setcDept(record.getStr("cDept"));
             staffDataEntity.setuRealName(record.getStr("uRealName"));
             staffDataEntity.setiRoleType(record.getInt("iRoleType"));
+            staffDataEntity.setAccounttime(record.getStr("AccountTime"));
             if(record.getStr("groupAssemble")!=null&&!record.getStr("groupAssemble").equals("")){
                 String projectlist=record.getStr("groupAssemble").replace('@',',');
                 staffDataEntity.setGroupAssemble(projectlist);

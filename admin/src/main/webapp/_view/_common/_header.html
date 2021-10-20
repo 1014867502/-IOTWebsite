@@ -6,6 +6,7 @@
 <!--&lt;!&ndash;        </a>&ndash;&gt;-->
 <!--&lt;!&ndash;    </li>&ndash;&gt;-->
 <!--</ul>-->
+
 <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
     #if(APP.name=='Cube-caster')
 <!--    <li class="layui-nav-item layui-hide-xs"  lay-unselect-->
@@ -17,19 +18,19 @@
 <!--    </li>-->
     #end
 
-    <li class="layui-nav-item" lay-unselect>
+    <li class="layui-nav-item" lay-unselect style="border-top-color: #333333;">
         <a href="javascript:;">
-            <cite>#(loginAccount.nickName)</cite>
+            <cite style="color: #333333">#(loginAccount.nickName)</cite>
         </a>
         <dl class="layui-nav-child">
-            <dd><a lay-href="/password" data-locale="web_menu_setting_reset_psw">修改密码</a></dd>
+            <dd><a id="changePassword" lay-href="/password" data-locale="web_menu_setting_reset_psw">修改密码</a></dd>
             <hr>
             <dd layadmin-event="logout" style="text-align: center;"><a data-locale="web_header_logout">退出</a></dd>
         </dl>
     </li>
 
     <li class="layui-nav-item layui-hide-xs" lay-unselect>
-        <a href="javascript:;" layadmin-event=""><i class="layui-icon layui-icon-more-vertical"></i></a>
+        <a href="javascript:;" layadmin-event=""><i class="layui-icon layui-icon-more-vertical" style="color: #333333"></i></a>
     </li>
     <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect>
         <a href="javascript:;" layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>

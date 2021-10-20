@@ -161,7 +161,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">模板名称</label>
             <div class="layui-input-block">
-                <input type="text" id="templatename"  name="templatename" lay-verify="required" autocomplete="off"
+                <input type="text" id="templatename"  name="templatename" lay-verify="required|templatename" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
@@ -175,7 +175,7 @@
 
 <div class="layui-fluid" style="padding: 0px;">
     <div class="layui-row layui-col-space15" style="font-weight: bold">
-        <form class="layui-form" action="" lay-filter="formDemo">
+        <form class="layui-form" action="" id="formDemo" lay-filter="formDemo">
             <div class="layui-card">
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
                     中移动OneNET平台对接
@@ -212,24 +212,22 @@
                 </div>
                 <div class="layui-card-body">
                     <div class="layui-form-item">
-                        <label class="layui-form-label" style="width: 86px;padding: 9px 10px;">模式</label>
-                        <div class="layui-input-block" style="width: 300px">
-                            <select id="chongqing_mode" name="chongqing_mode" lay-filter="chongqing_mode"
-                                    lay-verify="required">
-                                <option value="0">关闭</option>
-                                <option value="1">NB-IOT</option>
-                                <option value="2">MQTT</option>
-                            </select>
+                        <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
+                        <div class="layui-input-block">
+                            <input id="chongqing_enable" type="checkbox" lay-filter="chongqing_enable" name="chongqing_enable"
+                                   lay-skin="switch">
                         </div>
-                        <div id="chongqingcontent"></div>
+                    </div>
+                    <div class="layui-form-item"  id="chongqing_select">
+
                     </div>
                 </div>
             </div>
             <div class="layui-form-item" style="padding-top: 30px;text-align: center">
                 <div class="layui-input-block" style="margin-left: 0px!important;">
-                    <button class="layui-btn" type="button" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button id="platformsumbit" class="layui-btn" type="button" lay-submit lay-filter="formDemo">立即提交</button>
                     <button id="savemodel" type="button" class="layui-btn">保存为模板</button>
-                    <button id="reset" type="button" class="layui-btn ">重新获取数据</button>
+                    <button id="reset" type="button" class="layui-btn ">刷新</button>
                 </div>
             </div>
         </form>

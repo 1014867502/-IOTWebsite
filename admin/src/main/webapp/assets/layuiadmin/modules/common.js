@@ -118,7 +118,6 @@ layui.define(['table','form', 'multiSelect'],function(exports){
 
     //退出
     admin.events.logout = function(){
-
         //执行退出接口
         admin.req({
             url: '/logout'
