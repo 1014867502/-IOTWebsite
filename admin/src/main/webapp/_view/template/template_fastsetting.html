@@ -150,6 +150,23 @@
 </style>
 <body>
 
+<div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
+    <form class="layui-form" id="book" method="post" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">模板名称</label>
+            <div class="layui-input-block">
+                <input type="text" id="templatename"  name="templatename" lay-verify="required|templatename" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding-top: 30px;text-align: center">
+            <div class="layui-input-block" style="margin-left: 0px!important;">
+                <button class="layui-btn" type="button"  lay-submit lay-filter="example">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="layui-fluid" style="padding: 12px 0px;">
     <div class="layui-row layui-col-space15" style="font-weight: bold">
         <div class="layui-card">
@@ -185,7 +202,7 @@
                         <div class="layui-form-item  fastinput">
                             <label class="layui-form-label">采样频率</label>
                             <div class="layui-input-block">
-                                <select id="selectList" name="rawRate" lay-verify="required">
+                                <select id="selectList" name="rawRate" lay-filter="rawRate" lay-verify="required">
                                     <option value="1000">1s</option>
                                     <option value="5000">5s</option>
                                     <option value="10000">10s</option>
@@ -222,9 +239,12 @@
             </div>
         </div>
         <div class="layui-input-block" style="padding-top: 30px;text-align: center">
-            <button id="savemodel" type="button" class="layui-btn">保存模板</button>
+            <button type="button" class="layui-btn" id="changename" >修改模板名称</button>
+            <button id="savemodel" type="button" class="layui-btn">保存当前模板</button>
             <button id="reset" type="button" class="layui-btn ">刷新</button>
+            <div id="errormsg" style="color: #cc0000"></div>
         </div>
+
     </div>
 </div>
 
@@ -237,6 +257,7 @@
 
 <script>
     var agentnum = "#(agentNum)";
+    var writeright="#(writeright)"
     var templatename = "#(templatename)";
     layui.config({
         base: '/assets/layuiadmin/'

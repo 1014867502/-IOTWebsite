@@ -9,7 +9,7 @@ layui.define(['form','drawer','table'], function (exports) {
 
     var agentNumber;
     var beforeselect="";
-    iframechange();
+    setIframeHeight(document.getElementById("iframe_a"));
     $("#devicename").html(machinedata);
 
     if(document.getElementById("deviceinfo")!=null){
@@ -44,9 +44,7 @@ layui.define(['form','drawer','table'], function (exports) {
                 beforeselect="fastsetting";
                 document.getElementById("iframe_a").style.height="1200px";
                 document.getElementById("iframe_a").src="/devicelist/fastsetting";
-
                 break;
-
             case "deviceinfo" :
                 document.getElementById("deviceinfo").style.color="#00f0ff";
                 document.getElementById("deviceinfo1").style.color="#00f0ff";
@@ -58,7 +56,7 @@ layui.define(['form','drawer','table'], function (exports) {
                 document.getElementById("devicesetting").style.color="#00f0ff";
                 document.getElementById("devicesetting1").style.color="#00f0ff";
                 beforeselect="devicesetting";
-                document.getElementById("iframe_a").style.height="1956px";
+                document.getElementById("iframe_a").style.height="2200px";
                 document.getElementById("iframe_a").src="/devicelist/stationsetting?machinedata="+machinedata;
                 break;
             case "deviceorder":
@@ -87,18 +85,26 @@ layui.define(['form','drawer','table'], function (exports) {
                 document.getElementById("iframe_a").style.height="757px";
                 document.getElementById("iframe_a").src="/devicelist/deviceother?machinedata="+machinedata;
                 break;
+            case "orderlog":
+                document.getElementById("orderlog").style.color="#00f0ff";
+                document.getElementById("orderlog1").style.color="#00f0ff";
+                beforeselect="other";
+                document.getElementById("iframe_a").style.height="757px";
+                document.getElementById("iframe_a").src="/devicelist/deviceorderlog?machinedata="+machinedata;
+                break;
         }
 
     }, false);
 
     form.on('radio(compute)', function(data) {
-        iframechange();
+        setIframeHeight(document.getElementById("iframe_a"));
     });
     form.on('radio(station)', function(data) {
-        iframechange();
+        setIframeHeight(document.getElementById("iframe_a"));
     });
 
     adaptauthority();
+    getauthority();
 
     /**根据权限显示不同页面内容**/
     function adaptauthority(){
@@ -108,14 +114,34 @@ layui.define(['form','drawer','table'], function (exports) {
             success:function (data) {
                 if(data.data=="superadmin"){
                     $("#deviceorder").css("display","block");
+                    $("#orderlog").css("display","block");
                 }else{
                     $("#deviceorder").css("display","none");
+                    $("#orderlog").css("display","none");
                 }
             }
         })
     }
 
+    function getauthority(){
+        let webright=webauthority;
+        if(webright.indexOf("0")==-1){
+            document.getElementById("fastsetting").style.display="none";
+        }
+        if(webright.indexOf("1")==-1&&webright.indexOf("2")==-1&&webright.indexOf("3")==-1&&webright.indexOf("4")==-1){
+            document.getElementById("devicesetting").style.display="none";
+        }
+        if(webright.indexOf("5")==-1){
+            document.getElementById("deviceorder").style.display="none";
+        }
+        if(webright.indexOf("6")==-1){
+            document.getElementById("orderlog").style.display="none";
+        }
+        if(webright.indexOf("7")==-1){
+            document.getElementById("other").style.display="none";
+        }
 
+    }
 
     function  iframechange() {
         var iframes = document.getElementsByTagName('iframe_a');
@@ -145,6 +171,15 @@ layui.define(['form','drawer','table'], function (exports) {
             })(i);
         }
     }
+
+    function setIframeHeight(iframe) {
+        if (iframe) {
+            var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+            if (iframeWin.document.body) {
+                iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+            }
+        }
+    };
 
     exports('devicesetting',{})
 });

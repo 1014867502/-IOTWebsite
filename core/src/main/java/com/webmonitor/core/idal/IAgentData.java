@@ -59,7 +59,8 @@ public interface IAgentData {
 
     void addDevice(String sn, String comid, String state, String machinename);
 
-    void deleteDevice(String sn);
+    /**删除表中数据**/
+    void deleteDevice(int id);
 
     boolean isExitsn(String sn);
 

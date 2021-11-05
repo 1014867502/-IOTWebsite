@@ -73,6 +73,9 @@ public class OrderConstants  {
     //测站模式
     public static String RAW_MODE_Order ="SET,DEVICE.RAW.MODE,";
 
+    //解算模式
+    public static String RAW_SOLUTION="SET,DEVICE.RAW.SOLUTION,";
+
     //采样频率:
     public static String RAW_RATE_Order ="SET,DEVICE.RAW.RATE,";
 
@@ -206,10 +209,10 @@ public class OrderConstants  {
     public static String NETWORK_MODE="SET,NETWORK.MODE,";
 
     //网络模块服务器地址，支持IP或域名
-    public static String NETWORK_ADDR="SET,NETWORK.MODE.ADDR,";
+    public static String NETWORK_ADDR="SET,NETWORK.ADDR,";
 
     //网络模块服务器端口
-    public static String NETWORK_PORT="SET,NETWORK.MODE.PORT,";
+    public static String NETWORK_PORT="SET,NETWORK.PORT,";
 
     //Ntrip接入点
     public static String NETWORK_MOUNTPOINT="SET,NETWORK.MODE.MOUNTPOINT,";
@@ -253,11 +256,13 @@ public class OrderConstants  {
 
     public static String RAW_NTRIP_BASE="SET,DEVICE.RAW.NTRIP_BASE,";//使用Ntrip做基站数据来源
 
+    public static String RAW_SECOND_NTRIP_BASE="SET,DEVICE.RAW.SECOND_NTRIP_BASE,";//使用Ntrip做第二基站数据来源
+
     public static String GPS_BASE_LON="SET,GPS.BASE.LON,";//经度
 
     public static String GPS_BASE_LAT="SET,GPS.BASE.LAT,";//纬度
 
-    public static String GPS_BASE_HEIGHT="SET,GPS_BASE_HEIGHT,";//高度
+    public static String GPS_BASE_HEIGHT="SET,GPS.BASE.HEIGHT,";//高度
 
     public static String DEVICE_COORDINATES_X="SET,DEVICE.COORDINATES.X,";//设置基准坐标，用于计算位移
 
@@ -267,5 +272,7 @@ public class OrderConstants  {
 
     public static String RAW_NTRIP_ARG="SET,DEVICE.RAW.NTRIP_ARG,";//NTRIP参数，IP|端口|接入点|用户名|密码(core数据1)
 
-    public static String RAW_SECOND_NTRIP_ARG="SET,DEVICE.RAW.SECOND.NTRIP_ARG,";//第二cores
+    public static String RAW_SECOND_NTRIP_ARG="SET,DEVICE.RAW.SECOND_NTRIP_ARG,";//第二cores
+
+    public static String EXT_SENSOR_CMD="SET,DEVICE.EXT_SENSOR.CMD,";//增加设备传感器
 }

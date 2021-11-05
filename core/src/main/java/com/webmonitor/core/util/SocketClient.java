@@ -26,6 +26,7 @@ public class SocketClient {
      */
     private String mClientId;
     private String sn;
+    private String useid;
     private OutputStream outputStream;;
     // 输入流对象
     private InputStream is;
@@ -40,7 +41,8 @@ public class SocketClient {
     public String response;
     public boolean isOnlineFlag() { return onlineFlag; }
     public void setOnlineFlag(boolean onlineFlag) { this.onlineFlag = onlineFlag; }
-
+    public boolean getall=false;
+    public StringBuilder resultall=new StringBuilder();
     public long getConnectime() { return connectime; }
     public void setConnectime(long connectime) { this.connectime = connectime; }
     public long getLatesttime() { return latesttime; }
@@ -58,6 +60,7 @@ public class SocketClient {
     public void connect(String machineserial,String userid) {
         {
             sn=machineserial;
+            useid=userid;
             //如果关闭了要新建socket对象
             if (mSocket.isClosed()) {
                 mSocket = new Socket();
@@ -105,7 +108,6 @@ public class SocketClient {
                 @Override
                 public void run() {
                     try {
-
                         // 步骤1：从Socket 获得输出流对象OutputStream
                         // 该对象作用：发送数据
                         outputStream = mSocket.getOutputStream();
@@ -149,9 +151,24 @@ public class SocketClient {
                     Thread.sleep(100);
                     //接收数据
                     if((response=br.readLine())!=null) {//循环读取
-                        if(!response.equals("OK")&&!response.equals("test")){
+
+                        if(!response.equals("OK")&&!response.equals("test")&&!getall){
                             realdata=new String(response.getBytes(),"utf-8");
 //                            latesttime=System.currentTimeMillis();
+                        }
+                        if(!response.equals("OK")&&!response.equals("test")&&getall){
+                            String result=new String(response.getBytes(),"utf-8");
+                            resultall.append(result+"\n");
+//                            if(result.contains("@GNSS,GETALL,OK")){
+//                                realdata=resultall.toString();
+//                                getall=false;
+//                                resultall.delete(0,resultall.length());
+//                            }
+                        }
+                        if((response.equals("OK")||response.equals("test"))&&getall){
+                            realdata=resultall.toString();
+                            getall=false;
+                            resultall.delete(0,resultall.length());
                         }
 //                    Message message = new Message();
 //                    message.obj = "接收到服务器数据: " + response;
@@ -162,12 +179,12 @@ public class SocketClient {
                             mSocket.close();
                             mRecycleFlag = false;
                         }
-
                     }else {
                         //客户端断开连接
                         mRecycleFlag = false;
                     }
                 } catch (Exception e) {
+                    System.out.println(e.getMessage());
                     mRecycleFlag = false;
                 }
                 finally {

@@ -41,7 +41,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             laypage.render({
                 elem: 'demo7'
                 ,count: projectcount
-                ,limit:5
+                ,limit:9
                 ,layout: ['prev', 'page', 'next','skip']
                 ,theme: '#1E9FFF'
                 ,jump: function(obj){
@@ -79,7 +79,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 laypage.render({
                     elem: 'demo7'
                     ,count:projectcount
-                    ,limit:5
+                    ,limit:9
                     ,curr:currentpage
                     ,layout: ['prev', 'page', 'next','skip']
                     ,theme: '#1E9FFF'
@@ -108,7 +108,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 laypage.render({
                     elem: 'demo7'
                     ,count:projectcount
-                    ,limit:5
+                    ,limit:9
                     ,curr:currentpage
                     ,layout: ['prev', 'page', 'next','skip']
                     ,theme: '#1E9FFF'
@@ -160,39 +160,39 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
     function showProjects(data) {
         for (let i = 0; i < data.length; i++) {
             let item = data[i];
-            var innerHTML = "     <div class=\"layui-card\">\n" +
-                "                <div class=\"cardbody\">\n" +
-                "                    <div class=\"layui-card-body\">\n" +
-                "                        <div class=\"projects\">\n" +
-                "                            <div style=\"margin: auto;\">\n" +
-                "                                <div class=\"projectname\">" + item.agentName + "</div>\n" +
-                "                                <div style=\"display: flex;justify-content: space-between;padding-top: 10px;;color: #00f0ff;margin: auto;width: 150px\">\n" +
-                "                                    <span><a style='color: #00f0ff' href='/company/CompanyDetail?agentNumber="+item.agentNumber+"&&projectid="+projetid+"'>编辑</a></span>\n" +
-                "                                    <span class='delete' id='"+item.agentNumber+"'>删除</span>\n" +
+            var innerHTML = "  <div class=\"layui-card\">\n" +
+                "                            <div class=\"cardbody\">\n" +
+                "                                <div class=\"layui-card-body\">\n" +
+                "                                    <div class=\"projects\">\n" +
+                "                                        <div style=\"margin: auto;\">\n" +
+                "                                            <img width=\"30px\" src=\"/assets/images/icon_agent.png\"/>\n" +
+                "                                            <div class=\"projectname\">"+item.agentname+"</div>\n" +
+                "                                            <div style=\"margin-top: 10px\">\n" +
+                "                                                <div style=\"display: flex\">\n" +
+                "                                                    <img width=\"30px\" src=\"/assets/images/icon_project.png\"/><span style=\"margin-left: 10px;margin-right: 10px;\">项目数量:<span style=\"font-size: 20px\">"+item.projectsum+"</span></span>\n" +
+                "                                                    <img width=\"30px\" src=\"/assets/images/icon_devicesum.png\"/><span style=\"margin-left: 10px;margin-right: 10px;\">设备总数:<span style=\"font-size: 20px\">"+item.devicesum+"</span></span>\n" +
+                "                                                </div>\n" +
+                "                                                <div style=\"display: flex\">\n" +
+                "                                                    <img width=\"30px\" src=\"/assets/images/icon_deviceonline.png\"/><span style=\"margin-left: 10px;margin-right: 10px;\">设备在线数量:<span style=\"color: #00cca3;font-size: 20px\">"+item.onlinesum+"</span></span>\n" +
+                "                                                    <img width=\"30px\" src=\"/assets/images/icon_deviceout.png\"/><span style=\"margin-left: 10px;margin-right: 10px;\">设备离线数量:<span style=\"color: #F53C3C;font-size: 20px\">"+item.deadsum+"</span></span>\n" +
+                "                                                </div>\n" +
+                "                                            </div>\n" +
+                "                                            <div style=\"display: flex;justify-content: space-between;padding-top: 10px;;color: #00f0ff;margin: auto;width: 150px\">\n" +
+                "                                                <span><a style=\"color: #00f0ff;font-size: 14px;\" href=\"/company/CompanyDetail?agentNumber="+item.agentnum+"\">编辑</a></span>\n" +
+                "                                                <span class=\"delete\" id=\""+item.agentnum+"\"><a href='javascript:void(0)' style='color: #00f0ff;font-size: 14px;'>删除</a></span>\n" +
+                "                                            </div>\n" +
+                "                                        </div>\n" +
+                "                                    </div>\n" +
                 "                                </div>\n" +
                 "                            </div>\n" +
-                // "                            <div style=\"display: flex;margin: auto;\">\n" +
-                // "                                <ul style=\"display: flex ;margin: auto;\">\n" +
-                // "                                    <li class=\"little\">\n" +
-                // "                                        <div>公司名称</div>\n" +
-                // "                                        <div style=\"font-size: 20px\">" + item.agentname + "</div>\n" +
-                // "                                    </li>\n" +
-                // "                                    <li class=\"little\">\n" +
-                // "                                        <div>设备数量</div>\n" +
-                // "                                        <div style=\"font-size: 20px\">" + item.devicenum + "</div>\n" +
-                // "                                    </li>\n" +
-                // "                                    <li class=\"little\">\n" +
-                // "                                        <div>创建时间</div>\n" +
-                // "                                        <div>" + item.createtime + "</div>\n" +
-                // "                                    </li>\n" +
-                // "                                </ul>\n" +
-                // "                            </div>\n" +
-                "                        </div>\n" +
-                "                    </div>\n" +
-                "                </div>\n" +
-                "            </div>"
+                "                        </div>"
             $('#list2').append(innerHTML);
-
+        }
+        if(data.length<9){
+            let length2=9-data.length;
+            for(let j=0;j<length2;j++){
+                $("#list2").append("<i style='width: 400px;margin: 15px;'></i>");
+            }
         }
         $(".delete").click(function () {
             let val=$(this).attr("id");
@@ -246,7 +246,7 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
                 laypage.render({
                     elem: 'demo7'
                     ,count:projectcount
-                    ,limit:5
+                    ,limit:9
                     ,curr:currentpage
                     ,layout: ['prev', 'page', 'next','skip']
                     ,theme: '#1E9FFF'

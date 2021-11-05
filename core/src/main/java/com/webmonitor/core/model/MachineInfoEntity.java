@@ -96,6 +96,7 @@ public class MachineInfoEntity {
      * rawBackGnssData : 0
      */
     private Long _id;//主键id
+
     private String machineSerial;
     private String machineModel;
     private String mcuVer;
@@ -365,7 +366,6 @@ public class MachineInfoEntity {
     public void set_id(Long _id) {
         this._id = _id;
     }
-
 
     public String getMcuVer() {
         return this.mcuVer;

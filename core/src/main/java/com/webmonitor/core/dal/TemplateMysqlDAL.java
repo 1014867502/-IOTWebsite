@@ -100,8 +100,40 @@ public class TemplateMysqlDAL implements ITemplate {
         return null;
     }
 
-    /**搜索模板（全部）**/
+    /**搜索模板（全部）模板管理**/
     public Page<Templates> searchAllTemplate(String type,String content ,int pageno,int limit) {
+        String sql = "  from template_data a left join agent_table b on a.agentNumber=b.agentNumber ";
+        if(!type.equals("all")){
+            if(!content.isEmpty()){
+                sql=sql+" where a.agentNumber="+type+" and templateName like '%"+content+"%'";
+            }else{
+                sql=sql+" where a.agentNumber="+type;
+            }
+        }else{
+            if(!content.isEmpty()){
+                sql=sql+" where  templateName like '%"+content+"%'";
+            }
+        }
+        Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName",sql);
+        List<Record> recordList = page.getList();
+        List<Templates> rslist = new ArrayList<>();
+        for (Record record : recordList) {
+            Templates map = new Templates();
+            map.setType(record.getInt("type"));
+            map.setId(record.getInt("id"));
+            map.setAgentNumber(record.getStr("agentNumber"));
+            map.setAgentName(record.getStr("agentName"));
+            map.setuAccountNum(record.getStr("uAccountNumber"));
+            map.setTemplateName(record.getStr("templateName"));
+            map.setTemplateOrder(record.getStr("templateOrder"));
+            rslist.add(map);
+        }
+        return new Page<Templates>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+    }
+
+
+    /**搜索模板（全部）配置模板**/
+    public Page<Templates> searchSettingTemplate(String type,String content ,int pageno,int limit) {
         String sql = "  from template_data a left join agent_table b on a.agentNumber=b.agentNumber ";
         switch(type){
             case "0":

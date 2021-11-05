@@ -1,9 +1,10 @@
-layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
+layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
     var $ = layui.$
         , setter = layui.setter
         , admin = layui.admin
         , table = layui.table
         , drawer = layui.drawer
+        ,layer=layui.layer
         , table2 = layui.table
         , form = layui.form
         , upload = layui.upload
@@ -15,14 +16,18 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
     var identity = "";
     var agentNumber;
     var connectdevice = [];
+    var changecompany;//迁移设备的公司值
+    var tableobj;//当前表格类
     var templatedevice;//配置模板的设备
     var templatedata;//选中模板
     var Devicelist;
     var companylistadd;
     var layerindex;
-    var companylist;
+    var companylist;//迁移弹窗上的公司列表
+    var companysearch;//搜索框上的公司列表
     var devicetypelist;
     var roletype;
+    var rowsn;//当前选中行的sn号
     var layerindex2;//上传弹框编号
     var uploadindex;//上传文件编号
     var uploadbool = false;//上传文件个数
@@ -52,8 +57,10 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
 
     getDeviceCounts();
     adaptauthority();
-    getCompanyListByRole(userid);
+    getCompanyListByRole(userid,0);
     mounted();
+
+
 
     function getDeviceCounts() {
         $.ajax({
@@ -67,6 +74,8 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
                 $("#sumnum").html(item.sum);
                 $("#onlinenum").html(item.oncount);
                 $("#outnum").html(item.outcount);
+                $("#unprojnum").html(item.unprojcount);
+                $("#newonlinenum").html(item.newcount);
             }
         })
     }
@@ -117,9 +126,19 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
         uploadopen();
     });
 
+    /**批量删除设备**/
+    $("#delete_device").on('click',function () {
+        deletemachinelist();
+    })
+
+    /**批量迁移设备**/
+    $("#move_device").on('click',function () {
+        editbroadcast();
+    })
+
     //监听页面表格查询
     $("#datasumbit").on('click', function () {
-        let companynum=companylist.getValue('valueStr');
+        let companynum=companysearch.getValue('valueStr');
         let projectnum=projectlist.getValue('valueStr');
         let online=devicetypelist.getValue('valueStr');
         let stats = $("#search").val();
@@ -149,7 +168,7 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
                 , {field: 'machineName', title: "设备名称", align: 'center'}
                 , {field: 'createTime', title: "登录时间", align: 'center'}
                 , {field: 'onlineState', title: "在线状态", align: 'center', templet: '#table-online-state'}
-                , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
+                , {fixed: 'right', title: '操作', width: 240, align: 'center', toolbar: '#barDemo'}
             ]]
             , limit: 50 //每页默认显示的数量
             , limits: [50, 100, 200]
@@ -226,9 +245,13 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
         } else if (obj.event === 'edit') {
             location.href = '/devicelist/setting?sn=' + data.machineSerial;
         } else if (obj.event === 'change') {
-            editbroadcast(data.machineSerial);
+            tableobj=obj;
+            rowsn=data.machineSerial;
+            editbroadcast(1);
+        }else if(obj.event==='delete'){
+            deletemachine(data.machineSerial,data.id);
+            obj.del();
         }
-
     });
 
     //模板执行
@@ -272,7 +295,7 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
                 , {field: 'machineName', title: "设备名称", align: 'center'}
                 , {field: 'createTime', title: "登录时间", align: 'center'}
                 , {field: 'onlineState', title: "在线状态", align: 'center', templet: '#table-online-state'}
-                , {fixed: 'right', title: '操作', width: 178, align: 'center', toolbar: '#barDemo'}
+                , {fixed: 'right', title: '操作', width: 240, align: 'center', toolbar: '#barDemo'}
             ]]
             , limit: 50 //每页默认显示的数量
             , limits: [50, 100, 200]
@@ -304,7 +327,7 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
             , title: 'logdata'
             , totalRow: true
             , height: 'full-300'
-            , url: '/template/searchAllTemplate'
+            , url: '/template/searchSettingTemplate'
             , where: {'content': input, 'type': stats2}
             , cols: [[
                 {type: 'radio'}
@@ -341,13 +364,18 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
                     case "user":
                         $("#addequip").css("display", "none");
                         $("#add_device2").css("display", "none");
+                        $("#move_device").css("display", "none");
+                        $("#delete_device").css("display", "none");
                         $("#add_device3").css("display", "none");
-                        document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n";
+                        $("#nohostdev").css("display","none");
+                        document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n";
                         break;
                     case "companyadmin":
                         $("#add_device2").css("display", "none");
+                        $("#move_device").css("display", "none");
+                        $("#delete_device").css("display", "none");
                         $("#add_device3").css("display", "none");
-                        document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n";
+                        document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n";
                         break;
                     case "superadmin":
                         $("#projectheader").css("display", "none");
@@ -356,18 +384,28 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
                             "                                <option value=\"1\">模板名称</option>\n" +
                             "                                <option value=\"2\">公司</option>\n" +
                             "                            </select>";
-                        document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n" +
-                            "                        <a class=\"layui-btn layui-btn-danger layui-btn-xs\" lay-event=\"change\">设备迁移</a>";
+                        document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n" +
+                            "                        <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"change\">设备迁移</a>" +
+                            "<a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"delete\">删除</a>";
                         break;
                 }
                 roletype=data.data;
+                if(writeright==0){
+                    $("#add_device").prop('disabled',true);
+                    $("#templatedevice").mouseover(function(){
+                        debugger
+                        layer.msg("修改权限被限制")
+                    });
+                    // $("#templatedevice").attr("lay-tips","修改权限被限制");
+                    $("#add_device").addClass(" layui-btn-disabled");
+                }
                 form.render("select");
             }
         })
     }
 
     /**获取当前角色的公司列表(主页上的)**/
-    function getCompanyListByRole(userid) {
+    function getCompanyListByRole(userid,type) {
         $.ajax({
             url: '/manage/getCompanyListByRole',
             data: {
@@ -375,12 +413,16 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
             },
             async: false,
             success: function (data) {
-                loadcompanylist(data.data);
-                searchcompanylist(data.data);
-                searchdevicetype();
+                if(type==1){
+                    loadcompanylist(data.data);//弹出窗口内的公司列表
+                }else{
+                    searchcompanylist(data.data);//搜索框公司列表
+                    searchdevicetype();
+                }
             }
         })
     }
+
 
     /**获取当前角色的公司列表(添加设备上的)**/
     function getCompanyListByRoleAdd(userid) {
@@ -437,8 +479,8 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
         })
     }
 
-    //弹窗
-    function editbroadcast(machinserial) {
+    //迁移弹窗
+    function editbroadcast(type) {
         drawer.render({
             title: '设备迁移',  //标题
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
@@ -446,13 +488,19 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
             content: $("#devicechangewindow"),
             btn: ['迁移', '取消'],
             success: function (layero, index) {
-                getCompanyListByRole(userid);
+                getCompanyListByRole(userid,1);
             },
             btn1: function (index, layero) {
                 let data = companylist.getValue();
                 if (data != null && data != "") {
-                    updatedeviceagent(machinserial, data[0].value);
-                    renderTable();
+                    if(type==1) {//针对单行
+                        updatedeviceagent(rowsn, data[0].value);
+                        tableobj.update({
+                            agentName: data[0].name
+                        })
+                    }else{//批量
+                        updatedeviceagentlist(data[0].value);
+                    }
                     layer.close(index);
                 } else {
                     layer.msg("公司选项不得为空");
@@ -463,6 +511,60 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
                 return false;
             }
         });
+    }
+
+    /**设备删除**/
+    function deletemachine(serial,id){
+        $.ajax({
+            url: '/devicelist/deleteDevice',
+            data: {
+                machineserial: serial,
+                id:id
+            },
+            success: function (res) {
+                let data=res.data;
+                if(data=="成功"){
+                    layer.msg('删除成功');
+                }else{
+                    layer.msg("删除失败");
+                }
+            }
+        })
+    }
+
+    /**设备批量删除**/
+    function deletemachinelist(){
+        if(templatedevice != null && templatedevice.length > 2)
+        {
+            layer.confirm('确实要删除吗?', {icon: 3, title:'提示'}, function(index1){
+                $('div.layui-table-body table tbody input[name="layTableCheckbox"]:checked').each(function() { // 遍历选中的checkbox
+                    let  n = $(this).parents('tbody tr').index()  // 获取checkbox所在行的顺序
+                    //移除行
+                    $('div.layui-table-body table tbody ').find('tr:eq(' + n + ')').remove()
+                    //如果是全选移除，就将全选CheckBox还原为未选中状态
+                    $('div.layui-table-header table thead div.layui-unselect.layui-form-checkbox').removeClass('layui-form-checked')
+                })
+                $.ajax({
+                url: '/devicelist/deleteDeviceList',
+                data: {
+                    json: templatedevice,
+                },
+                success: function (res) {
+                    let data=res.data;
+                    if(data=="成功"){
+                        layer.msg('删除成功');
+                    }else{
+                        layer.msg("删除失败");
+                    }
+                     }
+                })
+                layer.close(index1);
+                return false;
+            });
+        }
+        else{
+            layer.msg("请选择删除的设备");
+        }
     }
 
     /**设备迁移**/
@@ -479,13 +581,39 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
         })
     }
 
+    /**设备批量迁移**/
+    function updatedeviceagentlist(agentnum){
+        if(templatedevice != null && templatedevice.length > 2)
+        {
+            layer.confirm('确实要迁移吗?', {icon: 3, title:'提示'}, function(index1){
+                $.ajax({
+                    url: '/devicelist/changeDeviceAgentByList',
+                    data: {
+                        json: templatedevice,
+                        agentnumber: agentnum
+                    },
+                    async:false,
+                    success: function (res) {
+                        layer.msg(res.data);
+                        renderTable();
+                    }
+                })
+                layer.close(index1);
+                return false;
+            });
+        }
+        else{
+            layer.msg("请选择迁移的设备");
+        }
+    }
+
     /**加载公司列表**/
     function loadcompanylist(json) {
-        var arrData = [];
-        var selectSn = "";
-        for (var i = 0; i < json.length; i++) {
-            var item = json[i];
-            var jsonStr = {};
+        let arrData = [];
+        let selectSn = "";
+        for (let i = 0; i < json.length; i++) {
+            let item = json[i];
+            let jsonStr = {};
             jsonStr.name = item.agentName;
             jsonStr.value = item.agentNumber;
             arrData.push(jsonStr);
@@ -548,6 +676,7 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
                 once = true;
                 deleteupload();
                 element.progress("sqlprogress","0%");
+                $("#upload_error").html("");
                 $("#sqlprogress").css("display","none");
                 if(curprogress!=100){
                     stopupload();
@@ -671,6 +800,9 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
                                         layer.msg(data.data);
                                     }else{
                                         layer.msg(data.data);
+                                        $("#upload_error").html("警告:"+data.data+" 执行已中止！");
+                                        $("#upload_progress").removeClass("layui-bg-blue");
+                                        $("#upload_progress").addClass("layui-bg-red");
                                         window.clearInterval(progressfinish);
                                     }
                                 }
@@ -814,6 +946,7 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
                 projectData.push(jsonStr);
                 if(i==0&&roletype!="superadmin"){
                     init=jsonStr.value;
+                    agentNumber=jsonStr.value;
                     $.ajax({
                             url:'/project/getProjectsById',
                             async:false,
@@ -827,7 +960,7 @@ layui.define(['form', 'drawer', 'table', 'upload'], function (exports) {
                      }
             }
         }
-        companylist = xmSelect.render({
+        companysearch = xmSelect.render({
             el: '#company',
             data: projectData,
             layVerify: 'required',

@@ -250,7 +250,6 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
 
     //提交模板
     form.on('submit(example)',function () {
-
         let data1 = form.val("example");
         $.ajax({
             url:'/template/updateModelNameByName',
@@ -288,7 +287,13 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
                     $("#sensor_enable").prop('checked',false);
                     document.getElementById("connectsensor").innerHTML = "";
                 }
-
+                if(parent.window.writeright==0){
+                    $("#changename").prop("disabled",true);
+                    $("#errormsg").html("修改权限被限制");
+                    $("#changename").addClass("layui-btn-disabled");
+                    $("#savemodel").prop("disabled",true);
+                    $("#savemodel").addClass("layui-btn-disabled");
+                }
                 /*定时*/
                 if (device.scheduler!=null&&device.scheduler!="0") {
                     $("#scheduler_enable").prop('checked',true);
@@ -341,8 +346,31 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
     /**更新模组**/
     function updateModel(){
         let setting=parent.testmodel
-        let jsondata=setting.compute.substring(0,setting.compute.length-1)+","+setting.locate.substring(1,setting.locate.length-1)+","
-            +setting.plaform.substring(1,setting.plaform.length-1)+","+setting.auxiliary.substring(1,setting.auxiliary.length);
+        let jsondata="";
+        let arr=[];
+        if(setting.compute!=null){
+            arr.push(setting.compute.substring(1, setting.compute.length - 1));
+        }
+        if (setting.locate != null) {
+            arr.push(setting.locate.substring(1, setting.locate.length - 1));
+        }
+        if (setting.plaform != null) {
+            arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
+        }
+        if (setting.auxiliary != null) {
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length));
+        }
+        for(let i=0;i<arr.length;i++){
+            if(i==0){
+                jsondata+="{"+arr[i];
+            }else{
+                jsondata+=","+arr[i];
+                if(i==arr.length-1){
+                    jsondata+="}";
+                }
+
+            }
+        }
         $.ajax({
             url:'/template/updateTemplate',
             data:{

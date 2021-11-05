@@ -9,10 +9,10 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         , element = layui.element;
 
 
-    var device={};
+    var device = {};
     var form21 = ["basestation", "devicestatus", "observedata", "rawdatareturn"];
     var form22 = ["statusresult", "observedata", "rtksetting", "rawdatareturn"];
-    var form12 = ["statusresult","basechange","statusresult2", "timerecord", "basedownload", "rawdatareturn", "rtksetting"];
+    var form12 = ["statusresult", "basechange", "statusresult2", "timerecord", "basedownload", "rawdatareturn", "rtksetting"];
     var form11 = ["basestation", "devicestatus", "basefilereturn", "rawdatareturn", "timerecord"];
     var formlist = ["basestation", "devicestatus", "basefilereturn", "basechange", "statusresult", "basedownload", "observedata", "rtksetting",
         "statusresult2", "rawdatareturn", "timerecord"];
@@ -24,7 +24,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     var rtkturn = true;//rtk开关
     var rawdataturn = false;//原始数据上传开关
     var doublebase = false;//双基站开关
-    var machineserial=machinesn;
+    var machineserial = machinesn;
     var layerindex;
 
 
@@ -37,9 +37,9 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
             },
             success: function (data) {
                 device = data.data;
-                if(device.rawName!=null&&device.rawName!=""){
+                if (device.rawName != null && device.rawName != "") {
                     $("#rawName").val(device.rawName);
-                }else{
+                } else {
                     $("#rawName").val(device.machineSerial);
                 }
                 $("#baseLon").val(device.baseLon);
@@ -57,18 +57,18 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 $("#networkAddress").val(device.networkAddress);
                 $("#networkPort").val(device.networkPort);
                 $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
-                let ntriparg=device.ntripArg;
-                if(ntriparg!=""&&ntriparg!=null){
-                    let arg=ntriparg.split('|');
+                let ntriparg = device.ntripArg;
+                if (ntriparg != "" && ntriparg != null) {
+                    let arg = ntriparg.split('|');
                     $("#rawntripaddress").val(arg[0]);
                     $("#rawntripport").val(arg[1]);
                     $("#networkMountpoint1").val(arg[2]);
                     $("#coreuse1").val(arg[3]);
                     $("#corepass1").val(arg[4]);
                 }
-                let secondarg=device.secondArg;
-                if(secondarg!=""&&secondarg!=null){
-                    let arg=secondarg.split('|');
+                let secondarg = device.secondArg;
+                if (secondarg != "" && secondarg != null) {
+                    let arg = secondarg.split('|');
                     $("#secondntripaddress").val(arg[0]);
                     $("#secondntripport").val(arg[1]);
                     $("#secondMountpoint1").val(arg[2]);
@@ -93,11 +93,11 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     $("#rawdataturn").prop("checked", true);
                     $("#rawBackEnabled").find("option[value=" + device.rawBackEnabled + "]").prop("selected", true);
                     $("#rawBackGnssData").find("option[value=" + device.rawBackGnssData + "]").prop("selected", true);
-                    let enabledata={};
-                    enabledata.value=parseInt(device.rawBackEnabled);
+                    let enabledata = {};
+                    enabledata.value = parseInt(device.rawBackEnabled);
                     rawdatabackflush(enabledata);
                 }
-                if(device.secondBase>0){
+                if (device.secondBase > 0) {
                     $("input[name='networkAddress']").val(device.networkAddress);
                     $("input[name='networkPort']").val(device.networkPort);
                 }
@@ -111,8 +111,8 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 if ($("#recordinterval") != null) {
                     $("#recordInterval").find("option[value=" + device.recordInterval + "]").prop("selected", true);
                 }
-                if(device.networkMountpointPass!=""&&device.networkMountpointPass!=null){
-                    let userpass=device.networkMountpointPass.toString().split("|");
+                if (device.networkMountpointPass != "" && device.networkMountpointPass != null) {
+                    let userpass = device.networkMountpointPass.toString().split("|");
                     $("#networkMountpointUse").val(userpass[0]);
                     $("#networkMountpointPass").val(userpass[1]);
                 }
@@ -123,10 +123,10 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     }
 
     /**保存模组**/
-    function saveModel(){
+    function saveModel() {
         let data1 = form.val("formDemo");
-        let data2={};
-        Object.assign(data2,device)
+        let data2 = {};
+        Object.assign(data2, device)
         delete data2.baseLon;
         delete data2.baseLat;
         delete data2.baseHeight;
@@ -135,52 +135,52 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         delete data2.coordinatesZ;
         let source = $("#coredata1").prop("checked");
         let source2 = $("#coredata2").prop("checked");
-        if(source){
-            data2.networkAddress=data1.rawntripaddress;
-            data2.networkPort=data1.rawntripport;
-            data2.networkMountpoint=data1.networkMountpoint1;
-            data2.networkMountpointUse=data1.coreuse1;
-            data2.networkMountpointPass=data1.corepass1;
+        if (source) {
+            data2.networkAddress = data1.rawntripaddress;
+            data2.networkPort = data1.rawntripport;
+            data2.networkMountpoint = data1.networkMountpoint1;
+            data2.networkMountpointUse = data1.coreuse1;
+            data2.networkMountpointPass = data1.corepass1;
         }
-        if(source2){
-            data2.networkAddress=data1.secondntripaddress;
-            data2.networkPort=data1.secondntripport;
-            data2.networkMountpoint=data1.secondMountpoint1;
-            data2.networkMountpointUse=data1.coreuse2;
-            data2.networkMountpointPass=data1.corepass2;
+        if (source2) {
+            data2.networkAddress = data1.secondntripaddress;
+            data2.networkPort = data1.secondntripport;
+            data2.networkMountpoint = data1.secondMountpoint1;
+            data2.networkMountpointUse = data1.coreuse2;
+            data2.networkMountpointPass = data1.corepass2;
         }
-        if(downloadsource==1){
-            data2.ntripArg= data1.rawntripaddress+"|"+data1.rawntripport+"|"+data1.networkMountpoint1+"|"+data1.coreuse1+"|"+data1.corepass1;
+        if (downloadsource == 1) {
+            data2.ntripArg = data1.rawntripaddress + "|" + data1.rawntripport + "|" + data1.networkMountpoint1 + "|" + data1.coreuse1 + "|" + data1.corepass1;
         }
-        if(doublebase){
-            data2.secondArg= data1.secondntripaddress+"|"+data1.secondntripport+"|"+data1.secondMountpoint1+"|"+data1.coreuse2+"|"+data1.corepass2;
+        if (doublebase) {
+            data2.secondArg = data1.secondntripaddress + "|" + data1.secondntripport + "|" + data1.secondMountpoint1 + "|" + data1.coreuse2 + "|" + data1.corepass2;
         }
-        let stringtest=JSON.stringify(data2);
-        parent.testmodel.compute=stringtest;
+        let stringtest = JSON.stringify(data2);
+        parent.testmodel.compute = stringtest;
     }
 
 
     /**获取接入点**/
     function getConnectPoint() {
-        if($("#rawntripaddress").val()==""||$("#rawntripport").val()==""){
+        if ($("#rawntripaddress").val() == "" || $("#rawntripport").val() == "") {
             layer.msg("IP地址和端口不得为空");
             return;
         }
         $.ajax({
-            url:'/manage/getConnectPoint',
-            data:{
-                ip:$("#rawntripaddress").val(),
-                port:$("#rawntripport").val()
+            url: '/manage/getConnectPoint',
+            data: {
+                ip: $("#rawntripaddress").val(),
+                port: $("#rawntripport").val()
             },
-            success:function(data){
-                let jsondata=data.data;
+            success: function (data) {
+                let jsondata = data.data;
                 let arrData = [];
                 let init;
-                for(let i=0;i<jsondata.length;i++){
+                for (let i = 0; i < jsondata.length; i++) {
                     let item = jsondata[i];
                     let jsonStr = {};
-                    if(i==0){
-                        init=item;
+                    if (i == 0) {
+                        init = item;
                     }
                     jsonStr.name = item;
                     jsonStr.value = item;
@@ -192,15 +192,15 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     paging: true,
                     pageSize: 10,
                     initValue: [init],
-                    radio:true,
-                    clickClose:true,
+                    radio: true,
+                    clickClose: true,
                     theme: {
                         color: '#01AAED',
                     },
                     layVerType: 'msg',
-                    model:{
-                        label:{
-                            type:'block',
+                    model: {
+                        label: {
+                            type: 'block',
                             block: {
                                 //最大显示数量, 0:不限制
                                 showCount: 0,
@@ -209,7 +209,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                             }
                         }
                     },
-                    on: function(data){
+                    on: function (data) {
                         $("#networkMountpoint1").val(data.change[0].value);
                     }
                 })
@@ -218,26 +218,26 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     }
 
     function getConnectPoint2() {
-        if($("#secondntripaddress").val()==""||$("#secondntripport").val()==""){
+        if ($("#secondntripaddress").val() == "" || $("#secondntripport").val() == "") {
             layer.msg("IP地址和端口不得为空");
             return;
         }
         $.ajax({
-            url:'/manage/getConnectPoint',
-            data:{
-                ip:$("#secondntripaddress").val(),
-                port:$("#secondntripport").val()
+            url: '/manage/getConnectPoint',
+            data: {
+                ip: $("#secondntripaddress").val(),
+                port: $("#secondntripport").val()
             },
-            success:function(data){
-                let jsondata=data.data;
+            success: function (data) {
+                let jsondata = data.data;
                 let arrData = [];
                 let init;
-                if(jsondata!=null&&jsondata.length>0){
-                    for(let i=0;i<jsondata.length;i++){
+                if (jsondata != null && jsondata.length > 0) {
+                    for (let i = 0; i < jsondata.length; i++) {
                         let item = jsondata[i];
                         let jsonStr = {};
-                        if(i==0){
-                            init=item;
+                        if (i == 0) {
+                            init = item;
                         }
                         jsonStr.name = item;
                         jsonStr.value = item;
@@ -250,15 +250,15 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     paging: true,
                     pageSize: 10,
                     initValue: [init],
-                    radio:true,
-                    clickClose:true,
+                    radio: true,
+                    clickClose: true,
                     theme: {
                         color: '#01AAED',
                     },
                     layVerType: 'msg',
-                    model:{
-                        label:{
-                            type:'block',
+                    model: {
+                        label: {
+                            type: 'block',
                             block: {
                                 //最大显示数量, 0:不限制
                                 showCount: 0,
@@ -267,7 +267,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                             }
                         }
                     },
-                    on: function(data){
+                    on: function (data) {
                         $("#networkMountpoint2").val(data.change[0].value);
                     }
                 })
@@ -276,25 +276,25 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     }
 
     function getConnectPoint3() {
-        if($("#networkAddress").val()==""||$("#networkPort").val()==""){
+        if ($("#networkAddress").val() == "" || $("#networkPort").val() == "") {
             layer.msg("IP地址和端口不得为空");
             return;
         }
         $.ajax({
-            url:'/manage/getConnectPoint',
-            data:{
-                ip:$("#networkAddress").val(),
-                port:$("#networkPort").val()
+            url: '/manage/getConnectPoint',
+            data: {
+                ip: $("#networkAddress").val(),
+                port: $("#networkPort").val()
             },
-            success:function(data){
-                let jsondata=data.data;
+            success: function (data) {
+                let jsondata = data.data;
                 let arrData = [];
                 let init;
-                for(let i=0;i<jsondata.length;i++){
+                for (let i = 0; i < jsondata.length; i++) {
                     let item = jsondata[i];
                     let jsonStr = {};
-                    if(i==0){
-                        init=item;
+                    if (i == 0) {
+                        init = item;
                     }
                     jsonStr.name = item;
                     jsonStr.value = item;
@@ -306,15 +306,15 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     paging: true,
                     pageSize: 10,
                     initValue: [init],
-                    radio:true,
-                    clickClose:true,
+                    radio: true,
+                    clickClose: true,
                     theme: {
                         color: '#01AAED',
                     },
                     layVerType: 'msg',
-                    model:{
-                        label:{
-                            type:'block',
+                    model: {
+                        label: {
+                            type: 'block',
                             block: {
                                 //最大显示数量, 0:不限制
                                 showCount: 0,
@@ -323,7 +323,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                             }
                         }
                     },
-                    on: function(data){
+                    on: function (data) {
                         $("#networkMountpoint3").val(data.change[0].value);
                     }
                 })
@@ -333,7 +333,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
 
 
     /*根据单选按钮组的变化显示不同内容*/
-    function showform(form1,form2,form3,form4,data1, data2) {
+    function showform(form1, form2, form3, form4, data1, data2) {
         let no = data1.toString()
         let no1 = data2.toString();
         let no2 = no + no1;
@@ -515,14 +515,14 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">IP地址</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input type=\"text\" name=\"observeip\" required lay-verify=\"ip|required\" placeholder=\"请输入IP地址\"\n" +
+                    "                                    <input id='rawIp' type=\"text\" name=\"rawIp\" required lay-verify=\"ip|required\" placeholder=\"请输入IP地址\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label  \">端口</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input type=\"text\" name=\"observeport\" required lay-verify=\"required|port\" placeholder=\"请输入端口\"\n" +
+                    "                                    <input id=\"rawPort\" type=\"text\" name=\"rawPort\" required lay-verify=\"required|port\" placeholder=\"请输入端口\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
@@ -533,29 +533,37 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            <div class=\"circle\"></div>\n" +
                     "                            <div>变形基准坐标</div>\n" +
                     "                        </div>\n" +
-                    "                        <div style=\"display: flex\">\n" +
-                    "                            <div class=\"layui-form-item  fastinput\">\n" +
-                    "                                <label class=\"layui-form-label\">纬度</label>\n" +
+                    "                        <div class=\"layui-form-item  fastinput\" style=\"margin-top: 30px\">\n" +
+                    "                            <label class=\"layui-form-label\">坐标类型</label>\n" +
+                    "                            <div class=\"layui-input-block\">\n" +
+                    "                                <input type=\"radio\" lay-filter=\"mark2\" name=\"marktype\" value=\"0\" title=\"BLH\" >\n" +
+                    "                                <input type=\"radio\" lay-filter=\"mark2\" name=\"marktype\" value=\"1\" title=\"XYZ\" checked>\n" +
+                    "                            </div>\n" +
+                    "                        </div>\n" +
+                    "                        <div style=\"display: flex\" id=\"BLH\" >\n" +
+                    "                           <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">X</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
                     "                                    <input id='coordinatesX' type=\"text\" name=\"coordinatesX\" disabled   placeholder=\"请输入纬度\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
-                    "                                <label class=\"layui-form-label\">经度</label>\n" +
+                    "                                <label class=\"layui-form-label\">Y</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
                     "                                    <input id='coordinatesY' type=\"text\" name=\"coordinatesY\" disabled  placeholder=\"请输入经度\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
-                    "                                <label class=\"layui-form-label\">大地高</label>\n" +
+                    "                                <label class=\"layui-form-label\">Z</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
                     "                                    <input id='coordinatesZ' type=\"text\" name=\"coordinatesZ\" disabled  placeholder=\"请输入大地高\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
-                    "                        </div>"
+                    "                        </div>\n" +
+                    "                        <div style=\"display: flex\" id=\"XYZ\" ></div>";
                 break;
             case "basedownload":
                 document.getElementById(select).innerHTML = "   <div style=\"display: flex;margin-top: 30px\">\n" +
@@ -569,10 +577,10 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                        <div class=\"layui-form-item\">\n" +
-                    "                            <label class=\"layui-form-label\">数据来源</label>\n" +
+                    "                            <label class=\"layui-form-label\" style='padding: 8px 5px;width: 98px;'>基站①数据来源</label>\n" +
                     "                            <div class=\"layui-input-block\">\n" +
-                    "                                <input type=\"radio\" name=\"downloadsource\" lay-filter=\"downloadsource\" value=\"0\" title=\"基站文件\" checked>\n" +
-                    "                                <input type=\"radio\" name=\"downloadsource\" lay-filter=\"downloadsource\" value=\"1\" title=\"CORS数据\">\n" +
+                    "                                <input type=\"radio\" name=\"ntrIpBase\" lay-filter=\"downloadsource\" value=\"0\" title=\"基站文件\" checked>\n" +
+                    "                                <input type=\"radio\" name=\"ntrIpBase\" lay-filter=\"downloadsource\" value=\"1\" title=\"CORS数据\">\n" +
                     "                            </div>\n" +
                     "                        </div>\n" +
                     "                        <div id=\"downcontent\">\n" +
@@ -596,6 +604,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                                </div>\n" +
                     "                            </div></div>\n" +
                     "                            <div id=\"cores\"></div>\n" +
+                    "                            <div id=\"datasource2\"></div>\n" +
                     "                            <div id=\"cores2\"></div>\n" +
                     "                            <div id=\"secondbase\"></div>\n" +
                     "                        </div>"
@@ -688,7 +697,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                        <div class=\"layui-input-block\">\n" +
                     "                            <input id=\"rawdataturn\" type=\"checkbox\" name=\"rawdataturn\" lay-filter=\"rawdataturn\" lay-skin=\"switch\">\n" +
                     "                        </div>\n" +
-                    "                    </div><div id='rawdatacontent'>\n"+
+                    "                    </div><div id='rawdatacontent'>\n" +
                     "<div class=\"layui-form-item  fastinput\">\n" +
                     "                            <label class=\"layui-form-label\">通讯设置</label>\n" +
                     "                            <div class=\"layui-input-block\">\n" +
@@ -711,7 +720,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                                </select>\n" +
                     "                            </div>\n" +
                     "                        </div>\n" +
-                    "<div id='rawdatabackcontent'>"+
+                    "<div id='rawdatabackcontent'>" +
                     "                        <div style=\"display: flex;margin-top: 30px\">\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">IP地址</label>\n" +
@@ -776,7 +785,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 document.getElementById(select).innerHTML = "<div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">记录时长</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <select id=\"recordInterval\" name=\"recordInterval\" lay-verify=\"required\">\n" +
+                    "                                    <select id=\"recordInterval\" name=\"recordInterval\" lay-filter=\"Interval\" lay-verify=\"required\">\n" +
                     "                                        <option value=\"3600\">1小时</option>\n" +
                     "                                        <option value=\"7200\">2小时</option>\n" +
                     "                                        <option value=\"14400\">4小时</option>\n" +
@@ -793,62 +802,116 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
     }
 
     function changemark(type) {
-            switch (type) {
-                case "0":
-                    document.getElementById("XYZ").innerHTML = "";
-                    document.getElementById("BLH").innerHTML =  "<div class=\"layui-form-item  fastinput\">\n" +
-                        "                                <label class=\"layui-form-label\">纬度</label>\n" +
-                        "                                <div class=\"layui-input-block\">\n" +
-                        "                                    <input id='baseLat' type=\"text\" name=\"baseLat\" required lay-verify=\"stationLat\" placeholder=\"请输入纬度\"\n" +
-                        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                </div>\n" +
-                        "                            </div>\n" +
-                        "                            <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                <label class=\"layui-form-label\">经度</label>\n" +
-                        "                                <div class=\"layui-input-block\">\n" +
-                        "                                    <input id='baseLon' type=\"text\" name=\"baseLon\" required lay-verify=\"stationLon\" placeholder=\"请输入经度\"\n" +
-                        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                </div>\n" +
-                        "                            </div>\n" +
-                        "                            <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                <label class=\"layui-form-label\">大地高</label>\n" +
-                        "                                <div class=\"layui-input-block\">\n" +
-                        "                                    <input id='baseHeight' type=\"text\" name=\"baseHeight\" required lay-verify=\"number|required\" placeholder=\"请输入大地高\"\n" +
-                        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                </div>\n" +
-                        "                            </div>\n";
-                    break;
-                case "1":
-                    document.getElementById("BLH").innerHTML = "";
-                    document.getElementById("XYZ").innerHTML = " <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                <label class=\"layui-form-label\">X</label>\n" +
-                        "                                <div class=\"layui-input-block\">\n" +
-                        "                                    <input id='ecefx' type=\"text\" name=\"title\" required lay-verify=\"required\" placeholder=\"请输入X坐标\"\n" +
-                        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                </div>\n" +
-                        "                            </div>\n" +
-                        "                            <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                <label class=\"layui-form-label\">Y</label>\n" +
-                        "                                <div class=\"layui-input-block\">\n" +
-                        "                                    <input id='ecefy' type=\"text\" name=\"title\" required lay-verify=\"required\" placeholder=\"请输入Y坐标\"\n" +
-                        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                </div>\n" +
-                        "                            </div>\n" +
-                        "                            <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                <label class=\"layui-form-label\">Z</label>\n" +
-                        "                                <div class=\"layui-input-block\">\n" +
-                        "                                    <input id='ecefz' type=\"text\" name=\"title\" required lay-verify=\"required\" placeholder=\"请输入Z坐标\"\n" +
-                        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                </div>\n" +
-                        "                            </div>";
-                    break;
-            }
-            markcompute();
+        switch (type) {
+            case "0":
+                document.getElementById("XYZ").innerHTML = "";
+                document.getElementById("BLH").innerHTML = "<div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">纬度</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='baseLat' type=\"text\" name=\"baseLat\" required lay-verify=\"stationLat\" placeholder=\"请输入纬度\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">经度</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='baseLon' type=\"text\" name=\"baseLon\" required lay-verify=\"stationLon\" placeholder=\"请输入经度\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">大地高</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='baseHeight' type=\"text\" name=\"baseHeight\" required lay-verify=\"number|required\" placeholder=\"请输入大地高\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n";
+                break;
+            case "1":
+                document.getElementById("BLH").innerHTML = "";
+                document.getElementById("XYZ").innerHTML = " <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">X</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='ecefx' type=\"text\" name=\"title\" required lay-verify=\"required\" placeholder=\"请输入X坐标\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">Y</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='ecefy' type=\"text\" name=\"title\" required lay-verify=\"required\" placeholder=\"请输入Y坐标\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">Z</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='ecefz' type=\"text\" name=\"title\" required lay-verify=\"required\" placeholder=\"请输入Z坐标\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>";
+                break;
+        }
+
+    }
+
+
+    function changemarkalter(type) {
+        switch (type) {
+            case "0":
+                document.getElementById("XYZ").innerHTML = "";
+                document.getElementById("BLH").innerHTML = "<div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">纬度</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='ecefLat' type=\"text\" name=\"baseLat\" disabled required lay-verify=\"stationLat\" placeholder=\"请输入纬度\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">经度</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='ecefLon' type=\"text\" name=\"baseLon\" disabled required lay-verify=\"stationLon\" placeholder=\"请输入经度\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">大地高</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='ecefHeight' type=\"text\" name=\"baseHeight\" disabled required lay-verify=\"number|required\" placeholder=\"请输入大地高\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n";
+                break;
+            case "1":
+                document.getElementById("BLH").innerHTML = "";
+                document.getElementById("XYZ").innerHTML = " <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">X</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='coordinatesX' type=\"text\" name=\"title\" disabled required lay-verify=\"required\" placeholder=\"请输入X坐标\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">Y</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='coordinatesY' type=\"text\" name=\"title\" disabled required lay-verify=\"required\" placeholder=\"请输入Y坐标\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">Z</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='coordinatesZ' type=\"text\" name=\"title\" disabled required lay-verify=\"required\" placeholder=\"请输入Z坐标\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>";
+                break;
+        }
     }
 
     function changesoure(doubleturn, type) {
-        doublebase=doubleturn;
-        downloadsource=type;
+        doublebase = doubleturn;
+        downloadsource = type;
         let rtknode = document.getElementById("rtkturn");
         let stationturn;
         if (doubleturn) {
@@ -912,7 +975,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                         "                                                   lay-verify=\"required\" placeholder=\"请输入接入点\"\n" +
                         "                                                   autocomplete=\"off\" class=\"layui-input\" style='width: 150px'>\n" +
                         "                                            <button type='button' class=\"layui-btn btn_primary\" id='getConnectPoint1'>获取接入点</button>\n" +
-                        "                                            <div id=\"corePoint1\" class=\"xm-select-demo\" style='width:140px'></div>\n" +                        "                                        </div>\n" +
+                        "                                            <div id=\"corePoint1\" class=\"xm-select-demo\" style='width:140px'></div>\n" + "                                        </div>\n" +
                         "                                    </div>\n" +
                         "                                    <div class=\"layui-form-item  fastinput\">\n" +
                         "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS①用户名</label>\n" +
@@ -1137,8 +1200,8 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
             $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
             $("input[name='networkAddress']").val(device.networkAddress);
             $("input[name='networkPort']").val(device.networkPort);
-            if(device.networkMountpointPass!=""&&device.networkMountpointPass!=null){
-                let userpass=device.networkMountpointPass.toString().split("|");
+            if (device.networkMountpointPass != "" && device.networkMountpointPass != null) {
+                let userpass = device.networkMountpointPass.toString().split("|");
                 $("#networkMountpointUse").val(userpass[0]);
                 $("#networkMountpointPass").val(userpass[1]);
             }
@@ -1149,45 +1212,93 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         }
     }
 
-    function markcompute(lat,lon,height,mark) {
-        if(mark==1){
+    function markcompute(lat, lon, height, mark) {
+        if (mark == 1) {
             $.ajax({
-                url:'/devicelist/blhtoxyz',
-                data:{
-                    lat:lat,
-                    lon:lon,
-                    height:height
+                url: '/devicelist/blhtoxyz',
+                data: {
+                    lat: lat,
+                    lon: lon,
+                    height: height
                 },
-                async:false,
-                success:function(res){
-                    let data=res.data;
+                async: false,
+                success: function (res) {
+                    let data = res.data;
                     try {
                         $("#ecefx").val(data.EcefX.toFixed(3));
                         $("#ecefy").val(data.EcefY.toFixed(3));
                         $("#ecefz").val(data.EcefZ.toFixed(3));
                         form.render();
-                    } catch(err) {
+                    } catch (err) {
                         //处理错误
                     }
                 }
             })
-        }else{
+        } else {
             $.ajax({
-                url:'/devicelist/xyztoblh',
-                data:{
-                    x:lat,
-                    y:lon,
-                    z:height
+                url: '/devicelist/xyztoblh',
+                data: {
+                    x: lat,
+                    y: lon,
+                    z: height
                 },
-                async:false,
-                success:function(res){
-                    let data=res.data;
+                async: false,
+                success: function (res) {
+                    let data = res.data;
                     try {
                         $("#baseLat").val(data.DesB.toFixed(3));
                         $("#baseLon").val(data.DesL.toFixed(3));
                         $("#baseHeight").val(data.DesH.toFixed(3));
                         form.render();
-                    } catch(err) {
+                    } catch (err) {
+                        //处理错误
+                    }
+
+                }
+            })
+        }
+
+    }
+
+    function mark2compute(lat, lon, height, mark) {
+        if (mark == 1) {
+            $.ajax({
+                url: '/devicelist/blhtoxyz',
+                data: {
+                    lat: lat,
+                    lon: lon,
+                    height: height
+                },
+                async: false,
+                success: function (res) {
+                    let data = res.data;
+                    try {
+                        $("#coordinatesX").val(data.EcefX.toFixed(3));
+                        $("#coordinatesY").val(data.EcefY.toFixed(3));
+                        $("#coordinatesZ").val(data.EcefZ.toFixed(3));
+                        form.render();
+                    } catch (err) {
+                        //处理错误
+                    }
+                }
+            })
+        } else {
+            $.ajax({
+                url: '/devicelist/xyztoblh',
+                data: {
+                    x: lat,
+                    y: lon,
+                    z: height
+                },
+                async: false,
+                success: function (res) {
+                    let data = res.data;
+                    try {
+                        $("#ecefLat").val(data.DesB.toFixed(3));
+                        $("#ecefLon").val(data.DesL.toFixed(3));
+                        $("#ecefHeight").val(data.DesH.toFixed(3));
+                        form.render();
+                    } catch (err) {
                         //处理错误
                     }
 
@@ -1204,18 +1315,18 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         $("#secondPort").val(device.secondPort);
         $("#networkAddress").val(device.networkAddress);
         $("#networkPort").val(device.networkPort);
-        let ntriparg=device.ntripArg;
-        if(ntriparg!=""&&ntriparg!=null){
-            let arg=ntriparg.split('|');
+        let ntriparg = device.ntripArg;
+        if (ntriparg != "" && ntriparg != null) {
+            let arg = ntriparg.split('|');
             $("#rawntripaddress").val(arg[0]);
             $("#rawntripport").val(arg[1]);
             $("#networkMountpoint1").val(arg[2]);
             $("#coreuse1").val(arg[3]);
             $("#corepass1").val(arg[4]);
         }
-        let secondarg=device.secondArg;
-        if(secondarg!=""&&secondarg!=null){
-            let arg=secondarg.split('|');
+        let secondarg = device.secondArg;
+        if (secondarg != "" && secondarg != null) {
+            let arg = secondarg.split('|');
             $("#secondntripaddress").val(arg[0]);
             $("#secondntripport").val(arg[1]);
             $("#secondMountpoint1").val(arg[2]);
@@ -1227,7 +1338,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
 
     /**原始数据回传刷新**/
     function rawdatabackflush(data) {
-        if(data.value==0){
+        if (data.value == 0) {
             document.getElementById("rawdatabackcontent").innerHTML = "";
             document.getElementById("rawdatabackcontent").innerHTML = "<div style=\"display: flex;margin-top: 30px\">\n" +
                 "                            <div class=\"layui-form-item  fastinput\">\n" +
@@ -1271,6 +1382,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 "                            </div>\n" +
                 "                        </div>\n";
             $("#rawBackAddress").val(device.rawBackAddress);
+
             $("#rawBackPort").val(device.rawBackPort);
         }
         if (data.value == 3) {
@@ -1313,20 +1425,20 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 "                        </div>\n";
             $("#rawBackAddress").val(device.rawBackAddress);
             $("#rawBackPort").val(device.rawBackPort);
-            let user=(device.rawBackUser!=null)?device.rawBackUser:"";
-            let pass=(device.rawBackPass!=null)?device.rawBackPass:"";
-            $("#rawreturnuser").val(user);
+            let user = (device.rawBackUser != null) ? device.rawBackUser : "";
+            let pass = (device.rawBackPass != null) ? device.rawBackPass : "";
+            $("#rawBackUser").val(user);
             $("#rawreturnpass").val(pass);
         }
         if (data.value == 10 || data.value == 11) {
             document.getElementById("rawdatabackcontent").innerHTML = "";
             document.getElementById("rawdatabackcontent").innerHTML =
-                "<div style=\"display: flex;margin-top: 30px\">\n" +
+                "<div style=\"margin-top: 30px\">\n" +
                 " <div class=\"layui-form-item\">\n" +
                 "            <label class=\"layui-form-label\">串口波特率</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div style=\"width: 70%\">\n" +
-                "                    <select id=\"rawreturnbaud\" name=\"rawBackBaud\" lay-filter=\"type\" style=\"width: 70%\">\n" +
+                "                <div style=\"width: 19%\">\n" +
+                "                    <select id=\"rawreturnbaud\" name=\"rawBackBaud\" lay-filter=\"rawBackBaud\" >\n" +
                 "                        <option value=\"4800\">4800 bps</option>\n" +
                 "                        <option value=\"9600\" selected>9600 bps</option>\n" +
                 "                        <option value=\"19200\">19200 bps</option>\n" +
@@ -1338,16 +1450,17 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 "            </div>\n" +
                 "        </div>" +
                 "                        </div>";
-            let baud=(device.rawBackBaud!=null)?device.rawBackBaud:"";
+            let baud = (device.rawBackBaud != null) ? device.rawBackBaud : "";
             $("#rawreturnbaud").val(baud);
+            form.render();
         }
     }
 
     /**判断rtk mode模式*/
-    function judgertkmode(data){
-        if(document.getElementById("rtkmodeselect")!=null){
-            if(data=="NTRIP"){
-                document.getElementById("rtkmodeselect").innerHTML="<div class=\"layui-form-item  fastinput\">\n" +
+    function judgertkmode(data) {
+        if (document.getElementById("rtkmodeselect") != null) {
+            if (data == "NTRIP") {
+                document.getElementById("rtkmodeselect").innerHTML = "<div class=\"layui-form-item  fastinput\">\n" +
                     "                                    <label class=\"layui-form-label\">接入点</label>\n" +
                     "                                    <div class=\"layui-input-block\" style=\"display: flex\">\n" +
                     "                                            <input id=\"networkMountpoint3\" type=\"text\" name=\"networkMountpoint\" required\n" +
@@ -1374,43 +1487,49 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                                    </div>\n" +
                     "                                </div>\n";
                 $("#networkMountpoint3").val(device.networkMountpoint);
-                if(device.networkMountpointPass!=""&&device.networkMountpointPass!=null){
-                    let userpass=device.networkMountpointPass.toString().split("|");
-                    $("#networkMountpointUse").val(userpass[0]);
-                    $("#networkMountpointPass").val(userpass[1]);
+                if (device.networkMountpointPass != "" && device.networkMountpointPass != null) {
+                    let userpass = device.networkMountpointPass.toString().split("|");
+                    if(userpass.length>1){
+                        $("#networkMountpointUse").val(userpass[0]);
+                        $("#networkMountpointPass").val(userpass[1]);
+                    }else{
+                        $("#networkMountpointUse").val(device.networkMountpointUse);
+                        $("#networkMountpointPass").val(device.networkMountpointPass);
+                    }
+
                 }
                 $("#getConnectPoint3").click(function () {
                     getConnectPoint3();
                 })
-            }else{
-                document.getElementById("rtkmodeselect").innerHTML="";
+            } else {
+                document.getElementById("rtkmodeselect").innerHTML = "";
             }
         }
     }
 
     /*判断是否插入core选择框*/
-    function rtkcore(doublebase,download,rtkturn) {
-        if(station==0&&compute==0){
+    function rtkcore(doublebase, download, rtkturn) {
+        if (station == 0 && compute == 0) {
             let base = doublebase;
             let source = download;
             let turn = rtkturn;
-            let mode=$("#networkMode").val();
+            let mode = $("#networkMode").val();
             if (base && source == 1 && turn) {
                 document.getElementById("coreselect").innerHTML = "  <label class=\"layui-form-label\"></label>\n" +
                     "     <div class=\"layui-input-block\">\n" +
-                    "          <input type=\"checkbox\" id='coredata1' name=\"coredata\"  lay-filter=\"coresource\" title=\"与CORS①数据同源\" lay-skin=\"primary\"  value=\"0\"  checked>"+
-                    "          <input type=\"checkbox\" id='coredata2' name=\"coredata\"  lay-filter=\"coresource\" title=\"与CORS②数据同源\" lay-skin=\"primary\"  value=\"1\" >"+
+                    "          <input type=\"checkbox\" id='coredata1' name=\"coredata\"  lay-filter=\"coresource\" title=\"与CORS①数据同源\" lay-skin=\"primary\"  value=\"0\"  checked>" +
+                    "          <input type=\"checkbox\" id='coredata2' name=\"coredata\"  lay-filter=\"coresource\" title=\"与CORS②数据同源\" lay-skin=\"primary\"  value=\"1\" >" +
                     "    </div>";
                 document.getElementById("rtkfront").style.display = "flex";
                 document.getElementById("rtkcontent").innerHTML = "";
                 document.getElementById("rtkfront").innerHTML = computefunc.rtkpiror;
             } else if ((!base && source == 0 && turn) || (base && source == 0 && turn)) {
                 document.getElementById("rtkfront").innerHTML = "";
-                document.getElementById("rtkfront").innerHTML =  computefunc.rtkpiror;
+                document.getElementById("rtkfront").innerHTML = computefunc.rtkpiror;
                 computefunc.decidertkmode(mode);
             } else if (!base && source == 1 && turn) {
                 document.getElementById("rtkfront").innerHTML = "";
-                document.getElementById("rtkfront").innerHTML =  computefunc.rtkpiror;
+                document.getElementById("rtkfront").innerHTML = computefunc.rtkpiror;
                 computefunc.decidertkmode(mode);
             } else {
                 document.getElementById("coreselect").innerHTML = "";
@@ -1445,32 +1564,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         "                                </div>\n" +
         "                            </div>";
 
-    var rtkcontent = " <div style=\"display: flex;margin-top: 30px;margin-bottom: 20px\">\n" +
-        "                                <div class=\"layui-form-item  fastinput\">\n" +
-        "                                    <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">RTK解算设置</label>\n" +
-        "                                    <div class=\"layui-input-block\">\n" +
-        "                                        <select id=\"rtkPos\" name=\"rtkPos\" lay-filter='rtkPos' lay-verify=\"required\">\n" +
-        "                                            <option value=\"1\">正常模式（5分钟输出）</option>\n" +
-        "                                            <option value=\"2\">紧急模式（1秒输出）</option>\n" +
-        "                                            <option value=\"3\">紧急模式（5秒输出）</option>\n" +
-        "                                        </select>\n" +
-        "                                    </div>\n" +
-        "                                </div>\n" +
-        "                                <div class=\"layui-form-item  fastinput\">\n" +
-        "                                    <label class=\"layui-form-label\"style=\"width: 150px\">IMU触发RTK紧急模式</label>\n" +
-        "                                    <div class=\"layui-input-block\" style=\"margin-left: 180px\">\n" +
-        "                                        <select id=\"imuWarn\" name=\"imuWarn\" lay-filter='imuWarn' lay-verify=\"required\">\n" +
-        "                                            <option value=\"0\">关闭</option>\n" +
-        "                                            <option value=\"0.3\">0.3度</option>\n" +
-        "                                            <option value=\"0.5\">0.5度</option>\n" +
-        "                                            <option value=\"1\">1度</option>\n" +
-        "                                            <option value=\"2\">2度</option>\n" +
-        "                                            <option value=\"3\">3度</option>\n" +
-        "                                            <option value=\"5\">5度</option>\n" +
-        "                                        </select>\n" +
-        "                                    </div>\n" +
-        "                                </div>\n" +
-        "                            </div>\n" +
+    var rtkcontent =
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\">通信协议</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
@@ -1501,7 +1595,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         "                            <div style=\"display: flex;margin-top: 30px\" id='rtkmodeselect'>\n" +
         "                            </div>";
 
-    var rtkcorecontent= " <div style=\"display: flex;margin-top: 30px;margin-bottom: 20px\">\n" +
+    var rtkcorecontent = " <div style=\"display: flex;margin-top: 30px;margin-bottom: 20px\">\n" +
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\">通信协议</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
@@ -1554,7 +1648,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         "                                </select>\n" +
         "                            </div>\n" +
         "                        </div>\n" +
-        "<div id='rawdatabackcontent'>"+
+        "<div id='rawdatabackcontent'>" +
         "                        <div style=\"display: flex;margin-top: 30px\">\n" +
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\">IP地址</label>\n" +
@@ -1575,61 +1669,95 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         "                        </div></div>";
 
 
-    var computefunc={
+    var computefunc = {
         // DeviceSetting:function (sn) {
         //     getDeviceSetting(sn)
         // },
-        ConnectPoint:function () {
+        ConnectPoint: function () {
             getConnectPoint()
         },
-        ConnectPoint2:function () {
+        ConnectPoint2: function () {
             getConnectPoint2()
         },
-        ConnectPoint3:function () {
+        ConnectPoint3: function () {
             getConnectPoint3()
         },
-        exhibitform:function (form1,form2,form3,form4,data1,data2,sn) {
-            showform(form1,form2,form3,form4,data1,data2);
+        exhibitform: function (form1, form2, form3, form4, data1, data2, sn) {
+            showform(form1, form2, form3, form4, data1, data2);
             getDeviceSetting(sn);
         },
-        altersource:function (doubleturn, type) {
-            changesoure(doubleturn,type)
+        altersource: function (doubleturn, type) {
+            changesoure(doubleturn, type)
         },
-        altermark:function (mark) {
+        altermark: function (mark) {
             changemark(mark);
         },
-        decidertkmode:function(mode){
+        altermark2: function (mark) {
+            changemarkalter(mark);
+        },
+        decidertkmode: function (mode) {
             judgertkmode(mode);
         },
-        rtkcores:function(base,source,turn){
-            rtkcore(base,source,turn);
+        rtkcores: function (base, source, turn) {
+            rtkcore(base, source, turn);
         },
-        delhtml:function(select){
+        delhtml: function (select) {
             removehtml(select);
         },
-        rtkupdate:function(){
+        rtkupdate: function () {
             rtkflush();
         },
-        rawdatabackupdate:function(data){
+        rawdatabackupdate: function (data) {
             rawdatabackflush(data);
         },
-        inserthtml:function(data){
+        inserthtml: function (data) {
             innhtml(data);
         },
-        downloadsourceupdate:function(){
+        downloadsourceupdate: function () {
             downloadsourceflush();
         },
-        setdevic:function(data){
-            Object.assign(device,data);
+        setdevic: function (data) {
+            Object.assign(device, data);
         },
-        computemark:function(lat,lon,height,mark){
-            markcompute(lat,lon,height,mark);
+        computemark: function (lat, lon, height, mark) {
+            markcompute(lat, lon, height, mark);
         },
-        rawdatatxt:rawdatacontent,
-        rtkcoretxt:rtkcorecontent,
-        rtktxt:rtkcontent,
-        rtkpiror:rtkfront,
+        computemark2: function (lat, lon, height, mark) {
+            mark2compute(lat, lon, height, mark);
+        },
+        rawdatatxt: rawdatacontent,
+        rtkcoretxt: rtkcorecontent,
+        rtktxt: rtkcontent,
+        rtkpiror: rtkfront,
 
     }
+
+    //
+    // " <div style=\"display: flex;margin-top: 30px;margin-bottom: 20px\">\n" +
+    // "                                <div class=\"layui-form-item  fastinput\">\n" +
+    // "                                    <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">RTK解算设置</label>\n" +
+    // "                                    <div class=\"layui-input-block\">\n" +
+    // "                                        <select id=\"rtkPos\" name=\"rtkPos\" lay-filter='rtkPos' lay-verify=\"required\">\n" +
+    // "                                            <option value=\"1\">正常模式（5分钟输出）</option>\n" +
+    // "                                            <option value=\"2\">紧急模式（1秒输出）</option>\n" +
+    // "                                            <option value=\"3\">紧急模式（5秒输出）</option>\n" +
+    // "                                        </select>\n" +
+    // "                                    </div>\n" +
+    // "                                </div>\n" +
+    // "                                <div class=\"layui-form-item  fastinput\">\n" +
+    // "                                    <label class=\"layui-form-label\"style=\"width: 150px\">IMU触发RTK紧急模式</label>\n" +
+    // "                                    <div class=\"layui-input-block\" style=\"margin-left: 180px\">\n" +
+    // "                                        <select id=\"imuWarn\" name=\"imuWarn\" lay-filter='imuWarn' lay-verify=\"required\">\n" +
+    // "                                            <option value=\"0\">关闭</option>\n" +
+    // "                                            <option value=\"0.3\">0.3度</option>\n" +
+    // "                                            <option value=\"0.5\">0.5度</option>\n" +
+    // "                                            <option value=\"1\">1度</option>\n" +
+    // "                                            <option value=\"2\">2度</option>\n" +
+    // "                                            <option value=\"3\">3度</option>\n" +
+    // "                                            <option value=\"5\">5度</option>\n" +
+    // "                                        </select>\n" +
+    // "                                    </div>\n" +
+    // "                                </div>\n" +
+    // "                            </div>\n" +
     exports('station_compute_func', computefunc)
 });

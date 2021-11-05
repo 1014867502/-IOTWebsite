@@ -108,6 +108,22 @@
         color: #ffffff;
         background-color: #1e9fff;
     }
+    .tableeventbtn{
+          width: 55px;
+          height: 23px;
+          border: 1px solid #01AAED;
+          border-radius: 5px;
+          font-size: 11px;
+          background-color: #FFFFFF;
+          color: #01AAED;
+      }
+    .layui-card-header .layui-icon {
+        line-height: unset;
+        position: initial;
+        right: 15px;
+        top: 29%;
+        margin-top: -4px;
+    }
 
     .header-Data {
         width: 100%;
@@ -197,10 +213,8 @@
 
     .indexcard {
         display: flex;
-        width: 297px;
-        margin-left: 4%;
-        padding-right: 21px;
-        height: 144px;
+        width: 100%;
+        height: 121px;
         background-color: #fffefe;
         box-shadow: 0 0 6px -1px #9f9f9f;
     }
@@ -351,8 +365,9 @@
     <div style="text-align: center"><button type="button" class="layui-btn layui-btn-normal" id="uploadBtn"><i class="layui-icon"></i>上传文件</button></div>
 
     <div id="sqlprogress" style="display: none;margin-top:10px" class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="sqlprogress">
-        <div class="layui-progress-bar layui-bg-blue" ></div>
+        <div id="upload_progress" class="layui-progress-bar layui-bg-blue" ></div>
     </div>
+    <div id="upload_error" style="color: #cc0000;margin-top: 10px;text-align: center;"></div>
 <!--    <div id="columwindow" style="display: none">-->
 <!--        <div style="display: flex">-->
 <!--            <h1>数据库对应文件导入列名</h1>-->
@@ -444,33 +459,42 @@
         <!--                </ul>-->
         <!--            </div>-->
         <!--        </div>-->
-        <div class="header-Data">
+        <div class="layui-col-md12" style="  display: flex;">
             <!--            <div style="display: flex;max-width: 1440px;margin-left: auto;margin-right: auto;">-->
             <div class="indexcard">
-                <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
-                    <img width="55px" src="/assets/images/icon_devicesum.png"/>
-                    <div style="font-size: 18px;margin-top: 10px">项目设备总数</div>
+                <div class="devicecard" style="border-right: solid #ACC0D8 1px;height: 100%">
+                    <div style="display: flex;justify-content: center;margin-top: 35px;">
+                        <img width="30px" src="/assets/images/icon_devicesum.png"/>
+                        <div style="font-weight: bold;font-size: 20px">设备总数（台）</div>
+                    </div>
+                    <div class="devicecard" id="sumnum" style="font-size: 36px;font-weight: bold"></div>
                 </div>
-                <div class="devicecard" id="sumnum" style="font-size: 20px;">
+                <div class="devicecard" style="border-right: solid #ACC0D8 1px;height: 100%">
+                    <div style="display: flex;justify-content: center;margin-top: 35px;">
+                        <img width="30px" src="/assets/images/icon_deviceonline.png">
+                        <div style="font-size: 20px;font-weight: bold;">设备在线数（台）</div>
+                    </div>
+                    <div class="devicecard" id="onlinenum" style="font-size: 24px;color: #00cca3"></div>
                 </div>
-            </div>
-            <div class="indexcard">
-                <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
-                    <img width="55px" src="/assets/images/icon_deviceonline.png">
-                    <div style="font-size: 18px;margin-top: 10px">项目设备在线数</div>
+                <div class="devicecard" style="border-right: solid #ACC0D8 1px;height: 100%">
+                    <div style="display: flex;justify-content: center;margin-top: 35px;">
+                        <img width="30px" src="/assets/images/icon_deviceout.png">
+                        <div style="font-size: 20px;font-weight: bold;">设备离线数（台）</div>
+                    </div>
+                    <div class="devicecard" id="outnum" style="font-size: 24px;color: #F53C3C">
+                    </div>
                 </div>
-                <div class="devicecard" id="onlinenum" style="font-size: 20px;">
-
+                <div class="devicecard" id="nohostdev" style="border-right: solid #ACC0D8 1px;height: 100%">
+                    <div style="display:flex;justify-content: center;margin-top: 35px;">
+                        <div style="font-size: 20px;font-weight: bold;">未归入项目的设备（台）</div>
+                    </div>
+                    <div class="devicecard" id="unprojnum" style="font-size: 24px;"></div>
                 </div>
-
-            </div>
-            <div class="indexcard">
-                <div class="devicecard" style="border-right: solid #ACC0D8 1px;">
-                    <img width="55px" src="/assets/images/icon_deviceout.png">
-                    <div style="font-size: 18px;margin-top: 10px">项目设备离线数</div>
-                </div>
-                <div class="devicecard" id="outnum" style="font-size: 20px;">
-
+                <div class="devicecard" id="newonlinedev" style="height: 100%">
+                    <div style="display: flex;justify-content: center;margin-top: 35px;">
+                        <div style="font-size: 20px;font-weight: bold;">最新上线的设备（台）</div>
+                    </div>
+                    <div class="devicecard" id="newonlinenum" style="font-size: 24px;"></div>
                 </div>
             </div>
             <!--            </div>-->
@@ -478,8 +502,8 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">设备表格</div>
-                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
-                    <div class="layui-form-item" style="margin: auto;width: 100%;display: flex">
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                    <div class="layui-form-item" style="margin: auto;width: 100%;display: flex;justify-content: center">
                         <div class="layui-inline" style="width: 20%;margin-top: 3px;">
                             <div id="company" class="xm-select-demo" ></div>
                         </div>
@@ -505,6 +529,9 @@
                             <!--                                </button>-->
                             <!--                            </div>-->
 <!--                        </div>-->
+
+                    </div>
+                    <div class="layui-form-item" style="margin: auto;width: 100%;display: flex;justify-content: center">
                         <div class="layui-inline" >
                             <button type="button" class="layui-btn" id="add_device2"><img
                                     src="/assets/images/icon_add_device_28.png"/>添加设备
@@ -515,9 +542,19 @@
                                     src="/assets/images/icon_add_device_28.png"/>批量添加设备
                             </button>
                         </div>
+                        <div class="layui-inline" id="templatedevice" >
+                            <button type="button" class="layui-btn" id="add_device">
+                                <i class="layui-icon layui-icon-set" style="font-size: 30px; color: #FFFFFF;"></i>
+                                配置设备
+                            </button>
+                        </div>
                         <div class="layui-inline" >
-                            <button type="button" class="layui-btn" id="add_device"><img
-                                    src="/assets/images/icon_add_device_28.png"/>配置设备
+                            <button type="button" class="layui-btn" id="delete_device">
+                                <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #FFFFFF;"></i>批量删除设备
+                            </button>
+                        </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn" id="move_device">批量设备迁移
                             </button>
                         </div>
                     </div>
@@ -554,6 +591,8 @@
 
 <script>
     var userid = parent.window.document.getElementsByName("homepageiframe")[0].getAttribute('userid');
+    var agentnum=parent.window.document.getElementsByName("homepageiframe")[0].getAttribute('agentnum');
+    var writeright="#(writeright)";
     var type = "#(type)";
     layui.config({
         base: '/assets/layuiadmin/'

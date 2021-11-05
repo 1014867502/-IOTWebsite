@@ -11,6 +11,7 @@ import com.webmonitor.core.idal.ITemplate;
 import com.webmonitor.core.model.MachineInfoEntity;
 import com.webmonitor.core.model.TemplateData;
 import com.webmonitor.core.model.userbase.Templates;
+import com.webmonitor.core.util.StringUtils;
 
 import java.util.List;
 
@@ -26,9 +27,14 @@ public class TemplateService {
         return dal.getTemplateByCom(agentNum, pageno, limit);
     }
 
-    /**搜索模板（管理员）**/
+    /**搜索模板**/
     public Page<Templates> searchAllTemplate(String type,String content,int pageno,int limit){
         return dal.searchAllTemplate(type, content, pageno, limit);
+    }
+
+    /**搜索模板**/
+    public Page<Templates> searchSettingTemplate(String type,String content,int pageno,int limit){
+        return dal.searchSettingTemplate(type, content, pageno, limit);
     }
 
     /**搜索模板（普通用户）**/
@@ -53,22 +59,61 @@ public class TemplateService {
         boolean test=false;
         TemplateData template=TemplateData.dao.findFirst("select * from template_data where templateName='"+templateName+"'");
         Gson gson=new Gson();
-        int rawport=0;
+        int rawBackport=0;
+        int numlen=0;
         int rawname=1;
-        int resultport=0;
+        int rawport=0;
+        String number="";
+        String sign="";
         MachineInfoEntity machineInfoEntity=gson.fromJson(template.getTemplateOrder(),new TypeToken<MachineInfoEntity>(){}.getType());
-        String rawback=machineInfoEntity.getRawBackPort();
-        String stationname=machineInfoEntity.getRawName();
-        String rawresultport=machineInfoEntity.getResultPort();
-        rawport=Integer.parseInt(rawback);
-        resultport=Integer.parseInt(rawresultport);
+        String rawsolution=machineInfoEntity.getRawSolution();
+        String rawmode=machineInfoEntity.getRawMode();
+        String compute=rawsolution+rawmode;
+
+        String rawback=machineInfoEntity.getRawBackPort();//原始端口
+        String stationname=machineInfoEntity.getRawName();//编号
+        String lasttwo=stationname.substring(stationname.length()-1,stationname.length());
+        if(StringUtils.isNumeric(lasttwo)){
+            String[] numbsers=StringUtils.splitNumber(stationname);
+            String[] signs=StringUtils.splitSign(stationname);
+            String lastsign=signs[signs.length-1];
+            String lastnum=numbsers[numbsers.length-1];
+            int lastindex=stationname.lastIndexOf(lastsign);
+            stationname=stationname.substring(0,lastindex+lastsign.length());
+            numlen=lastnum.length();
+            rawname=Integer.valueOf(lastnum);
+        }
+        String raw=machineInfoEntity.getRawPort();//基站文件回传|观测端口
+        rawBackport=Integer.parseInt(rawback==null?"0":rawback);
+        rawport=Integer.parseInt(raw==null?"0":raw);
         for(MachineInfoEntity item:machineInfoEntities){
-            machineInfoEntity.setResultPort(String.valueOf(resultport));
-            resultport++;
-            machineInfoEntity.setRawBackPort(String.valueOf(rawport));
-            rawport++;
-            machineInfoEntity.setRawName(stationname+rawname);
-            rawname++;
+            if(template.getType()==1){//1快速配置 2详细配置
+               if(!compute.equals("00")){
+                   machineInfoEntity.setRawPort(String.valueOf(rawport));
+                   rawport++;
+                   String rawname1=String.format("%0"+numlen+"d",rawname);
+                   machineInfoEntity.setRawName(stationname+rawname1);
+                   rawname++;
+               }
+            }else{
+                if(compute.equals("00")){
+                    machineInfoEntity.setRawBackPort(String.valueOf(rawBackport));
+                    rawBackport++;
+                    String rawname1=String.format("%0"+numlen+"d",rawname);
+                    machineInfoEntity.setRawName(stationname+rawname1);
+                    machineInfoEntity.setRawName(stationname+rawname);
+                    rawname++;
+                } else{
+                    machineInfoEntity.setRawPort(String.valueOf(rawport));
+                    rawport++;
+                    machineInfoEntity.setRawBackPort(String.valueOf(rawBackport));
+                    rawBackport++;
+                    String rawname1=String.format("%0"+numlen+"d",rawname);
+                    machineInfoEntity.setRawName(stationname+rawname1);
+                    machineInfoEntity.setRawName(stationname+rawname);
+                    rawname++;
+                }
+            }
            test=DeviceListService.me.checkObjAllFieldsIsNull(item.getMachineSerial(),machineInfoEntity);
         }
         if(test){

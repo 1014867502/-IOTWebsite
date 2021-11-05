@@ -9,6 +9,7 @@ import com.webmonitor.core.dal.ProjectMysqlDAL;
 import com.webmonitor.core.idal.IAgent;
 import com.webmonitor.core.idal.IProject;
 import com.webmonitor.core.model.AgentTable;
+import com.webmonitor.core.model.CompanyPage;
 import com.webmonitor.core.model.ProDevCount;
 import com.webmonitor.core.model.StaffData;
 
@@ -35,7 +36,7 @@ public class CompanyService {
     }
 
     /**获取所有公司**/
-    public Page<AgentTable> getAllCompanys(int pageno,int limit){
+    public Page<CompanyPage> getAllCompanys(int pageno, int limit){
         return dal.getAllcompanyPages(pageno, limit);
     }
 

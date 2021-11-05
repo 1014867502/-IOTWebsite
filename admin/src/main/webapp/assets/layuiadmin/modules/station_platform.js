@@ -75,7 +75,7 @@ layui.define(['form', 'drawer', 'table','station_platform_func'], function (expo
         if (this.checked) {
             document.getElementById("onenetcontent").innerHTML = platformfunc.onenetcontent;
             if(locatedata.oneNetMode!=null){
-                platformfunc.onenetexhibit(locatedata.oneNetMode);
+                platformfunc.onenetexhibit((locatedata.oneNetMode=="")?"0":locatedata.oneNetMode);
                 platformfunc.onenetupdate();
             }else{
                 platformfunc.onenetexhibit("0");
@@ -147,8 +147,30 @@ layui.define(['form', 'drawer', 'table','station_platform_func'], function (expo
     //提交模板
     form.on('submit(example)',function () {
         let setting=parent.testmodel
-        let jsondata=setting.compute.substring(0,setting.compute.length-1)+","+setting.locate.substring(1,setting.locate.length-1)+","
-            +setting.plaform.substring(1,setting.plaform.length-1)+","+setting.auxiliary.substring(1,setting.auxiliary.length);
+        let jsondata="";
+        let arr=[];
+        if(setting.compute!=null){
+            arr.push(setting.compute.substring(1, setting.compute.length - 1));
+        }
+        if (setting.locate != null) {
+            arr.push(setting.locate.substring(1, setting.locate.length - 1));
+        }
+        if (setting.plaform != null) {
+            arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
+        }
+        if (setting.auxiliary != null) {
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length));
+        }
+        for(let i=0;i<arr.length;i++){
+            if(i==0){
+                jsondata+="{"+arr[i];
+            }else{
+                jsondata+=","+arr[i];
+                if(i==arr.length-1){
+                    jsondata+="}";
+                }
+            }
+        }
         let data1 = form.val("example");
         $.ajax({
             url:'/template/addTemplate',
@@ -192,6 +214,13 @@ layui.define(['form', 'drawer', 'table','station_platform_func'], function (expo
                 locatedata=device;
                 platformfunc.setdevice(device);
                 isDeviceOnline(sn);
+                if(parent.window.writeright==0){
+                    $("#platformsumbit").prop("disabled",true);
+                    $("#errormsg").html("修改权限被限制");
+                    $("#platformsumbit").addClass("layui-btn-disabled");
+                    $("#savemodel").prop("disabled",true);
+                    $("#savemodel").addClass("layui-btn-disabled");
+                }
                 if(device.oneNetEnabled>0){
                         $("#onenet_enable").prop('checked',true);
                         document.getElementById("onenetcontent").innerHTML = platformfunc.onenetcontent;

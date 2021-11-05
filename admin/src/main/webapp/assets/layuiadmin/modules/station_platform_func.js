@@ -17,8 +17,16 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     function updateModel(){
 
         let setting=parent.testmodel
-        let jsondata=setting.compute.substring(0,setting.compute.length-1)+","+setting.locate.substring(1,setting.locate.length-1)+","
-            +setting.plaform.substring(1,setting.plaform.length-1)+","+setting.auxiliary.substring(1,setting.auxiliary.length);
+        let jsondata=setting.compute.substring(0,setting.compute.length-1);
+        if(setting.locate!=null){
+            jsondata+=","+setting.locate.substring(1,setting.locate.length-1);
+        }
+        if(setting.plaform!=null){
+            jsondata+=","+setting.plaform.substring(1,setting.plaform.length-1);
+        }
+        if(setting.auxiliary!=null){
+            jsondata+=","+setting.auxiliary.substring(1,setting.auxiliary.length);
+        }
         $.ajax({
             url:'/template/updateTemplate',
             data:{
@@ -79,7 +87,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         }else{
             jsondata.oneNetEnabled=0;
         }
-        if(chongqingturn){
+        if(test.chongqing_enable=="on"){
             jsondata.cqIotEnabled=test.chongqing_mode;
         }else{
             jsondata.cqIotEnabled=0;
@@ -116,6 +124,10 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             case "2":
                 document.getElementById("chongqingcontent").innerHTML = chongqingcontent;
                 document.getElementById("chongqingsetting").innerHTML = chongqingcontent1;
+                $("#chongqing_iot_telecom").val(locatedata.cqIotTelecom);
+                $("#chongqing_iot_id").val(locatedata.cqIotId);
+                $("#chongqing_iot_key").val(locatedata.cqIotKey);
+                $("#chongqing_iot_user").val(locatedata.cqIotUser);
                 break;
         }
         form.render();

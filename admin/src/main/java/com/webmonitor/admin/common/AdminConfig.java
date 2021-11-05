@@ -33,6 +33,7 @@ import com.webmonitor.admin.directive.TableBadgeDirective;
 import com.webmonitor.admin.directive.TableLabelDirective;
 import com.webmonitor.admin.index.IndexController;
 import com.webmonitor.admin.manage.ManagerController;
+import com.webmonitor.admin.orderlog.OrderLogController;
 import com.webmonitor.admin.overview.OverviewController;
 
 import com.webmonitor.admin.projects.ProjectController;
@@ -92,6 +93,7 @@ public class AdminConfig extends JfinalCoreConfig {
         me.add("/company", CompanyController.class);
         me.add("/project", ProjectController.class);
         me.add("/template", TemplateController.class);
+        me.add("/orderlog", OrderLogController.class);
         //me.add("/permission", PermissionController.class);
         //业务路由
     }

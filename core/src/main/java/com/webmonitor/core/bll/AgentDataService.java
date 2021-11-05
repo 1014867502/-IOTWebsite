@@ -3,10 +3,9 @@ package com.webmonitor.core.bll;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.core.dal.AgentDataMysqlDAL;
 import com.webmonitor.core.idal.IAgentData;
-import com.webmonitor.core.model.AgentData;
-import com.webmonitor.core.model.AgentDataDao;
-import com.webmonitor.core.model.ProDevCount;
-import com.webmonitor.core.model.StaffData;
+import com.webmonitor.core.model.*;
+
+import java.util.List;
 
 public class AgentDataService {
     public static final AgentDataService me=new AgentDataService();
@@ -49,6 +48,18 @@ public class AgentDataService {
 
     public ProDevCount getDevCount(){
         return dal.getDevCountAdmin();
+    }
+
+    /**删除表上数据**/
+    public void deletemachine(int id){
+        dal.deleteDevice(id);
+    }
+
+    /**批量删除表上数据**/
+    public void deletemachineList(List<AgentData> list){
+        for(int i=0;i<list.size();i++){
+            dal.deleteDevice(list.get(i).getId());
+        }
     }
 
     public ProDevCount getCompangyDevCount(String comid){

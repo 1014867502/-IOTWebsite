@@ -4,6 +4,7 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.core.idal.IStaffData;
+import com.webmonitor.core.model.Role;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.StaffDataEntity;
 import com.webmonitor.core.util.MD5Utils;
@@ -127,7 +128,7 @@ public class StaffDataMysqlDAL implements IStaffData {
                 String projectlist=item.getStr("groupAssemble").replace('@',',');
                 staffDataEntity.setGroupAssemble(projectlist);
             }else{
-                staffDataEntity.setGroupAssemble("");
+                staffDataEntity.setGroupAssemble("empty");
             }
             int type=item.getInt("iRoleType");
             staffDataEntity.setRoleType(RoleType.getTypeName(type));
@@ -157,7 +158,7 @@ public class StaffDataMysqlDAL implements IStaffData {
                 String projectlist=item.getStr("groupAssemble").replace('@',',');
                 staffDataEntity.setGroupAssemble(projectlist);
             }else{
-                staffDataEntity.setGroupAssemble("");
+                staffDataEntity.setGroupAssemble("empty");
             }
 
             int roletype=item.getInt("iRoleType");
@@ -187,7 +188,7 @@ public class StaffDataMysqlDAL implements IStaffData {
                 String projectlist=item.getStr("groupAssemble").replace('@',',');
                 staffDataEntity.setGroupAssemble(projectlist);
             }else{
-                staffDataEntity.setGroupAssemble("");
+                staffDataEntity.setGroupAssemble("empty");
             }
             int roletype=item.getInt("iRoleType");
             staffDataEntity.setRoleType(RoleType.getTypeName(roletype));
@@ -197,24 +198,18 @@ public class StaffDataMysqlDAL implements IStaffData {
     }
 
     @Override
-    public Page<StaffDataEntity> searchCustomByParam(String content,String agentnum,String userid, String roletype, int pageno, int limit) {
-        String sql="";
-        switch(roletype){
-            case "0":
-                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber ";
-                if(agentnum!=null){
-                    sql=sql+" where a.agentNumber="+agentnum;
-                }
-                break;
-            case "1":
-                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where b.agentName like '%"+content+"%' and a.id!="+userid;
-                break;
-            case "2":
-                sql=" from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where a.uAccountNum like '%"+content+"%' and a.id!="+userid;
-                if(agentnum!=null){
-                    sql=sql+" and a.agentNumber="+agentnum+" and a.id!="+userid;
-                }
-                break;
+    public Page<StaffDataEntity> searchCustomByParam(String content,String agentnum,int pageno, int limit) {
+        String sql = "   from staff_data a left join agent_table b on a.agentNumber=b.agentNumber ";
+        if(!agentnum.equals("all")){
+            if(!content.isEmpty()){
+                sql=sql+" where a.agentNumber="+agentnum+" and a.uAccountNum like '%"+content+"%'";
+            }else{
+                sql=sql+" where b.agentNumber='"+agentnum+"'";
+            }
+        }else{
+            if(!content.isEmpty()){
+                sql=sql+" where a.uAccountNum like '%"+content+"%'";
+            }
         }
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName",sql);
         List<Record> recordList = page.getList();
@@ -234,7 +229,7 @@ public class StaffDataMysqlDAL implements IStaffData {
                 String projectlist=record.getStr("groupAssemble").replace('@',',');
                 staffDataEntity.setGroupAssemble(projectlist);
             }else{
-                staffDataEntity.setGroupAssemble("");
+                staffDataEntity.setGroupAssemble("empty");
             }
             int type=record.getInt("iRoleType");
             staffDataEntity.setRoleType(RoleType.getTypeName(type));
@@ -248,8 +243,13 @@ public class StaffDataMysqlDAL implements IStaffData {
         String sql="from staff_data a left join agent_table b on a.agentNumber=b.agentNumber where a.agentNumber="+agentnum;
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.agentName",sql);
         List<Record> recordList = page.getList();
+        String role=RoleType.getTypeName(StaffData.dao.findById(userid).getIRoleType());
         List<StaffDataEntity> rslist = new ArrayList<>();
         for (Record record : recordList) {
+            int type=record.getInt("iRoleType");
+            if(!role.equals("超级管理员")&& RoleType.getTypeName(type).equals("超级管理员")){
+                continue;
+            }
             StaffDataEntity staffDataEntity=new StaffDataEntity();
             staffDataEntity.setId(record.getInt("id"));
             staffDataEntity.setAgentName(record.getStr("agentName"));
@@ -264,9 +264,8 @@ public class StaffDataMysqlDAL implements IStaffData {
                 String projectlist=record.getStr("groupAssemble").replace('@',',');
                 staffDataEntity.setGroupAssemble(projectlist);
             }else{
-                staffDataEntity.setGroupAssemble("");
+                staffDataEntity.setGroupAssemble("empty");
             }
-            int type=record.getInt("iRoleType");
             staffDataEntity.setRoleType(RoleType.getTypeName(type));
             rslist.add(staffDataEntity);
         }

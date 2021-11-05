@@ -248,6 +248,7 @@
             <button id="savemodel" type="button" class="layui-btn">保存为模板</button>
             <button id="reset" type="button" class="layui-btn ">刷新</button>
         </div>
+            <div id="errormsg" style="color: #cc0000"></div>
         </form>
     </div>
 </div>
@@ -261,6 +262,7 @@
 
 <script>
     var agentnum = "#(agentNum)";
+    var writeright="#(writeright)";
     var machinesn = parent.window.document.getElementsByName("iframe_a")[0].getAttribute('machinesn');
     layui.config({
         base: '/assets/layuiadmin/'

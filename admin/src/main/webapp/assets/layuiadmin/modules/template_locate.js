@@ -112,7 +112,7 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
                 $("#coordvt_dst_datum_da").val("6378137");
                 $("#coordvt_dst_datum_df").val("298.257223563");
                 break;
-            case "北京54":
+            case "BEIJING54":
                 $("#coordvt_dst_datum_da").val("6378245");
                 $("#coordvt_dst_datum_df").val("298.3");
                 break;
@@ -213,8 +213,31 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
     /**更新模组**/
     function updateModel(){
         let setting=parent.testmodel
-        let jsondata=setting.compute.substring(0,setting.compute.length-1)+","+setting.locate.substring(1,setting.locate.length-1)+","
-            +setting.plaform.substring(1,setting.plaform.length-1)+","+setting.auxiliary.substring(1,setting.auxiliary.length);
+        let jsondata="";
+        let arr=[];
+        if(setting.compute!=null){
+            arr.push(setting.compute.substring(1, setting.compute.length - 1));
+        }
+        if (setting.locate != null) {
+            arr.push(setting.locate.substring(1, setting.locate.length - 1));
+        }
+        if (setting.plaform != null) {
+            arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
+        }
+        if (setting.auxiliary != null) {
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length));
+        }
+        for(let i=0;i<arr.length;i++){
+            if(i==0){
+                jsondata+="{"+arr[i];
+            }else{
+                jsondata+=","+arr[i];
+                if(i==arr.length-1){
+                    jsondata+="}";
+                }
+
+            }
+        }
         $.ajax({
             url:'/template/updateTemplate',
             data:{
@@ -247,6 +270,61 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
     /**保存模组**/
     function saveModel(){
         let data1 = form.val("formDemo");
+        data1.coordcvt_enable = (data1.coordcvt_enable != "on") ? 0 : 1;
+        data1.coordcvt_seven_use = (data1.coordcvt_seven_use != "on") ? 0 : 1;
+        data1.coordcvt_four_use = (data1.coordcvt_four_use != "on") ? 0 : 1;
+        if(data1.coordcvt_enable!=1){
+            if (locatedata.coordcvtDstDatum != null) {
+                let coordcvt_dst = locatedata.coordcvtDstDatum.split('|');
+                data1.coordcvt_dst_datum_select=coordcvt_dst[0];
+                data1.coordvt_dst_datum_da=coordcvt_dst[1];
+                data1.coordvt_dst_datum_df=coordcvt_dst[2];
+            }
+
+            /*投影参数*/
+            if (locatedata.coordcvtProjParam != null) {
+                let coordvt_proj = locatedata.coordcvtProjParam.split('|');
+                data1.coordcvt_dst_datum_select=coordvt_proj[0];
+                let tmp=data1.coordvt_proj_centralmeridian;
+                tmp=(tmp*Math.PI/180);
+                data1.coordvt_proj_centralmeridian=tmp;
+                data1.coordvt_proj_scale=coordvt_proj[2];
+                data1.coordvt_proj_north=coordvt_proj[3];
+                data1.coordvt_proj_east=coordvt_proj[4];
+                data1.coordvt_proj_height=coordvt_proj[5];
+                data1.coordvt_proj_lat=coordvt_proj[6];
+            }
+        } else{
+            let tmp=data1.coordvt_proj_centralmeridian;
+            tmp=(tmp*Math.PI/180);
+            data1.coordvt_proj_centralmeridian=tmp;
+        }
+
+        if(data1.coordcvt_seven_use!=1){
+            /*七参数*/
+            if (locatedata.coordcvtSevenParam != null) {
+                let coordvt_seven = locatedata.coordcvtSevenParam.split('|');
+                data1.coordcvt_seven_tx=coordvt_seven[1];
+                data1.coordcvt_seven_ty=coordvt_seven[2];
+                data1.coordcvt_seven_tz=coordvt_seven[3];
+                data1.coordcvt_seven_rx=coordvt_seven[4];
+                data1.coordcvt_seven_ry=coordvt_seven[5];
+                data1.coordcvt_seven_rz=coordvt_seven[6];
+                data1.coordcvt_seven_scale=coordvt_seven[7];
+            }
+        }
+
+        if(data1.coordcvt_four_use!=1){
+            /*四参数*/
+            if (locatedata.coordcvtFourParam != null) {
+                let coordvt_four = locatedata.coordcvtFourParam.split('|');
+                data1.coordcvt_four_tx=coordvt_four[1];
+                data1.coordcvt_four_ty=coordvt_four[2];
+                data1.coordcvt_four_rotate=coordvt_four[3];
+                data1.coordcvt_four_scale=coordvt_four[4];
+            }
+        }
+
         let jsondata=locatefunc.datachange(basehidepara,fourhidepara,data1);
         parent.testmodel.locate= JSON.stringify(jsondata);
     }
@@ -260,9 +338,17 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
                 name: sn
             },
             success: function (data) {
+                debugger
                 let device = data.data;
                 locatedata = device;
                 locatefunc.setdevice(device);
+                if(parent.window.writeright==0){
+                    $("#changename").prop("disabled",true);
+                    $("#errormsg").html("修改权限被限制");
+                    $("#changename").addClass("layui-btn-disabled");
+                    $("#savemodel").prop("disabled",true);
+                    $("#savemodel").addClass("layui-btn-disabled");
+                }
                 if (device.coordcvtEnabled > 0) {
                     $("#coordcvt_enable").prop('checked', true);
                     document.getElementById("locate_content").innerHTML = locatefunc.locatetxt;
@@ -288,12 +374,13 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
                     }
                 }
 
-
                 /*投影参数*/
                 if (device.coordcvtProjParam != null) {
                     let coordvt_proj = device.coordcvtProjParam.split('|');
                     $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
-                    $("#coordvt_proj_centralmeridian").val(coordvt_proj[1]);
+                    let tmp=parseFloat(coordvt_proj[1]);
+                    tmp=(tmp*180/Math.PI).toFixed(10);
+                    $("#coordvt_proj_centralmeridian").val(tmp);
                     $("#coordvt_proj_scale").val(coordvt_proj[2]);
                     $("#coordvt_proj_north").val(coordvt_proj[3]);
                     $("#coordvt_proj_east").val(coordvt_proj[4]);
@@ -315,7 +402,7 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
                     $("#coordcvt_seven_ty").val(coordvt_seven[2]);
                     $("#coordcvt_seven_tz").val(coordvt_seven[3]);
                     $("#coordcvt_seven_rx").val(coordvt_seven[4]);
-                    $("#coordcvt_sevent_ry").val(coordvt_seven[5]);
+                    $("#coordcvt_seven_ry").val(coordvt_seven[5]);
                     $("#coordcvt_seven_rz").val(coordvt_seven[6]);
                     $("#coordcvt_seven_scale").val(coordvt_seven[7]);
                 }

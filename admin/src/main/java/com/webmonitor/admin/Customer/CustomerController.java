@@ -10,6 +10,7 @@ import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.config.annotation.Remark;
 import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.*;
+import com.webmonitor.core.model.userbase.AuthorityEntity;
 import com.webmonitor.core.model.userbase.CustomCount;
 import com.webmonitor.core.util.MD5Utils;
 import com.webmonitor.core.util.exception.BusinessException;
@@ -58,14 +59,25 @@ public class CustomerController extends BaseController {
 //        } catch (UnsupportedEncodingException e) {
 //            e.printStackTrace();
 //        }
+        String webright=getPara("webright");
+        String appright=getPara("appright");
         String select=getPara("select");
         select=(select==null)?"":select;
         select=select.replace(',','@');
+        webright=(webright==null)?"":webright;
+        webright=webright.replace(',','@');
+        appright=(appright==null)?"":appright;
+        appright=appright.replace(',','@');
         Result result=Result.newOne();
         Gson gson=new Gson();
         StaffDataEntity staffData= gson.fromJson(staffjson, new TypeToken<StaffDataEntity>(){}.getType());
+        if(staffData.getiRoleType()==3){
+            staffData.setGroupAssemble("all");
+            webright="";
+            staffData.setWritePermission(0);
+        }
         try {
-           result=srv.save(staffData,select);
+           result=srv.save(staffData,select,webright,appright);
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
         }
@@ -83,7 +95,13 @@ public class CustomerController extends BaseController {
 //        }
         Result<String> result = Result.newOne();
         String select=getPara("select");
+        String webright=getPara("webright");
+        String appright=getPara("appright");
         select=(select==null)?"":select;
+        webright=(webright==null)?"":webright;
+        webright=webright.replace(',','@');
+        appright=(appright==null)?"":appright;
+        appright=appright.replace(',','@');
         select=select.replace(',','@');
         Gson gson=new Gson();
         StaffDataEntity staffData= gson.fromJson(staffjson, new TypeToken<StaffDataEntity>(){}.getType());
@@ -92,7 +110,7 @@ public class CustomerController extends BaseController {
             staffData.setuPassword(staffData1.getUPassword());
         }
         try {
-            result = srv.update(staffData,select);
+            result = srv.update(staffData,select,webright,appright);
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
         }
@@ -104,6 +122,59 @@ public class CustomerController extends BaseController {
         Result<String> result = Result.newOne();
         try {
             result = srv.delete(getParaToInt("id"));
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /**批量删除用户**/
+    public void deletelist() {
+        Result<String> result = Result.newOne();
+        String json=getPara("json");
+        try {
+            Gson gson=new Gson();
+            List<StaffDataEntity> staffData= gson.fromJson(json, new TypeToken<List<StaffDataEntity>>(){}.getType());
+            for(int k=0;k<staffData.size();k++){
+                result = srv.delete(staffData.get(k).getId());
+            }
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /*批量重置密码*/
+    public void repasswordlist(){
+        Result<String> result = Result.newOne();
+        String json=getPara("json");
+        try {
+            Gson gson=new Gson();
+            List<StaffDataEntity> staffDatalist= gson.fromJson(json, new TypeToken<List<StaffDataEntity>>(){}.getType());
+            for(int k=0;k<staffDatalist.size();k++){
+                StaffData staffData= StaffService.me.getStaffByName(staffDatalist.get(k).getuAccountNum());
+                String code= MD5Utils.md5("123456")+"0";
+                staffData.setUPassword(code);
+                staffData.update();
+                result.success("success");
+            }
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+
+    /**重置密码**/
+    public void repassword(){
+        Result<String> result = Result.newOne();
+        String userid=getPara("uAccountname");
+        try {
+            StaffData staffData= StaffService.me.getStaffByName(userid);
+            String code= MD5Utils.md5("123456")+"0";
+            staffData.setUPassword(code);
+            staffData.update();
+            result.success("success");
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
         }
@@ -212,14 +283,12 @@ public class CustomerController extends BaseController {
     /**用户条件查询**/
     public void searchCustomByParam(){
         String account=getPara("content");
-        String searchtype=getPara("searchtype");
         String agentnum=getPara("agentnumber");
-        String userid=getPara("userid");
         int pageno=getParaToInt("page",1);
         int limit =getParaToInt("limit",50);
         Result<Page<StaffDataEntity>> result=Result.newOne();
         try{
-            Page<StaffDataEntity> customlist=CustomerService.me.searchCustomByParam(account,agentnum,userid,searchtype,pageno,limit);
+            Page<StaffDataEntity> customlist=CustomerService.me.searchCustomByParam(account.trim(),agentnum,pageno,limit);
             result.success(customlist);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -274,6 +343,23 @@ public class CustomerController extends BaseController {
             }else{
                 result.success("success");
             }
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**获取用户的权限**/
+    public void getAuthority(){
+        Result<AuthorityEntity> result=Result.newOne();
+        String userid=getPara("userid");
+        try{
+            StaffData staffData=StaffService.me.getStaffById(userid);
+            AuthorityEntity authorityEntity=new AuthorityEntity();
+            authorityEntity.setAppauthority(staffData.getAppPermission());
+            authorityEntity.setWebauthority(staffData.getWebPermission());
+            authorityEntity.setWriteright(staffData.getSetPermission());
+            result.success(authorityEntity);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }

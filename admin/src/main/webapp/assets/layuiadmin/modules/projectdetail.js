@@ -10,7 +10,10 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var projectlist;
     var projectcount;
     var identity="";
+    var devicetypelist;
+    var machinelist;
     var agentNumber=agentnum;
+    var progroupname;
     var agentName;
     var connectdevice=[];
     var Devicelist;
@@ -19,6 +22,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     getDetailProject();
     adaptauthority();
     getCompanyListByRole();
+    searchdevicetype();
 
     function getDetailProject(){
         $.ajax({
@@ -29,7 +33,11 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             async:false,
             success:function (data) {
                 let item=data.data;
-                $("#comname").html(item.agentname);
+                $("#progroupname2").html(item.progroupname);
+                $("#comname2").html(item.agentname);
+                agentName=item.agentname;
+                progroupname=item.progroupname;
+                $("#comname2").attr("href","/company/CompanyDetail?agentNumber="+agentnum);
                 $("#progroupname").html(item.progroupname);
                 $("#createtime").html(item.createtime);
             }
@@ -74,18 +82,8 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     //监听页面表格查询
     $("#datasumbit").on('click', function () {
         let agentnum=agentNumber;
-        let stats = $("#stats").val();
+        let online=devicetypelist.getValue('valueStr');
         let input = $("#SN").val();
-        let id=1,sn, snreal;
-        if (typeof (id) == "undefined") {
-            layer.msg("项目不能为空");
-            return;
-        } else if ((input.length == 0 || input == null) && (!stats == 2)) {
-            layer.msg("输入不能为空" );
-            return;
-        } else {
-            snreal = input;
-        }
         table.render({
             elem: '#table-form'
             , toolbar: '#table-form'
@@ -93,9 +91,10 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , height:'full-200'
             , totalRow: true
             , url: '/devicelist/findDevice'
-            , where: {'agentNumber': agentnum, 'sn': snreal, 'state': stats,'groupid':progroupid}
+            , where: {'agentNumber': agentnum, 'sn': input, 'state':online,'groupid':progroupid}
             , cols: [[
-                {field: 'agentName', title: "所属公司", align: 'center'}
+                {type:'checkbox'}
+                ,{field: 'agentName', title: "所属公司", align: 'center'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
                 , {field: 'createTime', title: "登录时间", align: 'center'}
@@ -113,6 +112,12 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     "count": res.data == null ? 0 : res.data.totalRow,
                     "data": res.data == null ? {} : res.data.list
                 };
+            },done:function () {
+                table.on('checkbox(table-from)', function (obj) {
+                    let checkStatus = table.checkStatus('table-form')
+                        , data = checkStatus.data;
+                    machinelist = JSON.stringify(data);
+                });
             }
         });
     });
@@ -120,6 +125,29 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     $("#selectall").on('click', function () {
         renderTable();
     });
+
+    $("#delete_device").on('click',function () {
+        updateconnectlist(devicetypelist);
+    })
+
+    $("#delete_project").on("click",function(){
+        layer.confirm('真的删除该项目吗？', function(index){
+            admin.req({
+                url:'/manage/deleteproject',
+                data:{
+                    projectid:progroupid
+                },
+                done:function (res) {
+                    if(res.data=="删除成功"){
+                        location.href="/company/CompanyDetail?agentNumber="+agentnum;
+                    }
+                    layer.msg(res.data);
+                    return false;
+                }
+            })
+            layer.close(index);
+        });
+    })
 
     /**未关联设备的查询**/
     $("#datasumbit2").on('click',function(){
@@ -177,7 +205,8 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             , url: '/project/getAllDeviceByGroupid'
             , where: {'progroupid':progroupid}
             , cols: [[
-                {field: 'agentName', title: "所属公司", align: 'center'}
+                {type:'checkbox'}
+                ,{field: 'agentName', title: "所属公司", align: 'center'}
                 , {field: 'machineSerial', title: "设备sn号", align: 'center'}
                 , {field: 'machineName', title: "设备名称", align: 'center'}
                 , {field: 'createTime', title: "登录时间", align: 'center'}
@@ -195,8 +224,47 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     "count": res.data == null ? 0 : res.data.totalRow,
                     "data": res.data == null ? {} : res.data.list
                 };
+            },done:function () {
+                table.on('checkbox(table-from)', function (obj) {
+                    let checkStatus = table.checkStatus('table-form')
+                        , data = checkStatus.data;
+                    machinelist = JSON.stringify(data);
+                });
             }
         });
+    }
+
+
+    /**在线离线**/
+    function searchdevicetype(){
+        let typeData = [{name:"全部设备",value:"all"},{name:"离线",value:"0"},{name:"在线",value:"1"}];
+        devicetypelist = xmSelect.render({
+            el: '#online',
+            data: typeData,
+            layVerify: 'required',
+            radio: true,
+            empty: '呀, 没有数据呢',
+            clickClose: true,
+            initValue:["all"],
+            layVerType: 'msg',
+            theme: {
+                color: '#1E9FFF',
+            },
+            style: {
+                borderRadius: '6px',
+            },
+            model: {
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 0,
+                        //是否显示删除图标
+                        showIcon: false,
+                    }
+                }
+            }
+        })
     }
 
 
@@ -233,6 +301,56 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 });
             }
         });
+    }
+
+    /**关联设备**/
+    function updateConnect(data){
+        $.ajax({
+            url:"/devicelist/changeConDev",
+            data:{
+                connectdevice:data,
+                projectid:progroupid
+            },
+            async:false,
+            success:function () {
+                getDeviceCounts();
+                layer.alert("关联成功");
+            }
+        })
+    }
+
+    /**设备批量删除**/
+    function  updateconnectlist(data) {
+        if(machinelist!=null&&machinelist.length>2){
+            layer.confirm('确实要删除吗?', {icon: 3, title:'提示'}, function(index1){
+                $('div.layui-table-body table tbody input[name="layTableCheckbox"]:checked').each(function() { // 遍历选中的checkbox
+                    let  n = $(this).parents('tbody tr').index()  // 获取checkbox所在行的顺序
+                    //移除行
+                    $('div.layui-table-body table tbody ').find('tr:eq(' + n + ')').remove()
+                    //如果是全选移除，就将全选CheckBox还原为未选中状态
+                    $('div.layui-table-header table thead div.layui-unselect.layui-form-checkbox').removeClass('layui-form-checked')
+                })
+                $.ajax({
+                    url: '/devicelist/delConnectDevlist',
+                    data: {
+                        json: machinelist,
+                    },
+                    success: function (res) {
+                        let data=res.data;
+                        if(data=="成功"){
+                            layer.msg('取消关联成功');
+                        }else{
+                            layer.msg("取消关联失败");
+                        }
+                    }
+                })
+                layer.close(index1);
+                return false;
+            });
+        }
+        else{
+            layer.msg("请选择取消关联的设备");
+        }
     }
 
     /**关联设备**/
@@ -295,6 +413,12 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             success:function (data) {
                 switch (data.data) {
                     case "user":
+                        $("#crumb").css("display","none");
+                        $("#crumb2").css("display","block");
+                        let nickname=$("#nickName").html();
+                        $("#comname3").html(progroupname);
+                        $("#userproname").html("项目管理");
+                        $("#comname3").attr("href","/project/projectdetail?agentnum="+agentnum+"&progroupid="+progroupid);
                         break;
                     case "companyadmin":
                         break;

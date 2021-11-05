@@ -8,10 +8,7 @@ import com.webmonitor.admin.devicelist.DeviceListService;
 import com.webmonitor.admin.index.IndexService;
 import com.webmonitor.core.bll.*;
 import com.webmonitor.core.dal.RoleType;
-import com.webmonitor.core.model.AgentTable;
-import com.webmonitor.core.model.ProDevCount;
-import com.webmonitor.core.model.ProjectsData;
-import com.webmonitor.core.model.StaffData;
+import com.webmonitor.core.model.*;
 import com.webmonitor.core.model.userbase.BaseProjects;
 import com.webmonitor.core.util.SocketTools;
 import com.webmonitor.core.util.Tools;
@@ -21,6 +18,8 @@ import com.webmonitor.core.vo.Result;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.webmonitor.core.model.Response.*;
 
 public class ManagerController extends BaseController {
 
@@ -32,7 +31,12 @@ public class ManagerController extends BaseController {
 
     public void selectprojects(){
         String userid = getCookie(IndexService.me.accessUserId);
+        StaffData staffData=StaffService.me.getStaffById(userid);
+        String agentnum=staffData.getAgentNumber();
+        String name=staffData.getUAccountNum();
         setAttr("userid", userid);
+        setAttr("agentnum",agentnum);
+        setAttr("accountname",name);
         render("selectprojects.html");
     }
 
@@ -46,8 +50,12 @@ public class ManagerController extends BaseController {
 
     public void templatemanage(){
         String userid = getCookie(IndexService.me.accessUserId);
+        String useid=getLoginAccount().getUserName();
         String agentnum=StaffService.me.getStaffById(userid).getAgentNumber();
+        String webpremission=StaffService.me.getStaffById(userid).getWebPermission();
+        setAttr("webpremission",webpremission);
         setAttr("agentnum",agentnum);
+        setAttr("userid",useid);
         render("templatemanage.html");
     }
 
@@ -96,6 +104,13 @@ public class ManagerController extends BaseController {
             projetid = "";
         setAttr("projetid", projetid);
         render("sensorlist.html");
+    }
+
+    public void orderlog(){
+        String userid = getCookie(IndexService.me.accessUserId);
+        String useid=getLoginAccount().getUserName();
+        setAttr("userid",useid);
+        render("orderlog.html");
     }
 
 
@@ -233,10 +248,18 @@ public class ManagerController extends BaseController {
 
     /**删除项目**/
     public void deleteproject(){
-        Result result=Result.newOne();
+        Result<String> result=Result.newOne();
         String id=getPara("projectid");
-        ProjectService.me.deleteProjectByid(id);
-        renderJson(result.success("ok"));
+        try{
+            ProjectService.me.deleteProjectByid(id);
+            result.success(SUCCESS_DELETE.getReport());
+            renderJson(result);
+        }catch(Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+            result.success(ERROR_DELETE.getReport());
+        }
+        renderJson(result);
+
     }
 
     public void editproject(){
@@ -303,11 +326,11 @@ public class ManagerController extends BaseController {
 
     /**获取所有公司的分页信息**/
     public void getAllCompanyPage(){
-        Result<Page<AgentTable>> result=Result.newOne();
+        Result<Page<CompanyPage>> result=Result.newOne();
         int pageno = getParaToInt("pageno", 1);
-        int limit = getParaToInt("limit", 5);
+        int limit = getParaToInt("limit", 9);
         try{
-            Page<AgentTable> page= CompanyService.me.getAllCompanys(pageno,limit);
+            Page<CompanyPage> page= CompanyService.me.getAllCompanys(pageno,limit);
             result.success(page);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -341,5 +364,19 @@ public class ManagerController extends BaseController {
            ExceptionUtil.handleThrowable(result,e);
        }
        renderJson(result);
+    }
+
+    /**获取配置日志表数据**/
+    public void getOrderLog(){
+        Result<Page<CompanyPage>> result=Result.newOne();
+        int pageno = getParaToInt("pageno", 1);
+        int limit = getParaToInt("limit", 9);
+        try{
+            Page<CompanyPage> page= CompanyService.me.getAllCompanys(pageno,limit);
+            result.success(page);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
     }
 }

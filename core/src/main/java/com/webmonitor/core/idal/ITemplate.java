@@ -27,8 +27,11 @@ public interface ITemplate {
     /**根据名称查找模板**/
     Page<Templates> getTemplateByName(String templatename);
 
-    /**管理员搜索全部模板**/
+    /**搜索全部模板（模板管理）**/
     Page<Templates> searchAllTemplate(String type,String content ,int pageno,int limit);
+
+    /**搜索全部模板（模板配置）**/
+    Page<Templates> searchSettingTemplate(String type,String content ,int pageno,int limit);
 
     /**普通用户搜索全部模板**/
     Page<Templates> searchTemplateByCom(String type,String agentnum,String content,int pageno,int limit);

@@ -11,6 +11,7 @@ import com.webmonitor.core.idal.ICache;
 import com.webmonitor.core.model.*;
 import com.webmonitor.core.model.userbase.DeviceSensorList;
 import com.webmonitor.core.util.OrderConstants;
+import com.webmonitor.core.util.SocketTools;
 import com.webmonitor.core.util.Tools;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import net.sf.ehcache.search.expression.Or;
@@ -27,6 +28,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.webmonitor.core.dal.AgentDataMysqlDAL.getSubString;
 
 
 public class DeviceListService {
@@ -60,8 +63,20 @@ public class DeviceListService {
         dal.updateDeivceAgentBySerial(sn,agentnum);
     }
 
+    /*批量修改设备归属*/
+    public void changeDeviceAgentByList(List<AgentData> list,String agentnum){
+        for(int i=0;i<list.size();i++){
+            dal.updateDeivceAgentBySerial(list.get(i).getMachineSerial(),agentnum);
+        }
+    }
+
     /**删除关联设备**/
     public void deleteDeviceBySerial(String sn){
+        dal.deleteDeviceBySerial(sn);
+    }
+
+    /**批量删除关联设备**/
+    public void deleteDeviceBylist(String sn){
         dal.deleteDeviceBySerial(sn);
     }
 
@@ -83,6 +98,7 @@ public class DeviceListService {
     public static boolean  checkObjAllFieldsIsNull(String machineserial,Object object) {
         String username="";
         String userpass="";
+        int commands=0;
         if (null == object) {
             return false;
         }
@@ -102,20 +118,25 @@ public class DeviceListService {
                     }
                     if(ListData.contains(f.getName())){
                         String order=getOrder(f.getName());
-                        if(!order.equals("")){
-                            String path=order.substring(4,order.length()-1);
-                            String value=order+f.get(object);
-                            cache.add(machineserial,path,value);
-                        }
                         if(order.equals("SET,NETWORK.MOUNTPOINTUSERPASS,")){
                             String path=order.substring(4,order.length()-1);
                             String value=order+userpass;
                             cache.add(machineserial,path,value);
+                            commands++;
+                        }
+                        if(!order.equals("")&&!order.equals("SET,NETWORK.MOUNTPOINTUSERPASS,")){
+                            String path=order.substring(4,order.length()-1);
+                            String value=order+f.get(object);
+                            cache.add(machineserial,path,value);
+                            commands++;
                         }
                     }
                 }
             }
-
+            if(commands>0){
+                SocketTools socketTools = new SocketTools();
+                socketTools.updateSocket(machineserial);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -196,11 +217,34 @@ public class DeviceListService {
 
     /**添加传感器**/
     public void addSensorByData(DeviceSensorList deviceSensorList,String machineserial){
+        String add="";
+        String sql="select extSensorCmd from machine_data where machineSerial='"+machineserial+"'";
+        String str1=deviceSensorList.getInterval()+";"+deviceSensorList.getVoltage()+";8N1@"+deviceSensorList.getBruad()+";"+deviceSensorList.getCmd()+";"+deviceSensorList.getSn()+";"+deviceSensorList.getType()+";"+
+                deviceSensorList.getVender()+";"+deviceSensorList.getRef();
+        String result=Db.findFirst(sql).getStr("extSensorCmd");
+        if(result.equals("")){
+            add=str1;
+        }else{
+            add=result+"|"+str1;
+        }
+        String realorder=getOrder("extSensorCmd");
+        String path=realorder.substring(4,realorder.length()-1);
+        String value=realorder+add;
+        cache.add(machineserial,path,value);
         dal.addSensorByData(deviceSensorList,machineserial);
     }
 
     /**删除传感器**/
     public void delSensorByData(DeviceSensorList deviceSensorList,String machineserial){
+        String sql="select extSensorCmd from machine_data where machineSerial='"+machineserial+"'";
+        String result=Db.findFirst(sql).getStr("extSensorCmd");
+        String str1=deviceSensorList.getInterval()+";"+deviceSensorList.getVoltage()+";"+deviceSensorList.getBruad()+";"+deviceSensorList.getCmd()+";"+deviceSensorList.getSn()+";"+deviceSensorList.getType()+";"+
+                deviceSensorList.getVender()+";"+deviceSensorList.getRef();
+        String realorder=getOrder("extSensorCmd");
+        String afterdel=getSubString(result,str1);
+        String path=realorder.substring(4,realorder.length()-1);
+        String value=realorder+afterdel;
+        cache.add(machineserial,path,value);
         dal.delSensorByData(deviceSensorList,machineserial);
     }
 
@@ -403,7 +447,7 @@ public class DeviceListService {
                 realorder=OrderConstants.ENABLED_Order;
                 break;
             case "extSensorCmd":
-
+                realorder=OrderConstants.EXT_SENSOR_CMD;
                 break;
             case "extSensorPower":
                 realorder=OrderConstants.SENSOR_POWER_Order;
@@ -587,6 +631,9 @@ public class DeviceListService {
             case "rawBackBaud":
                 realorder=OrderConstants.RAW_BACK_BAUD;
                 break;
+            case "rawSolution":
+                realorder=OrderConstants.RAW_SOLUTION;
+                break;
             case "dzIotRtkResult":
                 realorder=OrderConstants.DZ_IOT_RTK;
                 break;
@@ -596,6 +643,8 @@ public class DeviceListService {
             case "ntrIpBase":
                 realorder=OrderConstants.RAW_NTRIP_BASE;
                 break;
+            case "secondNtripBase":
+                realorder=OrderConstants.RAW_SECOND_NTRIP_BASE;
             case "connectState":
                 break;
             case "baseLon":

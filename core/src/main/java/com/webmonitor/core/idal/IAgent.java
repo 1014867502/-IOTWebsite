@@ -2,6 +2,7 @@ package com.webmonitor.core.idal;
 
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.core.model.AgentTable;
+import com.webmonitor.core.model.CompanyPage;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface IAgent {
 
     List<AgentTable> getAllcompanys();
 
-    Page<AgentTable> getAllcompanyPages(int pageno,int limit);
+    Page<CompanyPage> getAllcompanyPages(int pageno,int limit);
 
     AgentTable getAgentTableById(String comid);
 
@@ -25,5 +26,8 @@ public interface IAgent {
 
     /**删除**/
     int deletCompany(String agentNumber);
+
+    /**根据公司编码获取公司相关信息**/
+    CompanyPage getCompanyDetialByNum(String agentNumber);
 
 }

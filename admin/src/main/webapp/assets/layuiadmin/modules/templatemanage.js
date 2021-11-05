@@ -9,8 +9,10 @@ layui.define(['form','drawer','table'], function (exports) {
 
     var agentNumber;
     var layerindex;
-    var companylistfind;
+    var companysearch;
     var companylist;
+    var templateselected;
+    var roletype;
     var projectlist;
     var newtype="0";//新建用户页面的用户类型
     var edittype="0"//修改用户页面
@@ -87,6 +89,10 @@ layui.define(['form','drawer','table'], function (exports) {
         }
     });
 
+    /**批量删除模板**/
+    $("#delete_template").on('click',function () {
+        deletetemplatelist();
+    })
 
     form.on('select(type2)',function(data){
         let type=data.value;
@@ -153,27 +159,18 @@ layui.define(['form','drawer','table'], function (exports) {
 
     //监听页面表格查询
     $("#datasumbit").on('click', function () {
-        let stats = $("#stats").val();
+        let companynum=companysearch.getValue('valueStr');
         let input = $("#account").val();
-        let id = 1, sn, snreal;
-        if (typeof (id) == "undefined") {
-            layer.msg("项目不能为空");
-            return;
-        } else if ((input.length == 0 || input == null) && (!stats == 2)) {
-            layer.msg("输入不能为空");
-            return;
-        } else {
-            snreal = input;
-        }
         table.render({
             elem: '#table-form'
             , title: 'logdata'
             , totalRow: true
-            , height:'full-300'
+            , height:'full-200'
             , url: '/template/searchAllTemplate'
-            ,where:{'type':stats,"content":input}
+            ,where:{'type':companynum,"content":input}
             , cols: [[
-                {field: 'id', title: "序号", align: 'center'}
+                {type: 'checkbox'}
+                ,{field: 'id', title: "序号", align: 'center'}
                 , {field: 'agentName', title: "隶属公司", align: 'center'}
                 , {field: 'uAccountNum', title: "创建人", align: 'center'}
                 , {field: 'templateName', title: "模板名称", align: 'center'}
@@ -191,12 +188,24 @@ layui.define(['form','drawer','table'], function (exports) {
                     "count": res.data == null ? 0 : res.data.totalRow,
                     "data": res.data == null ? {} : res.data.list
                 };
+            },
+            done: function () {
+                table.on('checkbox(table-form)', function (obj) {
+                    let checkStatus = table.checkStatus('table-form')
+                        , data = checkStatus.data;
+                    for(let k=0;k<data.length;k++){
+                        let item=data[k];
+                        delete item.templateOrder;
+                    }
+                    templateselected = JSON.stringify(data);
+                });
             }
         });
     });
 
     renderTable();
     adaptauthority();
+    getCompanyListByRole();
 
     function renderTable(){
         var stats = $("#stats").val();
@@ -204,10 +213,11 @@ layui.define(['form','drawer','table'], function (exports) {
             elem: '#table-form'
             , title: 'logdata'
             , totalRow: true
-            , height:'full-300'
+            , height:'full-200'
             , url: '/template/showTemplateByRole'
             , cols: [[
-                {field: 'id', title: "序号", align: 'center'}
+                {type: 'checkbox'}
+                ,{field: 'id', title: "序号", align: 'center'}
                 , {field: 'agentName', title: "隶属公司", align: 'center'}
                 , {field: 'uAccountNum', title: "创建人", align: 'center'}
                 , {field: 'templateName', title: "模板名称", align: 'center'}
@@ -225,6 +235,17 @@ layui.define(['form','drawer','table'], function (exports) {
                     "count": res.data == null ? 0 : res.data.totalRow,
                     "data": res.data == null ? {} : res.data.list
                 };
+            },
+            done: function () {
+                table.on('checkbox(table-form)', function (obj) {
+                    let checkStatus = table.checkStatus('table-form')
+                        , data = checkStatus.data;
+                    for(let k=0;k<data.length;k++){
+                        let item=data[k];
+                        delete item.templateOrder;
+                    }
+                    templateselected = JSON.stringify(data);
+                });
             }
         });
     }
@@ -242,24 +263,138 @@ layui.define(['form','drawer','table'], function (exports) {
                     case "companyadmin":
                         break;
                     case "superadmin":
-                        document.getElementById("select").innerHTML = "<select id=\"stats\" name=\"stats\" lay-verify=\"\" lay-filter=\"stats\">\n" +
-                            "                                <option value=\"0\" selected>全部</option>\n" +
-                            "                                <option value=\"1\">模板名称</option>\n" +
-                            "                                <option value=\"2\">公司</option>\n" +
-                            "                            </select>";
+
                         break;
                 }
+                roletype=data.data;
                 form.render("select");
             }
         })
     }
+
+    /**获取当前角色的公司列表(主页上的)**/
+    function getCompanyListByRole() {
+        $.ajax({
+            url: '/manage/getCompanyListByRole',
+            data: {
+                userid: userid
+            },
+            async: false,
+            success: function (data) {
+                searchcompanylist(data.data);//搜索框公司列表
+            }
+        })
+    }
+
+    /**初始化当前搜索公司项目列表**/
+    function searchcompanylist(json) {
+        let selectdisabled=false;
+        let projectData;
+        let init;
+        if(roletype!="superadmin"){
+            projectData = [];
+            selectdisabled=true;
+        }else{
+            projectData = [{name:"全部公司",value:"all"}];
+            init="all";
+        }
+        if(json.length>0){
+            for (let i = 0; i < json.length; i++) {
+                let item = json[i];
+                let jsonStr = {};
+                jsonStr.name = item.agentName;
+                jsonStr.value = item.agentNumber;
+                projectData.push(jsonStr);
+                if(i==0&&roletype!="superadmin"){
+                    init=jsonStr.value;
+                }
+            }
+        }
+        companysearch = xmSelect.render({
+            el: '#company',
+            data: projectData,
+            layVerify: 'required',
+            radio: true,
+            empty: '呀, 没有数据呢',
+            clickClose: true,
+            initValue:[init],
+            disabled:selectdisabled ,
+            layVerType: 'msg',
+            theme: {
+                color: '#1E9FFF',
+            },
+            style: {
+                borderRadius: '6px',
+            },
+            model: {
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 0,
+                        //是否显示删除图标
+                        showIcon: false,
+                    }
+                }
+            }
+        });
+    }
+
+    /**批量删除**/
+    function deletetemplatelist(){
+        if(templateselected != null && templateselected.length > 2)
+        {
+            layer.confirm('确实要删除吗?', {icon: 3, title:'提示'}, function(index1){
+                $('div.layui-table-body table tbody input[name="layTableCheckbox"]:checked').each(function() { // 遍历选中的checkbox
+                    let  n = $(this).parents('tbody tr').index()  // 获取checkbox所在行的顺序
+                    //移除行
+                    $('div.layui-table-body table tbody ').find('tr:eq(' + n + ')').remove()
+                    //如果是全选移除，就将全选CheckBox还原为未选中状态
+                    $('div.layui-table-header table thead div.layui-unselect.layui-form-checkbox').removeClass('layui-form-checked')
+                })
+                $.ajax({
+                    url: '/template/delTemplatelist',
+                    data: {
+                        json: templateselected,
+                    },
+                    success: function (res) {
+                        let data=res.data;
+                        if(data=="成功"){
+                            layer.msg('删除成功');
+                        }else{
+                            layer.msg("删除失败");
+                        }
+                    }
+                })
+                layer.close(index1);
+                return false;
+            });
+        }
+        else{
+            layer.msg("请选择删除的模板");
+        }
+    }
+
+
     //每行记录的按钮事件
     table.on('tool(table-form)', function (obj) {
         var data = obj.data;
         if (obj.event === 'echarts') {
             location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
         }else if(obj.event === 'edit'){
-            location.href = '/template/setting?templatename=' + data.templateName+"&&type="+data.type;
+            if(data.type==1){
+                if(webpremission.indexOf("0")>0){
+                    location.href = '/template/setting?templatename=' + data.templateName+"&&type="+data.type;
+                }else{
+                    layer.msg("功能受限，无法查看模板!");
+                }
+            }else{
+                if(webpremission.indexOf("1")>0||webpremission.indexOf("5")>0||webpremission.indexOf("6")>0||webpremission.indexOf("7")>0){
+                    location.href = '/template/setting?templatename=' + data.templateName+"&&type="+data.type;
+                }else{
+                    layer.msg("功能受限，无法查看模板!");
+                }
+            }
         } else if (obj.event === 'del') {
             layer.confirm('真的删除行么', function(index){
                 obj.del();

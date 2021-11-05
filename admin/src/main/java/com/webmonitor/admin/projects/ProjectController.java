@@ -1,13 +1,13 @@
 package com.webmonitor.admin.projects;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.devicelist.DeviceListService;
+import com.webmonitor.core.bll.AgentDataService;
 import com.webmonitor.core.bll.ProjectService;
-import com.webmonitor.core.model.AgentData;
-import com.webmonitor.core.model.AgentDataDao;
-import com.webmonitor.core.model.ProDevCount;
-import com.webmonitor.core.model.ProjectsData;
+import com.webmonitor.core.model.*;
 import com.webmonitor.core.model.userbase.BaseProjects;
 import com.webmonitor.core.model.userbase.ExportGNSSWord;
 import com.webmonitor.core.util.exception.ExceptionUtil;
@@ -15,6 +15,9 @@ import com.webmonitor.core.vo.Result;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.webmonitor.core.model.Response.ERROR_EXECUTE;
+import static com.webmonitor.core.model.Response.SUCCESS_EXECUTE;
 
 public class ProjectController extends BaseController {
 
@@ -144,6 +147,87 @@ public class ProjectController extends BaseController {
         try{
             BaseProjects baseProjects=ProjectService.me.getProjectByName(name);
             result.success(baseProjects);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**获取公司旗下项目的详情**/
+    public void getProjectPageByNum(){
+        String agentnum=getPara("agentNumber");
+        int pageno=getParaToInt("page",1);
+        int limit=getParaToInt("limit",50);
+        Result result=Result.newOne();
+        try{
+            Page<ProjectPage> baseProjects=ProjectService.me.getProjectPageByNum(agentnum,pageno,limit);
+            result.success(baseProjects);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+            result.error(ERROR_EXECUTE.getReport());
+        }
+        renderJson(result);
+    }
+
+    /**根据项目名查询项目**/
+    public void searchProjectPageByName(){
+        String agentnum=getPara("agentNumber");
+        String content=getPara("content")==null?"":getPara("content");
+        int pageno=getParaToInt("page",1);
+        int limit=getParaToInt("limit",50);
+        Result result=Result.newOne();
+        try{
+            Page<ProjectPage> baseProjects=ProjectService.me.searchProjectPageByName(content.trim(),agentnum,pageno,limit);
+            result.success(baseProjects);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+            result.error(ERROR_EXECUTE.getReport());
+        }
+        renderJson(result);
+    }
+
+    /**根据用户名id获取项目**/
+    public void getPageProjectById(){
+        String userid=getPara("userid");
+        int pageno=getParaToInt("page",1);
+        int limit=getParaToInt("limit",50);
+        Result result=Result.newOne();
+        try{
+            Page<BaseProjects> baseProjects=ProjectService.me. getProjectsById(userid,pageno,limit);
+            result.success(baseProjects);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+            result.error(ERROR_EXECUTE.getReport());
+        }
+        renderJson(result);
+    }
+
+    /**搜索用户的项目列表**/
+    public void seekProjectsById(){
+        String content=getPara("content");
+        String userid=getPara("userid");
+        int pageno=getParaToInt("page",1);
+        int limit=getParaToInt("limit",50);
+        Result result=Result.newOne();
+        try{
+            Page<BaseProjects> baseProjects=ProjectService.me.seekProjectsById(userid,content,pageno,limit);
+            result.success(baseProjects);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+            result.error(ERROR_EXECUTE.getReport());
+        }
+        renderJson(result);
+    }
+
+    /**根据多选删除项目**/
+    public void deleteProjectList(){
+        Result result=Result.newOne();
+        String data=getPara("json");
+        Gson gson=new Gson();
+        List<ProjectPage> sList =gson.fromJson(data,new TypeToken<List<ProjectPage>>(){}.getType());
+        try{
+            ProjectService.me.deleteProjectList(sList);
+            result.success("成功");
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }

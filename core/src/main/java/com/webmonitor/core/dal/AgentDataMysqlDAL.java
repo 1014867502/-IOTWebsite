@@ -6,6 +6,7 @@ import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.core.bll.*;
 import com.webmonitor.core.idal.IAgentData;
 import com.webmonitor.core.model.*;
+import com.webmonitor.core.model.userbase.BaseProjects;
 import com.webmonitor.core.model.userbase.DeviceSensorList;
 import com.webmonitor.core.model.userbase.Templates;
 import com.webmonitor.core.util.Tools;
@@ -57,20 +58,20 @@ public class AgentDataMysqlDAL implements IAgentData {
         switch(state){
             case "0"://离线
                 if(!content.isEmpty()){
-                    sql=sql+"(b.connectState=0 or b.connectState is null) and a.machineSerial like '%"+content+"%'";
+                    sql=sql+"(b.connectState=0 or b.connectState is null) and a.machineSerial like '%"+content.trim()+"%'";
                 }else{
                     sql=sql+"(b.connectState=0 or b.connectState is null)";
                 }
                 break;
             case "1"://在线
                 if(!content.isEmpty()){
-                    sql=sql+"b.connectState=1 and a.machineSerial like '%"+content+"%'";
+                    sql=sql+"b.connectState=1 and a.machineSerial like '%"+content.trim()+"%'";
                 }else{
                     sql=sql+"b.connectState=1";
                 }
                 break;
             case "2"://公司
-                sql=sql+" c.agentName like '%"+content+"%'";
+                sql=sql+" c.agentName like '%"+content.trim()+"%'";
                 break;
         }
         if(projectid[0]!=null&&(!type.equals("1"))&&(!type.equals("2"))){
@@ -129,9 +130,9 @@ public class AgentDataMysqlDAL implements IAgentData {
         }
         if(!content.equals("")){
             if(agentnum.equals("all")){
-                sql+=" where a.machineSerial like '%"+content+"%'";
+                sql+=" where a.machineSerial like '%"+content.trim()+"%'";
             }else{
-                sql+=" and a.machineSerial like '%"+content+"%'";
+                sql+=" and a.machineSerial like '%"+content.trim()+"%'";
             }
         }
         if(!projectid.equals("all")){
@@ -157,7 +158,6 @@ public class AgentDataMysqlDAL implements IAgentData {
             }
 
         }
-
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,b.updateTime,c.agentName ",sql+" order by b.updateTime desc");
         List<Record> recordList = page.getList();
         List<AgentData> rslist = new ArrayList<>();
@@ -199,14 +199,14 @@ public class AgentDataMysqlDAL implements IAgentData {
         switch(state){
             case "0"://离线
                 if(!content.isEmpty()){
-                    sql=sql+" and (b.connectState=0 or b.connectState is null) and a.machineSerial like '%"+content+"%'";
+                    sql=sql+" and (b.connectState=0 or b.connectState is null) and a.machineSerial like '%"+content.trim()+"%'";
                 }else{
                     sql=sql+" and (b.connectState=0 or b.connectState is null)";
                 }
                 break;
             case "1"://在线
                 if(!content.isEmpty()){
-                    sql=sql+" and b.connectState=1 and a.machineSerial like '%"+content+"%'";
+                    sql=sql+" and b.connectState=1 and a.machineSerial like '%"+content.trim()+"%'";
                 }else{
                     sql=sql+" and b.connectState=1";
                 }
@@ -263,12 +263,15 @@ public class AgentDataMysqlDAL implements IAgentData {
                 break;
             case "1"://在线
                 if(!content.isEmpty()){
-                    sql=sql+" and b.connectState=1 and a.machineSerial like '%"+content+"%'";
+                    sql=sql+" and b.connectState=1 and a.machineSerial like '%"+content.trim()+"%'";
                 }else{
                     sql=sql+" and b.connectState=1";
                 }
                 break;
-            case "2"://全部
+            case "all"://全部
+                if(!content.isEmpty()){
+                  sql=sql+" and a.machineSerial like '%"+content.trim()+"%'";
+                }
                 break;
         }
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,b.updateTime,c.agentName ",sql+" order by b.updateTime desc");
@@ -459,11 +462,11 @@ public class AgentDataMysqlDAL implements IAgentData {
         switch (role) {
             /**根据serial查询**/
             case "admin":
-                sql= CompanyAdminService.me.searchOutDeviceByParam(agentnum, content, pageno, limit, type, role);
+                sql= CompanyAdminService.me.searchOutDeviceByParam(agentnum, content.trim(), pageno, limit, type, role);
             break;
             /**根据名称查询**/
             case "consumer":
-                sql= CompanyAdminService.me.searchOutDeviceByParam(agentnum, content, pageno, limit, type, role);
+                sql= CompanyAdminService.me.searchOutDeviceByParam(agentnum, content.trim(), pageno, limit, type, role);
                 break;
         }
         Page<Record> page = Db.paginate(pageno, limit, "select *",sql);
@@ -530,9 +533,8 @@ public class AgentDataMysqlDAL implements IAgentData {
     }
 
     @Override
-    public void deleteDevice(String sn) {
-        Record device=new Record().set("machineSerial",sn);
-        Db.delete("agent_data",device);
+    public void deleteDevice(int id) {
+        AgentDataDao.dao.deleteById(id);
     }
 
     @Override
@@ -555,6 +557,10 @@ public class AgentDataMysqlDAL implements IAgentData {
         proDevCount.setOutcount(record.getInt("count(*)"));
         record=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where b.connectState=1");
         proDevCount.setOncount(record.getInt("count(*)"));
+        record=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where a.proGroupId=0");
+        proDevCount.setUnprojcount(record.getInt("count(*)"));
+        record=Db.findFirst("select count(*) from agent_data  where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(createTime)");
+        proDevCount.setNewcount((record.getInt("count(*)")));
         return proDevCount;
     }
 
@@ -563,12 +569,16 @@ public class AgentDataMysqlDAL implements IAgentData {
     public ProDevCount getDeviceCountByComid(String comid) {
         ProDevCount proDevCount=new ProDevCount();
         Record record=new Record();
-        record=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where agentNumber="+comid);
+        record=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where agentNumber='"+comid+"'");
         proDevCount.setSum(record.getInt("count(*)"));
-        record=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where (b.connectState=0 or b.connectState is null) and a.agentNumber="+comid);
+        record=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where (b.connectState=0 or b.connectState is null) and a.agentNumber='"+comid+"'");
         proDevCount.setOutcount(record.getInt("count(*)"));
-        record=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where b.connectState=1 and a.agentNumber="+comid);
+        record=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where b.connectState=1 and a.agentNumber='"+comid+"'");
         proDevCount.setOncount(record.getInt("count(*)"));
+        record=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where a.proGroupId=0 and a.agentNumber='"+comid+"'");
+        proDevCount.setUnprojcount(record.getInt("count(*)"));
+        record=Db.findFirst("select count(*) from agent_data  where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(createTime) and agentNumber='"+comid+"'");
+        proDevCount.setNewcount((record.getInt("count(*)")));
         return proDevCount;
     }
 
@@ -587,10 +597,10 @@ public class AgentDataMysqlDAL implements IAgentData {
                     deviceSensorList.setInterval(0<sensor.length?sensor[0]:"");
                     deviceSensorList.setVoltage(1<sensor.length?sensor[1]:"");
                     deviceSensorList.setBruad(2<sensor.length?sensor[2]:"");
+                    deviceSensorList.setCmd(3<sensor.length?sensor[3]:"");
                     deviceSensorList.setSn(4<sensor.length?sensor[4]:"");
                     deviceSensorList.setType(5<sensor.length?sensor[5]:"");
                     deviceSensorList.setVender(6<sensor.length?sensor[6]:"");
-                    deviceSensorList.setCmd(3<sensor.length?sensor[3]:"");
                     deviceSensorList.setRef(7<sensor.length?sensor[7]:"");
                     deviceSensorLists.add(deviceSensorList);
                 }
@@ -605,7 +615,7 @@ public class AgentDataMysqlDAL implements IAgentData {
     public void addSensorByData(DeviceSensorList deviceSensorList,String machineserial){
         String add="";
         String sql="select extSensorCmd from machine_data where machineSerial='"+machineserial+"'";
-        String str1=deviceSensorList.getInterval()+";"+deviceSensorList.getVoltage()+";"+deviceSensorList.getBruad()+";"+deviceSensorList.getCmd()+";"+deviceSensorList.getSn()+";"+deviceSensorList.getType()+";"+
+        String str1=deviceSensorList.getInterval()+";"+deviceSensorList.getVoltage()+";8N1@"+deviceSensorList.getBruad()+";"+deviceSensorList.getCmd()+";"+deviceSensorList.getSn()+";"+deviceSensorList.getType()+";"+
                 deviceSensorList.getVender()+";"+deviceSensorList.getRef();
         String result=Db.findFirst(sql).getStr("extSensorCmd");
         if(result.equals("")){
@@ -613,6 +623,7 @@ public class AgentDataMysqlDAL implements IAgentData {
         }else{
             add=result+"|"+str1;
         }
+
         Db.update("update machine_data set extSensorCmd = ? where machineSerial=?",add,machineserial);
     }
 
@@ -668,16 +679,19 @@ public class AgentDataMysqlDAL implements IAgentData {
         int sum=0;
         int online=0;
         int outline=0;
+        int newdev=0;
         ProDevCount proDevCountfin=new ProDevCount();
         for (int i = 0; i < authoritys.length; i++) {
             ProDevCount proDevCount=ProjectService.me.getProDevCountById(authoritys[i]);
             sum=sum+proDevCount.getSum();
             online=online+proDevCount.getOncount();
             outline=outline+proDevCount.getOutcount();
+            newdev+=proDevCount.getNewcount();
         }
         proDevCountfin.setOutcount(outline);
         proDevCountfin.setSum(sum);
         proDevCountfin.setOncount(online);
+        proDevCountfin.setNewcount(newdev);
         return proDevCountfin;
     }
 

@@ -19,7 +19,7 @@ public class AdminService {
         return sql;
     }
 
-    /**旗下设备的总数，在线离线情况**/
+    /**旗下设备的总数，在线离线未关联，最新情况**/
     public ProDevCount getDevCount(){
         return AgentDataService.me.getDevCount();
     }

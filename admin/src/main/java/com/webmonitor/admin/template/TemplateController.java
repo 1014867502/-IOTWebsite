@@ -27,8 +27,11 @@ public class TemplateController extends BaseController {
     /**模板设置页面**/
     public void setting(){
         String templatename=getPara("templatename");
+        String userid = getCookie(IndexService.me.accessUserId);
+        String permission=StaffService.me.getStaffById(userid).getWebPermission();
         String type=getPara("type");
         setAttr("type",type);
+        setAttr("webauthority",permission);
         setAttr("templatename",templatename);
         render("template_setting.html");
     }
@@ -36,6 +39,9 @@ public class TemplateController extends BaseController {
     /**快速设置模板页面**/
     public void fastsetting(){
         String templatename=getPara("templatename");
+        String userid = getCookie(IndexService.me.accessUserId);
+        int writeright=StaffService.me.getStaffById(userid).getSetPermission();
+        setAttr("writeright",writeright);
         setAttr("templatename",templatename);
         render("template_fastsetting.html");
     }
@@ -43,7 +49,10 @@ public class TemplateController extends BaseController {
     /**快速设置模板页面**/
     public void stationsetting(){
         String templatename=getPara("templatename");
+        String userid = getCookie(IndexService.me.accessUserId);
+        int permission=StaffService.me.getStaffById(userid).getSetPermission();
         setAttr("templatename",templatename);
+        setAttr("writeright",permission);
         render("template_stationsetting.html");
     }
 
@@ -179,23 +188,55 @@ public class TemplateController extends BaseController {
         renderJson(result);
     }
 
-    /**搜索模板（全部）**/
+    /**批量删除模板**/
+    public void delTemplatelist(){
+        String json=getPara("json");
+        Result<String> result=Result.newOne();
+        try{
+            Gson gson=new Gson();
+            List<Templates> templatesList= gson.fromJson(json, new TypeToken<List<Templates>>(){}.getType());
+            for(int i=0;i<templatesList.size();i++){
+                String id=String.valueOf(templatesList.get(i).getId());
+                if(TemplateService.me.delTemplateById(id)){
+                    result.success("成功");
+                }else{
+                    result.error("失败");
+                  break;
+                }
+            }
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+            result.error("删除失败");
+        }
+        renderJson(result);
+    }
+
+    /**搜索模板（模板管理）**/
     public void searchAllTemplate(){
-        String content=getPara("content");
+        String content=(getPara("content")!=null)?getPara("content"):"";
         String type=getPara("type");
         int pageno=getParaToInt("pageno",1);
         int limit=getParaToInt("limit",10);
-        String userid = getCookie(IndexService.me.accessUserId);
-        StaffData currentuser = StaffService.me.getStaffById(userid);
         Result<Page<Templates>> result=Result.newOne();
         try{
-            if(RoleType.getString(currentuser.getIRoleType()).equals("superadmin")){
-                Page<Templates> templatesPage=TemplateService.me.searchAllTemplate(type,content,pageno,limit);
-                result.success(templatesPage);
-            }else{
-                Page<Templates> templatesPage=TemplateService.me.searchTemplateByCom(type,currentuser.getAgentNumber(),content,pageno,limit);
-                result.success(templatesPage);
-            }
+            Page<Templates> templatesPage=TemplateService.me.searchAllTemplate(type,content.trim(),pageno,limit);
+            result.success(templatesPage);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**搜索模板（配置模板）**/
+    public void searchSettingTemplate(){
+        String content=(getPara("content")!=null)?getPara("content"):"";
+        String type=getPara("type");
+        int pageno=getParaToInt("pageno",1);
+        int limit=getParaToInt("limit",10);
+        Result<Page<Templates>> result=Result.newOne();
+        try{
+            Page<Templates> templatesPage=TemplateService.me.searchSettingTemplate(type,content,pageno,limit);
+            result.success(templatesPage);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }

@@ -143,25 +143,25 @@
 <div class="layui-fluid" style="padding: 0px;">
     <div class="layui-tab">
         <ul class="layui-tab-title" style="color: #1e9fff;background-color: #FFF;border-color:#FFF;">
-            <li class="tabborder layui-this">解算设置</li>
-            <li class="tabborder">坐标系统</li>t
-            <li class="tabborder">平台对接</li>
-            <li class="tabborder">辅助功能</li>
+            <li id="setting0" class="tabborder">解算设置</li>
+            <li id="setting1" class="tabborder">坐标系统</li>
+            <li id="setting2" class="tabborder">平台对接</li>
+            <li id="setting3" class="tabborder">辅助功能</li>
         </ul>
         <div class="layui-tab-content" style="padding: 0px">
-            <div class="layui-tab-item layui-show">
+            <div id="compute" class="layui-tab-item ">
                 <iframe id="iframe_compute" src="" frameborder="0" name="iframe_compute"  onload="this.height=iframe_compute.document.body.scrollHeight"
-                        width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>
+                        width="100%" scrolling="no" frameborder="0" style="height: 2150px"></iframe>
             </div>
-            <div class="layui-tab-item">
+            <div id="locate" class="layui-tab-item">
                 <iframe id="iframe_locate" src="" frameborder="0"  name="iframe_locate" onload="this.height=iframe_locate.document.body.scrollHeight"
                         width="100%" scrolling="no" frameborder="0" style="height: 1600px"></iframe>
             </div>
-            <div class="layui-tab-item">
+            <div id="platform" class="layui-tab-item">
                 <iframe id="iframe_platform" src="" name="iframe_platform" frameborder="0"  onload="this.height=iframe_platform.document.body.scrollHeight"
                         width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>
             </div>
-            <div class="layui-tab-item">
+            <div id="auxiliary" class="layui-tab-item">
                 <iframe id="iframe_auxiliary" src="" frameborder="0" name="iframe_auxiliary" onload="this.height=iframe_auxiliary.document.body.scrollHeight"
                         width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>
             </div>
@@ -179,14 +179,59 @@
 <script>
     var agentnum = "#(agentNum)";
     var machinesn="#(machinedata)";
+    var authority="#(webauthority)";
+    var writeright="#(writeright)";
     var testmodel={};//详细模板数据
     var fastmodel="";//快速设置模板
     src();
     function src() {
-        document.getElementById("iframe_compute").src="/devicelist/stationcompute?machinesn="+machinesn;
-        document.getElementById("iframe_locate").src="/devicelist/stationlocate?machinesn="+machinesn;
-        document.getElementById("iframe_platform").src="/devicelist/stationplatform?machinesn="+machinesn;
-        document.getElementById("iframe_auxiliary").src="/devicelist/stationauxiliary?machinesn="+machinesn;
+                let arr=[];
+                if(authority.indexOf("1")!=-1){
+                    document.getElementById("iframe_compute").src="/devicelist/stationcompute?machinesn="+machinesn;
+                    // let height=document.body.clientHeight+"px";
+                    // if(parent.document.getElementById("iframe_compute")!=null){
+                    //     parent.document.getElementById("iframe_compute").style.height=height;
+                    // }
+                    arr.push(1);
+                }else{
+                    document.getElementById("setting0").style.display="none";
+                }
+                if(authority.indexOf("2")!=-1){
+                    document.getElementById("iframe_locate").src="/devicelist/stationlocate?machinesn="+machinesn;
+                    arr.push(2);
+                }else{
+                    document.getElementById("setting1").style.display="none";
+                }
+                if(authority.indexOf("3")!=-1){
+                    document.getElementById("iframe_platform").src="/devicelist/stationplatform?machinesn="+machinesn;
+                    arr.push(3);
+                }else{
+                    document.getElementById("setting2").style.display="none";
+                }
+                if(authority.indexOf("4")!=-1){
+                    document.getElementById("iframe_auxiliary").src="/devicelist/stationauxiliary?machinesn="+machinesn;
+                    arr.push(4);
+                }else{
+                    document.getElementById("setting3").style.display="none";
+                }
+                switch (arr[0]) {
+                    case 1:
+                        $("#compute").addClass("layui-show");
+                        $("#setting0").addClass("layui-this");
+                        break;
+                    case 2:
+                        $("#locate").addClass("layui-show");
+                        $("#setting1").addClass("layui-this");
+                        break;
+                    case 3:
+                        $("#platform").addClass("layui-show");
+                        $("#setting2").addClass("layui-this");
+                        break;
+                    case 4:
+                        $("#auxiliary").addClass("layui-show");
+                        $("#setting3").addClass("layui-this");
+                        break;
+                }
     }
     layui.config({
         base: '/assets/layuiadmin/'

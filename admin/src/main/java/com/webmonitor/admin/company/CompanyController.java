@@ -14,13 +14,14 @@ import com.webmonitor.core.vo.Result;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.webmonitor.core.model.Response.ERROR_DELETE;
+import static com.webmonitor.core.model.Response.SUCCESS_DELETE;
+
 public class CompanyController extends BaseController {
 
     public void CompanyDetail(){
         String agentNum=getPara("agentNumber");
-        String projectid=getPara("projectid");
         setAttr("agentNum",agentNum);
-        setAttr("projetid",projectid);
         render("CompanyDetail.html");
     }
 
@@ -131,10 +132,11 @@ public class CompanyController extends BaseController {
         Result<String> result=Result.newOne();
         try{
             if(CompanyService.me.deletagentByNum(agentnum)>0){
-                result.success("ok");
+                result.success(SUCCESS_DELETE.getReport());
             }
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
+            result.success(ERROR_DELETE.getReport());
         }
         renderJson(result);
     }

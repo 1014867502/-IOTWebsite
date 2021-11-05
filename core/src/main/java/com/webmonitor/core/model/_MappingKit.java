@@ -28,6 +28,7 @@ public class _MappingKit {
 		arp.addMapping("sys_session", "accessToken", Session.class);
 		arp.addMapping("cache_order", "id", CacheOrder.class);
 		arp.addMapping("update_data", "id", UpdateData.class);
+		arp.addMapping("take_note", "id", TakeNote.class);
 	}
 }
 

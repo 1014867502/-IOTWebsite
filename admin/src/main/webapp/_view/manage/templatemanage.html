@@ -13,10 +13,18 @@
 
     .untreated {
         background-color: #FF5722;
+        color: #FFFF;
+        border: 0;
+        width: 70px;
+        height: 30px;
     }
 
     .treated {
         background-color: #01AAED;
+        color: #FFFF;
+        border: 0;
+        width: 70px;
+        height: 30px;
     }
 
     .normalnotice {
@@ -71,11 +79,53 @@
     !important;
     }
 
-    .little{
+    .little {
         text-align: center;
         width: 200px;
         margin-left: 10%;
-        line-height:40px;
+        line-height: 40px;
+    }
+
+    .layui-btn:hover {
+        opacity: .8;
+        filter: alpha(opacity=80);
+        color: #ffffff;
+        background-color: #1e9fff;
+    }
+
+    .layui-laypage .layui-laypage-curr .layui-laypage-em {
+        position: absolute;
+        left: -1px;
+        top: -1px;
+        padding: 1px;
+        width: 100%;
+        height: 100%;
+        background-color: #1e9fff;
+    }
+
+    .searchbtn {
+        background-color: #FFFFFF;
+        color: #01AAED;
+        border: 1px solid #01AAED;
+        border-radius: 0px 6px 6px 0px;
+    }
+
+    .tableeventbtn {
+        width: 55px;
+        height: 23px;
+        border: 1px solid #01AAED;
+        border-radius: 5px;
+        font-size: 11px;
+        background-color: #FFFFFF;
+        color: #01AAED;
+    }
+
+    .layui-card-header .layui-icon {
+        line-height: unset;
+        position: initial;
+        right: 15px;
+        top: 50%;
+        margin-top: -7px;
     }
 </style>
 
@@ -84,31 +134,36 @@
         <div class="layui-form-item">
             <label class="layui-form-label">账号名</label>
             <div class="layui-input-block">
-                <input style="width: 70%" type="text" name="uAccountNum"  lay-verify="confirmaccount|required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input style="width: 70%" type="text" name="uAccountNum" lay-verify="confirmaccount|required"
+                       placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">昵称</label>
             <div class="layui-input-block">
-                <input style="width: 70%" type="text" name="uRealName" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input style="width: 70%" type="text" name="uRealName" required lay-verify="required"
+                       placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">修改密码</label>
             <div class="layui-input-block">
-                <input style="width: 70%" type="password" name="uPassword" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input style="width: 70%" type="password" name="uPassword" required lay-verify="required"
+                       placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">再次输入密码</label>
             <div class="layui-input-block">
-                <input style="width: 70%" type="password" name="againPassword" required  lay-verify="required|confirmpass" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input style="width: 70%" type="password" name="againPassword" required
+                       lay-verify="required|confirmpass" placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">所属部门</label>
             <div class="layui-input-block">
-                <input style="width: 70%" type="text" name="cDept" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input style="width: 70%" type="text" name="cDept" required lay-verify="required" placeholder="请输入标题"
+                       autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -138,7 +193,7 @@
             </div>
         </div>
 
-        <div class="layui-form-item" >
+        <div class="layui-form-item">
             <div class="layui-input-block">
                 <button id="sumbit" type="button" class="layui-btn" lay-submit lay-filter="formDemo1">提交</button>
                 <button id="reset" type="reset" class="layui-btn">重置</button>
@@ -152,31 +207,36 @@
         <div class="layui-form-item">
             <label class="layui-form-label">账号名</label>
             <div class="layui-input-block">
-                <input id="uaccountnum" style="width: 70%" type="text" name="uAccountNum"  lay-verify="editaccount|required" placeholder="请输入账号" autocomplete="off" class="layui-input">
+                <input id="uaccountnum" style="width: 70%" type="text" name="uAccountNum"
+                       lay-verify="editaccount|required" placeholder="请输入账号" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">昵称</label>
             <div class="layui-input-block">
-                <input id="urealname" style="width: 70%" type="text" name="uRealName" required  lay-verify="required" placeholder="请输入昵称" autocomplete="off" class="layui-input">
+                <input id="urealname" style="width: 70%" type="text" name="uRealName" required lay-verify="required"
+                       placeholder="请输入昵称" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">修改密码</label>
             <div class="layui-input-block">
-                <input id="upassword" style="width: 70%" type="password" name="editPassword"  placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input id="upassword" style="width: 70%" type="password" name="editPassword" placeholder="请输入标题"
+                       autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">再次输入密码</label>
             <div class="layui-input-block">
-                <input id="againpassword" style="width: 70%" type="password" name="againPassword"  lay-verify="confirmeditpass" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input id="againpassword" style="width: 70%" type="password" name="againPassword"
+                       lay-verify="confirmeditpass" placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">所属部门</label>
             <div class="layui-input-block">
-                <input id="cDpet" style="width: 70%" type="text" name="cDept" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input id="cDpet" style="width: 70%" type="text" name="cDept" required lay-verify="required"
+                       placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -200,10 +260,10 @@
         <div id="formprojectedit">
 
         </div>
-        <div class="layui-form-item" >
+        <div class="layui-form-item">
             <div class="layui-input-block">
-                <button  type="button" class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
-                <button  type="reset" class="layui-btn ">重置</button>
+                <button type="button" class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
+                <button type="reset" class="layui-btn ">重置</button>
             </div>
         </div>
     </form>
@@ -214,28 +274,32 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">模板列表</div>
-                <div class="layui-form layui-card-header layuiadmin-card-header-auto">
-                    <div class="layui-form-item" style="text-align: center">
-                        <div class="layui-inline" id="select">
-                            <select id="stats" name="stats" lay-verify="" lay-filter="stats">
-                                <option value="0" selected>全部</option>
-                                <option value="1">模板名称</option>
-                            </select>
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                    <div class="layui-form-item" style="margin: auto">
+                        <div class="layui-inline">
+                            <div id="company" class="xm-select-demo" style="width: 250px"></div>
                         </div>
                         <div class="layui-inline">
-                            <input type="text" class="layui-input" lay-verify="search" name="account" id="account" placeholder=" 请输入查询内容 " >
+                            <div style="display: flex">
+                                <input type="text" class="layui-input"  name="account" id="account"
+                                       placeholder=" 请输入模板名 ">
+                                <button type="button" class="layui-btn searchbtn" lay-submit data-type="reload"
+                                        id="datasumbit" lay-filter="LAY-app-contlist-search">
+                                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="layui-inline">
-                            <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
-                                    id="datasumbit" lay-filter="LAY-app-contlist-search">
-                                <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn" id="delete_template">
+                                <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #FFFFFF;"></i>批量删除模板
                             </button>
                         </div>
-<!--                        <div class="layui-inline">-->
-<!--                            <div style="margin: auto">-->
-<!--                                <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>添加模板</button>-->
-<!--                            </div>-->
-<!--                        </div>-->
+
+                        <!--                        <div class="layui-inline">-->
+                        <!--                            <div style="margin: auto">-->
+                        <!--                                <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>添加模板</button>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -257,25 +321,28 @@
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
 <script type="text/html" id="table-online-state">
     {{ d.type == 1 ? '
-    <button class="layui-btn layui-btn-sm treated">快速设置</button>'
+    <button class="treated">快速设置</button>'
     : '
-    <button class="layui-btn layui-btn-sm untreated">详细设置</button>' }}
+    <button class="untreated">详细设置</button>' }}
 </script>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn tableeventbtn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn tableeventbtn layui-btn-xs" lay-event="del">删除</a>
 </script>
 
 <script>
 
     //var projectid = window.location.hash.substr(1);
     var projectid = "#(projetid)";
+    var userid = "#(userid)";
+    var agentnum = "#(agentnum)";
+    var webpremission="#(webpremission)";
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'table', 'templatemanage','drawer']);
+    }).use(['index', 'table', 'templatemanage', 'drawer']);
 </script>
 </body>
 </html>

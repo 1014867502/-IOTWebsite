@@ -273,14 +273,14 @@
             <label class="layui-form-label">查询命令</label>
             <div class="layui-input-block">
                 <input id="sensor_cmd" style="width: 70%" type="text" name="cmd" required
-                       lay-verify="required" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
+                       lay-verify="required" placeholder="请输入查询命令" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">基准值</label>
             <div class="layui-input-block">
                 <input id="sensor_ref" style="width: 70%" type="text" name="ref" required
-                       lay-verify="required" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
+                       lay-verify="required" placeholder="请输入基准值" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -343,6 +343,7 @@
                     <button id="savemodel" type="button" class="layui-btn">保存当前模板</button>
                     <button id="reset" type="button" class="layui-btn ">刷新</button>
                 </div>
+                <div id="errormsg" style="color: #cc0000"></div>
             </div>
         </form>
     </div>

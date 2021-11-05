@@ -1204,4 +1204,58 @@ public abstract class StringUtils {
 		return m.matches();
 	}
 
+	public static boolean isNumeric(String str) {
+		Pattern pattern = Pattern.compile("[0-9]*");
+		return pattern.matcher(str).matches();
+	}
+
+
+	// 判断一个字符串是否含有数字
+	public static boolean HasDigit(String content) {
+		boolean flag = false;
+		Pattern p = Pattern.compile(".*\\d+.*");
+		Matcher m = p.matcher(content);
+		if (m.matches()) {
+			flag = true;
+		}
+		return flag;
+	}
+
+
+	//截取数字
+	public static String getNumbers(String content) {
+		Pattern pattern = Pattern.compile("\\d+");
+		Matcher matcher = pattern.matcher(content);
+		while (matcher.find()) {
+			return matcher.group(0);
+		}
+		return "";
+	}
+
+	// 截取非数字
+	public static String splitNotNumber(String content) {
+		Pattern pattern = Pattern.compile("\\D+");
+		Matcher matcher = pattern.matcher(content);
+		while (matcher.find()) {
+			return matcher.group(0);
+		}
+		return "";
+	}
+
+	// 获取字符串数字
+	public static String[] splitNumber(String content) {
+		Pattern pattern = Pattern.compile("\\D+");
+		String[] numbers=pattern.split(content);
+		return numbers;
+	}
+
+	// 获取字符串非数字
+	public static String[] splitSign(String content) {
+		Pattern pattern = Pattern.compile("\\d+");
+		String[] signs=pattern.split(content);
+		return signs;
+	}
+
+
+
 }

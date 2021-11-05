@@ -1,4 +1,4 @@
-layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], function (exports) {
+layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func','station_compute_func'], function (exports) {
     var $ = layui.$
         , setter = layui.setter
         , admin = layui.admin
@@ -7,6 +7,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
         , table = layui.table
         , table2 = layui.table
         ,fastsettingfunc=layui.station_fastsetting_func
+        ,computefunc=layui.station_compute_func
         , element = layui.element;
 
 
@@ -19,9 +20,11 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
     var formlist = ["basestation", "devicestatus", "basefilereturn", "basechange", "statusresult", "basedownload", "observedata","timerecord"];
     var beforeform;
     var beforemark;
+    var beforemark2;
     var compute = 0;
     var station = 0;
     var mark = 0;
+    var mark2=1;
     var doublebase = false;//双基站开关
     var downloadsource = 0;//基站数据来源的数据来源单选
     var layerindex;
@@ -101,10 +104,10 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
         showform(compute, station);
     });
     form.on('select(rawRate)', function(data){
-        curdecive.rawMode=data.value;
+        curdecive.rawRate=data.value;
     });
     form.on('select(recordInterval)', function(data){
-        curdecive.rawMode=data.value;
+        curdecive.recordInterval=data.value;
     });
     form.on('radio(mark)', function (data) {
         mark = data.value;
@@ -144,8 +147,48 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
         }
 
     });
+    form.on('radio(mark2)', function (data) {
+        mark2 = data.value;
+        if(beforemark2==null){
+            if(mark2==1){
+                let lat=$("#ecefLat").val();
+                let lon=$("#ecefLon").val();
+                let height=$("#ecefHeight").val();
+                computefunc.altermark2(mark2);
+                computefunc.computemark2(lat,lon,height,mark2);
+                beforemark2=1;
+            }else{
+                let x=$("#coordinatesX").val();
+                let y=$("#coordinatesY").val();
+                let z=$("#coordinatesZ").val();
+                computefunc.altermark2(mark2);
+                computefunc.computemark2(x,y,z,mark2);
+                beforemark2=0;
+            }
+        }else{
+            if(mark2==1&&beforemark2!=mark2){
+                let lat=$("#ecefLat").val();
+                let lon=$("#ecefLon").val();
+                let height=$("#ecefHeight").val();
+                computefunc.altermark2(mark2);
+                computefunc.computemark2(lat,lon,height,mark2);
+                beforemark2=1;
+            }
+            else if(mark2!=1&&beforemark!=mark2){
+                let x=$("#coordinatesX").val();
+                let y=$("#coordinatesY").val();
+                let z=$("#coordinatesZ").val();
+                computefunc.altermark2(mark2);
+                computefunc.computemark2(x,y,z,mark2);
+                beforemark2=0;
+            }
+        }
+    });
+
     form.on('radio(downloadsource)', function (data) {
         downloadsource = data.value;
+        curdecive.ntrIpBase=data.value;
+        device.ntrIpBase=data.value;
         fastsettingfunc.altersource(doublebase, downloadsource);
         listening();
     })
@@ -296,6 +339,13 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
                 $("#networkPort").val(device.networkPort);
                 $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
                 let ntriparg=device.ntripArg;
+                if(writeright==0){
+                    $("#fastsumbit").prop("disabled",true);
+                    $("#errormsg").html("修改权限被限制");
+                    $("#fastsumbit").addClass("layui-btn-disabled");
+                    $("#savemodel").prop("disabled",true);
+                    $("#savemodel").addClass("layui-btn-disabled");
+                }
                 if(ntriparg!=""&&ntriparg!=null){
                     let arg=ntriparg.split('|');
                     $("#rawntripaddress").val(arg[0]);
@@ -318,6 +368,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
                     $("input[name='networkAddress']").val(device.networkAddress);
                     $("input[name='networkPort']").val(device.networkPort);
                     doublebase=true;
+                    debugger
                     if(device.ntrIpBase>0){
                         $("input[name=downloadsource][value='1']").prop("checked",true);
                         fastsettingfunc.altersource(doublebase,"1");
@@ -559,22 +610,23 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
                             },
                             success: function (res) {
                                 let data=res.data
-                                if(data=="成功"){
-                                    $.ajax({
-                                        url: '/devicelist/sendorder',
-                                        data: {
-                                            order: "",
-                                            machinesn: sn
-                                        },
-                                        success:function(res){
+                                if(data=="连接成功"){
+                                //     $.ajax({
+                                //         url: '/devicelist/sendorder',
+                                //         data: {
+                                //             order: "",
+                                //             machinesn: sn
+                                //         },
+                                //         success:function(res){
                                             if(res.data=="连接成功"||connected){
                                                 connected=true;
                                                 getcurlocal(machinesn);
                                                 mounted();
                                             }
-                                        }
-                                    })
-                                }else{
+                                    //     }
+                                    // })
+                                }
+                                else{
                                    layer.msg("连接服务器出错");
                                     $("#cover").css('display','none'); //显示遮罩层
                                     parent.layer.close(index);

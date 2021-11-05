@@ -13,6 +13,33 @@ public class StaffDataEntity {
     private String iAccountType;
     private String groupAssemble;
     private String accounttime;
+    private String appPermission;
+    private String webPermission;
+    private int writePermission;
+
+    public int getWritePermission() {
+        return writePermission;
+    }
+
+    public void setWritePermission(int writePermission) {
+        this.writePermission = writePermission;
+    }
+
+    public String getAppPermission() {
+        return appPermission;
+    }
+
+    public void setAppPermission(String appPermission) {
+        this.appPermission = appPermission;
+    }
+
+    public String getWebPermission() {
+        return webPermission;
+    }
+
+    public void setWebPermission(String webPermission) {
+        this.webPermission = webPermission;
+    }
 
     public String getRoleType() {
         return RoleType;

@@ -57,12 +57,36 @@ public abstract class BaseAgentData<M extends BaseAgentData<M>> extends Model<M>
 		return getStr("createTime");
 	}
 
-	public void setProGroupId(java.lang.Integer ProGroupId) {
-		set("proGroupId", ProGroupId);
+	public void setProGroupId(java.lang.Integer proGroupId) {
+		set("proGroupId", proGroupId);
 	}
 	
 	public java.lang.Integer getProGroupId() {
 		return getInt("proGroupId");
+	}
+
+	public void setMainModel(java.lang.String mainModel) {
+		set("mainModel", mainModel);
+	}
+	
+	public java.lang.String getMainModel() {
+		return getStr("mainModel");
+	}
+
+	public void setOrderNumber(java.lang.String orderNumber) {
+		set("orderNumber", orderNumber);
+	}
+	
+	public java.lang.String getOrderNumber() {
+		return getStr("orderNumber");
+	}
+
+	public void setProductCode(java.lang.String productCode) {
+		set("productCode", productCode);
+	}
+	
+	public java.lang.String getProductCode() {
+		return getStr("productCode");
 	}
 
 }

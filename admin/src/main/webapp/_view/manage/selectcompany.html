@@ -24,6 +24,7 @@
             margin-bottom: 30px;
             border-radius: 2px;
             background-color: #fff;
+            box-shadow: 0 1px 2px 0 #fff;
         }
 
         .card-body-scrollbar {
@@ -83,13 +84,15 @@
         }
 
         .projects {
-            height: 100px;
+            text-align: left;
             width: 100%;
             display: flex;
+            margin-top: 10px;
         }
 
         .projectname {
-            font-size: 25px;
+            text-align: left;
+            font-size: 20px;
             font-weight: bold;
         }
 
@@ -101,12 +104,21 @@
         .cardbody {
             transition: bottom .2s linear 0s;
             bottom: 0px;
+            margin: 15px;
+            width: 400px;
+            height: 200px;
+            border: 1px solid #E6E6E6;
+            border-radius: 8px;
         }
 
         .cardbody:hover {
             box-shadow: 2px 1px 10px #cbc8c8;
             position: relative;
             bottom: 2px;
+        }
+
+        .layui-card:last-child {
+            margin-bottom: 30px;
         }
     </style>
 </head>
@@ -117,10 +129,11 @@
         <div class="layui-form-item">
             <label class="layui-form-label">供销商名称</label>
             <div class="layui-input-block">
-                <input style="width: 70%" type="text" name="title" required  lay-verify="required|editaccount" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input style="width: 70%" type="text" name="title" required lay-verify="required|editaccount"
+                       placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item" >
+        <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="button" id="btn1" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
             </div>
@@ -130,36 +143,28 @@
 
 
 <div class="layui-fluid" style="padding: 0px">
-    <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
-        <div style="width:100%" id="list">
-            <div class="layui-card" style="display: flex">
-                <ul style="display: flex ;margin: auto;">
-<!--                    <li class="little">-->
-<!--                        <div>供销商数量</div>-->
-<!--                        <div id="companycount" style="font-size: 20px"></div>-->
-<!--                    </li>-->
-                </ul>
-                <div style="margin-right: 9%">
-                    <div style="margin: auto;display: flex;margin-top: 10px;margin-bottom: 10px;">
-                        <button type="button" class="layui-btn" id="add_device"><img
-                                src="/assets/images/icon_add_device_28.png"/>添加供销商
-                        </button>
+        <div class="layui-col-md12">
+            <div class="layui-card" style="margin: 15px">
+                <div class="layui-card-header" style="font-size: 18px;height: 50px;display: flex">
+                    <div>供销商列表</div>
+                    <div class="layui-card" style="display: flex;width: 80%;margin: auto;height: 100%">
+                        <div style="margin:auto">
+                            <div style="margin: auto;display: flex;margin-top: 10px;margin-bottom: 10px;">
+                                <button type="button" class="layui-btn" id="add_device"><img
+                                        src="/assets/images/icon_add_device_28.png"/>添加供销商
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div style="margin-top: 13px;margin-right: 10%;">
-                    <div id="return" style="font-weight: bold;font-size: 24px;">
-                        <a lay-href="javascript:history.go(-1)"  lay-tips="返回上一页" lay-direction="2"><i class="layui-icon layui-icon-return" style="font-size: 30px; color: #1E9FFF;"></i></a>
+                <div class="layui-card-body">
+                    <div style="text-align: center;display: flex;justify-content: center;align-items: center;flex-wrap: wrap;
+                            width: 90%;margin-right: 5%;margin-left: 5%;" id="list2">
                     </div>
                 </div>
             </div>
-        </div>
     </div>
-    <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
-        <div style="width:1000px;margin-top: 20px;" id="list2">
-
-        </div>
-    </div>
-    <div div class="layer-footer" style="position: fixed; bottom: 0;background-color:#fffefe;width:100%;height:50px">
+    <div class="layer-footer" style="position: fixed; bottom: 0;background-color:#fffefe;width:100%;height:50px">
         <div style="text-align: center;" id="demo7"></div>
     </div>
 </div>
@@ -170,13 +175,13 @@
 <script src="/assets/lib/loadlanguage.js"></script>
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script>
-    var identity="#(identity)";
-    var projetid="#(projetid)";
+    var identity = "#(identity)";
+    var projetid = "#(projetid)";
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index','selectcompany','drawer']);
+    }).use(['index', 'selectcompany', 'drawer']);
 </script>
 </body>
 </html>

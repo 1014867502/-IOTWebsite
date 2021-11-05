@@ -225,7 +225,7 @@
                         <div class="layui-form-item  fastinput">
                             <label class="layui-form-label">采样频率</label>
                             <div class="layui-input-block">
-                                <select id="selectList" name="rawRate" lay-verify="required">
+                                <select id="selectList" name="rawRate" lay-filter="rawRate" lay-verify="required">
                                     <option value="1000">1s</option>
                                     <option value="5000">5s</option>
                                     <option value="10000">10s</option>
@@ -268,10 +268,11 @@
             </div>
             <div class="layui-form-item" style="padding-top: 30px;text-align: center">
                 <div class="layui-input-block" style="margin-left: 0px!important;">
-                    <button id="computesumbit" type="button" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-                    <button id="savemodel" type="button" class="layui-btn">保存为模板</button>
+                        <button id="computesumbit" type="button" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                        <button id="savemodel" type="button" class="layui-btn">保存为模板</button>
                     <button id="reset" type="button" class="layui-btn ">刷新</button>
                 </div>
+                <div id="errormsg" style="color: #cc0000"></div>
             </div>
         </form>
     </div>

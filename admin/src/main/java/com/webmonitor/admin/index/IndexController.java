@@ -48,7 +48,8 @@ public class IndexController extends BaseController {
         StaffData currentuser= StaffService.me.getStaffByName(useid);
         setCookie(IndexService.me.accessUserId,currentuser.getId().toString(),24*60*60,true);
         setAttr("userid", currentuser.getUAccountNum());
-
+        setAttr("agentnum",currentuser.getAgentNumber());
+        setAttr("writeright",currentuser.getSetPermission());
 //        String projetid = getCookie(IndexService.me.accessProjectId);
 //        if (Tools.isEmpty(projetid)){
 //            projetid = list.size()>0?list.get(0).getProjId():"";
@@ -67,6 +68,9 @@ public class IndexController extends BaseController {
     }
 
     public void projectindex(){
+        String useid=getLoginAccount().getUserName();
+        StaffData currentuser= StaffService.me.getStaffByName(useid);
+        setAttr("writeright",currentuser.getSetPermission());
         render("projectindex.html");
     }
 

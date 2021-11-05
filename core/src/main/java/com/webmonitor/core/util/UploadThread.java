@@ -75,7 +75,7 @@ public class UploadThread{
                         String value="";
                         String[] values=line.split(",");
                         for(int i=0;i<values.length;i++){
-                            if(i>0){
+                            if(i>1){
                                 value+=",'"+values[i].replace('/','-')+"'";
                                 if(i==3&&values.length==4){
 //                                    if(values[i].length()<10){
@@ -86,18 +86,21 @@ public class UploadThread{
                             }
                             else{
                                 if(i==0){
+                                    value+="'"+values[i].replace('/','-')+"'";
+                                }
+                                if(i==1){
                                     String sql="select agentNumber from agent_table where agentName like '%"+values[i]+"%'";
                                     AgentTable result= AgentTable.dao.findFirst(sql);
                                     if(result==null){
-                                        return "公司名不存在";
+                                        return values[i]+" 公司名不存在";
                                     }else{
-                                        values[i]=result.getAgentNumber();
+                                        value+=",'"+result.getAgentNumber()+"'";
                                     }
                                 }
-                                value+="'"+values[i].replace('/','-')+"'";
+
                             }
                         }
-                        String sql="REPLACE INTO  agent_data (agentNumber,createTime,machineName,machineSerial,mainModel,proGroupId)" +
+                        String sql="REPLACE INTO  agent_data (orderNumber,agentNumber,productCode,machineName,machineSerial,createTime,mainModel,proGroupId)" +
                                 "VALUES("+value+ ",'0')";
                         Db.query(sql);
                         excutecount++;

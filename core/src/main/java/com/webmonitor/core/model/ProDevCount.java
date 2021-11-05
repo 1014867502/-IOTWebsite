@@ -5,6 +5,24 @@ public class ProDevCount {
     private int sum;
     private int outcount;
     private int oncount;
+    private int unprojcount;
+    private int newcount;
+
+    public int getUnprojcount() {
+        return unprojcount;
+    }
+
+    public void setUnprojcount(int unprojcount) {
+        this.unprojcount = unprojcount;
+    }
+
+    public int getNewcount() {
+        return newcount;
+    }
+
+    public void setNewcount(int newcount) {
+        this.newcount = newcount;
+    }
 
     public int getSum() {
         return sum;

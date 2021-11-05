@@ -47,6 +47,8 @@ public enum RoleType {
             case 2:
                 name="超级管理员";
                 break;
+            case 3:
+                name="安装测试人员";
         }
         return name;
     }

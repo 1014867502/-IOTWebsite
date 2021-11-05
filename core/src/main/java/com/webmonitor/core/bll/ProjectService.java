@@ -6,6 +6,7 @@ import com.webmonitor.core.dal.ProjectMysqlDAL;
 import com.webmonitor.core.idal.IProject;
 import com.webmonitor.core.model.AgentData;
 import com.webmonitor.core.model.ProDevCount;
+import com.webmonitor.core.model.ProjectPage;
 import com.webmonitor.core.model.ProjectsData;
 import com.webmonitor.core.model.userbase.BaseProjects;
 
@@ -42,7 +43,7 @@ public class ProjectService {
     }
 
     /**根据用户id获取对应的项目**/
-    public Page<Object> getProjectsById(String userid,int pageno,int limit){
+    public Page<BaseProjects> getProjectsById(String userid,int pageno,int limit){
         return dal.getProjectsById(userid,pageno,limit);
     }
 
@@ -59,6 +60,11 @@ public class ProjectService {
     /**根据用户id获取对应的项目列表**/
     public List<BaseProjects> getProjectlistById(String userid){
         return dal.getProjectlistById(userid);
+    }
+
+    /**根据用户id查找对应的项目列表**/
+    public Page<BaseProjects> seekProjectsById(String userid,String content,int pageno,int limit){
+        return dal.seekProjectsById(userid, content, pageno, limit);
     }
 
 
@@ -86,7 +92,29 @@ public class ProjectService {
         proDevCount.setSum(dal.getProDevCountById(projectid));
         proDevCount.setOncount(dal.getProDevOnCountById(projectid));
         proDevCount.setOutcount(dal.getProDevOutCountById(projectid));
+        proDevCount.setNewcount(dal.getProDevNewCountById(projectid));
         return proDevCount;
+    }
+
+
+    /**根据公司编号获取旗下项目信息**/
+    public Page<ProjectPage> getProjectPageByNum(String agentnum,int pageno,int limit){
+        return dal.getProjectPageByNum(agentnum,pageno,limit);
+    }
+
+
+
+
+    /**根据项目名找项目**/
+    public Page<ProjectPage> searchProjectPageByName(String content,String agentnum,int pageno,int limit){
+        return dal.searchProjectPageByNum(content, agentnum, pageno, limit);
+    }
+
+    /**批量删除项目**/
+    public void deleteProjectList(List<ProjectPage> projectPageList){
+        for(int i=0;i<projectPageList.size();i++){
+            dal.deleteProject(projectPageList.get(i).getProjectid());
+        }
     }
 
 }

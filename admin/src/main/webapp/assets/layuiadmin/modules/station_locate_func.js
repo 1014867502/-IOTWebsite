@@ -17,16 +17,27 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         basehidepara=basepara;
         fourhidepara=four;
         let jsondata={};
-        let dstturn = (test.coordcvt_enable != "on") ? 0 : 1;
-        let seventurn = (test.coordcvt_seven_use != "on") ? 0 : 1;
-        let fourturn = (test.coordcvt_four_use != "on") ? 0 : 1;
+        let dstturn = (test.coordcvt_enable != 1) ? 0 : 1;
+        let seventurn = (test.coordcvt_seven_use != 1) ? 0 : 1;
+        let fourturn = (test.coordcvt_four_use != 1) ? 0 : 1;
         jsondata.coordcvtEnabled = dstturn;
-        jsondata.coordcvtDstDatum = test.coordcvt_dst_datum_select + "|" + test.coordvt_dst_datum_da + "|" + test.coordvt_dst_datum_df;
-        jsondata.coordcvtProjParam = test.corrdcvt_proj_mode_select + "|" + test.coordvt_proj_centralmeridian + "|" + test.coordvt_proj_scale + "|" + test.coordvt_proj_north +
-            "|" + test.coordvt_proj_east + "|" + test.coordvt_proj_height + "|" + test.coordvt_proj_lat + basehidepara;
-        jsondata.coordcvtSevenParam = seventurn + "|" + test.coordcvt_seven_tx + "|" + test.coordcvt_seven_ty + "|" + test.coordcvt_seven_tz + "|" +
-            test.coordcvt_seven_rx + "|" + test.coordcvt_seven_ry + "|" + test.coordcvt_seven_rz + "|" + test.coordcvt_seven_scale;
-        jsondata.coordcvtFourParam = fourturn + "|" + test.coordcvt_four_tx + "|" + test.coordvt_four_ty + "|" + test.coordvt_four_rt + "|" + test.coordvt_four_scale + fourhidepara;
+        if(dstturn!=0){
+            jsondata.coordcvtDstDatum = test.coordcvt_dst_datum_select + "|" + test.coordvt_dst_datum_da + "|" + test.coordvt_dst_datum_df;
+            jsondata.coordcvtProjParam = test.corrdcvt_proj_mode_select + "|" + test.coordvt_proj_centralmeridian + "|" + test.coordvt_proj_scale + "|" + test.coordvt_proj_north +
+                "|" + test.coordvt_proj_east + "|" + test.coordvt_proj_height + "|" + test.coordvt_proj_lat + basehidepara;
+        }
+        if(seventurn!=0){
+            jsondata.coordcvtSevenParam = seventurn + "|" + test.coordcvt_seven_tx + "|" + test.coordcvt_seven_ty + "|" + test.coordcvt_seven_tz + "|" +
+                test.coordcvt_seven_rx + "|" + test.coordcvt_seven_ry + "|" + test.coordcvt_seven_rz + "|" + test.coordcvt_seven_scale;
+        }else{
+            jsondata.coordcvtSevenParam = "0|" + test.coordcvt_seven_tx + "|" + test.coordcvt_seven_ty + "|" + test.coordcvt_seven_tz + "|" +
+                test.coordcvt_seven_rx + "|" + test.coordcvt_seven_ry + "|" + test.coordcvt_seven_rz + "|" + test.coordcvt_seven_scale;
+        }
+        if(fourturn!=0){
+            jsondata.coordcvtFourParam = fourturn + "|" + test.coordcvt_four_tx + "|" + test.coordvt_four_ty + "|" + test.coordvt_four_rt + "|" + test.coordvt_four_scale + fourhidepara;
+        }else{
+            jsondata.coordcvtFourParam =  "0|" + test.coordcvt_four_tx + "|" + test.coordcvt_four_ty + "|" + test.coordcvt_four_rotate + "|" + test.coordcvt_four_scale + fourhidepara;
+        }
         return jsondata;
     }
 
@@ -40,6 +51,17 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     $("#coordcvt_dst_datum_select").val(coordcvt_dst[0]);
                     $("#coordvt_dst_datum_da").val(coordcvt_dst[1]);
                     $("#coordvt_dst_datum_df").val(coordcvt_dst[2]);
+                    if(coordcvt_dst[0]!="CUSTOM"){
+                        $('#coordvt_dst_datum_da').attr('disabled',true);
+                        $('#coordvt_dst_datum_df').attr('disabled',true);
+                        $("#coordvt_dst_datum_da").addClass('layui-disabled');
+                        $('#coordvt_dst_datum_df').addClass('layui-disabled');
+                    }else{
+                        $('#coordvt_dst_datum_da').attr('disabled',false);
+                        $('#coordvt_dst_datum_df').attr('disabled',false);
+                        $("#coordvt_dst_datum_da").removeClass('layui-disabled');
+                        $('#coordvt_dst_datum_df').removeClass('layui-disabled');
+                    }
                 }
 
                 /*投影参数*/
@@ -62,7 +84,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     $("#coordcvt_seven_ty").val(coordvt_seven[2]);
                     $("#coordcvt_seven_tz").val(coordvt_seven[3]);
                     $("#coordcvt_seven_rx").val(coordvt_seven[4]);
-                    $("#coordcvt_sevent_ry").val(coordvt_seven[5]);
+                    $("#coordcvt_seven_ry").val(coordvt_seven[5]);
                     $("#coordcvt_seven_rz").val(coordvt_seven[6]);
                     $("#coordcvt_seven_scale").val(coordvt_seven[7]);
                 }
@@ -82,35 +104,35 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     var projnorth="<label class=\"layui-form-label  \">北加常数</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_north' type=\"text\" name=\"coordvt_proj_north\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_proj_north' type=\"text\" name=\"coordvt_proj_north\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入北加常数\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n";
 
     var projeast="<label class=\"layui-form-label  \">东加常数</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_east' type=\"text\" name=\"coordvt_proj_east\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_proj_east' type=\"text\" name=\"coordvt_proj_east\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入东加常数\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n";
 
     var projlat="<label class=\"layui-form-label  \">基准纬度</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_lat' type=\"text\" name=\"coordvt_proj_lat\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_proj_lat' type=\"text\" name=\"coordvt_proj_lat\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入基准纬度\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n";
 
     var projheight="<label class=\"layui-form-label  \">投影高</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_height' type=\"text\" name=\"coordvt_proj_height\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_proj_height' type=\"text\" name=\"coordvt_proj_height\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入投影高\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n";
 
     var projscale="<label class=\"layui-form-label  \">投影比例尺</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_scale' type=\"text\" name=\"coordvt_proj_scale\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_proj_scale' type=\"text\" name=\"coordvt_proj_scale\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入比例尺\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n"
@@ -127,7 +149,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"coordcvt_dst_datum_select\" lay-filter='datumselect' name=\"coordcvt_dst_datum_select\" lay-verify=\"required\">\n" +
         "                                        <option value=\"WGS84\">WGS84</option>\n" +
-        "                                        <option value=\"北京54\">北京54</option>\n" +
+        "                                        <option value=\"BEIJING54\">北京54</option>\n" +
         "                                        <option value=\"XIAN80\">西安80</option>\n" +
         "                                        <option value=\"CGCS2000\">CGCS2000</option>\n" +
         "                                        <option value=\"CUSTOM\">自定义</option>\n" +
@@ -137,7 +159,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">长半轴</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_dst_datum_da' type=\"text\" name=\"coordvt_dst_datum_da\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_dst_datum_da' type=\"text\" name=\"coordvt_dst_datum_da\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入长半轴\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -145,7 +167,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">扁率倒数</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_dst_datum_df' type=\"text\" name=\"coordvt_dst_datum_df\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_dst_datum_df' type=\"text\" name=\"coordvt_dst_datum_df\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入端口\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -173,7 +195,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">中央子午线</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_centralmeridian' type=\"text\" name=\"coordvt_proj_centralmeridian\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_proj_centralmeridian' type=\"text\" name=\"coordvt_proj_centralmeridian\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入中央子午线\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -181,7 +203,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div id='projnorth' class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">北加常数</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_north' type=\"text\" name=\"coordvt_proj_north\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_proj_north' type=\"text\" name=\"coordvt_proj_north\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入北加常数\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -191,7 +213,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div id='projeast' class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">东加常数</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_east' type=\"text\" name=\"coordvt_proj_east\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_proj_east' type=\"text\" name=\"coordvt_proj_east\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入东加常数\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -199,7 +221,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div id='projscale' class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">投影比例尺</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_scale' type=\"text\" name=\"coordvt_proj_scale\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_proj_scale' type=\"text\" name=\"coordvt_proj_scale\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入比例尺\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -207,7 +229,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div id='projlat' class=\"layui-form-item  fastinput\">\n" +
         "                               <label class=\"layui-form-label  \">基准纬度</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_lat' type=\"text\" name=\"coordvt_proj_lat\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_proj_lat' type=\"text\" name=\"coordvt_proj_lat\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入基准纬度\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -217,7 +239,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div id='projheight' class=\"layui-form-item  fastinput\">\n" +
         "                               <label class=\"layui-form-label  \">投影高</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_proj_height' type=\"text\" name=\"coordvt_proj_height\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordvt_proj_height' type=\"text\" name=\"coordvt_proj_height\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入投影高\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -264,7 +286,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">△X</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordcvt_seven_tx' type=\"text\" name=\"coordcvt_seven_tx\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordcvt_seven_tx' type=\"text\" name=\"coordcvt_seven_tx\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -272,7 +294,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">△Y</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordcvt_seven_ty' type=\"text\" name=\"coordcvt_seven_ty\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordcvt_seven_ty' type=\"text\" name=\"coordcvt_seven_ty\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -282,7 +304,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">△Z</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordcvt_seven_tz' type=\"text\" name=\"coordcvt_seven_tz\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordcvt_seven_tz' type=\"text\" name=\"coordcvt_seven_tz\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -290,7 +312,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">△α(秒)</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordcvt_seven_rx' type=\"text\" name=\"coordcvt_seven_rx\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordcvt_seven_rx' type=\"text\" name=\"coordcvt_seven_rx\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -298,7 +320,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">△β(秒)</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordcvt_seven_ry' type=\"text\" name=\"coordcvt_seven_ry\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordcvt_seven_ry' type=\"text\" name=\"coordcvt_seven_ry\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -308,7 +330,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">△γ(秒)</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordcvt_seven_rz' type=\"text\" name=\"coordcvt_seven_rz\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordcvt_seven_rz' type=\"text\" name=\"coordcvt_seven_rz\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -316,7 +338,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">△比例尺(ppm)</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordcvt_seven_scale' type=\"text\" name=\"coordcvt_seven_scale\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordcvt_seven_scale' type=\"text\" name=\"coordcvt_seven_scale\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入比例尺\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -327,7 +349,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">x平移</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordcvt_four_tx' type=\"text\" name=\"coordcvt_four_tx\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordcvt_four_tx' type=\"text\" name=\"coordcvt_four_tx\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -335,7 +357,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">y平移</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordcvt_four_ty' type=\"text\" name=\"coordvt_four_ty\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordcvt_four_ty' type=\"text\" name=\"coordvt_four_ty\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -345,7 +367,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">旋转</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordcvt_four_rotate' type=\"text\" name=\"coordvt_four_rt\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordcvt_four_rotate' type=\"text\" name=\"coordvt_four_rt\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -353,7 +375,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">缩放</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordcvt_four_scale' type=\"text\" name=\"coordvt_four_scale\" required lay-verify=\"required\"\n" +
+        "                                    <input id='coordcvt_four_scale' type=\"text\" name=\"coordvt_four_scale\" required lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +

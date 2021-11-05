@@ -102,7 +102,31 @@ public abstract class BaseStaffData<M extends BaseStaffData<M>> extends Model<M>
 	}
 	
 	public java.lang.String getAccountTime() {
-		return get("AccountTime");
+		return getStr("AccountTime");
+	}
+
+	public void setAppPermission(java.lang.String appPermission) {
+		set("appPermission", appPermission);
+	}
+	
+	public java.lang.String getAppPermission() {
+		return getStr("appPermission");
+	}
+
+	public void setWebPermission(java.lang.String webPermission) {
+		set("webPermission", webPermission);
+	}
+	
+	public java.lang.String getWebPermission() {
+		return getStr("webPermission");
+	}
+
+	public void setSetPermission(java.lang.Integer setPermission) {
+		set("setPermission", setPermission);
+	}
+	
+	public java.lang.Integer getSetPermission() {
+		return getInt("setPermission");
 	}
 
 }

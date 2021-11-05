@@ -37,7 +37,7 @@ public interface IStaffData {
 
     /**根据条件查询用户
      * @return**/
-    Page<StaffDataEntity> searchCustomByParam(String content,String userid,String agentnum, String roletype, int pageno, int limit);
+    Page<StaffDataEntity> searchCustomByParam(String content,String agentnum,int pageno, int limit);
 
      /**根据公司编号返回用户**/
      Page<StaffDataEntity> getCustomByComId(String agentnum,String userid,int pageno,int limit);

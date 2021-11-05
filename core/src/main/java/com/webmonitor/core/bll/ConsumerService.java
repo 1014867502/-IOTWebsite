@@ -40,34 +40,33 @@ public class ConsumerService {
         List<AgentTable> agentTables=new ArrayList<>();
         try{
             StaffData staffData=StaffService.me.getStaffByName(Name);
-            if(staffData.getGroupAssemble().equals("all")){
                 Record record=new Record();
                 AgentTable agentTable=new AgentTable();
-                record= Db.findFirst("SELECT a.* FROM agent_table a,projects_data b where a.agentNumber=b.agentNumber and a.agentNumber='"+staffData.getAgentNumber()+"'");
+                record= Db.findFirst("SELECT a.* FROM agent_table a where a.agentNumber='"+staffData.getAgentNumber()+"'");
                 agentTable.setId(record.getInt("id"));
                 agentTable.setAgentName(record.getStr("agentName"));
                 agentTable.setAgentNumber(record.getStr("agentNumber"));
                 agentTables.add(agentTable);
-            }else{
-                String[] projects=staffData.getGroupAssemble().split("@");
-                for(int i=0;i<projects.length;i++){
-                    Record record=new Record();
-                    AgentTable agentTable=new AgentTable();
-                    record= Db.findFirst("SELECT a.* FROM agent_table a,projects_data b where a.agentNumber=b.agentNumber and b.proGroupId="+projects[i]);
-                    agentTable.setId(record.getInt("id"));
-                    agentTable.setAgentName(record.getStr("agentName"));
-                    agentTable.setAgentNumber(record.getStr("agentNumber"));
-                    if(agentTables.isEmpty()){
-                        agentTables.add(agentTable);
-                    }else{
-                        for(int k=0;k<agentTables.size();k++){
-                            if(!agentTable.getAgentName().equals(agentTables.get(i).getAgentName())){
-                                agentTables.add(agentTable);
-                            }
-                        }
-                    }
-                }
-            }
+//            else{
+//                String[] projects=staffData.getGroupAssemble().split("@");
+//                for(int i=0;i<projects.length;i++){
+//                    Record record=new Record();
+//                    AgentTable agentTable=new AgentTable();
+//                    record= Db.findFirst("SELECT a.* FROM agent_table a,projects_data b where a.agentNumber=b.agentNumber and b.proGroupId="+projects[i]);
+//                    agentTable.setId(record.getInt("id"));
+//                    agentTable.setAgentName(record.getStr("agentName"));
+//                    agentTable.setAgentNumber(record.getStr("agentNumber"));
+//                    if(agentTables.isEmpty()){
+//                        agentTables.add(agentTable);
+//                    }else{
+//                        for(int k=0;k<agentTables.size();k++){
+//                            if(!agentTable.getAgentName().equals(agentTables.get(i).getAgentName())){
+//                                agentTables.add(agentTable);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
         }catch (Exception e){
             System.out.println(e.getMessage());

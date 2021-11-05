@@ -26,15 +26,6 @@ public class CompanyAdminService {
         public String searchOutDeviceByParam(String agentnum,String content, int pageno, int limit, String type, String role){
             String sql="";
             switch(type){
-                case "0":
-                    if(!content.isEmpty()&&content!=null){
-                        String sn1 = "%" + content + "%";
-                        sql = " from agent_data" +
-                                " where (proGroupId is null or proGroupId=0) and machineSerial like '" + sn1 + "' and agentNumber="+agentnum;
-                    }else{
-                        sql=" from agent_data where (proGroupId is null or proGroupId=0) and agentNumber="+agentnum;
-                    }
-                    break;
                 case "1":
                     if(!content.isEmpty()&&content!=null){
                         String sn1 = "%" + content + "%";
@@ -45,7 +36,13 @@ public class CompanyAdminService {
                     }
                     break;
                 case "2":
-                    sql=" from agent_data where (proGroupId is null or proGroupId=0) and agentNumber="+agentnum;
+                    if(!content.isEmpty()&&content!=null){
+                        String sn1 = "%" + content + "%";
+                        sql = " from agent_data" +
+                                " where (proGroupId is null or proGroupId=0) and machineSerial like '" + sn1 + "' and agentNumber="+agentnum;
+                    }else{
+                        sql=" from agent_data where (proGroupId is null or proGroupId=0) and agentNumber="+agentnum;
+                    }
                     break;
             }
             sql=sql+" order by createTime desc";

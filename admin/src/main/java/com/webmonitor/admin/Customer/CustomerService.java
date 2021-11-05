@@ -40,7 +40,7 @@ public class CustomerService {
     }
 
     /**新增用户**/
-    public Result<String> save(StaffDataEntity staffData,String select) {
+    public Result<String> save(StaffDataEntity staffData,String select,String right,String appright) {
         Result<String> result = Result.newOne();
         StaffData staffData1=new StaffData();
         staffData1.setAgentNumber(staffData.getAgentNumber());
@@ -48,14 +48,22 @@ public class CustomerService {
         staffData1.setIAccountType(staffData.getiAccountType());
         staffData1.setIRoleType(staffData.getiRoleType());
         staffData1.setAccountTime(staffData.getAccounttime());
+        staffData1.setSetPermission(staffData.getWritePermission());
         String password=staffData.getuPassword();
         String code= MD5Utils.md5(password)+"0";
         staffData1.setUPassword(code);
         staffData1.setURealName(staffData.getuRealName());
         staffData1.setUAccountNum(staffData.getuAccountNum());
+        staffData1.setWebPermission(right);
+        staffData1.setAppPermission(appright);
         switch(staffData1.getIRoleType()){
             case 0:
-                staffData1.setGroupAssemble(select);
+                if(select.equals("empty")){
+                    staffData1.setGroupAssemble("");
+                }else{
+                    staffData1.setGroupAssemble(select);
+                }
+
                 break;
             case 1:
                 staffData1.setGroupAssemble("all");//供销商公司所有项目
@@ -82,7 +90,7 @@ public class CustomerService {
 
 
     /**更新用户资料**/
-    public Result<String> update(StaffDataEntity staffData,String select) {
+    public Result<String> update(StaffDataEntity staffData,String select,String right,String appright) {
         Result<String> result = Result.newOne();
         StaffData staffData1=new StaffData();
         staffData1.setId(staffData.getId());
@@ -91,6 +99,7 @@ public class CustomerService {
         staffData1.setIAccountType(staffData.getiAccountType());
         staffData1.setIRoleType(staffData.getiRoleType());
         staffData1.setAccountTime(staffData.getAccounttime());
+        staffData1.setSetPermission(staffData.getWritePermission());
         String password=staffData.getuPassword();
         String oldpassword=StaffData.dao.findById(staffData.getId()).getUPassword();
         if(!password.equals("")&&!oldpassword.equals(password)){
@@ -99,9 +108,15 @@ public class CustomerService {
         }
         staffData1.setURealName(staffData.getuRealName());
         staffData1.setUAccountNum(staffData.getuAccountNum());
+        staffData1.setWebPermission(right);
+        staffData1.setAppPermission(appright);
         switch(staffData1.getIRoleType()){
             case 0:
-                staffData1.setGroupAssemble(select);
+                if(select.equals("empty")){
+                    staffData1.setGroupAssemble("");
+                }else{
+                    staffData1.setGroupAssemble(select);
+                }
                 break;
             case 1:
                 staffData1.setGroupAssemble("all");//供销商公司所有项目
@@ -156,8 +171,8 @@ public class CustomerService {
     }
 
     /**搜索用户**/
-    public Page<StaffDataEntity> searchCustomByParam(String content,String userid ,String agentnum,String roletype,int pageno,int limit){
-        return dal.searchCustomByParam(content,userid,agentnum,roletype, pageno, limit);
+    public Page<StaffDataEntity> searchCustomByParam(String content,String agentnum,int pageno,int limit){
+        return dal.searchCustomByParam(content,agentnum, pageno, limit);
     }
 
 

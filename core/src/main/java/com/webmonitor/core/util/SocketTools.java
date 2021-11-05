@@ -141,6 +141,7 @@ public class SocketTools {
 
     /**执行完操作，告诉服务器**/
     public void updateSocket(String machineserial) {
+        OutputStream outputStream=null;
         if (socket == null && connectThread == null) {
             if (mStreamDetailList.size() > 0) {
                 mStreamDetailList.clear();
@@ -152,27 +153,16 @@ public class SocketTools {
                 socket.connect(new InetSocketAddress("rjb.geoelectron.com", 9000), 5000);
                 /*连接成功的话  发送心跳包*/
                 if (socket.isConnected()) {
-                    String requestmsg = "AppClient"+getIpAddress()+"&WebRequest&"+machineserial+"\n";
-                    OutputStream outputStream = socket.getOutputStream();
+                    String requestmsg = "WebClient"+getIpAddress()+"&WebRequest&"+machineserial+"\n";
+                    outputStream = socket.getOutputStream();
                     outputStream.write((requestmsg+"\n").getBytes("utf-8"));
                     /*因为Toast是要运行在主线程的  这里是子线程  所以需要到主线程哪里去显示toast*/
-                    if (outputStream != null) {
-                        try {
-                            outputStream.close();
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        outputStream = null;
-                    }
-                    if (socket != null) {
-                        try {
-                            socket.close();
-                            Log.getLog(this.getClass()).info("服务器资源：已释放");
-                        } catch (IOException ignored) {
-                        }
-                        socket = null;
-                    }
+//                    if (outputStream != null) {
+//                        try {
+//                            Log.getLog(this.getClass()).info("服务器资源：已释放");
+//                        } catch (IOException ignored) {
+//                        }
+//                        socket = null;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -184,6 +174,21 @@ public class SocketTools {
                 } else if (e instanceof ConnectException) {
                     Log.getLog(this.getClass()).info("连接异常或被拒绝，请检查:", e);
                 }
+            }finally{
+                try {
+                    outputStream.close();
+                    socket.shutdownOutput();
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        outputStream = null;
+//                    }
+//                    if (socket != null) {
+//                        try {
             }
         }
     }
@@ -200,7 +205,7 @@ public class SocketTools {
                 socket.connect(new InetSocketAddress("rjb.geoelectron.com", 9000), 5000);
                 /*连接成功的话  发送心跳包*/
                 if (socket.isConnected()) {
-                    String requestmsg =  "AppClient"+getIpAddress()+"&"+machineserial+"&"+order+"\n";
+                    String requestmsg =  "WebClient"+getIpAddress()+"&"+machineserial+"&"+order+"\n";
                     sendOrder(requestmsg);
                     inputStream = socket.getInputStream();
                     isr = new InputStreamReader(inputStream, "UTF-8");

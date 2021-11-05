@@ -428,14 +428,14 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">IP地址</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input type=\"text\" name=\"observeip\" required lay-verify=\"ip|required\" placeholder=\"请输入IP地址\"\n" +
+                    "                                    <input id='rawIp' type=\"text\" name=\"rawIp\" required lay-verify=\"ip|required\" placeholder=\"请输入IP地址\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label  \">端口</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input type=\"text\" name=\"observeport\" required lay-verify=\"required|port\" placeholder=\"请输入端口\"\n" +
+                    "                                    <input id=\"rawPort\" type=\"text\" name=\"rawPort\" required lay-verify=\"required|port\" placeholder=\"请输入端口\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
@@ -446,41 +446,49 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            <div class=\"circle\"></div>\n" +
                     "                            <div>变形基准坐标</div>\n" +
                     "                        </div>\n" +
-                    "                        <div style=\"display: flex\">\n" +
-                    "                            <div class=\"layui-form-item  fastinput\">\n" +
-                    "                                <label class=\"layui-form-label\">纬度</label>\n" +
+                    "                        <div class=\"layui-form-item  fastinput\" style=\"margin-top: 30px\">\n" +
+                    "                            <label class=\"layui-form-label\">坐标类型</label>\n" +
+                    "                            <div class=\"layui-input-block\">\n" +
+                    "                                <input type=\"radio\" lay-filter=\"mark2\" name=\"marktype\" value=\"0\" title=\"BLH\" >\n" +
+                    "                                <input type=\"radio\" lay-filter=\"mark2\" name=\"marktype\" value=\"1\" title=\"XYZ\" checked>\n" +
+                    "                            </div>\n" +
+                    "                        </div>\n" +
+                    "                        <div style=\"display: flex\" id=\"BLH\" >\n" +
+                    "                           <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">X</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id='coordinatesX' type=\"text\" name=\"coordinatesX\" disabled  placeholder=\"请输入纬度\"\n" +
+                    "                                    <input id='coordinatesX' type=\"text\" name=\"coordinatesX\" disabled   placeholder=\"请输入纬度\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
-                    "                                <label class=\"layui-form-label\">经度</label>\n" +
+                    "                                <label class=\"layui-form-label\">Y</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
                     "                                    <input id='coordinatesY' type=\"text\" name=\"coordinatesY\" disabled  placeholder=\"请输入经度\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
-                    "                                <label class=\"layui-form-label\">大地高</label>\n" +
+                    "                                <label class=\"layui-form-label\">Z</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
                     "                                    <input id='coordinatesZ' type=\"text\" name=\"coordinatesZ\" disabled  placeholder=\"请输入大地高\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
-                    "                        </div>"
+                    "                        </div>\n" +
+                    "                        <div style=\"display: flex\" id=\"XYZ\" ></div>";
                 break;
             case "basedownload":
                 document.getElementById(select).innerHTML = "   <div style=\"display: flex;margin-top: 30px\">\n" +
                     "                            <div class=\"circle\"></div>\n" +
                     "                            <div>基站数据下载</div>\n" +
                     "                        </div>\n" +
-                    "                        <div class=\"layui-form-item\">\n" +
-                    "                            <label class=\"layui-form-label\">启用双基站</label>\n" +
-                    "                            <div class=\"layui-input-block\">\n" +
-                    "                                <input type=\"checkbox\" name=\"doublebase\" lay-filter=\"doublebase\" id='doublebase' lay-skin=\"switch\">\n" +
-                    "                            </div>\n" +
-                    "                        </div>\n" +
+                    // "                        <div class=\"layui-form-item\">\n" +
+                    // "                            <label class=\"layui-form-label\">启用双基站</label>\n" +
+                    // "                            <div class=\"layui-input-block\">\n" +
+                    // "                                <input type=\"checkbox\" name=\"doublebase\" lay-filter=\"doublebase\" id='doublebase' lay-skin=\"switch\">\n" +
+                    // "                            </div>\n" +
+                    // "                        </div>\n" +
                     "                        <div class=\"layui-form-item\">\n" +
                     "                            <label class=\"layui-form-label\">数据来源</label>\n" +
                     "                            <div class=\"layui-input-block\">\n" +
@@ -583,7 +591,60 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            </div>";
                 break;
         }
-        markcompute();
+    }
+
+    function changemarkalter(type) {
+        switch (type) {
+            case "0":
+                document.getElementById("XYZ").innerHTML = "";
+                document.getElementById("BLH").innerHTML = "<div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">纬度</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='ecefLat' type=\"text\" name=\"baseLat\" disabled required lay-verify=\"stationLat\" placeholder=\"请输入纬度\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">经度</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='ecefLon' type=\"text\" name=\"baseLon\" disabled required lay-verify=\"stationLon\" placeholder=\"请输入经度\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">大地高</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='ecefHeight' type=\"text\" name=\"baseHeight\" disabled required lay-verify=\"number|required\" placeholder=\"请输入大地高\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n";
+                break;
+            case "1":
+                document.getElementById("BLH").innerHTML = "";
+                document.getElementById("XYZ").innerHTML = " <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">X</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='coordinatesX' type=\"text\" name=\"title\" disabled required lay-verify=\"required\" placeholder=\"请输入X坐标\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">Y</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='coordinatesY' type=\"text\" name=\"title\" disabled required lay-verify=\"required\" placeholder=\"请输入Y坐标\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    "                                <label class=\"layui-form-label\">Z</label>\n" +
+                    "                                <div class=\"layui-input-block\">\n" +
+                    "                                    <input id='coordinatesZ' type=\"text\" name=\"title\" disabled required lay-verify=\"required\" placeholder=\"请输入Z坐标\"\n" +
+                    "                                           autocomplete=\"off\" class=\"layui-input layui-disabled\">\n" +
+                    "                                </div>\n" +
+                    "                            </div>";
+                break;
+        }
+        mark2compute();
     }
 
     function changesoure(doubleturn, type){
@@ -688,22 +749,22 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                         "                                        </div>\n" +
                         "                                    </div>\n" +
                         "                                </div>";
-                    document.getElementById("secondbase").innerHTML = " <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                <label class=\"layui-form-label basecoreindex\" style='width: 98px;padding: 6px 6px;'>第二基站IP地址</label>\n" +
-                        "                                <div class=\"layui-input-block\">\n" +
-                        "                                    <input type=\"text\" id='secondIp' name=\"secondIp\" required lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
-                        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                </div>\n" +
-                        "                            </div>\n" +
-                        "                            <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                <label class=\"layui-form-label basecoreindex \" style='width: 98px;padding: 6px 6px;'>第二基站端口</label>\n" +
-                        "                                <div class=\"layui-input-block\">\n" +
-                        "                                    <input type=\"text\" id='secondPort' name=\"secondPort\" required lay-verify=\"required|port\" placeholder=\"请输入端口\"\n" +
-                        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                </div>\n" +
-                        "                            </div>";
-                    document.getElementById("secondbase").style.display = "flex";
-                    document.getElementById("secondbase").style.marginTop = "30px";
+                    // document.getElementById("secondbase").innerHTML = " <div class=\"layui-form-item  fastinput\">\n" +
+                    //     "                                <label class=\"layui-form-label basecoreindex\" style='width: 98px;padding: 6px 6px;'>第二基站IP地址</label>\n" +
+                    //     "                                <div class=\"layui-input-block\">\n" +
+                    //     "                                    <input type=\"text\" id='secondIp' name=\"secondIp\" required lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
+                    //     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                    //     "                                </div>\n" +
+                    //     "                            </div>\n" +
+                    //     "                            <div class=\"layui-form-item  fastinput\">\n" +
+                    //     "                                <label class=\"layui-form-label basecoreindex \" style='width: 98px;padding: 6px 6px;'>第二基站端口</label>\n" +
+                    //     "                                <div class=\"layui-input-block\">\n" +
+                    //     "                                    <input type=\"text\" id='secondPort' name=\"secondPort\" required lay-verify=\"required|port\" placeholder=\"请输入端口\"\n" +
+                    //     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+                    //     "                                </div>\n" +
+                    //     "                            </div>";
+                    // document.getElementById("secondbase").style.display = "flex";
+                    // document.getElementById("secondbase").style.marginTop = "30px";
                     break;
                 case "11":
                     document.getElementById("cores").innerHTML = " <div style=\"display: flex;margin-top: 30px\">\n" +
@@ -752,52 +813,52 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                         "                                        </div>\n" +
                         "                                    </div>\n" +
                         "                                </div>";
-                    document.getElementById("cores2").innerHTML = " <div style=\"display: flex;margin-top: 30px\">\n" +
-                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS②IP地址</label>\n" +
-                        "                                        <div class=\"layui-input-block\">\n" +
-                        "                                            <input id=\"secondntripaddress\" type=\"text\" name=\"secondntripaddress\" required\n" +
-                        "                                                   lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
-                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                        </div>\n" +
-                        "                                    </div>\n" +
-                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS②IP端口</label>\n" +
-                        "                                        <div class=\"layui-input-block\">\n" +
-                        "                                            <input id=\"secondntripport\" type=\"text\" name=\"secondntripport\" required\n" +
-                        "                                                   lay-verify=\"required|port\" placeholder=\"请输入端口\"\n" +
-                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                        </div>\n" +
-                        "                                    </div>\n" +
-                        "                                </div>\n" +
-                        "                                <div style=\"display: flex;margin-top: 30px\">\n" +
-                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS②接入点</label>\n" +
-                        "                                        <div class=\"layui-input-block\" style=\"display: flex\">\n" +
-                        "                                            <input id=\"secondMountpoint1\" type=\"text\" name=\"secondMountpoint1\" lay-filter='secondMountpoint1' required\n" +
-                        "                                                   lay-verify=\"required\" placeholder=\"请输入接入点\"\n" +
-                        "                                                   autocomplete=\"off\" class=\"layui-input\" style='width: 150px'>\n" +
-                        "                                            <button type='button' class=\"layui-btn btn_primary\" id='getConnectPoint2'>获取接入点</button>\n" +
-                        "                                            <div id=\"corePoint2\" class=\"xm-select-demo\" style='width: 150px'></div>\n" +
-                        "                                        </div>\n" +
-                        "                                    </div>\n" +
-                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\"style='padding: 9px 4px;width: 98px;' >CORS②用户名</label>\n" +
-                        "                                        <div class=\"layui-input-block\">\n" +
-                        "                                            <input id=\"coreuse2\" type=\"text\" name=\"coreuse2\" required\n" +
-                        "                                                   lay-verify=\"required\" placeholder=\"请输入用户名\"\n" +
-                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                        </div>\n" +
-                        "                                    </div>\n" +
-                        "                                    <div class=\"layui-form-item  fastinput\">\n" +
-                        "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 93px;'>CORS②密码</label>\n" +
-                        "                                        <div class=\"layui-input-block\">\n" +
-                        "                                            <input id=\"corepass2\" type=\"text\" name=\"corepass2\" required\n" +
-                        "                                                   lay-verify=\"required\" placeholder=\"请输入密码\"\n" +
-                        "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
-                        "                                        </div>\n" +
-                        "                                    </div>\n" +
-                        "                                </div>"
+                    // document.getElementById("cores2").innerHTML = " <div style=\"display: flex;margin-top: 30px\">\n" +
+                    //     "                                    <div class=\"layui-form-item  fastinput\">\n" +
+                    //     "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS②IP地址</label>\n" +
+                    //     "                                        <div class=\"layui-input-block\">\n" +
+                    //     "                                            <input id=\"secondntripaddress\" type=\"text\" name=\"secondntripaddress\" required\n" +
+                    //     "                                                   lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
+                    //     "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
+                    //     "                                        </div>\n" +
+                    //     "                                    </div>\n" +
+                    //     "                                    <div class=\"layui-form-item  fastinput\">\n" +
+                    //     "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS②IP端口</label>\n" +
+                    //     "                                        <div class=\"layui-input-block\">\n" +
+                    //     "                                            <input id=\"secondntripport\" type=\"text\" name=\"secondntripport\" required\n" +
+                    //     "                                                   lay-verify=\"required|port\" placeholder=\"请输入端口\"\n" +
+                    //     "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
+                    //     "                                        </div>\n" +
+                    //     "                                    </div>\n" +
+                    //     "                                </div>\n" +
+                    //     "                                <div style=\"display: flex;margin-top: 30px\">\n" +
+                    //     "                                    <div class=\"layui-form-item  fastinput\">\n" +
+                    //     "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS②接入点</label>\n" +
+                    //     "                                        <div class=\"layui-input-block\" style=\"display: flex\">\n" +
+                    //     "                                            <input id=\"secondMountpoint1\" type=\"text\" name=\"secondMountpoint1\" lay-filter='secondMountpoint1' required\n" +
+                    //     "                                                   lay-verify=\"required\" placeholder=\"请输入接入点\"\n" +
+                    //     "                                                   autocomplete=\"off\" class=\"layui-input\" style='width: 150px'>\n" +
+                    //     "                                            <button type='button' class=\"layui-btn btn_primary\" id='getConnectPoint2'>获取接入点</button>\n" +
+                    //     "                                            <div id=\"corePoint2\" class=\"xm-select-demo\" style='width: 150px'></div>\n" +
+                    //     "                                        </div>\n" +
+                    //     "                                    </div>\n" +
+                    //     "                                    <div class=\"layui-form-item  fastinput\">\n" +
+                    //     "                                        <label class=\"layui-form-label basecoreindex\"style='padding: 9px 4px;width: 98px;' >CORS②用户名</label>\n" +
+                    //     "                                        <div class=\"layui-input-block\">\n" +
+                    //     "                                            <input id=\"coreuse2\" type=\"text\" name=\"coreuse2\" required\n" +
+                    //     "                                                   lay-verify=\"required\" placeholder=\"请输入用户名\"\n" +
+                    //     "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
+                    //     "                                        </div>\n" +
+                    //     "                                    </div>\n" +
+                    //     "                                    <div class=\"layui-form-item  fastinput\">\n" +
+                    //     "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 93px;'>CORS②密码</label>\n" +
+                    //     "                                        <div class=\"layui-input-block\">\n" +
+                    //     "                                            <input id=\"corepass2\" type=\"text\" name=\"corepass2\" required\n" +
+                    //     "                                                   lay-verify=\"required\" placeholder=\"请输入密码\"\n" +
+                    //     "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
+                    //     "                                        </div>\n" +
+                    //     "                                    </div>\n" +
+                    //     "                                </div>"
                     break;
             }
             $("#getConnectPoint1").click(function () {
@@ -816,8 +877,6 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
             document.getElementById(select).innerHTML = "";
         }
     }
-
-
 
     var fastsettingfunc={
         // DeviceSetting:function (sn) {

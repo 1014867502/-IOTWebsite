@@ -212,7 +212,7 @@
                         <div class="layui-form-item  fastinput">
                             <label class="layui-form-label">采样频率</label>
                             <div class="layui-input-block">
-                                <select id="selectList" name="rawRate" lay-verify="required">
+                                <select id="selectList" name="rawRate" lay-filter="rawRate" lay-verify="required">
                                     <option value="1000">1s</option>
                                     <option value="5000">5s</option>
                                     <option value="10000">10s</option>
@@ -259,6 +259,7 @@
                     <button id="savemodel" type="button" class="layui-btn">保存当前模板</button>
                     <button id="reset" type="button" class="layui-btn ">刷新</button>
                 </div>
+                <div id="errormsg" style="color: #cc0000"></div>
             </div>
         </form>
     </div>
