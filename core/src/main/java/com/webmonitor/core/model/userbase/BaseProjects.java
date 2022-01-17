@@ -11,6 +11,24 @@ public class BaseProjects {
     private String createtime;
     private String agentname;
     private String agentnumber;
+    private String proLongitude;
+    private String proLatitude;
+
+    public String getProLongitude() {
+        return proLongitude;
+    }
+
+    public void setProLongitude(String proLongitude) {
+        this.proLongitude = proLongitude;
+    }
+
+    public String getProLatitude() {
+        return proLatitude;
+    }
+
+    public void setProLatitude(String proLatitude) {
+        this.proLatitude = proLatitude;
+    }
 
     public String getAgentnumber() {
         return agentnumber;

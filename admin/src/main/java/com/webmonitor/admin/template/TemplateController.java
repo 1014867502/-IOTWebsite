@@ -26,11 +26,13 @@ public class TemplateController extends BaseController {
 
     /**模板设置页面**/
     public void setting(){
-        String templatename=getPara("templatename");
+        String templatename=getPara("templatename","");
         String userid = getCookie(IndexService.me.accessUserId);
         String permission=StaffService.me.getStaffById(userid).getWebPermission();
-        String type=getPara("type");
+        String type=getPara("type");//判读设置类型
+        String modeltype=getPara("model");//是否是空白
         setAttr("type",type);
+        setAttr("modeltype",modeltype);
         setAttr("webauthority",permission);
         setAttr("templatename",templatename);
         render("template_setting.html");
@@ -38,49 +40,73 @@ public class TemplateController extends BaseController {
 
     /**快速设置模板页面**/
     public void fastsetting(){
-        String templatename=getPara("templatename");
+        String type=getPara("type");
         String userid = getCookie(IndexService.me.accessUserId);
         int writeright=StaffService.me.getStaffById(userid).getSetPermission();
         setAttr("writeright",writeright);
-        setAttr("templatename",templatename);
+        if(type.equals("1")){
+            String templatename=getPara("templatename");
+            setAttr("templatename",templatename);
+        }
+        setAttr("type",type);
         render("template_fastsetting.html");
     }
 
-    /**快速设置模板页面**/
+    /**详细设置模板页面**/
     public void stationsetting(){
-        String templatename=getPara("templatename");
+        String type=getPara("type");
         String userid = getCookie(IndexService.me.accessUserId);
         int permission=StaffService.me.getStaffById(userid).getSetPermission();
-        setAttr("templatename",templatename);
+        if(type.equals("1")){//判断是否是新建模板，1为编辑模板
+            String templatename=getPara("templatename");
+            setAttr("templatename",templatename);
+        }
         setAttr("writeright",permission);
+        setAttr("type",type);
         render("template_stationsetting.html");
     }
 
     /**解算设置页面**/
     public void computesetting(){
         String templatename=getPara("templatename");
-        setAttr("templatename",templatename);
+        String type=getPara("type");
+        if(type.equals("1")){
+            setAttr("templatename",templatename);
+        }
+        setAttr("type",type);
         render("template_compute.html");
     }
 
     /**坐标设置页面**/
     public void locatesetting(){
         String templatename=getPara("templatename");
-        setAttr("templatename",templatename);
+        String type=getPara("type");
+        if(type.equals("1")){
+            setAttr("templatename",templatename);
+        }
+        setAttr("type",type);
         render("template_locate.html");
     }
 
     /**平台设置页面**/
     public void  platformsetting(){
         String templatename=getPara("templatename");
-        setAttr("templatename",templatename);
+        String type=getPara("type");
+        if(type.equals("1")){
+            setAttr("templatename",templatename);
+        }
+        setAttr("type",type);
         render("template_platform.html");
     }
 
     /**辅助设置页面**/
     public void auxiliarysetting(){
         String templatename=getPara("templatename");
-        setAttr("templatename",templatename);
+        String type=getPara("type");
+        if(type.equals("1")){
+            setAttr("templatename",templatename);
+        }
+        setAttr("type",type);
         render("template_auxiliary.html");
     }
 
@@ -95,13 +121,18 @@ public class TemplateController extends BaseController {
         String id=getLoginAccount().getUserName();
         StaffData currentuser= StaffService.me.getStaffByName(id);
         String role=RoleType.getString(currentuser.getIRoleType());
-        int pageno=getParaToInt("pageno",1);
+        int pageno=getParaToInt("page",1);
         int limit=getParaToInt("limit",10);
         try{
             switch (role){
                 case "superadmin":
                     Page<Templates> templatesPage1=TemplateService.me.showAllTemplate(pageno,limit);
                     result.success(templatesPage1);
+                    break;
+                case "admin":
+                    String groupagent=currentuser.getGroupAgentNumber()!=null?currentuser.getGroupAgentNumber():"";
+                    Page<Templates> templatesPage2=TemplateService.me.getAdminTemplate(groupagent,pageno,limit);
+                    result.success(templatesPage2);
                     break;
                 default:
                     Page<Templates> templatesPage=TemplateService.me.showTemplateByCom(currentuser.getAgentNumber(),pageno,limit);
@@ -215,11 +246,13 @@ public class TemplateController extends BaseController {
     public void searchAllTemplate(){
         String content=(getPara("content")!=null)?getPara("content"):"";
         String type=getPara("type");
-        int pageno=getParaToInt("pageno",1);
+        int pageno=getParaToInt("page",1);
         int limit=getParaToInt("limit",10);
+        String userid = getCookie(IndexService.me.accessUserId);
+        StaffData currentuser = StaffService.me.getStaffById(userid);
         Result<Page<Templates>> result=Result.newOne();
         try{
-            Page<Templates> templatesPage=TemplateService.me.searchAllTemplate(type,content.trim(),pageno,limit);
+            Page<Templates> templatesPage=TemplateService.me.searchAllTemplate(currentuser,type,content.trim(),pageno,limit);
             result.success(templatesPage);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -231,11 +264,13 @@ public class TemplateController extends BaseController {
     public void searchSettingTemplate(){
         String content=(getPara("content")!=null)?getPara("content"):"";
         String type=getPara("type");
-        int pageno=getParaToInt("pageno",1);
+        int pageno=getParaToInt("page",1);
         int limit=getParaToInt("limit",10);
         Result<Page<Templates>> result=Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        StaffData currentuser= StaffService.me.getStaffById(userid);
         try{
-            Page<Templates> templatesPage=TemplateService.me.searchSettingTemplate(type,content,pageno,limit);
+            Page<Templates> templatesPage=TemplateService.me.searchSettingTemplate(currentuser,type,content,pageno,limit);
             result.success(templatesPage);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -251,20 +286,21 @@ public class TemplateController extends BaseController {
         String data=getPara("json");
         List<MachineInfoEntity> sList =gson.fromJson(data,new TypeToken<List<MachineInfoEntity>>(){}.getType());
         String template=getPara("sn");
+        String userid = getCookie(IndexService.me.accessUserId);
         boolean online=true;
         try{
-            for(int i=0;i<sList.size();i++){
-                String cursn=sList.get(i).getMachineSerial();
-                int state=MachineData.dao.findFirst("select * from machine_data where machineSerial='"+cursn+"'").getConnectState();
-                if(state==0){
-                    online=false;
-                    break;
-                }
-            }
+//            for(int i=0;i<sList.size();i++){
+//                String cursn=sList.get(i).getMachineSerial();
+//                int state=MachineData.dao.findFirst("select * from machine_data where machineSerial='"+cursn+"'").getConnectState();
+//                if(state==0){
+//                    online=false;
+//                    break;
+//                }
+//            }
             if(online){
-                TemplateService.me.excuteTemplate(sList,template);
+                TemplateService.me.excuteTemplate(userid,sList,template);
                 for(int i=0;i<sList.size();i++){
-                    socketTools.updateSocket(sList.get(i).getMachineSerial());
+                    socketTools.updateSocket(userid,sList.get(i).getMachineSerial());
                 }
                 result.success("success");
             }else{
@@ -275,6 +311,33 @@ public class TemplateController extends BaseController {
             result.success("error");
         }
        renderJson(result);
+    }
+
+    /**升级设备**/
+    public void updatedevices(){
+        Result result=Result.newOne();
+        Gson gson=new Gson();
+        SocketTools socketTools=new SocketTools();
+        String data=getPara("json");
+        List<MachineInfoEntity> sList =gson.fromJson(data,new TypeToken<List<MachineInfoEntity>>(){}.getType());
+        String template=getPara("sn");
+        String userid = getCookie(IndexService.me.accessUserId);
+        boolean online=true;
+        try{
+            if(online){
+                TemplateService.me.excuteTemplate(userid,sList,template);
+                for(int i=0;i<sList.size();i++){
+                    socketTools.updateSocket(userid,sList.get(i).getMachineSerial());
+                }
+                result.success("success");
+            }else{
+                result.success("设备不在线，修改失败");
+            }
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+            result.success("error");
+        }
+        renderJson(result);
     }
 
     /**获取模板对应的设备配置**/

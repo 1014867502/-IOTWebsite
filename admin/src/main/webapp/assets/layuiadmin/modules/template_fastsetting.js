@@ -74,17 +74,31 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
         }
     })
 
-    init(templatename);
+    if(type=="1"){
+        init(templatename);
+        $("#savemodel").click(function () {
+            if(form.doVerify("formDemo")){
+                saveModel();
+                updateModel();
+            }
+        })
+    }else{
+        showform(0,2);
+        $("#savemodel").click(function () {
+            if(form.doVerify("formDemo")){
+                saveModel();
+                addModel();
+            }
+        })
+        $("#reset").css("display","none");
+        $("#changename").css("display","none");
+    }
+
 
     $("#reset").click(function () {
         getDeviceSetting(templatename);
     })
-    $("#savemodel").click(function () {
-        if(form.doVerify("formDemo")){
-            saveModel();
-            updateModel();
-        }
-    })
+
 
     $("#changename").click(function () {
         changename();
@@ -128,7 +142,36 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
             },
             async:false,
             success:function () {
-                layer.msg("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
+            }
+        })
+        layer.close(layerindex);
+    })
+
+    form.on('submit(save)',function () {
+        let jsondata=parent.fastmodel;
+        debugger
+        let data1 = form.val("save");
+        $.ajax({
+            url:'/template/addTemplate',
+            data:{
+                json:jsondata,
+                templatename:data1.templatename,
+                type:"1"
+            },
+            async:false,
+            success:function () {
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
         layer.close(layerindex);
@@ -192,77 +235,92 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
             },
             success: function (data) {
                 device = data.data;
-                fastsettingfunc.setdevice(device);
-                if(device.rawName!=null&&device.rawName!=""){
-                    $("#rawName").val(device.rawName);
-                }else{
-                    $("#rawName").val(device.machineSerial);
-                }
-                $("#baseLon").val(device.baseLon);
-                $("#baseLat").val(device.baseLat);
-                if ($("#recordinterval") != null) {
-                    $("#recordInterval").find("option[value=" + device.recordInterval + "]").prop("selected", true);
-                }
-                $("#baseHeight").val(device.baseHeight);
-                $("#rawIp").val(device.rawIp);
-                $("#rawPort").val(device.rawPort)
-                $("#resultIp").val(device.resultIp);
-                $("#resultPort").val(device.resultPort);
-                $("#coordinatesX").val(device.coordinatesX);
-                $("#coordinatesY").val(device.coordinatesY);
-                $("#coordinatesZ").val(device.coordinatesZ);
-                $("#secondIp").val(device.scondIp);
-                $("#secondPort").val(device.scondPort);
-                $("#networkAddress").val(device.networkAddress);
-                $("#networkPort").val(device.networkPort);
-                if(writeright==0){
-                    $("#changename").prop("disabled",true);
-                    $("#errormsg").html("修改权限被限制");
-                    $("#changename").addClass("layui-btn-disabled");
-                    $("#savemodel").prop("disabled",true);
-                    $("#savemodel").addClass("layui-btn-disabled");
-                }
-                $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
-                let ntriparg=device.ntripArg;
-                if(ntriparg!=""&&ntriparg!=null){
-                    let arg=ntriparg.split('|');
-                    $("#rawntripaddress").val(arg[0]);
-                    $("#rawntripport").val(arg[1]);
-                    $("#networkMountpoint1").val(arg[2]);
-                    $("#coreuse1").val(arg[3]);
-                    $("#corepass1").val(arg[4]);
-                }
-                let secondarg=device.secondArg;
-                if(secondarg!=""&&secondarg!=null){
-                    let arg=secondarg.split('|');
-                    $("#secondntripaddress").val(arg[0]);
-                    $("#secondntripport").val(arg[1]);
-                    $("#secondMountpoint1").val(arg[2]);
-                    $("#coreuse2").val(arg[3]);
-                    $("#corepass2").val(arg[4]);
-                }
-                if(device.secondBase!="0"){
-                    $("#doublebase").prop('checked',true);
-                    $("input[name='networkAddress']").val(device.networkAddress);
-                    $("input[name='networkPort']").val(device.networkPort);
-                    doublebase=true;
-                    if(device.ntrIpBase>0){
-                        $("input[name=downloadsource][value='1']").prop("checked",true);
-                        fastsettingfunc.altersource(doublebase,"1");
-                    }else{
-                        $("input[name=downloadsource][value='0']").prop("checked",true);
-                        fastsettingfunc.altersource(doublebase,"0");
+                if (device.rawName!=null) {
+                    fastsettingfunc.setdevice(device);
+                    if (device.rawName != null && device.rawName != "") {
+                        $("#rawName").val(device.rawName);
+                    } else {
+                        $("#rawName").val(device.machineSerial);
                     }
-                }else{
-                    doublebase=false;
+                    switch(device.nameType){
+                        case 0:
+                            $("input[name=nameType][value='0']").prop("checked", true);
+                            break;
+                        case 1:
+                            $("input[name=nameType][value='1']").prop("checked", true);
+                            break;
+                        case 2:
+                            $("input[name=nameType][value='2']").prop("checked", true);
+                            break;
+                    }
+                    $("#baseLon").val(device.baseLon);
+                    $("#baseLat").val(device.baseLat);
+                    if ($("#recordinterval") != null && device.recordInterval != "") {
+                        $("#recordInterval").find("option[value=" + device.recordInterval + "]").prop("selected", true);
+                    }
+                    $("#baseHeight").val(device.baseHeight);
+                    $("#rawIp").val(device.rawIp);
+                    $("#rawPort").val(device.rawPort)
+                    $("#resultIp").val(device.resultIp);
+                    $("#resultPort").val(device.resultPort);
+                    $("#coordinatesX").val(device.coordinatesX);
+                    $("#coordinatesY").val(device.coordinatesY);
+                    $("#coordinatesZ").val(device.coordinatesZ);
+                    $("#secondIp").val(device.scondIp);
+                    $("#secondPort").val(device.scondPort);
+                    $("#networkAddress").val(device.networkAddress);
+                    $("#networkPort").val(device.networkPort);
+                    if (writeright == 0) {
+                        $("#changename").prop("disabled", true);
+                        $("#errormsg").html("修改权限被限制");
+                        $("#changename").addClass("layui-btn-disabled");
+                        $("#savemodel").prop("disabled", true);
+                        $("#savemodel").addClass("layui-btn-disabled");
+                    }
+                    if (device.rawRate != null & device.rawRate != "") {
+                        $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
+                    }
+                    let ntriparg = device.ntripArg;
+                    if (ntriparg != "" && ntriparg != null) {
+                        let arg = ntriparg.split('|');
+                        $("#rawntripaddress").val(arg[0]);
+                        $("#rawntripport").val(arg[1]);
+                        $("#networkMountpoint1").val(arg[2]);
+                        $("#coreuse1").val(arg[3]);
+                        $("#corepass1").val(arg[4]);
+                    }
+                    let secondarg = device.secondArg;
+                    if (secondarg != "" && secondarg != null) {
+                        let arg = secondarg.split('|');
+                        $("#secondntripaddress").val(arg[0]);
+                        $("#secondntripport").val(arg[1]);
+                        $("#secondMountpoint1").val(arg[2]);
+                        $("#coreuse2").val(arg[3]);
+                        $("#corepass2").val(arg[4]);
+                    }
+                    if (device.secondBase != "0") {
+                        $("#doublebase").prop('checked', true);
+                        $("input[name='networkAddress']").val(device.networkAddress);
+                        $("input[name='networkPort']").val(device.networkPort);
+                        doublebase = true;
+                        if (device.ntrIpBase > 0) {
+                            $("input[name=downloadsource][value='1']").prop("checked", true);
+                            fastsettingfunc.altersource(doublebase, "1");
+                        } else {
+                            $("input[name=downloadsource][value='0']").prop("checked", true);
+                            fastsettingfunc.altersource(doublebase, "0");
+                        }
+                    } else {
+                        doublebase = false;
+                    }
+                    if (device.networkMountpointPass != "" && device.networkMountpointPass != null) {
+                        let userpass = device.networkMountpointPass.toString().split("|");
+                        $("#networkMountpointUse").val(userpass[0]);
+                        $("#networkMountpointPass").val(userpass[1]);
+                    }
+                    saveModel();
+                    form.render();
                 }
-                if(device.networkMountpointPass!=""&&device.networkMountpointPass!=null){
-                    let userpass=device.networkMountpointPass.toString().split("|");
-                    $("#networkMountpointUse").val(userpass[0]);
-                    $("#networkMountpointPass").val(userpass[1]);
-                }
-                saveModel();
-                form.render();
             }
         })
     }
@@ -291,8 +349,27 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
                 templatename:templatename,
                 type:"1"
             },success:function (res) {
-                layer.msg("提交成功", { offset: '300px' });
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
+        });
+    }
+
+    /**提交模组**/
+    function addModel(){
+        layer.open({
+            type: 1
+            ,id: 'layerDemo' //防止重复弹出
+            , title: ['保存模板']
+            , area: ['300px', '300px']
+            , content: $("#savewindow")
+            , success: function (layero, index) {
+                layerindex=index;
+            },
         });
     }
 

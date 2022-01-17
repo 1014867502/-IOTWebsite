@@ -15,7 +15,16 @@ public class StaffDataEntity {
     private String accounttime;
     private String appPermission;
     private String webPermission;
+    private String groupAgentNumber;
     private int writePermission;
+
+    public String getGroupAgentNumber() {
+        return groupAgentNumber;
+    }
+
+    public void setGroupAgentNumber(String groupAgentNumber) {
+        this.groupAgentNumber = groupAgentNumber;
+    }
 
     public int getWritePermission() {
         return writePermission;

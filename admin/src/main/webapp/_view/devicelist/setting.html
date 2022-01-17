@@ -128,7 +128,7 @@
 
         .little {
             text-align: center;
-            width: 200px;
+            width: 121px;
             /*margin-left: 10%;*/
             line-height: 40px;
             margin: auto;
@@ -173,11 +173,16 @@
     <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
         <div style="width:100%;margin-top: 5px;margin-bottom: 10px">
             <div class="layui-card" style="display: flex">
+                <div style="margin-top: 31px;margin-left: 2%;">
+                    <div id="return" style="font-weight: bold;font-size: 24px;">
+                        <a lay-href="javascript:history.go(-1)"  lay-tips="返回上一页" lay-direction="2"><i class="layui-icon layui-icon-return" style="font-size: 30px; color: #1E9FFF;"></i></a>
+                    </div>
+                </div>
                 <div style="margin-top: 16px;margin-left: 10px;">
                     <div id="devicename" style="font-weight: bold;font-size: 24px;"></div>
                     <div style="font-size: 24px;font-weight: bold;">设备设置</div>
                 </div>
-                <ul style="display: flex ;margin: auto;height: 100px" id="menu">
+                <ul style="display: flex ;width:100%;flex-basis: auto;height: 100px" id="menu">
                     <li class="little" id="deviceinfo">
                         <div style="display: flex;justify-content: center;"><i class="icon"><i id="deviceinfo1" class="icon" style="background: url(/assets/images/deviceinform_black.png) no-repeat center;"></i></i></div>
                         <div>设备信息</div>
@@ -213,11 +218,6 @@
                         <div>其他设置</div>
                     </li>
                 </ul>
-                <div style="margin-top: 31px;margin-right: 2%;">
-                    <div id="return" style="font-weight: bold;font-size: 24px;">
-                        <a lay-href="javascript:history.go(-1)"  lay-tips="返回上一页" lay-direction="2"><i class="layui-icon layui-icon-return" style="font-size: 30px; color: #1E9FFF;"></i></a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

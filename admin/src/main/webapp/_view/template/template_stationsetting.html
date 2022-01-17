@@ -141,7 +141,7 @@
 
 
 <div class="layui-fluid" style="padding: 0px">
-    <div class="layui-tab">
+    <div class="layui-tab" lay-filter="demo">
         <ul class="layui-tab-title" style="color: #1e9fff;background-color: #FFF;border-color:#FFF;">
             <li id="setting0" class="tabborder">解算设置</li>
             <li id="setting1" class="tabborder">坐标系统</li>
@@ -181,12 +181,18 @@
     var authority=parent.window.authority1;
     var writeright="#(writeright)";
     var testmodel={};//详细模板数据
+    var type="#(type)";
     var fastmodel="";//快速设置模板
     src();
     function src() {
         let arr=[];
         if(authority.indexOf("1")!=-1){
-            document.getElementById("iframe_compute").src = "/template/computesetting?templatename=" + templatename;
+            if(type=="1"){//判断是否为新建模板 1为编辑模板，0为新建模板
+                document.getElementById("iframe_compute").src = "/template/computesetting?templatename=" + templatename+"&&type="+type;
+            }else{
+                document.getElementById("iframe_compute").src = "/template/computesetting?type=" + type;
+            }
+
             // let height=document.body.clientHeight+"px";
             // if(parent.document.getElementById("iframe_compute")!=null){
             //     parent.document.getElementById("iframe_compute").style.height=height;
@@ -196,19 +202,36 @@
             document.getElementById("setting0").style.display="none";
         }
         if(authority.indexOf("2")!=-1){
-            document.getElementById("iframe_locate").src="/template/locatesetting?templatename="+templatename;
+            if(type=="1"){//判断是否为新建模板 1为编辑模板，0为新建模板
+                document.getElementById("iframe_locate").src="/template/locatesetting?templatename="+templatename+"&&type="+type;
+            }else{
+                document.getElementById("iframe_locate").src="/template/locatesetting?type=" + type;
+            }
+
             arr.push(2);
         }else{
             document.getElementById("setting1").style.display="none";
         }
         if(authority.indexOf("3")!=-1){
-            document.getElementById("iframe_platform").src="/template/platformsetting?templatename="+templatename;
+            if(type=="1"){//判断是否为新建模板 1为编辑模板，0为新建模板
+                document.getElementById("iframe_platform").src="/template/platformsetting?templatename="+templatename+"&&type="+type;
+            }else{
+                document.getElementById("iframe_platform").src="/template/platformsetting?type=" + type;
+            }
+
+
             arr.push(3);
         }else{
             document.getElementById("setting2").style.display="none";
         }
         if(authority.indexOf("4")!=-1){
-            document.getElementById("iframe_auxiliary").src = "/template/auxiliarysetting?templatename=" + templatename;
+            if(type=="1"){//判断是否为新建模板 1为编辑模板，0为新建模板
+                document.getElementById("iframe_auxiliary").src = "/template/auxiliarysetting?templatename=" + templatename+"&&type="+type;
+            }else{
+                document.getElementById("iframe_auxiliary").src = "/template/auxiliarysetting?type=" + type;
+            }
+
+
             arr.push(4);
         }else{
             document.getElementById("setting3").style.display="none";

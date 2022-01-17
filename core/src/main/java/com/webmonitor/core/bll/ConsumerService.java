@@ -13,8 +13,8 @@ public class ConsumerService {
     public static final ConsumerService me=new ConsumerService();
 
     /**获取用户下属设备的在线离线情况**/
-    public ProDevCount getDevCount(String[] projects){
-        return AgentDataService.me.getCosumerDevCount(projects);
+    public ProDevCount getDevCount(String[] projects,String agentNumber){
+        return AgentDataService.me.getCosumerDevCount(projects,agentNumber);
     }
 
     /**获取用户下属所有设备**/
@@ -23,7 +23,7 @@ public class ConsumerService {
         String[] projects=currentuser.getGroupAssemble().split("@");
         String sql="";
         if(!currentuser.getGroupAssemble().isEmpty()){
-            sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where  a.proGroupId="+projects[0];
+            sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where  a.proGroupId="+projects[0]+" and a.agentNumber="+currentuser.getAgentNumber();
             for(int i=1;i<projects.length;i++){
                 sql=sql+" or a.proGroupId="+projects[i];
             }

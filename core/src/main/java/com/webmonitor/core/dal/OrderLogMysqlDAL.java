@@ -5,6 +5,7 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.core.idal.IOrderLog;
 import com.webmonitor.core.model.MachineData;
+import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.UpdateData;
 import com.webmonitor.core.model.userbase.TakeNoteEntity;
 
@@ -24,7 +25,9 @@ public class OrderLogMysqlDAL implements IOrderLog {
             TakeNoteEntity map = new TakeNoteEntity();
             map.setMachineSerial(record.getStr("machineSerial"));
             Record result=Db.findFirst("select connectState from machine_data where machineSerial='"+record.getStr("machineSerial")+"'");
-            map.setType(result.getStr("connectState").equals("0")?0:1);
+            if(result!=null){
+                map.setType(result.getStr("connectState").equals("0")?0:1);
+            }
             map.setAgentName(record.getStr("agentName"));
             if(record.getInt("ResSate")!=null){
                 switch (record.getInt("ResSate")){
@@ -75,8 +78,9 @@ public class OrderLogMysqlDAL implements IOrderLog {
     }
 
     /**查找配置日志信息**/
-    public Page<TakeNoteEntity> searchAlllOrderLog(String company,String content,int pageno,int limit){
+    public Page<TakeNoteEntity> searchAlllOrderLog(StaffData staffData,String company, String content, int pageno, int limit){
         String sql=" from take_note a left join agent_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on b.agentNumber=c.agentNumber ";
+        String role=RoleType.getString(staffData.getIRoleType());
         if(!company.equals("all")){
             sql+=" where b.agentNumber='"+company+"'";
         }
@@ -87,6 +91,15 @@ public class OrderLogMysqlDAL implements IOrderLog {
                 sql+=" and a.machineSerial like '%"+content+"%'";
             }
         }
+        if(role.equals("admin")){
+            String groupagent=staffData.getGroupAgentNumber().replace("@",",");
+            if(sql.contains("where")){
+                sql+=" and b.agentNumber in ("+groupagent+")";
+            }else{
+                sql+=" where b.agentNumber in ("+groupagent+")";
+
+            }
+        }
         sql+=" order by a.workTime desc";
         Page<Record> page = Db.paginate(pageno, limit, "select  a.*,c.agentName ",sql);
         List<Record> recordList = page.getList();
@@ -95,7 +108,9 @@ public class OrderLogMysqlDAL implements IOrderLog {
             TakeNoteEntity map = new TakeNoteEntity();
             map.setMachineSerial(record.getStr("machineSerial"));
             Record result=Db.findFirst("select connectState from machine_data where machineSerial='"+record.getStr("machineSerial")+"'");
-            map.setType(result.getStr("connectState").equals("0")?0:1);
+            if(result!=null){
+                map.setType(result.getStr("connectState").equals("0")?0:1);
+            }
             map.setAgentName(record.getStr("agentName"));
             if(record.getInt("ResSate")!=null){
                 switch (record.getInt("ResSate")){
@@ -156,7 +171,9 @@ public class OrderLogMysqlDAL implements IOrderLog {
             TakeNoteEntity map = new TakeNoteEntity();
             map.setMachineSerial(record.getStr("machineSerial"));
             Record result=Db.findFirst("select connectState from machine_data where machineSerial='"+record.getStr("machineSerial")+"'");
-            map.setType(result.getStr("connectState").equals("0")?0:1);
+            if(result!=null){
+                map.setType(result.getStr("connectState").equals("0")?0:1);
+            }
             map.setAgentName(record.getStr("agentName"));
             if(record.getInt("ResSate")!=null){
                 switch (record.getInt("ResSate")){
@@ -217,7 +234,9 @@ public class OrderLogMysqlDAL implements IOrderLog {
             TakeNoteEntity map = new TakeNoteEntity();
             map.setMachineSerial(record.getStr("machineSerial"));
             Record result=Db.findFirst("select connectState from machine_data where machineSerial='"+record.getStr("machineSerial")+"'");
-            map.setType(result.getStr("connectState").equals("0")?0:1);
+            if(result!=null){
+                map.setType(result.getStr("connectState").equals("0")?0:1);
+            }
             map.setAgentName(record.getStr("agentName"));
             if(record.getInt("ResSate")!=null){
                 switch (record.getInt("ResSate")){

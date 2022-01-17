@@ -3,6 +3,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         , setter = layui.setter
         , admin = layui.admin
         , table = layui.table
+        , form = layui.form
         , drawer = layui.drawer
         ,table2=layui.table
 
@@ -17,6 +18,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var agentName;
     var connectdevice=[];
     var Devicelist;
+    var templatedevice;//配置模板的设备
+    var selectdata=[];//选中的设备
+    var templatedata;//选中模板
 
     getDeviceCounts();
     getDetailProject();
@@ -59,6 +63,45 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             }
         })
     }
+
+    $("#excute_template").click(function () {
+        if (templatedevice != null && templatedevice.length > 2) {
+            drawer.render({
+                title: '配置设备',  //标题
+                offset: 'r',    //r:抽屉在右边、l:抽屉在左边
+                width: "600px", //r、l抽屉可以设置宽度
+                content: $("#templatewindow"),
+                btn: ['<i class="layui-icon">&#xe615;</i>配置设备', '取消'],
+                success: function (layero, index) {
+                    rendertemplateTable();
+                },
+                btn1: function (index, layero) {
+                    excutetemplate();
+                    renderTable();
+                    templatedevice = [];
+                    layer.close(index);
+                },
+                btn2: function (index, layero) {
+                    layer.close(index);
+                    return false;
+                }
+            });
+        } else {
+            layer.msg("请选择配置的设备");
+        }
+
+    })
+
+    /**模板查询**/
+    $("#datasumbit3").on('click', function () {
+        let stats = $("#templatetype").val();
+        let input = $("#SN2").val();
+        if ((input.length == 0 || input == null) && (!stats == 2)) {
+            layer.msg("输入不能为空");
+        } else {
+            rendertemplateTable();
+        }
+    });
 
     $("#add_device").click(function () {
         drawer.render({
@@ -116,7 +159,26 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 table.on('checkbox(table-from)', function (obj) {
                     let checkStatus = table.checkStatus('table-form')
                         , data = checkStatus.data;
-                    machinelist = JSON.stringify(data);
+                    if(obj.type!=null&&obj.type=="all"){
+                        if(obj.checked){
+                            selectdata=data;
+                        }else{
+                            selectdata=[];
+                        }
+                    }else{
+                        if(obj.checked){
+                            selectdata.push(obj.data);
+                        }else{
+                            let k=0;
+                            for (let i = 0; i < selectdata.length; i++) {
+                                if (selectdata[i].machineSerial == obj.data.machineSerial){
+                                    k=i;
+                                }
+                            }
+                            selectdata.splice(k,1);
+                        }
+                    }
+                    templatedevice = JSON.stringify(selectdata);
                 });
             }
         });
@@ -194,6 +256,30 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     });
 
+    //模板执行
+    function excutetemplate() {
+        if (templatedata != null) {
+            $.ajax({
+                url: '/template/excuteTemplate',
+                data: {
+                    json: templatedevice,
+                    sn: templatedata.templateName
+                },
+                async: false,
+                success: function (res) {
+                    let data = res.data;
+                    if (data == "success") {
+                        layer.msg("修改成功");
+                    } else {
+                        layer.msg(data);
+                    }
+                }
+            })
+        } else {
+            layer.msg("请选择模板");
+        }
+    }
+
     //表格刷新
     function renderTable(){
         var stats = $("#stats").val();
@@ -228,7 +314,26 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 table.on('checkbox(table-from)', function (obj) {
                     let checkStatus = table.checkStatus('table-form')
                         , data = checkStatus.data;
-                    machinelist = JSON.stringify(data);
+                    if(obj.type!=null&&obj.type=="all"){
+                        if(obj.checked){
+                            selectdata=data;
+                        }else{
+                            selectdata=[];
+                        }
+                    }else{
+                        if(obj.checked){
+                            selectdata.push(obj.data);
+                        }else{
+                            let k=0;
+                            for (let i = 0; i < selectdata.length; i++) {
+                                if (selectdata[i].machineSerial == obj.data.machineSerial){
+                                    k=i;
+                                }
+                            }
+                            selectdata.splice(k,1);
+                        }
+                    }
+                    templatedevice = JSON.stringify(selectdata);
                 });
             }
         });
@@ -298,6 +403,43 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     let checkStatus = table2.checkStatus('table3')
                         ,data = checkStatus.data;
                     connectdevice=JSON.stringify(data);
+                });
+            }
+        });
+    }
+
+
+    //模板表单
+    function rendertemplateTable() {
+        let stats2 = $("#templatetype").val();
+        let input = $("#SN3").val();
+        table2.render({
+            elem: '#table2'
+            , title: 'logdata'
+            , totalRow: true
+            , height: 'full-300'
+            , url: '/template/searchSettingTemplate'
+            , where: {'content': input, 'type': stats2}
+            , cols: [[
+                {type: 'radio'}
+                , {field: 'agentName', title: "隶属公司", align: 'center'}
+                , {field: 'templateName', title: "模板名称", align: 'center'}
+                , {field: 'type', title: "模板类型", align: 'center', templet: '#modeltype'}
+
+            ]]
+            , limit: 20 //每页默认显示的数量
+            , limits: [50, 100, 200]
+            , page: true
+            , parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "msg": res.msg,
+                    "count": res.data == null ? 0 : res.data.totalRow,
+                    "data": res.data == null ? {} : res.data.list
+                };
+            }, done: function () {
+                table.on('radio(table2)', function (obj) {
+                    templatedata = obj.data;
                 });
             }
         });
@@ -415,16 +557,24 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     case "user":
                         $("#crumb").css("display","none");
                         $("#crumb2").css("display","block");
+
                         let nickname=$("#nickName").html();
                         $("#comname3").html(progroupname);
                         $("#userproname").html("项目管理");
+
                         $("#comname3").attr("href","/project/projectdetail?agentnum="+agentnum+"&progroupid="+progroupid);
                         break;
                     case "companyadmin":
                         break;
                     case "superadmin":
+                        document.getElementById("templateselect").innerHTML = "<select id=\"templatetype\" name=\"templatetype\" lay-verify=\"\" lay-filter=\"templatetype\">\n" +
+                            "                                <option value=\"0\" selected>全部</option>\n" +
+                            "                                <option value=\"2\">公司</option>\n" +
+                            "                            </select>";
                         break;
+
                 }
+                form.render("select");
 
             }
         })

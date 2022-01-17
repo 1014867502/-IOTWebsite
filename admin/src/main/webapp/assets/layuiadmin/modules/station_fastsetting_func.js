@@ -144,7 +144,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         $("#machineSerial").val(device.machineSerial);
         $("#baseLon").val(device.baseLon);
         $("#baseLat").val(device.baseLat);
-        if ($("#recordinterval") != null) {
+        if ($("#recordinterval") != null&&device.recordInterval!="") {
             $("#recordInterval").find("option[value=" + device.recordInterval + "]").prop("selected", true);
         }
         $("#baseHeight").val(device.baseHeight);
@@ -159,7 +159,9 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
         $("#secondPort").val(device.scondPort);
         $("#networkAddress").val(device.networkAddress);
         $("#networkPort").val(device.networkPort);
-        $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
+        if(device.rawRate!=null&device.rawRate!=""){
+            $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
+        }
         form.render();
     }
 
@@ -526,6 +528,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                                <label class=\"layui-form-label\">记录时长</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
                     "                                    <select id=\"recordInterval\" name=\"recordInterval\" lay-filter='recordInterval' lay-verify=\"required\">\n" +
+                    "                                        <option value=\"\"></option>\n" +
                     "                                        <option value=\"3600\">1小时</option>\n" +
                     "                                        <option value=\"7200\">2小时</option>\n" +
                     "                                        <option value=\"14400\">4小时</option>\n" +

@@ -6,14 +6,18 @@ import com.google.gson.reflect.TypeToken;
 import com.jfinal.i18n.Res;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.upload.UploadFile;
+import com.webmonitor.admin.Customer.CustomerService;
 import com.webmonitor.admin.base.BaseController;
+import com.webmonitor.admin.company.CompanyService;
 import com.webmonitor.admin.index.IndexService;
+import com.webmonitor.admin.template.TemplateService;
 import com.webmonitor.core.bll.AgentDataService;
+import com.webmonitor.core.bll.ProjectService;
 import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.*;
-import com.webmonitor.core.model.userbase.DeviceSensorList;
-import com.webmonitor.core.model.userbase.ExportGNSSWord;
+import com.webmonitor.core.model.base.BaseProject;
+import com.webmonitor.core.model.userbase.*;
 import com.webmonitor.core.util.*;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import com.webmonitor.core.vo.Result;
@@ -35,8 +39,8 @@ import static com.webmonitor.core.util.SocketTools.getIpAddress;
  * 控制与设备数据相关操作
  **/
 public class DeviceController extends BaseController {
-
-    static HashMap<String, SocketClient> socketClientHashMap = new HashMap<String, SocketClient>();//用户的socket连接
+    public static final DeviceController me = new DeviceController();
+    public static HashMap<String, SocketClient> socketClientHashMap = new HashMap<String, SocketClient>();//用户的socket连接
     static HashMap<String, File> FileClientHashMap = new HashMap<>();
     static HashMap<String, UploadThread> ThreadHashMap = new HashMap<>();//执行线程；
     private boolean listenFlag = true;
@@ -55,8 +59,8 @@ public class DeviceController extends BaseController {
      **/
     public void fastsetting() {
         String userid = getCookie(IndexService.me.accessUserId);
-        int writeright=StaffService.me.getStaffById(userid).getSetPermission();
-        setAttr("writeright",writeright);
+        int writeright = StaffService.me.getStaffById(userid).getSetPermission();
+        setAttr("writeright", writeright);
         render("fastsetting.html");
     }
 
@@ -65,12 +69,12 @@ public class DeviceController extends BaseController {
      **/
     public void stationsetting() {
         String machinesn = getPara("machinedata");
-        String useid=getLoginAccount().getUserName();
+        String useid = getLoginAccount().getUserName();
         String userid = getCookie(IndexService.me.accessUserId);
-        String permission=StaffService.me.getStaffById(userid).getWebPermission();
-        int writeright=StaffService.me.getStaffById(userid).getSetPermission();
-        setAttr("writeright",writeright);
-        setAttr("webauthority",permission);
+        String permission = StaffService.me.getStaffById(userid).getWebPermission();
+        int writeright = StaffService.me.getStaffById(userid).getSetPermission();
+        setAttr("writeright", writeright);
+        setAttr("webauthority", permission);
         setAttr("machinedata", machinesn);
         render("stationsetting.html");
     }
@@ -141,8 +145,8 @@ public class DeviceController extends BaseController {
         try {
             String sn = getPara("sn");
             String userid = getCookie(IndexService.me.accessUserId);
-            String permission=StaffService.me.getStaffById(userid).getWebPermission();
-            setAttr("webauthority",permission);
+            String permission = StaffService.me.getStaffById(userid).getWebPermission();
+            setAttr("webauthority", permission);
             setAttr("machinedata", sn);
             render("setting.html");
         } catch (Throwable e) {
@@ -156,8 +160,10 @@ public class DeviceController extends BaseController {
     public void deviceorder() {
         Result result = Result.newOne();
         try {
+            String userid = getCookie(IndexService.me.accessUserId);
             String sn = getPara("sn");
             setAttr("machinedata", sn);
+            setAttr("userid", userid);
             render("order.html");
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
@@ -232,8 +238,10 @@ public class DeviceController extends BaseController {
         String sql = "select * from machine_data where machineSerial='" + sn + "'";
         MachineData machineData = Optional.ofNullable(MachineData.dao.findFirst(sql))
                 .orElseGet(MachineData::new);
-        int second = Integer.parseInt(machineData.getRecordInterval()) * 3600;
-        machineData.setRecordInterval(String.valueOf(second));
+        if(machineData.getConnectState()!=null){
+            int second = Integer.parseInt(machineData.getRecordInterval()) * 3600;
+            machineData.setRecordInterval(String.valueOf(second));
+        }
         result.success(machineData);
         renderJson(result);
     }
@@ -444,11 +452,12 @@ public class DeviceController extends BaseController {
         Gson gson = new Gson();
         String json = getPara("setting");
         String machine = getPara("machinesn");
+        String userid = getCookie(IndexService.me.accessUserId);
         boolean test = false;
         if (json.length() != 2) {
             MachineInfoEntity agentDataDao = gson.fromJson(json, new TypeToken<MachineInfoEntity>() {
             }.getType());
-            test = DeviceListService.checkObjAllFieldsIsNull(machine, agentDataDao);
+            test = DeviceListService.checkObjAllFieldsIsNull(userid, machine, agentDataDao);
         }
         if (test) {
             result.setMsg("修改成功");
@@ -596,12 +605,13 @@ public class DeviceController extends BaseController {
         Result result = Result.newOne();
         String data = getPara("json");
         String machinesn = getPara("machinesn");
+        String userid = getCookie(IndexService.me.accessUserId);
         DeviceSensorList deviceSensorList = gson.fromJson(data, new TypeToken<DeviceSensorList>() {
         }.getType());
         try {
             DeviceListService.me.addSensorByData(deviceSensorList, machinesn);
             SocketTools socketTools = new SocketTools();
-            socketTools.updateSocket(machinesn);
+            socketTools.updateSocket(userid, machinesn);
             result.success("成功");
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
@@ -617,12 +627,13 @@ public class DeviceController extends BaseController {
         Result result = Result.newOne();
         String data = getPara("json");
         String machinesn = getPara("machineserial");
+        String userid = getCookie(IndexService.me.accessUserId);
         DeviceSensorList deviceSensorList = gson.fromJson(data, new TypeToken<DeviceSensorList>() {
         }.getType());
         try {
             DeviceListService.me.delSensorByData(deviceSensorList, machinesn);
             SocketTools socketTools = new SocketTools();
-            socketTools.updateSocket(machinesn);
+            socketTools.updateSocket(userid, machinesn);
             result.success("成功");
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
@@ -653,10 +664,16 @@ public class DeviceController extends BaseController {
     public void isLatestVersion() {
         Result<String> result = Result.newOne();
         String machinesn = getPara("machinesn");
-        if (DeviceListService.me.isLatestVersion(machinesn)) {
+        String devicetype= AgentDataService.me.getDeviceDetailBySn(machinesn).getFirmwareType();
+        if (devicetype!=null&&!devicetype.equals("")&&DeviceListService.me.isLatestVersion(machinesn)) {
             result.success("ok");
         } else {
-            result.success("fail");
+            if(devicetype.equals("")){
+                result.success("fail2");
+            }else{
+                result.success("fail");
+            }
+
         }
         renderJson(result);
     }
@@ -715,11 +732,70 @@ public class DeviceController extends BaseController {
     }
 
     /**
+     * 批量更新设备
+     **/
+    public void updatedevices(){
+        Result result=Result.newOne();
+        Gson gson=new Gson();
+        String data=getPara("json");
+        List<MachineInfoEntity> sList =gson.fromJson(data,new TypeToken<List<MachineInfoEntity>>(){}.getType());
+        String userid = getCookie(IndexService.me.accessUserId);
+        ProDevCount proDevCount=new ProDevCount();//用来存储执行情况
+        String order="SET,DEVICE.FTP_UPDATE,GEO";
+        int success=0;
+        int error=0;
+        int error2=0;
+        try {
+            for(int i=0;i<sList.size();i++){
+                    SocketClient socketClient = new SocketClient();
+                    AgentData agentData=AgentDataService.me.getDeviceDetailBySn(sList.get(i).getMachineSerial());
+                    if(agentData.getFirmwareType().equals("")){
+                        error2++;
+                        continue;
+                    }
+                    socketClient.connect(sList.get(i).getMachineSerial(), userid);
+                    if (socketClient.isOnlineFlag()) {
+                        socketClient.setConnectime(System.currentTimeMillis());
+                        socketClient.sendData("WebClient" + userid + "&" + sList.get(i).getMachineSerial() + "&" + order);
+                        SocketTools socketTools=new SocketTools();
+                        socketTools.updateSocket(userid,sList.get(i).getMachineSerial());//通知更新
+                        socketClient.realdata = "";
+                        socketClient.getall = true;
+                        while ((socketClient.realdata == null || socketClient.realdata.equals(""))) {
+                            TimeUnit.SECONDS.sleep(1);
+                            socketClient.setLatesttime(System.currentTimeMillis());
+                            if ((socketClient.getLatesttime() - socketClient.getConnectime() > 1500)) {
+                                break;
+                            }
+                        }
+                        if (!(socketClient.realdata.equals("")||socketClient.realdata.equals("连接成功"))) {
+                            success++;
+                        } else {
+                            error++;
+                        }
+                        socketClient.realdata = "";
+                    } else {
+                        result.success("连接失败");
+                    }
+            }
+            proDevCount.setOncount(success);
+            proDevCount.setSum(sList.size());
+            proDevCount.setOutcount(error);
+            proDevCount.setUnprojcount(error2);
+            result.success(proDevCount);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+            result.success("error");
+        }
+        renderJson(result);
+    }
+
+    /**
      * 接受命令
      **/
     public void sendorder() {
         Result<String> result = Result.newOne();
-        String order = getPara("order").replace("\n","");
+        String order = getPara("order").replace("\n", "");
         String machinesn = getPara("machinesn");
         String userid = getCookie(IndexService.me.accessUserId);
         String test = "";
@@ -732,7 +808,7 @@ public class DeviceController extends BaseController {
             socketClient.sendData("WebClient" + userid + "&" + machinesn + "&" + order);
             if (!order.equals("")) {
                 socketClient.getall = true;
-                while ((socketClient.realdata == null || socketClient.realdata.equals(""))&&(socketClient.getall)) {
+                while ((socketClient.realdata == null || socketClient.realdata.equals(""))) {
                     TimeUnit.SECONDS.sleep(1);
 //                    socketClient.setLatesttime(System.currentTimeMillis());
 //                    if ((socketClient.getLatesttime() - socketClient.getConnectime() > 10000)) {
@@ -748,7 +824,7 @@ public class DeviceController extends BaseController {
                     }
                 }
             }
-            if (!socketClient.realdata.equals("") && !socketClient.getall) {
+            if (!socketClient.realdata.equals("")) {
                 test = socketClient.realdata;
                 System.out.println(socketClient.realdata);
             } else {
@@ -775,12 +851,12 @@ public class DeviceController extends BaseController {
                 SocketClient socketClient = new SocketClient();
                 socketClient.connect(machinesn, userid);
                 socketClientHashMap.put(userid, socketClient);
-                if (socketClient.isOnlineFlag()){
+                if (socketClient.isOnlineFlag()) {
                     result.success("连接成功");
-                }else{
+                } else {
                     result.success("连接失败");
                 }
-            }else{
+            } else {
                 result.success("连接成功");
             }
         } catch (Throwable e) {
@@ -898,6 +974,7 @@ public class DeviceController extends BaseController {
      **/
     public void fileinput() {
         Result<String> result = Result.newOne();
+        String type = getPara("type");
         String userid = getPara("userid") == null ? "" : getPara("userid");
         String stop = getPara("stop") == null ? "" : getPara("stop");
         String filename = getPara("filename") == null ? "" : getPara("filename");
@@ -906,7 +983,13 @@ public class DeviceController extends BaseController {
             if (stop.equals("")) {
                 UploadThread thread = new UploadThread(FileClientHashMap.get(userid + filename), userid + filename);
                 ThreadHashMap.put(userid + filename, thread);
-                String sqlresult = thread.uploadexcute();
+                String sqlresult = "";
+                if (type.equals("0")) {
+                    sqlresult = thread.uploadexcute();
+                } else {
+                    sqlresult = thread.uploadexcute2();
+                }
+
                 result.success(sqlresult);
             } else {
                 UploadThread thread = ThreadHashMap.get(userid + filename);
@@ -955,6 +1038,121 @@ public class DeviceController extends BaseController {
             String filename = getPara("filename");
             int progress = ThreadHashMap.get(filename).getProgress();
             result.success(progress);
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /**
+     * 获取所有项目对应的设备的经纬度
+     **/
+    public void getAllLocalGnss() {
+        Result<List<List<BaseDevicemap>>> result = Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        StaffData user = StaffService.me.getStaffById(userid);
+        String agentnum=getPara("agentnum");
+        List<List<BaseDevicemap>> devicemapList = new ArrayList<>();
+        try {
+            String type = RoleType.getString(user.getIRoleType());
+            switch (type) {
+                case "superadmin":
+                    List<BaseProjects> project1 = ProjectService.me.getProjectByComId(agentnum);
+                    for (int i = 0; i < project1.size(); i++) {
+                        String j = project1.get(i).getProjectid();
+                        List<BaseDevicemap> list1 = DeviceListService.me.getProjectGnssDevices(j);
+                        devicemapList.add(list1);
+                    }
+                    result.success(devicemapList);
+                    break;
+                case "companyadmin":
+                    String agentNumber = StaffService.me.getStaffById(userid).getAgentNumber();
+                    List<BaseProjects> project = ProjectService.me.getProjectByComId(agentNumber);
+                    for (int i = 0; i < project.size(); i++) {
+                        String j = project.get(i).getProjectid();
+                        List<BaseDevicemap> list1 = DeviceListService.me.getProjectGnssDevices(j);
+                        devicemapList.add(list1);
+                    }
+                    result.success(devicemapList);
+                    break;
+                case "user":
+                    String userproject = StaffService.me.getStaffById(userid).getGroupAssemble();
+                    String[] projects = userproject.split("@");
+                    for (int i = 0; i < projects.length; i++) {
+                        String j = projects[i];
+                        List<BaseDevicemap> list1 = DeviceListService.me.getProjectGnssDevices(j);
+                        devicemapList.add(list1);
+                    }
+                    result.success(devicemapList);
+                    break;
+                case "admin":
+                    List<BaseProjects> project2 = ProjectService.me.getProjectByComId(agentnum);
+                    for (int i = 0; i < project2.size(); i++) {
+                        String j = project2.get(i).getProjectid();
+                        List<BaseDevicemap> list1 = DeviceListService.me.getProjectGnssDevices(j);
+                        devicemapList.add(list1);
+                    }
+                    result.success(devicemapList);
+                    break;
+            }
+        } catch (Exception e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /**
+     * 获取用户所有项目对应的设备的经纬度
+     **/
+    public void getUsrAllLocalGnss() {
+        Result<List<List<BaseDevicemap>>> result = Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        String project = StaffService.me.getStaffById(userid).getGroupAssemble();
+        String[] projects = project.split("@");
+        List<List<BaseDevicemap>> devicemapList = new ArrayList<>();
+        try {
+            for (int i = 0; i < projects.length; i++) {
+                String j = projects[i];
+                List<BaseDevicemap> list1 = DeviceListService.me.getProjectGnssDevices(j);
+                devicemapList.add(list1);
+            }
+            result.success(devicemapList);
+        } catch (Exception e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /**
+     * 获取设备的位置信息
+     **/
+    public void getGnssDevicesBySn() {
+        Result<BaseDevicemap> result = Result.newOne();
+        BaseDevicemap devicemap = new BaseDevicemap();
+        String sn = getPara("sn");
+        try {
+            devicemap = DeviceListService.me.getGnssDevicesBySn(sn);
+            result.success(devicemap);
+        } catch (Exception e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /**
+     * 根据项目id获取对应设备的经纬度
+     **/
+    public void getprojectGnssmapmark() {
+        Result<List<BaseDevicemap>> result = Result.newOne();
+        try {
+            String projId = getPara("projid");
+            List<BaseDevicemap> list = DeviceListService.me.getProjectGnssDevices(projId);
+            for (int i = 0; i < list.size(); i++) {
+                LonLat blh = Tools.transform(list.get(i).getLon(), list.get(i).getLat());
+                list.get(i).setLon(blh.getLon());
+                list.get(i).setLat(blh.getLat());
+            }
+            result.success(list);
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
         }

@@ -218,7 +218,7 @@ layui.define(['form','drawer','table','laydate'], function (exports) {
         }else if(obj.event === 'edit'){
             location.href = '/template/setting?templatename=' + data.templateName+"&&type="+data.type;
         } else if (obj.event === 'del') {
-            layer.confirm('真的删除行么', function(index){
+            layer.confirm('真的删除当前项吗？', function(index){
                 obj.del();
                 admin.req({
                     url:'/template/delTemplate',

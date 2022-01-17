@@ -122,18 +122,22 @@ layui.define(['form','drawer','table'], function (exports) {
         });
     });
 
-    renderTable();
+
     adaptauthority();
     getCompanyListByRole();
+    renderTable();
 
     function renderTable(){
         var stats = $("#stats").val();
+        let companynum=companysearch.getValue('valueStr');
+        let input = $("#account").val();
         table.render({
             elem: '#table-form'
             , title: 'logdata'
             , totalRow: true
             , height:'full-200'
-            , url: '/orderlog/getAllOrderLog'
+            , url: '/orderlog/searchAlllOrderLog'
+            ,where:{'agentnum':companynum,"content":input}
             , cols: [[
                 {field: 'agentName', title: "隶属公司", align: 'center'}
                 , {field: 'machineSerial', title: "设备SN码", align: 'center'}
@@ -199,7 +203,7 @@ layui.define(['form','drawer','table'], function (exports) {
         let selectdisabled=false;
         let projectData;
         let init;
-        if(roletype!="superadmin"){
+        if(roletype!="superadmin"&&roletype!="admin"){
             projectData = [];
             selectdisabled=true;
         }else{
@@ -213,7 +217,7 @@ layui.define(['form','drawer','table'], function (exports) {
                 jsonStr.name = item.agentName;
                 jsonStr.value = item.agentNumber;
                 projectData.push(jsonStr);
-                if(i==0&&roletype!="superadmin"){
+                if(i==0&&roletype!="superadmin"&&roletype!="admin"){
                     init=jsonStr.value;
                 }
             }
@@ -257,7 +261,7 @@ layui.define(['form','drawer','table'], function (exports) {
         }else if(obj.event === 'edit'){
             location.href = '/template/setting?templatename=' + data.templateName+"&&type="+data.type;
         } else if (obj.event === 'del') {
-            layer.confirm('真的删除行么', function(index){
+            layer.confirm('真的删除当前项吗？', function(index){
                 obj.del();
                 admin.req({
                     url:'/template/delTemplate',

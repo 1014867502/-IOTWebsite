@@ -2,6 +2,7 @@ package com.webmonitor.core.idal;
 
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.core.model.*;
+import com.webmonitor.core.model.userbase.BaseDevicemap;
 import com.webmonitor.core.model.userbase.DeviceSensorList;
 import com.webmonitor.core.model.userbase.Templates;
 
@@ -13,6 +14,10 @@ public interface IAgentData {
 
     /**获取所有设备信息**/
     public Page<AgentData> getAllDevice(int pageno,int limit);
+
+    List<BaseDevicemap> getProjectGnssDevices(String projectid);
+
+    BaseDevicemap getGnssDevicesBySn(String sn);
 
     /**筛选所有设备**/
     Page<AgentData> searchDeviceByParam(String type,String content,String agentNum,String[] projectid,String state,int pageno,int limit);
@@ -74,7 +79,8 @@ public interface IAgentData {
     Page<DeviceSensorList> getDeivceSensorList(String machineserial,int pageno,int limit);
 
     /**获取用户属下的所有设备数目**/
-    ProDevCount getDeviceCountByUserid(String[] authoritys);
+    ProDevCount getDeviceCountByUserid(String[] authoritys,String agentNumber);
+
 
     /**添加设备的传感器**/
     void addSensorByData(DeviceSensorList deviceSensorList,String machineserial);

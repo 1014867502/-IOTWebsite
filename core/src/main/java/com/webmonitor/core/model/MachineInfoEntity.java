@@ -96,7 +96,7 @@ public class MachineInfoEntity {
      * rawBackGnssData : 0
      */
     private Long _id;//主键id
-
+    private int nameType;
     private String machineSerial;
     private String machineModel;
     private String mcuVer;
@@ -216,6 +216,7 @@ public class MachineInfoEntity {
     private String gpsBeiDou;
     private String glonass;
     private String gaLileo;
+    private String expiredate;
     public MachineInfoEntity(Long _id, String machineSerial, String machineModel,
             String mcuVer, String firmwareVer, String puwerLever, String extVoltage,
             String insideSpace, String dataLink, String timeZone, String rtkPos,
@@ -1046,4 +1047,8 @@ public class MachineInfoEntity {
     public void setGlonass(String glonass) { this.glonass = glonass; }
     public String getGaLileo() { return gaLileo; }
     public void setGaLileo(String gaLileo) { this.gaLileo = gaLileo; }
+    public int getNameType() { return nameType; }
+    public void setNameType(int nameType) { this.nameType = nameType; }
+    public String getExpiredate() { return expiredate; }
+    public void setExpiredate(String expiredate) { this.expiredate = expiredate; }
 }

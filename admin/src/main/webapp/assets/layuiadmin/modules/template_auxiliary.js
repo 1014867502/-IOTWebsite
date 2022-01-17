@@ -6,6 +6,9 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
         , drawer = layui.drawer
         ,table2=layui.table
         ,auxiliaryfunc=layui.station_auxiliary_func
+        // ,templatform=layui.template_platform
+        // ,temcompute=layui.template_compute
+        // ,temlocate=layui.template_locate
         ,form=layui.form
 
     var locatedata;
@@ -71,18 +74,31 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
         }
     });
 
-    getDeviceSetting(templatename);
+    if(type==1){
+        getDeviceSetting(templatename);
+        $("#savemodel").click(function () {
+            if(form.doVerify("formDemo2")){
+                saveModel();
+                updateModel();
+            }
+        })
+    }else{
+        getDeviceSetting("init");
+        $("#savemodel").click(function () {
+            if(form.doVerify("formDemo")){
+                saveModel();
+                addModel();
+            }
+        })
+        $("#reset").css("display","none");
+        $("#changename").css("display","none");
+    }
+
 
     $("#reset").click(function () {
         getDeviceSetting(templatename);
     })
 
-    $("#savemodel").click(function () {
-        if(form.doVerify("formDemo2")){
-            saveModel();
-            updateModel();
-        }
-    })
 
 
 
@@ -142,7 +158,12 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
             success:function (data) {
                 model=model+stringtest;
                 getDeviceSetting(machinesn);
-                alert("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
     })
@@ -276,72 +297,135 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
             },
             success: function (data) {
                 let device = data.data;
-                locatedata=device;
-                auxiliaryfunc.setdevice(device);
-                if(device.extSensorEnabled>0){
-                    $("#sensor_enable").prop('checked',true);
-                    document.getElementById("connectsensor").innerHTML=auxiliaryfunc.sensorcontent1;
-                    /*添加设备*/
-                    $("#sensor_power").val(device.extSensorPower);
-                } else {
-                    $("#sensor_enable").prop('checked',false);
-                    document.getElementById("connectsensor").innerHTML = "";
-                }
-                if(parent.window.writeright==0){
-                    $("#changename").prop("disabled",true);
-                    $("#errormsg").html("修改权限被限制");
-                    $("#changename").addClass("layui-btn-disabled");
-                    $("#savemodel").prop("disabled",true);
-                    $("#savemodel").addClass("layui-btn-disabled");
-                }
-                /*定时*/
-                if (device.scheduler!=null&&device.scheduler!="0") {
-                    $("#scheduler_enable").prop('checked',true);
-                    let timepara=device.scheduler.split('|');
-                    document.getElementById("timeswitch").innerHTML =auxiliaryfunc.timecontent;
-                    let workdaystr=parseInt(timepara[0]).toString(2);
-                    if(workdaystr.length<7){
-                        for(let k=0;k<7-workdaystr.length;k++){
-                            workdaystr="0"+workdaystr;
+                if (device.rawName!=null) {
+                    locatedata = device;
+                    auxiliaryfunc.setdevice(device);
+                    if (device.extSensorEnabled > 0) {
+                        $("#sensor_enable").prop('checked', true);
+                        document.getElementById("connectsensor").innerHTML = auxiliaryfunc.sensorcontent1;
+                        /*添加设备*/
+                        if (device.extSensorPower != "" && device.extSensorPower != null) {
+                            $("#sensor_power").val(device.extSensorPower);
                         }
+                    } else {
+                        $("#sensor_enable").prop('checked', false);
+                        document.getElementById("connectsensor").innerHTML = "";
                     }
-                    workdaystr=workdaystr.split('').reverse().join('');
-                    for(let i=0;i<workdaystr.length;i++){
-                        if(workdaystr.charAt(i)!=='0'){
-                            let id=i+1;
-                            let timeid="#week_"+id;
-                            $(timeid).prop("checked",true);
+                    if (parent.window.writeright == 0) {
+                        $("#changename").prop("disabled", true);
+                        $("#errormsg").html("修改权限被限制");
+                        $("#changename").addClass("layui-btn-disabled");
+                        $("#savemodel").prop("disabled", true);
+                        $("#savemodel").addClass("layui-btn-disabled");
+                    }
+                    /*定时*/
+                    if (device.scheduler != null && device.scheduler != "0") {
+                        $("#scheduler_enable").prop('checked', true);
+                        let timepara1 = device.scheduler.split('|');
+                        document.getElementById("timeswitch").innerHTML = auxiliaryfunc.timecontent;
+                        let workdaystr = parseInt(timepara1[0]).toString(2);
+                        if (workdaystr.length < 7) {
+                            for (let k = 0; k < 7 - workdaystr.length; k++) {
+                                workdaystr = "0" + workdaystr;
+                            }
                         }
+                        workdaystr = workdaystr.split('').reverse().join('');
+                        for (let i = 0; i < workdaystr.length; i++) {
+                            if (workdaystr.charAt(i) !== '0') {
+                                let id = i + 1;
+                                let timeid = "#week_" + id;
+                                $(timeid).prop("checked", true);
+                            }
+                        }
+                        if (timepara1[1] != "" && timepara1[1] != null) {
+                            $("#scheduler_start_time").val(timepara1[1]);
+                        }
+                        if (timepara1[2] != "" && timepara1[2] != null) {
+                            $("#scheduler_run_time").val(timepara1[2]);
+                        }
+                        if (timepara1[3] != "" && timepara1[3] != null) {
+                            $("#scheduler_powerlevel").val(timepara1[3]);
+                        }
+                    } else {
+                        $("#scheduler_enable").prop('checked', false);
+                        document.getElementById("timeswitch").innerHTML = "";
                     }
-                    $("#scheduler_start_time").val(timepara[1]);
-                    $("#scheduler_run_time").val(timepara[2]);
-                    $("#scheduler_powerlevel").val(timepara[3]);
-                } else {
-                    $("#scheduler_enable").prop('checked',false);
-                    document.getElementById("timeswitch").innerHTML="";
-                }
 
 
-                /*触发报警*/
-                if(device.moveWarnEnabled>0){
-                    $("#move_warn_enable").prop('checked',true);
-                    document.getElementById("warning").innerHTML=auxiliaryfunc.warncontent;
-                    let movewarn=device.moveWarnThreshold.split("|");
-                    $("#move_warn_dx").val(movewarn[0]);
-                    $("#move_warn_dy").val(movewarn[1]);
-                    $("#move_warn_dz").val(movewarn[2]);
-                    $("#move_warn_mems").val(device.moveWarnMems);
-                    $("#move_warn_baud").val(device.moveWarnBaud);
-                    $("#move_warn_cmd").val(device.moveWarnCmd);
-                }else{
-                    $("#move_warn_enable").prop('checked',false);
-                    document.getElementById("warning").innerHTML = "";
+                    /*触发报警*/
+                    if (device.moveWarnEnabled > 0) {
+                        $("#move_warn_enable").prop('checked', true);
+                        document.getElementById("warning").innerHTML = auxiliaryfunc.warncontent;
+                        let movewarn = device.moveWarnThreshold.split("|");
+                        $("#move_warn_dx").val(movewarn[0]);
+                        $("#move_warn_dy").val(movewarn[1]);
+                        $("#move_warn_dz").val(movewarn[2]);
+                        if (locatedata.moveWarnMems != "" && locatedata.moveWarnMems != null) {
+                            $("#move_warn_mems").val(locatedata.moveWarnMems);
+                        }
+                        if (locatedata.moveWarnBaud != "" && locatedata.moveWarnBaud != null) {
+                            $("#move_warn_baud").val(locatedata.moveWarnBaud);
+                        }
+                        $("#move_warn_cmd").val(device.moveWarnCmd);
+                    } else {
+                        $("#move_warn_enable").prop('checked', false);
+                        document.getElementById("warning").innerHTML = "";
+                    }
+                    saveModel();
+                    form.render();
                 }
-                saveModel();
-                form.render();
             }
         })
     }
+
+
+    /**添加模板**/
+    form.on('submit(save)',function () {
+        let setting=parent.testmodel;
+        let jsondata="";
+        let arr=[];
+        if(setting.compute!=null){
+            arr.push(setting.compute.substring(1, setting.compute.length - 1));
+        }
+        if (setting.locate != null) {
+            arr.push(setting.locate.substring(1, setting.locate.length - 1));
+        }
+        if (setting.plaform != null) {
+            arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
+        }
+        if (setting.auxiliary != null) {
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length-1));
+        }
+        for(let i=0;i<arr.length;i++){
+            if(i==0){
+                jsondata+="{"+arr[i];
+            }else{
+                jsondata+=","+arr[i];
+                if(i==arr.length-1){
+                    jsondata+="}";
+                }
+            }
+        }
+        let data1 = form.val("save");
+        $.ajax({
+            url:'/template/addTemplate',
+            data:{
+                json:jsondata,
+                templatename:data1.templatename,
+                type:"2"
+            },
+            async:false,
+            success:function () {
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
+            }
+        })
+        layer.close(layerindex);
+    })
 
     /**更新模组**/
     function updateModel(){
@@ -358,7 +442,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
             arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
         }
         if (setting.auxiliary != null) {
-            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length));
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length-1));
         }
         for(let i=0;i<arr.length;i++){
             if(i==0){
@@ -380,9 +464,28 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
             },
             async:false,
             success:function () {
-                layer.msg("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
+    }
+
+    /**提交模组**/
+    function addModel(){
+        layer.open({
+            type: 1
+            ,id: 'layerDemo' //防止重复弹出
+            , title: ['保存模板']
+            , area: ['300px', '300px']
+            , content: $("#savewindow")
+            , success: function (layero, index) {
+                layerindex=index;
+            },
+        });
     }
 
     /**保存模组**/
@@ -392,6 +495,22 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
         parent.testmodel.auxiliary=JSON.stringify(jsondata);
     }
 
+    /**保存当前页面模板（）**/
+    function checksavemodel(){
+            if(form.doVerify("formDemo")){
+                saveModel();
+                return true;
+            }else{
+                layer.msg("辅助功能页面有误！");
+                return false;
+            }
+    }
 
-    exports('template_auxiliary', {})
+    var temauxiliary = {
+        checksavemodel: function () {
+            checksavemodel();
+        }
+    }
+
+    exports('template_auxiliary', temauxiliary)
 });

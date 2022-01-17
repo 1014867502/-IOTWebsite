@@ -66,8 +66,8 @@ public class AgentDataService {
         return dal.getDeviceCountByComid(comid);
     }
 
-    public ProDevCount getCosumerDevCount(String[] projects){
-        return dal.getDeviceCountByUserid(projects);
+    public ProDevCount getCosumerDevCount(String[] projects,String agentNumber){
+        return dal.getDeviceCountByUserid(projects,agentNumber);
     }
 
 //    /**查询当前项目所有设备**/

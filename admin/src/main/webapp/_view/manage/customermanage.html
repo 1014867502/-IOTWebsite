@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    #@meta("管理员的用户管理页面")
+    #@meta("超级管理员的用户管理页面")
     <script src="/assets/lib/xm-select.js"></script>
 </head>
 <body class="layui-layout-body">
@@ -54,6 +54,9 @@
         border-color: #1E9FFF !important;
         color: #fff;
     }
+    .layui-form-checked span, .layui-form-checked:hover span {
+        background-color: #01aaed;
+    }
 
     .layui-form-select dl dd.layui-this {
         background-color: #1E9FFF !important;
@@ -90,7 +93,7 @@
         background-color: #1e9fff;
     }
     .tableeventbtn{
-        width: 55px;
+        width: 60px;
         height: 23px;
         border: 1px solid #01AAED;
         border-radius: 5px;
@@ -161,9 +164,13 @@
                         <option value="1">供销商管理员</option>
                         <option value="2">超级管理员</option>
                         <option value="3">安装测试人员</option>
+                        <option value="4">普通管理员</option>
                     </select>
                 </div>
             </div>
+        </div>
+        <div id="addmanagecompanylist">
+
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">所属公司</label>
@@ -171,6 +178,7 @@
                 <div id="companylist" class="xm-select-project" style="width: 70%"></div>
             </div>
         </div>
+
         <div id="formproject">
             <div class="layui-form-item">
                <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">可查看的项目</label>
@@ -179,18 +187,23 @@
                </div>
             </div>
         </div>
-        <div class="layui-form-item" id="showwebright">
-            <label class="layui-form-label" style="width: 84px;">网页功能权限</label>
-            <div class="layui-input-block">
-                <div id="initwebauthority" class="xm-select-demo" style="width: 70%"></div>
+        <div id="showwebright">
+            <div class="layui-form-item" >
+                <label class="layui-form-label" style="width: 84px;">网页功能权限</label>
+                <div class="layui-input-block">
+                    <div id="initwebauthority" class="xm-select-demo" style="width: 70%"></div>
+                </div>
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">app功能权限</label>
-            <div class="layui-input-block">
-                <div id="initappauthority" class="xm-select-demo" style="width: 70%"></div>
-            </div>
-        </div>
+       <div id="showappright">
+           <div class="layui-form-item" >
+               <label class="layui-form-label">app功能权限</label>
+               <div class="layui-input-block">
+                   <div id="initappauthority" class="xm-select-demo" style="width: 70%"></div>
+               </div>
+           </div>
+       </div>
+
         <div id="datekeep" class="layui-form-item">
             <label class="layui-form-label">账号时限</label>
             <div class="layui-input-block">
@@ -211,6 +224,32 @@
             <div class="layui-input-block">
                 <button id="sumbit" type="button" class="layui-btn" lay-submit lay-filter="formDemo1">提交</button>
 <!--                <button id="reset" type="reset" class="layui-btn">重置</button>-->
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--弹出修改公司功能权限的窗口-->
+<div class="site-text" style="margin: 5%; display: none" id="authorwindow" target="test123">
+    <form class="layui-form" id="book" method="post" lay-filter="authorexample">
+        <div class="layui-form-item">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">选择公司</label>
+                <div class="layui-input-block">
+                    <div id="authorcompanylist" class="xm-select-project" style="width: 70%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">网页权限内容</label>
+            <div class="layui-input-block" id="webcontent" style="height: 100px">
+
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">app权限内容</label>
+            <div class="layui-input-block" id="appcontent" style="height: 100px">
+
             </div>
         </div>
     </form>
@@ -258,6 +297,8 @@
                         <option value="1">供销商管理员</option>
                         <option value="2">超级管理员</option>
                         <option value="3">安装测试人员</option>
+                        <option value="4">普通管理员</option>
+                        <option></option>
                     </select>
                 </div>
             </div>
@@ -268,6 +309,9 @@
                 <div id="companylistedit" class="xm-select-project" style="width: 70%"></div>
             </div>
         </div>
+        <div id="formcompanyedit">
+
+        </div>
         <div id="formprojectedit">
 
         </div>
@@ -277,7 +321,7 @@
                 <div id="webauthority" class="xm-select-demo" style="width: 70%"></div>
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item" id="editappright">
             <label class="layui-form-label">app功能权限</label>
             <div class="layui-input-block">
                 <div id="appauthority" class="xm-select-demo" style="width: 70%"></div>
@@ -343,6 +387,11 @@
                         <div class="layui-inline" >
                             <button type="button" class="layui-btn" id="repassword_user">
                                 <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #FFFFFF;"></i>批量重置密码
+                            </button>
+                        </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn" id="reauthor_com">
+                                <i class="layui-icon" style="font-size: 30px; color: #FFFFFF;"></i>修改公司功能权限
                             </button>
                         </div>
                     </div>

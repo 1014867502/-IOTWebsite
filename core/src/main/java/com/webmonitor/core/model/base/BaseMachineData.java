@@ -941,8 +941,8 @@ public abstract class BaseMachineData<M extends BaseMachineData<M>> extends Mode
 		set("connectState", connectState);
 	}
 	
-	public java.lang.Integer getConnectState() {
-		return getInt("connectState");
+	public java.lang.Long getConnectState() {
+		return getLong("connectState");
 	}
 
 	public void setUpdateTime(java.lang.String updateTime) {
@@ -993,6 +993,14 @@ public abstract class BaseMachineData<M extends BaseMachineData<M>> extends Mode
 		return getStr("gpsSerial");
 	}
 
+	public void setGpsModel(java.lang.String gpsModel) {
+		set("gpsModel", gpsModel);
+	}
+	
+	public java.lang.String getGpsModel() {
+		return getStr("gpsModel");
+	}
+
 	public void setGpsFirmwareVer(java.lang.String gpsFirmwareVer) {
 		set("gpsFirmwareVer", gpsFirmwareVer);
 	}
@@ -1031,6 +1039,54 @@ public abstract class BaseMachineData<M extends BaseMachineData<M>> extends Mode
 	
 	public java.lang.String getGaLileo() {
 		return getStr("gaLileo");
+	}
+
+	public void setProName(java.lang.String proName) {
+		set("proName", proName);
+	}
+	
+	public java.lang.String getProName() {
+		return getStr("proName");
+	}
+
+	public void setRawStatus(java.lang.String rawStatus) {
+		set("rawStatus", rawStatus);
+	}
+	
+	public java.lang.String getRawStatus() {
+		return getStr("rawStatus");
+	}
+
+	public void setRawBackStatus(java.lang.String rawBackStatus) {
+		set("rawBackStatus", rawBackStatus);
+	}
+	
+	public java.lang.String getRawBackStatus() {
+		return getStr("rawBackStatus");
+	}
+
+	public void setNetworkState(java.lang.String networkState) {
+		set("networkState", networkState);
+	}
+	
+	public java.lang.String getNetworkState() {
+		return getStr("networkState");
+	}
+
+	public void setWifiEnable(java.lang.String wifiEnable) {
+		set("wifiEnable", wifiEnable);
+	}
+	
+	public java.lang.String getWifiEnable() {
+		return getStr("wifiEnable");
+	}
+
+	public void setExpireDate(java.lang.String expireDate) {
+		set("expireDate", expireDate);
+	}
+	
+	public java.lang.String getExpireDate() {
+		return getStr("expireDate");
 	}
 
 }

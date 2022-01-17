@@ -74,7 +74,12 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             },
             async:false,
             success:function (data) {
-                layer.msg('提交成功');
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
                 getProjectCount();
                 laypage.render({
                     elem: 'demo7'
@@ -103,7 +108,12 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             },
             async:false,
             success:function (data) {
-                layer.msg('提交成功');
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
                 getProjectCount();
                 laypage.render({
                     elem: 'demo7'
@@ -228,6 +238,9 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             type:'get',
             success:function(data){
                 identity=data.data;
+              if(identity=="superadmin"){
+                  $("#add_device").css("display","block");
+              }
             }
         });
         return identity;

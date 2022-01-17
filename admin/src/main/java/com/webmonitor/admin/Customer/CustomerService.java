@@ -6,14 +6,14 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.admin.common.kit.I18nKit;
 import com.webmonitor.core.bll.StaffService;
-import com.webmonitor.core.dal.AgentDataMysqlDAL;
-import com.webmonitor.core.dal.StaffDataMysqlDAL;
+import com.webmonitor.core.dal.*;
 import com.webmonitor.core.idal.IAgentData;
 import com.webmonitor.core.idal.IStaffData;
 import com.webmonitor.core.model.Permission;
 import com.webmonitor.core.model.Role;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.StaffDataEntity;
+import com.webmonitor.core.model.userbase.FuncAuthor;
 import com.webmonitor.core.util.MD5Utils;
 import com.webmonitor.core.util.exception.BusinessException;
 import com.webmonitor.core.vo.Result;
@@ -40,13 +40,16 @@ public class CustomerService {
     }
 
     /**新增用户**/
-    public Result<String> save(StaffDataEntity staffData,String select,String right,String appright) {
+    public Result<String> save(StaffDataEntity staffData,String select,String right,String appright,String selectcom) {
         Result<String> result = Result.newOne();
         StaffData staffData1=new StaffData();
         staffData1.setAgentNumber(staffData.getAgentNumber());
         staffData1.setCDept(staffData.getcDept());
         staffData1.setIAccountType(staffData.getiAccountType());
         staffData1.setIRoleType(staffData.getiRoleType());
+        if(staffData.getiRoleType()== RoleType.superadmin.getIndex() ||staffData.getiRoleType()== RoleType.admin.getIndex()){
+            staffData1.setIAccountType("1");
+        }
         staffData1.setAccountTime(staffData.getAccounttime());
         staffData1.setSetPermission(staffData.getWritePermission());
         String password=staffData.getuPassword();
@@ -54,22 +57,33 @@ public class CustomerService {
         staffData1.setUPassword(code);
         staffData1.setURealName(staffData.getuRealName());
         staffData1.setUAccountNum(staffData.getuAccountNum());
-        staffData1.setWebPermission(right);
-        staffData1.setAppPermission(appright);
-        switch(staffData1.getIRoleType()){
-            case 0:
+        staffData1.setGroupAgentNumber(selectcom);
+        switch(RoleType.getString(staffData1.getIRoleType())){
+            case "user":
                 if(select.equals("empty")){
                     staffData1.setGroupAssemble("");
                 }else{
                     staffData1.setGroupAssemble(select);
                 }
-
+                staffData1.setWebPermission(right);
+                staffData1.setAppPermission(appright);
                 break;
-            case 1:
+            case "companyadmin":
                 staffData1.setGroupAssemble("all");//供销商公司所有项目
+                staffData1.setWebPermission(right);
+                staffData1.setAppPermission(appright);
                 break;
-            case 2:
+            case "superadmin":
                 staffData1.setGroupAssemble("all");//所有项目
+                staffData1.setWebPermission(WebAuthority.getAllString());
+                staffData1.setAppPermission(AppAuthority.getAllString());
+                break;
+            case "test":
+                staffData1.setAppPermission(appright);
+                break;
+            case "admin":
+                staffData1.setWebPermission(WebAuthority.getAllString());
+                staffData1.setAppPermission(AppAuthority.getAllString());
                 break;
         }
         if(staffData1.save()){
@@ -90,14 +104,16 @@ public class CustomerService {
 
 
     /**更新用户资料**/
-    public Result<String> update(StaffDataEntity staffData,String select,String right,String appright) {
+    public Result<String> update(StaffDataEntity staffData,String select,String right,String appright,String selectcom) {
         Result<String> result = Result.newOne();
         StaffData staffData1=new StaffData();
+        StaffData staffData2=StaffData.dao.findById(staffData.getId());
         staffData1.setId(staffData.getId());
         staffData1.setAgentNumber(staffData.getAgentNumber());
         staffData1.setCDept(staffData.getcDept());
         staffData1.setIAccountType(staffData.getiAccountType());
         staffData1.setIRoleType(staffData.getiRoleType());
+        staffData1.setIAccountType(staffData2.getIAccountType());
         staffData1.setAccountTime(staffData.getAccounttime());
         staffData1.setSetPermission(staffData.getWritePermission());
         String password=staffData.getuPassword();
@@ -108,21 +124,35 @@ public class CustomerService {
         }
         staffData1.setURealName(staffData.getuRealName());
         staffData1.setUAccountNum(staffData.getuAccountNum());
+        staffData1.setGroupAgentNumber(selectcom);
         staffData1.setWebPermission(right);
         staffData1.setAppPermission(appright);
-        switch(staffData1.getIRoleType()){
-            case 0:
+        switch(RoleType.getString(staffData1.getIRoleType())){
+            case "user":
                 if(select.equals("empty")){
                     staffData1.setGroupAssemble("");
                 }else{
                     staffData1.setGroupAssemble(select);
                 }
+                staffData1.setWebPermission(right);
+                staffData1.setAppPermission(appright);
                 break;
-            case 1:
+            case "companyadmin":
                 staffData1.setGroupAssemble("all");//供销商公司所有项目
+                staffData1.setWebPermission(right);
+                staffData1.setAppPermission(appright);
                 break;
-            case 2:
+            case "superadmin":
                 staffData1.setGroupAssemble("all");//所有项目
+                staffData1.setWebPermission(WebAuthority.getAllString());
+                staffData1.setAppPermission(AppAuthority.getAllString());
+                break;
+            case "admin":
+                staffData1.setWebPermission(WebAuthority.getAllString());
+                staffData1.setAppPermission(AppAuthority.getAllString());
+                break;
+            case "test":
+                staffData1.setAppPermission(appright);
                 break;
         }
         if(staffData1.update()){
@@ -171,8 +201,8 @@ public class CustomerService {
     }
 
     /**搜索用户**/
-    public Page<StaffDataEntity> searchCustomByParam(String content,String agentnum,int pageno,int limit){
-        return dal.searchCustomByParam(content,agentnum, pageno, limit);
+    public Page<StaffDataEntity> searchCustomByParam(StaffData staffData,String content,String agentnum,int pageno,int limit){
+        return dal.searchCustomByParam(staffData,content,agentnum, pageno, limit);
     }
 
 
@@ -251,4 +281,14 @@ public class CustomerService {
         return ret;
     }
 
+    /**获取用户web权限内容**/
+    public List<FuncAuthor> getWebAuthorityById(String userid){
+        return dal.getWebAuthorityById(userid);
+    }
+
+
+    /**获取用户app权限内容**/
+    public List<FuncAuthor> getAppAuthorityById(String userid){
+        return dal.getAppAuthorityById(userid);
+    }
 }

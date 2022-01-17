@@ -192,9 +192,9 @@
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script>
     var templatename = "#(templatename)"
-    debugger
     var authority1="#(webauthority)";
     var type="#(type)";
+    var modeltype="#(modeltype)";
 
     layui.config({
         base: '/assets/layuiadmin/'
@@ -202,6 +202,7 @@
         index: 'lib/index' //主入口模块
     }).use(['index']);
 
+    debugger
     showtype(type);
     function  iframechange() {
         var iframes = document.getElementsByTagName('iframe_a');
@@ -233,20 +234,29 @@
     }
 
     function showtype(type){
-        $("#templatename").html(templatename);
+        if(templatename!=""){
+            $("#templatename").html(templatename);
+        }
         if(type=="1"){
             document.getElementById("menu").innerHTML="    <li class=\"little\" id=\"fastsetting\"  >\n" +
                 "                        <div style=\"display: flex;justify-content: center;\" ><i  class=\"icon\" ><i id=\"fastsetting2\"  class=\"icon\" style=\"background: url(/assets/images/icon-zhinan.png) no-repeat center;\"></i></i></div>\n" +
                 "                        <div>快速设置</div>\n" +
                 "                    </li>\n"
-            document.getElementById("iframe_a").src="/template/fastsetting?templatename="+templatename;
-
+            if(modeltype=="1"){
+                document.getElementById("iframe_a").src="/template/fastsetting?templatename="+templatename+"&&type=1";
+            }else{
+                document.getElementById("iframe_a").src="/template/fastsetting?type=0";
+            }
         }else{
             document.getElementById("menu").innerHTML="    <li class=\"little\" id=\"devicesetting\">\n" +
                 "                        <div style=\"display: flex;justify-content: center;\"><i class=\"icon\"><i class=\"icon\" style=\"background: url(/assets/images/testsetting_black.png) no-repeat center;\"></i></i></div>\n" +
                 "                        <div>测站设置</div>\n" +
                 "                    </li>";
-            document.getElementById("iframe_a").src="/template/stationsetting?templatename="+templatename;
+            if(modeltype=="1"){
+                document.getElementById("iframe_a").src="/template/stationsetting?templatename="+templatename+"&&type=1";
+            }else{
+                document.getElementById("iframe_a").src="/template/stationsetting?type=0";
+            }
         }
     }
 </script>

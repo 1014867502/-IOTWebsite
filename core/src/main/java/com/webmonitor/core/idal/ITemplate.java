@@ -1,6 +1,7 @@
 package com.webmonitor.core.idal;
 
 import com.jfinal.plugin.activerecord.Page;
+import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.TemplateData;
 import com.webmonitor.core.model.userbase.Templates;
 
@@ -8,6 +9,10 @@ public interface ITemplate {
 
     /**获取模板列表（全部）**/
     Page<Templates> getAllTemplate(int pageno, int limit);
+
+    /**获取模板列表（管理员全部）**/
+    Page<Templates> getAdminTemplate(String groupagent,int pageno, int limit);
+
 
     /**获取模板列表(公司)**/
     Page<Templates> getTemplateByCom(String comid,int pageno,int limit);
@@ -28,10 +33,10 @@ public interface ITemplate {
     Page<Templates> getTemplateByName(String templatename);
 
     /**搜索全部模板（模板管理）**/
-    Page<Templates> searchAllTemplate(String type,String content ,int pageno,int limit);
+    Page<Templates> searchAllTemplate(StaffData staffData,String type, String content , int pageno, int limit);
 
     /**搜索全部模板（模板配置）**/
-    Page<Templates> searchSettingTemplate(String type,String content ,int pageno,int limit);
+    Page<Templates> searchSettingTemplate(StaffData staffData,String type,String content ,int pageno,int limit);
 
     /**普通用户搜索全部模板**/
     Page<Templates> searchTemplateByCom(String type,String agentnum,String content,int pageno,int limit);

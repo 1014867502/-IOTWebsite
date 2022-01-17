@@ -164,6 +164,24 @@
 
 </style>
 <body>
+
+<div class="site-text" style="margin: 5%; display: none" id="savewindow" target="test123">
+    <form class="layui-form" id="savebook" method="post" lay-filter="save">
+        <div class="layui-form-item">
+            <label class="layui-form-label">模板名称</label>
+            <div class="layui-input-block">
+                <input type="text" id="savetemplatename"  name="templatename" lay-verify="required|templatename" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding-top: 30px;text-align: center">
+            <div class="layui-input-block" style="margin-left: 0px!important;">
+                <button class="layui-btn" type="button"  lay-submit lay-filter="save">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
     <form class="layui-form" id="book" method="post" lay-filter="example">
         <div class="layui-form-item">
@@ -359,6 +377,7 @@
 <script>
     var templatename = "#(templatename)";
     var machinesn = "#(machinesn)";
+    var type="#(type)";
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

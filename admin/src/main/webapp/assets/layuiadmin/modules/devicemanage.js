@@ -145,7 +145,7 @@ layui.define(['form','drawer','table'], function (exports) {
         }else if(obj.event === 'edit'){
             location.href = '/devicelist/setting?sn='+data.machineSerial;
         } else if (obj.event === 'del') {
-            layer.confirm('真的删除行么', function(index){
+            layer.confirm('真的删除当前项吗？', function(index){
                 obj.del();
                 layer.close(index);
             });

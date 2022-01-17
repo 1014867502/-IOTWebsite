@@ -14,6 +14,7 @@ layui.define(['form','drawer','table'], function (exports) {
     var templateselected;
     var roletype;
     var projectlist;
+    var windowindex;
     var newtype="0";//新建用户页面的用户类型
     var edittype="0"//修改用户页面
     var account;//编辑页面的用户账号
@@ -93,6 +94,27 @@ layui.define(['form','drawer','table'], function (exports) {
     $("#delete_template").on('click',function () {
         deletetemplatelist();
     })
+    $("#add_template").on('click',function () {
+        editbroadcast();
+    })
+    $("#add_fasttemplate").on('click',function () {
+       layer.close(windowindex);
+            if(webpremission.indexOf("0")>=0){
+                location.href = '/template/setting?type=1&&model=0';
+            }else{
+                layer.msg("功能受限，无法创建模板!");
+            }
+
+    })
+    $("#add_stationtemplate").on('click',function () {
+        layer.close(windowindex);
+        if(webpremission.indexOf("1")>=0){
+            location.href = '/template/setting?type=2&&model=0';
+        }else{
+            layer.msg("功能受限，无法查看模板!");
+        }
+    })
+
 
     form.on('select(type2)',function(data){
         let type=data.value;
@@ -125,7 +147,12 @@ layui.define(['form','drawer','table'], function (exports) {
             async:false,
             success:function (data) {
                 renderTable();
-                layer.msg('提交成功');
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
         layer.close(layerindex);
@@ -150,7 +177,12 @@ layui.define(['form','drawer','table'], function (exports) {
             async:false,
             success:function (data) {
                 renderTable();
-                layer.msg('提交成功');
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
         layer.close(layerindex);
@@ -263,13 +295,35 @@ layui.define(['form','drawer','table'], function (exports) {
                     case "companyadmin":
                         break;
                     case "superadmin":
-
                         break;
                 }
                 roletype=data.data;
                 form.render("select");
             }
         })
+    }
+
+    //弹窗
+    function editbroadcast() {
+            layer.open({
+                type: 1
+                , title: ['添加模板']
+                , area: ['350px', '150px']
+                ,resize:false
+                , content: $("#window")
+                , success: function (layero, index) {
+                    windowindex=index;
+                }, yes: function (index, layero) {
+
+                    let data = form.val('example')
+                },
+                btn2: function () {
+                    $('#book')[0].reset();
+                },
+                cancel: function () {
+                    $('#book')[0].reset();
+                }
+            });
     }
 
     /**获取当前角色的公司列表(主页上的)**/
@@ -291,7 +345,7 @@ layui.define(['form','drawer','table'], function (exports) {
         let selectdisabled=false;
         let projectData;
         let init;
-        if(roletype!="superadmin"){
+        if(roletype!="superadmin"&&roletype!="admin"){
             projectData = [];
             selectdisabled=true;
         }else{
@@ -305,7 +359,7 @@ layui.define(['form','drawer','table'], function (exports) {
                 jsonStr.name = item.agentName;
                 jsonStr.value = item.agentNumber;
                 projectData.push(jsonStr);
-                if(i==0&&roletype!="superadmin"){
+                if(i==0&&roletype!="superadmin"&&roletype!="admin"){
                     init=jsonStr.value;
                 }
             }
@@ -375,7 +429,6 @@ layui.define(['form','drawer','table'], function (exports) {
         }
     }
 
-
     //每行记录的按钮事件
     table.on('tool(table-form)', function (obj) {
         var data = obj.data;
@@ -383,20 +436,20 @@ layui.define(['form','drawer','table'], function (exports) {
             location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
         }else if(obj.event === 'edit'){
             if(data.type==1){
-                if(webpremission.indexOf("0")>0){
-                    location.href = '/template/setting?templatename=' + data.templateName+"&&type="+data.type;
+                if(webpremission.indexOf("0")>=0){
+                    location.href = '/template/setting?templatename=' + data.templateName+"&&type="+data.type+"&&model=1";
                 }else{
                     layer.msg("功能受限，无法查看模板!");
                 }
             }else{
-                if(webpremission.indexOf("1")>0||webpremission.indexOf("5")>0||webpremission.indexOf("6")>0||webpremission.indexOf("7")>0){
-                    location.href = '/template/setting?templatename=' + data.templateName+"&&type="+data.type;
+                if(webpremission.indexOf("1")>=0||webpremission.indexOf("5")>=0||webpremission.indexOf("6")>=0||webpremission.indexOf("7")>=0){
+                    location.href = '/template/setting?templatename=' + data.templateName+"&&type="+data.type+"&&model=1";
                 }else{
                     layer.msg("功能受限，无法查看模板!");
                 }
             }
         } else if (obj.event === 'del') {
-            layer.confirm('真的删除行么', function(index){
+            layer.confirm('真的删除当前项吗？', function(index){
                 obj.del();
                 admin.req({
                     url:'/template/delTemplate',

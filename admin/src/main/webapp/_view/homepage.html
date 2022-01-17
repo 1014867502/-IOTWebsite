@@ -124,6 +124,12 @@
                             document.getElementById("devicemanage").style.display="none";
                             document.getElementById("projectmanage").style.display="none";
                             break;
+                        case "admin":
+                                document.getElementById("changePassword").style.display="none";
+                                document.getElementById("devicemanage").style.display="none";
+                                document.getElementById("projectmanage").style.display="none";
+                            document.getElementById("usermanage2").setAttribute("lay-href","/manage/comadminmanage");
+                                break;
                     }
                 }
             })

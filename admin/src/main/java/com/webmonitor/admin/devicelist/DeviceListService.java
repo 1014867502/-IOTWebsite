@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.webmonitor.core.bll.AgentDataService;
 import com.webmonitor.core.dal.AgentDataMysqlDAL;
 import com.webmonitor.core.dal.CacheMysqlDAL;
 import com.webmonitor.core.idal.IAgentData;
 import com.webmonitor.core.idal.ICache;
 import com.webmonitor.core.model.*;
+import com.webmonitor.core.model.userbase.BaseDevicemap;
 import com.webmonitor.core.model.userbase.DeviceSensorList;
 import com.webmonitor.core.util.OrderConstants;
 import com.webmonitor.core.util.SocketTools;
@@ -95,7 +97,7 @@ public class DeviceListService {
     }
 
 
-    public static boolean  checkObjAllFieldsIsNull(String machineserial,Object object) {
+    public static boolean  checkObjAllFieldsIsNull(String userid,String machineserial,Object object) {
         String username="";
         String userpass="";
         int commands=0;
@@ -122,12 +124,14 @@ public class DeviceListService {
                             String path=order.substring(4,order.length()-1);
                             String value=order+userpass;
                             cache.add(machineserial,path,value);
+                            System.out.println(path+value);
                             commands++;
                         }
                         if(!order.equals("")&&!order.equals("SET,NETWORK.MOUNTPOINTUSERPASS,")){
                             String path=order.substring(4,order.length()-1);
                             String value=order+f.get(object);
                             cache.add(machineserial,path,value);
+                            System.out.println(path+value);
                             commands++;
                         }
                     }
@@ -135,7 +139,7 @@ public class DeviceListService {
             }
             if(commands>0){
                 SocketTools socketTools = new SocketTools();
-                socketTools.updateSocket(machineserial);
+                socketTools.updateSocket(userid,machineserial);
             }
             return true;
         } catch (Exception e) {
@@ -168,12 +172,17 @@ public class DeviceListService {
     /**判断设备是否是最新版本**/
     public boolean isLatestVersion(String machineSerial){
         MachineData machineData=MachineData.dao.findFirst("select * from machine_data where machineSerial='"+machineSerial+"'");
-        String version=machineData.getFirmwareVer().substring(4);
-        VersionData versionData=VersionData.dao.findFirst("select * from version_data where versionType=4");
-        String latest=versionData.getVersionCode().toString();
-        if(version.contains(latest)){
-            return true;
-        }else{
+        if(machineData.getFirmwareVer()!=null&&!machineData.getFirmwareVer().equals("")){
+                String devicetype= AgentDataDao.dao.findFirst("select * from agent_data where machineSerial='"+machineSerial+"'").getFirmwareType();
+                String version=machineData.getFirmwareVer().substring(4,12);
+                VersionData versionData=VersionData.dao.findFirst("select * from version_data where downloadUrl='"+devicetype+"'");
+                String latest=versionData.getVersionCode().toString();
+                if(Integer.parseInt(version)>=Integer.parseInt(latest)){
+                    return true;
+                }else{
+                    return false;
+                }
+        }else {
             return false;
         }
     }
@@ -365,7 +374,15 @@ public class DeviceListService {
         return  map;
     }
 
+    /**获取项目内设备的的位置和信息**/
+    public List<BaseDevicemap> getProjectGnssDevices(String projectid){
+        return dal.getProjectGnssDevices(projectid);
+    }
 
+    /**获取设备的的位置和信息**/
+    public BaseDevicemap getGnssDevicesBySn(String sn){
+        return dal.getGnssDevicesBySn(sn);
+    }
 
     public static String getOrder(String order){
         String realorder="";

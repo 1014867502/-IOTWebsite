@@ -7,6 +7,8 @@ layui.define(['table', 'form','laydate','carousel'],function (exports) {
         ,$ = layui.$;
 
     var device={};
+    var websocket;
+    var websocketuse=false;
     var orderlist;
 
 
@@ -21,7 +23,19 @@ layui.define(['table', 'form','laydate','carousel'],function (exports) {
             machinesn: machinedata
         },
         success: function (data) {
-            debugger
+            if ('WebSocket' in window) {
+                websocket = new WebSocket("ws://8.134.94.147:8080/websocket");
+                websocket.onopen = function () {
+                    layer.msg("服务器连接成功");
+                }
+                websocket.onerror = function () {
+                    layer.msg("WebSocket连接发生错误");
+                };
+                websocketuse=true;
+            }
+            else {
+                alert('当前浏览器 Not support websocket,请升级浏览器');
+            }
             let result=data.data;
             let time=getcurrent();
             let text=document.getElementById("returninform");
@@ -36,37 +50,34 @@ layui.define(['table', 'form','laydate','carousel'],function (exports) {
     function initcon(result){
         $.post('/devicelist/getDeviceSetting?machineSerial='+machinedata,function(res){
             let device =res.data;
-            debugger
             let index;
-            if(device.connectState>0){
-                $("#warn").removeClass("layui-btn-disabled");
-                // $.ajax({
-                //     url: '/devicelist/sendorder',
-                //     data: {
-                //         order: "",
-                //         machinesn: machinedata
-                //     },
-                //     async:true,
-                //     success: function (data) {
-                //         let result=data.data;
-                //         let time=getcurrent();
-                //         let text=document.getElementById("returninform");
-                //         text.value=text.value+"\n"+time+"\n"+"命令执行结果："+data.data;
-                //         parent.layer.close(index);
-                //         $("#cover").css('display','none');   //显示遮罩层
-                //     }
-                // });
-            }else{
-                let time=getcurrent();
-                document.getElementById("online").innerHTML="（设备不在线！）";
-                $("#btn").addClass("layui-btn-disabled");
-                orderlist.update({ disabled: true });
-                $("#btn").attr("disabled","disabled");
-                $("#text").attr("disabled","disabled");
-                $("#text").addClass("layui-btn-disabled");
-            }
-
-
+                if (device.connectState > 0) {
+                    $("#warn").removeClass("layui-btn-disabled");
+                    // $.ajax({
+                    //     url: '/devicelist/sendorder',
+                    //     data: {
+                    //         order: "",
+                    //         machinesn: machinedata
+                    //     },
+                    //     async:true,
+                    //     success: function (data) {
+                    //         let result=data.data;
+                    //         let time=getcurrent();
+                    //         let text=document.getElementById("returninform");
+                    //         text.value=text.value+"\n"+time+"\n"+"命令执行结果："+data.data;
+                    //         parent.layer.close(index);
+                    //         $("#cover").css('display','none');   //显示遮罩层
+                    //     }
+                    // });
+                } else {
+                    let time = getcurrent();
+                    document.getElementById("online").innerHTML = "（设备不在线！）";
+                    $("#btn").addClass("layui-btn-disabled");
+                    orderlist.update({disabled: true});
+                    $("#btn").attr("disabled", "disabled");
+                    $("#text").attr("disabled", "disabled");
+                    $("#text").addClass("layui-btn-disabled");
+                }
         });
     }
 
@@ -104,26 +115,46 @@ layui.define(['table', 'form','laydate','carousel'],function (exports) {
         let demo=data.field;
         let order=demo.order;
         let index;
-        $.ajax({
-            url: '/devicelist/sendorder',
-            data: {
-                order: order,
-                machinesn: machinedata
-            },
-            success: function (data) {
+        if ('WebSocket' in window) {
+            websocket = new WebSocket("ws://8.134.94.147:8080/websocket");
+            websocket.onopen = function () {
+                websocket.send(machinedata+"@"+order+"@"+userid);
+            }
+            websocket.onerror = function () {
+                layer.msg("WebSocket连接发生错误");
+            };
+            websocket.onmessage = function (event) {
                 let time=getcurrent();
                 let text=document.getElementById("returninform");
-                text.value=text.value+"\n"+time+"\n"+"命令执行结果："+data.data;
-                parent.layer.close(index);
-                $("#cover").css('display','none');   //显示遮罩层
+                text.value=text.value+"\n"+time+"\n"+"命令执行结果："+event.data;
             }
-        })
-        layer.msg('正在执行，请稍后', {icon: 6});
-        index = parent.layer.load();
-        $("#cover").css('display','block'); //显示遮罩层
-        let high=parent.document.getElementById("iframe_a").height;
-        let high2=parent.document.getElementById("iframe_a").style.height;
-        $("#cover").css('height',high2);
+            websocketuse=true;
+        }
+        else {
+            alert('当前浏览器 Not support websocket,请升级浏览器');
+        }
+        //接收到消息的回调方法
+
+        // $.ajax({
+        //     url: '/devicelist/sendorder',
+        //     data: {
+        //         order: order,
+        //         machinesn: machinedata
+        //     },
+        //     success: function (data) {
+        //         let time=getcurrent();
+        //         let text=document.getElementById("returninform");
+        //         text.value=text.value+"\n"+time+"\n"+"命令执行结果："+data.data;
+        //         parent.layer.close(index);
+        //         $("#cover").css('display','none');   //显示遮罩层
+        //     }
+        // })
+        // layer.msg('正在执行，请稍后', {icon: 6});
+        // index = parent.layer.load();
+        // $("#cover").css('display','block'); //显示遮罩层
+        // let high=parent.document.getElementById("iframe_a").height;
+        // let high2=parent.document.getElementById("iframe_a").style.height;
+        // $("#cover").css('height',high2);
     })
 
     mounted();
@@ -208,6 +239,7 @@ layui.define(['table', 'form','laydate','carousel'],function (exports) {
     }
 
     function closesocket() {
+        websocket.close();
         $.ajax({
             url: '/devicelist/closesocket',
             success: function (data) {

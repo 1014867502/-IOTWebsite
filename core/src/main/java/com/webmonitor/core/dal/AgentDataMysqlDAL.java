@@ -6,10 +6,9 @@ import com.jfinal.plugin.activerecord.Record;
 import com.webmonitor.core.bll.*;
 import com.webmonitor.core.idal.IAgentData;
 import com.webmonitor.core.model.*;
-import com.webmonitor.core.model.userbase.BaseProjects;
-import com.webmonitor.core.model.userbase.DeviceSensorList;
-import com.webmonitor.core.model.userbase.Templates;
+import com.webmonitor.core.model.userbase.*;
 import com.webmonitor.core.util.Tools;
+import sun.rmi.server.InactiveGroupException;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -49,6 +48,76 @@ public class AgentDataMysqlDAL implements IAgentData {
             rslist.add(map);
         }
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
+    }
+
+    @Override
+    public List<BaseDevicemap> getProjectGnssDevices(String projectid) {
+        String sql="select *,a.machineSerial from agent_data a left join agent_table b on a.agentNumber=b.agentNumber LEFT JOIN machine_data c on a.machineSerial=c.machineSerial " +
+                " where a.proGroupId='"+projectid+"'";
+        List<Record> recordList = new ArrayList<>();
+        recordList = Db.find(sql);
+        List<BaseDevicemap> rslist = new ArrayList<>();
+        for (Record record : recordList) {
+            BaseDevicemap map = new BaseDevicemap();
+            map.setProjectid(projectid);
+            map.setStationname(record.getStr("ProGroupName"));
+            map.setName(record.getStr("machineName"));
+            map.setDevicemodel(record.getStr("firmwareType"));
+            map.setSn(record.getStr("machineSerial"));
+            map.setOnlinestate(1);
+            String lat=(record.getStr("positionLat")==null)||record.getStr("positionLat").equals("")?"0":record.getStr("positionLat");
+            String lon=record.getStr("positionLon")==null||record.getStr("positionLon").equals("")?"0":record.getStr("positionLon");
+            String hegiht=record.getStr("positionHeight")==null||record.getStr("positionHeight").equals("")?"0":record.getStr("positionHeight");
+            map.setLat(Double.parseDouble(lat));
+            map.setOnlinestate(record.getInt("connectState")==null?0:record.getInt("connectState"));
+            map.setLon(Double.parseDouble(lon));
+            map.setHeight(Double.parseDouble(hegiht));
+            String type=record.getStr("rawMode")==null?"0":record.getStr("rawMode");
+            map.setTypeid(Integer.parseInt(type));
+            if(map.getLat()>0||map.getLon()>0){
+                LonLat blh = Tools.transform(Double.parseDouble(lon),Double.parseDouble(lat));
+                map.setTransLat(blh.getLat());
+                map.setTransLon(blh.getLon());
+            }else{
+                map.setTransLat(Double.parseDouble(lat));
+                map.setTransLon(Double.parseDouble(lon));
+            }
+            rslist.add(map);
+        }
+        return rslist;
+    }
+
+    @Override
+    public BaseDevicemap getGnssDevicesBySn(String sn) {
+        String sql="select * from agent_data a left join agent_table b on a.agentNumber=b.agentNumber LEFT JOIN machine_data c on a.machineSerial=c.machineSerial " +
+                " where a.machineSerial='"+sn+"'";
+        Record record = new Record();
+        record = Db.findFirst(sql);
+            BaseDevicemap map = new BaseDevicemap();
+            map.setProjectid(record.getStr("proGroupId"));
+            map.setStationname(record.getStr("ProGroupName"));
+            map.setName(record.getStr("machineName"));
+            map.setDevicemodel(record.getStr("firmwareType"));
+            map.setSn(record.getStr("machineSerial"));
+            map.setOnlinestate(1);
+            String lat=(record.getStr("positionLat")==null)||record.getStr("positionLat").equals("")?"0":record.getStr("positionLat");
+            String lon=record.getStr("positionLon")==null||record.getStr("positionLon").equals("")?"0":record.getStr("positionLon");
+            String hegiht=record.getStr("positionHeight")==null||record.getStr("positionHeight").equals("")?"0":record.getStr("positionHeight");
+            map.setLat(Double.parseDouble(lat));
+        map.setOnlinestate(record.getInt("connectState")==null?0:record.getInt("connectState"));
+            map.setLon(Double.parseDouble(lon));
+            map.setHeight(Double.parseDouble(hegiht));
+            String type=record.getStr("rawMode")==null?"0":record.getStr("rawMode");
+            map.setTypeid(Integer.parseInt(type));
+            if(map.getLat()>0||map.getLon()>0){
+                LonLat blh = Tools.transform(Double.parseDouble(lon),Double.parseDouble(lat));
+                map.setTransLat(blh.getLat());
+                map.setTransLon(blh.getLon());
+            }else{
+                map.setTransLat(Double.parseDouble(lat));
+                map.setTransLon(Double.parseDouble(lon));
+            }
+        return map;
     }
 
     /**首页上的搜索框**/
@@ -127,9 +196,21 @@ public class AgentDataMysqlDAL implements IAgentData {
         String sql=" from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber ";
         if(!agentnum.equals("all")){
             sql+=" where a.agentNumber='"+agentnum+"'";
+        }else{
+            if(currentuser.getIRoleType()==4){
+                String[] agentnums=currentuser.getGroupAgentNumber().split("@");
+                for(int i=0;i<agentnums.length;i++){
+                    if(i!=0) {
+                        sql += " or a.agentNumber='" + agentnums[i] + "'";
+                    }else{
+                        sql+="  where (a.agentNumber='"+agentnums[i]+"'";
+                    }
+                }
+                sql+=" )";
+            }
         }
         if(!content.equals("")){
-            if(agentnum.equals("all")){
+            if(agentnum.equals("all")&&!sql.contains("where")){
                 sql+=" where a.machineSerial like '%"+content.trim()+"%'";
             }else{
                 sql+=" and a.machineSerial like '%"+content.trim()+"%'";
@@ -394,6 +475,9 @@ public class AgentDataMysqlDAL implements IAgentData {
                 break;
             case "companyadmin":
                 sql= CompanyAdminService.me.getAllDevice(currentuser.getAgentNumber());
+                break;
+            case "admin":
+                sql=AdminService.me.getAdminDevice(userid);
                 break;
         }
         Page<Record> page = Db.paginate(pageno, limit, "select a.*,b.connectState,b.updateTime,c.agentName ",sql);
@@ -670,19 +754,20 @@ public class AgentDataMysqlDAL implements IAgentData {
         agentData.setMachineName(result.getStr("machineName")!=null?result.getStr("machineName"):"");
         agentData.setMachineSerial(result.getStr("machineSerial")!=null?result.getStr("machineSerial"):"");
         agentData.setProGroupName(result.getStr("ProGroupName")!=null?result.getStr("ProGroupName"):"");
+        agentData.setFirmwareType(result.getStr("firmwareType")!=null?result.getStr("firmwareType"):"");
         return agentData;
     }
 
 
     @Override
-    public ProDevCount getDeviceCountByUserid(String[] authoritys) {
+    public ProDevCount getDeviceCountByUserid(String[] authoritys,String agentNumber) {
         int sum=0;
         int online=0;
         int outline=0;
         int newdev=0;
         ProDevCount proDevCountfin=new ProDevCount();
         for (int i = 0; i < authoritys.length; i++) {
-            ProDevCount proDevCount=ProjectService.me.getProDevCountById(authoritys[i]);
+            ProDevCount proDevCount=ProjectService.me.getProDevCountById(authoritys[i],agentNumber);
             sum=sum+proDevCount.getSum();
             online=online+proDevCount.getOncount();
             outline=outline+proDevCount.getOutcount();
@@ -694,6 +779,8 @@ public class AgentDataMysqlDAL implements IAgentData {
         proDevCountfin.setNewcount(newdev);
         return proDevCountfin;
     }
+
+
 
 
     public static String getSubString(String str1, String str2) {

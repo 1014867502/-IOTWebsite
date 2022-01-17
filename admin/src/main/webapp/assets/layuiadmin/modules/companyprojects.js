@@ -73,7 +73,12 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             async:false,
             success:function (data) {
                 getProjectCount()
-                layer.msg('提交成功');
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
         layer.close(layerindex);

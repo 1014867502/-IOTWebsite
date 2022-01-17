@@ -1,26 +1,30 @@
 package com.webmonitor.admin.company;
 
-import com.jfinal.i18n.Res;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.devicelist.DeviceListService;
 import com.webmonitor.admin.index.IndexService;
 import com.webmonitor.core.bll.CompanyAdminService;
 import com.webmonitor.core.bll.StaffService;
+import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.*;
+import com.webmonitor.core.model.userbase.AuthorityEntity;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import com.webmonitor.core.vo.Result;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.webmonitor.core.model.Response.ERROR_DELETE;
-import static com.webmonitor.core.model.Response.SUCCESS_DELETE;
+import static com.webmonitor.core.model.Response.*;
 
 public class CompanyController extends BaseController {
 
     public void CompanyDetail(){
+        String userid = getCookie(IndexService.me.accessUserId);
+        StaffData currentuser = StaffService.me.getStaffById(userid);
+        String name=currentuser.getUAccountNum();
         String agentNum=getPara("agentNumber");
+        setAttr("userid",name);
         setAttr("agentNum",agentNum);
         render("CompanyDetail.html");
     }
@@ -52,7 +56,7 @@ public class CompanyController extends BaseController {
     public void getAllDeviceByComid(){
         Result<Page<AgentData>> result=Result.newOne();
         String comid=getPara("agentnum");
-        int pageno = getParaToInt("pageno", 1);
+        int pageno = getParaToInt("page", 1);
         int limit = getParaToInt("limit", 20);
         try{
             Page<AgentData> daoPage= DeviceListService.me.getDeviceByComid(comid,pageno,limit);
@@ -80,8 +84,34 @@ public class CompanyController extends BaseController {
     public void getAllCompany(){
         List<AgentTable> agentTables=new ArrayList<>();
         Result result=Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        StaffData currentuser = StaffService.me.getStaffById(userid);
+        int roletype = currentuser.getIRoleType();
+        RoleType role = RoleType.getIndex(roletype);
         try{
-            agentTables=CompanyService.me.getAllCompany();
+            switch (role) {
+                case superadmin:
+                    agentTables=CompanyService.me.getAllCompany();
+                    result.success(agentTables);
+                    break;
+                case admin:
+                    agentTables=CompanyService.me.getCompanyByRole(userid);
+                    result.success(agentTables);
+                    break;
+            }
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**根据用户类型导出公司列表**/
+    public void getCompanyByRole(){
+        List<AgentTable> agentTables=new ArrayList<>();
+        String userid=getPara("id");
+        Result result=Result.newOne();
+        try{
+            agentTables=CompanyService.me.getCompanyByRole(userid);
             result.success(agentTables);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
@@ -137,6 +167,35 @@ public class CompanyController extends BaseController {
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
             result.success(ERROR_DELETE.getReport());
+        }
+        renderJson(result);
+    }
+
+    public void getComAuthor(){
+        String agentnum=getPara("agentnum");
+        Result<AuthorityEntity> result=Result.newOne();
+        try{
+           AuthorityEntity authorityEntity=CompanyService.me.getComAuthorById(agentnum);
+           result.success(authorityEntity);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    public void modifyCompanyAuthority(){
+        String agentnum=getPara("agentnum");
+        String web=getPara("comweb");
+        String app=getPara("comapp");
+        Result<Response> result= Result.newOne();
+        try{
+            if(CompanyService.me.modifyCompanyAuthority(agentnum,web,app)){
+                result.success(SUCCESS_EXECUTE);
+            }else{
+                result.success(ERROR_EXECUTE);
+            }
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
         }
         renderJson(result);
     }

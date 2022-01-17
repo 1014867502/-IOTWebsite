@@ -140,7 +140,12 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
             },
             success:function (data) {
                 getDeviceSetting(machinesn);
-                alert("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
     })
@@ -252,7 +257,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
         if (obj.event === 'echarts') {
         }else if(obj.event === 'edit'){
         } else if (obj.event === 'del') {
-            layer.confirm('真的删除行么', {
+            layer.confirm('真的删除当前项吗？', {
                 offset: '100px'
             },function(index){
                 obj.del();
@@ -289,7 +294,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
             arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
         }
         if (setting.auxiliary != null) {
-            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length));
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length-1));
         }
         for(let i=0;i<arr.length;i++){
             if(i==0){
@@ -312,7 +317,12 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
             },
             async:false,
             success:function () {
-                layer.msg("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
         layer.close(layerindex);
@@ -328,83 +338,98 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
             },
             success: function (data) {
                 let device = data.data;
-                locatedata=device;
-                auxiliaryfunc.setdevice(device);
-                isDeviceOnline(sn);
-                if(parent.window.writeright==0){
-                    $("#auxiliarysumbit").prop("disabled",true);
-                    $("#errormsg").html("修改权限被限制");
-                    $("#auxiliarysumbit").addClass("layui-btn-disabled");
-                    $("#savemodel").prop("disabled",true);
-                    $("#savemodel").addClass("layui-btn-disabled");
-                }
-                if(device.extSensorEnabled>0){
-                    $("#sensor_enable").prop('checked',true);
-                    document.getElementById("connectsensor").innerHTML=auxiliaryfunc.sensorcontent;
-                    /*添加设备*/
-                    $("#add_sensor").click(function () {
-                        drawer.render({
-                            title: '添加设备',  //标题
-                            offset: 'r',    //r:抽屉在右边、l:抽屉在左边
-                            width: "600px", //r、l抽屉可以设置宽度
-                            content: $("#addprowindow"),
-                            success: function (layero, index) {
-                                layerindex=index;
-                            },
+                if (device.rawName!=null) {
+                    locatedata = device;
+                    auxiliaryfunc.setdevice(device);
+                    // isDeviceOnline(sn);
+                    if (parent.window.writeright == 0) {
+                        $("#auxiliarysumbit").prop("disabled", true);
+                        $("#errormsg").html("修改权限被限制");
+                        $("#auxiliarysumbit").addClass("layui-btn-disabled");
+                        $("#savemodel").prop("disabled", true);
+                        $("#savemodel").addClass("layui-btn-disabled");
+                    }
+                    if (device.extSensorEnabled > 0) {
+                        $("#sensor_enable").prop('checked', true);
+                        document.getElementById("connectsensor").innerHTML = auxiliaryfunc.sensorcontent;
+                        /*添加设备*/
+                        $("#add_sensor").click(function () {
+                            drawer.render({
+                                title: '添加设备',  //标题
+                                offset: 'r',    //r:抽屉在右边、l:抽屉在左边
+                                width: "600px", //r、l抽屉可以设置宽度
+                                content: $("#addprowindow"),
+                                success: function (layero, index) {
+                                    layerindex = index;
+                                },
+                            });
                         });
-                    });
-                    $("#sensor_power").val(device.extSensorPower);
-                    rendersensortable();
-                } else {
-                    $("#sensor_enable").prop('checked',false);
-                    document.getElementById("connectsensor").innerHTML = "";
-                }
-
-                /*定时*/
-                if (device.scheduler!=null&&device.scheduler!="0") {
-                    $("#scheduler_enable").prop('checked',true);
-                    let timepara=device.scheduler.split('|');
-                    document.getElementById("timeswitch").innerHTML =auxiliaryfunc.timecontent;
-                    let workdaystr=parseInt(timepara[0]).toString(2);
-                    if(workdaystr.length<7){
-                        for(let k=0;k<7-workdaystr.length;k++){
-                            workdaystr="0"+workdaystr;
+                        if (device.extSensorPower != "" && device.extSensorPower != null) {
+                            $("#sensor_power").val(device.extSensorPower);
                         }
+
+                        rendersensortable();
+                    } else {
+                        $("#sensor_enable").prop('checked', false);
+                        document.getElementById("connectsensor").innerHTML = "";
                     }
-                    workdaystr=workdaystr.split('').reverse().join('');
-                    for(let i=0;i<workdaystr.length;i++){
-                        if(workdaystr.charAt(i)!=='0'){
-                            let id=i+1;
-                            let timeid="#week_"+id;
-                            $(timeid).prop("checked",true);
+
+                    /*定时*/
+                    if (device.scheduler != null && device.scheduler != "0") {
+                        $("#scheduler_enable").prop('checked', true);
+                        let timepara = device.scheduler.split('|');
+                        document.getElementById("timeswitch").innerHTML = auxiliaryfunc.timecontent;
+                        let workdaystr = parseInt(timepara[0]).toString(2);
+                        if (workdaystr.length < 7) {
+                            for (let k = 0; k < 7 - workdaystr.length; k++) {
+                                workdaystr = "0" + workdaystr;
+                            }
                         }
+                        workdaystr = workdaystr.split('').reverse().join('');
+                        for (let i = 0; i < workdaystr.length; i++) {
+                            if (workdaystr.charAt(i) !== '0') {
+                                let id = i + 1;
+                                let timeid = "#week_" + id;
+                                $(timeid).prop("checked", true);
+                            }
+                        }
+                        if (timepara[1] != "" && timepara[1] != null) {
+                            $("#scheduler_start_time").val(timepara[1]);
+                        }
+                        if (timepara[2] != "" && timepara[2] != null) {
+                            $("#scheduler_run_time").val(timepara[2]);
+                        }
+                        if (timepara[3] != "" && timepara[3] != null) {
+                            $("#scheduler_powerlevel").val(timepara[3]);
+                        }
+                    } else {
+                        $("#scheduler_enable").prop('checked', false);
+                        document.getElementById("timeswitch").innerHTML = "";
                     }
-                    $("#scheduler_start_time").val(timepara[1]);
-                    $("#scheduler_run_time").val(timepara[2]);
-                    $("#scheduler_powerlevel").val(timepara[3]);
-                } else {
-                    $("#scheduler_enable").prop('checked',false);
-                    document.getElementById("timeswitch").innerHTML="";
-                }
 
 
-                /*触发报警*/
-                if(device.moveWarnEnabled>0){
-                    $("#move_warn_enable").prop('checked',true);
-                    document.getElementById("warning").innerHTML=auxiliaryfunc.warncontent;
-                    let movewarn=device.moveWarnThreshold.split("|");
-                    $("#move_warn_dx").val(movewarn[0]);
-                    $("#move_warn_dy").val(movewarn[1]);
-                    $("#move_warn_dz").val(movewarn[2]);
-                    $("#move_warn_mems").val(device.moveWarnMems);
-                    $("#move_warn_baud").val(device.moveWarnBaud);
-                    $("#move_warn_cmd").val(device.moveWarnCmd);
-                }else{
-                    $("#move_warn_enable").prop('checked',false);
-                    document.getElementById("warning").innerHTML = "";
+                    /*触发报警*/
+                    if (device.moveWarnEnabled > 0) {
+                        $("#move_warn_enable").prop('checked', true);
+                        document.getElementById("warning").innerHTML = auxiliaryfunc.warncontent;
+                        let movewarn = device.moveWarnThreshold.split("|");
+                        $("#move_warn_dx").val(movewarn[0]);
+                        $("#move_warn_dy").val(movewarn[1]);
+                        $("#move_warn_dz").val(movewarn[2]);
+                        if (locatedata.moveWarnMems != "" && locatedata.moveWarnMems != null) {
+                            $("#move_warn_mems").val(locatedata.moveWarnMems);
+                        }
+                        if (locatedata.moveWarnBaud != "" && locatedata.moveWarnBaud != null) {
+                            $("#move_warn_baud").val(locatedata.moveWarnBaud);
+                        }
+                        $("#move_warn_cmd").val(device.moveWarnCmd);
+                    } else {
+                        $("#move_warn_enable").prop('checked', false);
+                        document.getElementById("warning").innerHTML = "";
+                    }
+                    saveModel();
+                    form.render();
                 }
-                saveModel();
-                form.render();
             }
         })
     }

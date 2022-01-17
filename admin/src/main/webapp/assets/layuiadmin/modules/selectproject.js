@@ -211,6 +211,8 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             success:function (data) {
                 switch (data.data) {
                     case "user":
+                        $("#delete_project").css("display","none");
+                        document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n";
                         break;
                     case "companyadmin":
                         $("#crumb").css("display","none");
@@ -328,7 +330,12 @@ layui.define(['form', 'drawer', 'form','laypage','usertools'], function (exports
             },
             async:false,
             success:function (data) {
-                layer.msg('提交成功');
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
         layer.close(layerindex);

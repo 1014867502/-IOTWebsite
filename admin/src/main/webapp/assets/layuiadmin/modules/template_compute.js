@@ -10,7 +10,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
         , element = layui.element;
 
 
-    var device;
+    var device={};
     var form21 = ["devicestatus", "observedata", "rawdatareturn"];
     var form22 = ["statusresult", "observedata", "rtksetting", "rawdatareturn"];
     var form12 = ["statusresult","statusresult2", "timerecord", "basedownload", "rawdatareturn", "rtksetting"];
@@ -33,16 +33,11 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
         getDeviceSetting(templatename);
     })
 
-    $("#savemodel").click(function () {
-        if(form.doVerify("formDemo")){
-            saveModel();
-            updateModel();
-        }
-    })
 
     $("#changename").click(function () {
         changename();
     })
+
 
     form.verify({
         ip: [
@@ -91,7 +86,26 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
         }
     });
 
-    init(templatename);
+    if(type==1){
+        init(templatename);
+        $("#savemodel").click(function () {
+            if(form.doVerify("formDemo1")){
+                saveModel();
+                updateModel();
+            }
+        })
+    }else{
+        let sn="init";
+        init(sn);
+        $("#savemodel").click(function () {
+            if(form.doVerify("formDemo1")){
+                saveModel();
+                addModel();
+            }
+        })
+        $("#reset").css("display","none");
+        $("#changename").css("display","none");
+    }
 
     form.on('radio(compute)', function (data) {
         compute = data.value;
@@ -150,8 +164,14 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
             document.getElementById("rtkcontent").style.display = "block";
             document.getElementById("rtkcontent").style.marginTop = "30px";
             $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
-            $("#imuWarn").find("option[value=" + device.imuWarn + "]").prop("selected", true);
-            $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
+            $("#imuWarn").find("option[value='" + device.imuWarn + "']").prop("selected", true);
+            if(document.getElementById("rtkfront").innerHTML==""){
+                document.getElementById("rtkfront").style.display = "flex";
+                document.getElementById("rtkfront").innerHTML=computefunc.rtkpiror;
+            }
+            if(device.networkMode!=""){
+                $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
+            }
             rtkflush();
         } else {
             rtkturn = false;
@@ -173,11 +193,12 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
             let rawreturndata={};
             rawreturndata.value=parseInt(device.rawBackEnabled);
             computefunc.rawdatabackupdate(rawreturndata);
-            $("#rawBackEnabled").find("option[value=" + device.rawBackEnabled + "]").prop("selected", true);
+            if(device.rawBackEnabled!=""){
+                $("#rawBackEnabled").find("option[value=" + device.rawBackEnabled + "]").prop("selected", true);
+
+            }
             if(device.rawBackGnssData!=null&&device.rawBackGnssData!=""){
                 $("#rawBackGnssData").find("option[value=" + device.rawBackGnssData + "]").prop("selected", true);
-            }else{
-                $("#rawBackGnssData").find("option[value=0]").prop("selected", true);
             }
 
         } else {
@@ -215,7 +236,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
         form.render('checkbox');
     })
     /*监听表单提交*/
-    form.on('submit(formDemo)', function (data) {
+    form.on('submit(formDemo1)', function (data) {
         let test = data.field;
         let source = $("#coredata1").prop("checked");
         let source2 = $("#coredata2").prop("checked");
@@ -248,7 +269,12 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
             },
             success: function (data) {
                 getDeviceSetting(data.data);
-                alert("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
     })
@@ -272,6 +298,54 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
         layer.close(layerindex);
     })
 
+    /**添加模板**/
+    form.on('submit(save)',function () {
+        let setting=parent.testmodel;
+        let jsondata="";
+        let arr=[];
+        if(setting.compute!=null){
+            arr.push(setting.compute.substring(1, setting.compute.length - 1));
+        }
+        if (setting.locate != null) {
+            arr.push(setting.locate.substring(1, setting.locate.length - 1));
+        }
+        if (setting.plaform != null) {
+            arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
+        }
+        if (setting.auxiliary != null) {
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length-1));
+        }
+        for(let i=0;i<arr.length;i++){
+            if(i==0){
+                jsondata+="{"+arr[i];
+            }else{
+                jsondata+=","+arr[i];
+                if(i==arr.length-1){
+                    jsondata+="}";
+                }
+            }
+        }
+        let data1 = form.val("save");
+        $.ajax({
+            url:'/template/addTemplate',
+            data:{
+                json:jsondata,
+                templatename:data1.templatename,
+                type:"2"
+            },
+            async:false,
+            success:function () {
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
+            }
+        })
+        layer.close(layerindex);
+    })
+
     /*获取配置数据*/
     function getDeviceSetting(sn) {
         $.ajax({
@@ -281,172 +355,229 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
             },
             success: function (data) {
                 device = data.data;
-                let data2={};
-                Object.assign(data2,device);
-                computefunc.setdevic(device);
-                if(parent.window.writeright==0){
-                    $("#changename").prop("disabled",true);
-                    $("#errormsg").html("修改权限被限制");
-                    $("#changename").addClass("layui-btn-disabled");
-                    $("#savemodel").prop("disabled",true);
-                    $("#savemodel").addClass("layui-btn-disabled");
-                }
-                if(device.rawName!=null&&device.rawName!=""){
-                    $("#rawName").val(device.rawName);
-                }else{
-                    $("#rawName").val(device.machineSerial);
-                }
-                $("#baseLon").val(device.baseLon);
-                $("#baseLat").val(device.baseLat);
-                $("#baseHeight").val(device.baseHeight);
-                $("#rawIp").val(device.rawIp);
-                $("#rawPort").val(device.rawPort)
-                $("#resultIp").val(device.resultIp);
-                $("#resultPort").val(device.resultPort);
-                $("#coordinatesX").val(device.coordinatesX);
-                $("#coordinatesY").val(device.coordinatesY);
-                $("#coordinatesZ").val(device.coordinatesZ);
-                $("#secondIp").val(device.scondIp);
-                $("#secondPort").val(device.scondPort);
-                $("#networkAddress").val(device.networkAddress);
-                $("#networkPort").val(device.networkPort);
-                $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
-                let ntriparg=data2.ntripArg;
-                if(ntriparg!=""&&ntriparg!=null){
-                    let arg=ntriparg.split('|');
-                    $("#rawntripaddress").val(arg[0]);
-                    $("#rawntripport").val(arg[1]);
-                    $("#networkMountpoint1").val(arg[2]);
-                    $("#coreuse1").val(arg[3]);
-                    $("#corepass1").val(arg[4]);
-                }
-                let secondarg=data2.secondArg;
-                if(secondarg!=""&&secondarg!=null){
-                    let arg=secondarg.split('|');
-                    $("#secondntripaddress").val(arg[0]);
-                    $("#secondntripport").val(arg[1]);
-                    $("#secondMountpoint1").val(arg[2]);
-                    $("#coreuse2").val(arg[3]);
-                    $("#corepass2").val(arg[4]);
-                }
-
-                if (device.rawBackEnabled!= "0") {
-                    $("#rawdataturn").prop("checked", true);
-                    $("#rawBackEnabled").find("option[value=" + device.rawBackEnabled + "]").prop("selected", true);
-                    $("#rawBackGnssData").find("option[value=" + device.rawBackGnssData + "]").prop("selected", true);
-                    let enabledata={};
-                    enabledata.value=parseInt(device.rawBackEnabled);
-                    computefunc.rawdatabackupdate(enabledata);
-                }else{
-                    rawdataturn = false;
-                    $("#rawdataturn").prop("checked", false);
-                    document.getElementById("rawdatacontent").innerHTML="";
-                    document.getElementById("rawdatacontent").style.display = "none";
-                }
-                if(device.secondBase!="0"){
-                    $("#doublebase").prop('checked',true);
-                    $("input[name='networkAddress']").val(device.networkAddress);
-                    $("input[name='networkPort']").val(device.networkPort);
-                    doublebase=true;
-                    if(document.getElementById("datasource2")!=null) {
-                        document.getElementById("datasource2").innerHTML = "<div class=\"layui-form-item\">\n" +
-                            "                            <label class=\"layui-form-label\" style='padding: 8px 5px;width: 96px;'>基站2数据来源</label>\n" +
-                            "                            <div class=\"layui-input-block\">\n" +
-                            "                                <input type=\"radio\" name=\"secondNtripBase\" lay-filter=\"downloadsource2\" value=\"0\" title=\"基站文件\" checked>\n" +
-                            "                                <input type=\"radio\" name=\"secondNtripBase\" lay-filter=\"downloadsource2\" value=\"1\" title=\"CORS数据\">\n" +
-                            "                            </div>\n" +
-                            "                        </div>\n";
-                    }
-                    let ntripbase=device.ntrIpBase.toString();
-                    let secondntrip=device.secondNtripBase.toString();
-                    if(ntripbase==null||ntripbase==""){
-                        ntripbase="0";
-                        device.ntripBase="0";
-                    }
-                    if(secondntrip==null||secondntrip==""){
-                        secondntrip="0";
-                        device.secondNtripBase="0";
-                    }
-                    switch(ntripbase+secondntrip){
-                        case "01":
-                            $("input[name=secondNtripBase][value='1']").prop("checked", true);
-                            device.secondNtripBase="1";
+                if (device.rawName!=null) {
+                    let data2 = {};
+                    Object.assign(data2, device);
+                    computefunc.setdevic(device);
+                    switch(device.nameType){
+                        case 0:
+                            $("input[name=nameType][value='0']").prop("checked", true);
                             break;
-                        case "10":
-                            $("input[name=ntrIpBase][value='1']").prop("checked", true);
-                            device.ntrIpBase="1";
+                        case 1:
+                            $("input[name=nameType][value='1']").prop("checked", true);
                             break;
-                        case "11":
-                            $("input[name=ntrIpBase][value='1']").prop("checked", true);
-                            $("input[name=secondNtripBase][value='1']").prop("checked", true);
-                            device.ntrIpBase="1";
-                            device.secondNtripBase="1";
+                        case 2:
+                            $("input[name=nameType][value='2']").prop("checked", true);
                             break;
                     }
-
-                    changesoure(rtkturn, doublebase, ntripbase,secondntrip);
-                    if(document.getElementById("rtkfront")!=null){
-                        rtkcore();
+                    if (parent.window.writeright == 0) {
+                        $("#changename").prop("disabled", true);
+                        $("#errormsg").html("修改权限被限制");
+                        $("#changename").addClass("layui-btn-disabled");
+                        $("#savemodel").prop("disabled", true);
+                        $("#savemodel").addClass("layui-btn-disabled");
                     }
-                }else{
-                    doublebase=false;
-                    $("#doublebase").prop('checked',false);
-                    if(document.getElementById("datasource2")!=null) {
-                    document.getElementById("datasource2").innerHTML = "";
-                    document.getElementById("cores2").innerHTML = "";}
-                }
-                let status2 = $("#resultMsg")
-                if (status2 != null) {
-                    $("#resultMsg").find("option[value=" + device.resultMsg + "]").prop("selected", true);
-                    $("#resultImu").find("option[value=" + device.resultImu + "]").prop("selected", true);
-                    $("#resultRs232").find("option[value=" + device.resultRs232 + "]").prop("selected", true);
-                }
-                if ($("#recordinterval") != null) {
-                    $("#recordInterval").find("option[value=" + device.recordInterval + "]").prop("selected", true);
-                }
-
-                if (device.rtkPos !="0" ) {
-                    rtkturn = true;
-                    $("#rtkturn").prop("checked", true);
-                    $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
-                    $("#imuWarn").find("option[value=" + device.imuWarn + "]").prop("selected", true);
-                    $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
-                    computefunc.decidertkmode(device.networkMode);
+                    if (device.rawName != null && device.rawName != "") {
+                        $("#rawName").val(device.rawName);
+                    } else {
+                        $("#rawName").val(device.machineSerial);
+                    }
+                    $("#baseLon").val(device.baseLon);
+                    $("#baseLat").val(device.baseLat);
+                    $("#baseHeight").val(device.baseHeight);
+                    $("#rawIp").val(device.rawIp);
+                    $("#rawPort").val(device.rawPort)
+                    $("#resultIp").val(device.resultIp);
+                    $("#resultPort").val(device.resultPort);
+                    $("#coordinatesX").val(device.coordinatesX);
+                    $("#coordinatesY").val(device.coordinatesY);
+                    $("#coordinatesZ").val(device.coordinatesZ);
+                    $("#secondIp").val(device.scondIp);
+                    $("#secondPort").val(device.scondPort);
                     $("#networkAddress").val(device.networkAddress);
                     $("#networkPort").val(device.networkPort);
-                    $("#networkMountpoint3").val(device.networkMountpoint);
-                    $("#getConnectPoint3").click(function () {
-                        computefunc.ConnectPoint3();
-                    })
-                    if(device.networkMountpointPass!=""&&device.networkMountpointPass!=null){
-                        $("#networkMountpointUse").val(device.networkMountpointUse);
-                        $("#networkMountpointPass").val(device.networkMountpointPass);
+                    if (device.rawRate != null & device.rawRate != "") {
+                        $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
                     }
-                }else {
-                    rtkturn = false;
-                    $("#rtkturn").prop("checked", false);
-                    if(document.getElementById("rtkfront")!=null){
-                        document.getElementById("rtkfront").innerHTML = "";
-                        document.getElementById("rtkfront").style.display = "none";
+                    let ntriparg = data2.ntripArg;
+                    if (ntriparg != "" && ntriparg != null) {
+                        let arg = ntriparg.split('|');
+                        $("#rawntripaddress").val(arg[0]);
+                        $("#rawntripport").val(arg[1]);
+                        $("#networkMountpoint1").val(arg[2]);
+                        $("#coreuse1").val(arg[3]);
+                        $("#corepass1").val(arg[4]);
                     }
-                    if(document.getElementById("rtkcontent")!=null){
-                        document.getElementById("rtkcontent").innerHTML = "";
-                        document.getElementById("rtkcontent").style.display = "none";
+                    let secondarg = data2.secondArg;
+                    if (secondarg != "" && secondarg != null) {
+                        let arg = secondarg.split('|');
+                        $("#secondntripaddress").val(arg[0]);
+                        $("#secondntripport").val(arg[1]);
+                        $("#secondMountpoint1").val(arg[2]);
+                        $("#coreuse2").val(arg[3]);
+                        $("#corepass2").val(arg[4]);
                     }
-                    if(document.getElementById("coreselect")!=null){
-                        document.getElementById("coreselect").innerHTML="";
 
+                    if (device.rawBackEnabled != "0") {
+                        $("#rawdataturn").prop("checked", true);
+                        if (device.rawBackEnabled != "") {
+                            $("#rawBackEnabled").find("option[value=" + device.rawBackEnabled + "]").prop("selected", true);
+
+                        }
+                        if (device.rawBackGnssData != "") {
+                            $("#rawBackGnssData").find("option[value=" + device.rawBackGnssData + "]").prop("selected", true);
+                        }
+                        let enabledata = {};
+                        enabledata.value = parseInt(device.rawBackEnabled);
+                        computefunc.rawdatabackupdate(enabledata);
+                    } else {
+                        rawdataturn = false;
+                        $("#rawdataturn").prop("checked", false);
+                        document.getElementById("rawdatacontent").innerHTML = "";
+                        document.getElementById("rawdatacontent").style.display = "none";
                     }
+                    let status2 = $("#resultMsg")
+                    if (status2 != null) {
+                        if (device.resultMsg != null && device.resultMsg != "") {
+                            $("#resultMsg").find("option[value=" + device.resultMsg + "]").prop("selected", true);
+                        }
+                        if (device.resultImu != null && device.resultImu != "") {
+                            $("#resultImu").find("option[value=" + device.resultImu + "]").prop("selected", true);
+                        }
+                        if (device.resultRs232 != null && device.resultRs232 != "") {
+                            $("#resultRs232").find("option[value=" + device.resultRs232 + "]").prop("selected", true);
+                        }
+                    }
+                    if ($("#recordinterval") != null && device.recordInterval != "") {
+                        $("#recordInterval").find("option[value=" + device.recordInterval + "]").prop("selected", true);
+                    }
+                    if (device.secondBase != "0") {
+                        $("#doublebase").prop('checked', true);
+                        $("input[name='networkAddress']").val(device.networkAddress);
+                        $("input[name='networkPort']").val(device.networkPort);
+                        doublebase = true;
+                        if (document.getElementById("datasource2") != null) {
+                            document.getElementById("datasource2").innerHTML = "<div class=\"layui-form-item\">\n" +
+                                "                            <label class=\"layui-form-label\" style='padding: 8px 5px;width: 96px;'>基站2数据来源</label>\n" +
+                                "                            <div class=\"layui-input-block\">\n" +
+                                "                                <input type=\"radio\" name=\"secondNtripBase\" lay-filter=\"downloadsource2\" value=\"0\" title=\"基站文件\" checked>\n" +
+                                "                                <input type=\"radio\" name=\"secondNtripBase\" lay-filter=\"downloadsource2\" value=\"1\" title=\"CORS数据\">\n" +
+                                "                            </div>\n" +
+                                "                        </div>\n";
+                        }
+                        let ntripbase = device.ntrIpBase.toString();
+                        let secondntrip = device.secondNtripBase.toString();
+                        if (ntripbase == null || ntripbase == "") {
+                            ntripbase = "0";
+                            device.ntripBase = "0";
+                        }
+                        if (secondntrip == null || secondntrip == "") {
+                            secondntrip = "0";
+                            device.secondNtripBase = "0";
+                        }
+                        switch (ntripbase + secondntrip) {
+                            case "01":
+                                $("input[name=secondNtripBase][value='1']").prop("checked", true);
+                                device.secondNtripBase = "1";
+                                break;
+                            case "10":
+                                $("input[name=ntrIpBase][value='1']").prop("checked", true);
+                                device.ntrIpBase = "1";
+                                break;
+                            case "11":
+                                $("input[name=ntrIpBase][value='1']").prop("checked", true);
+                                $("input[name=secondNtripBase][value='1']").prop("checked", true);
+                                device.ntrIpBase = "1";
+                                device.secondNtripBase = "1";
+                                break;
+                        }
+
+                        changesoure(rtkturn, doublebase, ntripbase, secondntrip);
+                        if (document.getElementById("rtkfront") != null) {
+                            rtkcore();
+                        }
+                    } else {
+                        doublebase = false;
+                        $("#doublebase").prop('checked', false);
+                        if (document.getElementById("datasource2") != null) {
+                            document.getElementById("datasource2").innerHTML = "";
+                            document.getElementById("cores2").innerHTML = "";
+                        }
+                        let ntripbase = device.ntrIpBase.toString();
+                        if (ntripbase == "1") {
+                            $("input[name=ntrIpBase][value='1']").prop("checked", true);
+                            device.ntrIpBase = "1";
+                            if (device.rtkPos != "0") {
+                                rtkturn = true;
+                            }
+                            changesoure(rtkturn, doublebase, "1", downloadsource2);
+                            rtkcore();
+                            form.render();
+                        }
+                    }
+                    if (device.rtkPos != "0") {
+                        rtkturn = true;
+                        $("#rtkturn").prop("checked", true);
+                        if (device.rtkPos != "") {
+                            $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
+                        }
+                        if (device.imuWarn != "") {
+                            $("#imuWarn").find("option[value='" + device.imuWarn + "']").prop("selected", true);
+                        }
+                        if (device.networkMode != "") {
+                            $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
+                        }
+                        computefunc.decidertkmode(device.networkMode);
+                        $("#networkAddress").val(device.networkAddress);
+                        $("#networkPort").val(device.networkPort);
+                        $("#networkMountpoint3").val(device.networkMountpoint);
+                        $("#getConnectPoint3").click(function () {
+                            computefunc.ConnectPoint3();
+                        })
+                        if (device.networkMountpointPass != "" && device.networkMountpointPass != null) {
+                            $("#networkMountpointUse").val(device.networkMountpointUse);
+                            $("#networkMountpointPass").val(device.networkMountpointPass);
+                        }
+                    } else {
+                        rtkturn = false;
+                        $("#rtkturn").prop("checked", false);
+                        if (document.getElementById("rtkfront") != null) {
+                            document.getElementById("rtkfront").innerHTML = "";
+                            document.getElementById("rtkfront").style.display = "none";
+                        }
+                        if (document.getElementById("rtkcontent") != null) {
+                            document.getElementById("rtkcontent").innerHTML = "";
+                            document.getElementById("rtkcontent").style.display = "none";
+                        }
+                        if (document.getElementById("coreselect") != null) {
+                            document.getElementById("coreselect").innerHTML = "";
+
+                        }
+                    }
+
+                    saveModel();
+                    // form.render();
                 }
-                saveModel();
-                // form.render();
             }
         })
     }
 
+    /**提交模组**/
+    function addModel(){
+        layer.open({
+            type: 1
+            ,id: 'layerDemo' //防止重复弹出
+            , title: ['保存模板']
+            , area: ['300px', '300px']
+            , content: $("#savewindow")
+            , success: function (layero, index) {
+                layerindex=index;
+            },
+        });
+    }
     /**保存模组**/
     function saveModel(){
-        let data1 = form.val("formDemo");
+        let data1 = form.val("formDemo1");
         let data2={};
         Object.assign(data2,device);
         data2.rawMode=station;
@@ -518,7 +649,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
             arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
         }
         if (setting.auxiliary != null) {
-            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length));
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length-1));
         }
         for(let i=0;i<arr.length;i++){
             if(i==0){
@@ -539,7 +670,12 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
             },
             async:false,
             success:function () {
-                layer.msg("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
     }
@@ -571,7 +707,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
                 showform(solution,mode);
                 compute=solution;
                 station=mode;
-                getDeviceSetting(templatename);
+                getDeviceSetting(sn);
             }});
     }
 
@@ -620,7 +756,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
                 for (let i = 0; i < form12.length; i++) {
                     computefunc.inserthtml(form12[i]);
                 }
-                if(device.secondBase>0){
+                if(type==1&&device.secondBase>0){
                     doublebase=true;
                     if(device.ntrIpBase>0){
                         downloadsource=1;
@@ -659,13 +795,21 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
                 document.getElementById("rtkcontent").innerHTML = computefunc.rtktxt;
                 document.getElementById("rtkcontent").style.display = "block";
                 document.getElementById("rtkcontent").style.marginTop = "30px";
-                $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
-                $("#imuWarn").find("option[value=" + device.imuWarn + "]").prop("selected", true);
-                $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
+                if(device.rtkPos!=""){
+                    $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
+                }
+                if(device.imuWarn!=""){
+                    $("#imuWarn").find("option[value='" + device.imuWarn + "']").prop("selected", true);
+                }
+                if(device.networkMode!=""){
+                    $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
+                }
                 rtkflush();
                 break;
         }
-        getDeviceSetting(machineserial);
+        if(type==1){
+            getDeviceSetting(machineserial);
+        }
         form.render();
     }
 
@@ -674,9 +818,15 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
         if (device.rtkPos > 0) {
             rtkturn = true;
             $("#rtkturn").prop("checked", true);
-            $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
-            $("#imuWarn").find("option[value=" + device.imuWarn + "]").prop("selected", true);
-            $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
+            if(device.rtkPos!=""){
+                $("#rtkPos").find("option[value=" + device.rtkPos + "]").prop("selected", true);
+            }
+            if(device.imuWarn!=""){
+                $("#imuWarn").find("option[value='" + device.imuWarn + "']").prop("selected", true);
+            }
+            if(device.networkMode!=""){
+                $("#networkMode").find("option[value=" + device.networkMode + "]").prop("selected", true);
+            }
             $("input[name='networkAddress']").val(device.networkAddress);
             $("input[name='networkPort']").val(device.networkPort);
             $("#networkMountpoint3").val(device.networkMountpoint);
@@ -873,6 +1023,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
                 "                                <label class=\"layui-form-label\">通信协议</label>\n" +
                 "                                <div class=\"layui-input-block\">\n" +
                 "                                    <select id=\"networkMode\" name=\"networkMode\" lay-verify=\"required\" lay-filter='networkMode'>\n" +
+                "                                        <option value=\"\"></option>\n" +
                 "                                        <option value=\"NTRIP\">NTRIP</option>\n" +
                 "                                        <option value=\"PPP\">PPP</option>\n" +
                 "                                    </select>\n" +
@@ -948,8 +1099,36 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
         }
     }
 
+    /**保存当前页面模板（）**/
+    function checksavemodel(){
+            if(form.doVerify("formDemo1")){
+                saveModel();
+                return true;
+            }else{
+                layer.msg("解算设置页面有误！");
+                return false;
+            }
+    }
+
+    // function mounted() {
+    //     parent.addEventListener('unload', function () {
+    //         checksavemodel()
+    //     });
+    //     parent.addEventListener('beforeunload', function (e) {
+    //         checksavemodel()
+    //     });
+    //     window.onbeforeunload = function () {
+    //         checksavemodel()
+    //     }
+    // }
 
 
+   var temcompute={
+        checksavemodel:function () {
+            checksavemodel();
+        }
+   }
 
-    exports('template_compute', {})
+
+    exports('template_compute',temcompute)
 });

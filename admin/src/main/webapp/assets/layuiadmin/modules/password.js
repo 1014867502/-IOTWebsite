@@ -44,7 +44,12 @@ layui.define(['form'], function (exports) {
             async:false,
             success:function (data) {
                 form.render();
-                layer.msg('提交成功');
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
                 logout();
             }
         })

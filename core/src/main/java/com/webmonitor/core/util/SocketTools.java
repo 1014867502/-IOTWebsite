@@ -140,7 +140,7 @@ public class SocketTools {
     }
 
     /**执行完操作，告诉服务器**/
-    public void updateSocket(String machineserial) {
+    public void updateSocket(String userid,String machineserial) {
         OutputStream outputStream=null;
         if (socket == null && connectThread == null) {
             if (mStreamDetailList.size() > 0) {
@@ -151,10 +151,11 @@ public class SocketTools {
             try {
                 /*超时时间为2秒*/
                 socket.connect(new InetSocketAddress("rjb.geoelectron.com", 9000), 5000);
+                outputStream = socket.getOutputStream();
+                outputStream.write(("WebClient"+userid+"\n").getBytes("utf-8"));
                 /*连接成功的话  发送心跳包*/
                 if (socket.isConnected()) {
-                    String requestmsg = "WebClient"+getIpAddress()+"&WebRequest&"+machineserial+"\n";
-                    outputStream = socket.getOutputStream();
+                    String requestmsg = "WebClient"+userid+"&WebRequest&"+machineserial;
                     outputStream.write((requestmsg+"\n").getBytes("utf-8"));
                     /*因为Toast是要运行在主线程的  这里是子线程  所以需要到主线程哪里去显示toast*/
 //                    if (outputStream != null) {
@@ -177,7 +178,6 @@ public class SocketTools {
             }finally{
                 try {
                     outputStream.close();
-                    socket.shutdownOutput();
                     socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();

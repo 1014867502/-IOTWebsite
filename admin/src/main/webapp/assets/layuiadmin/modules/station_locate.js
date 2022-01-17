@@ -151,7 +151,9 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
         if(data1.coordcvt_enable!=1){
             if (locatedata.coordcvtDstDatum != null) {
                 let coordcvt_dst = locatedata.coordcvtDstDatum.split('|');
-                data1.coordcvt_dst_datum_select=coordcvt_dst[0];
+                if(coordcvt_dst[0]!=""&&coordcvt_dst[0]!=null){
+                    data1.coordcvt_dst_datum_select=coordcvt_dst[0];
+                }
                 data1.coordvt_dst_datum_da=coordcvt_dst[1];
                 data1.coordvt_dst_datum_df=coordcvt_dst[2];
             }
@@ -208,7 +210,12 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
             },
             success: function (data) {
                 getDeviceSetting(machinesn);
-                alert("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
     })
@@ -253,7 +260,9 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
         }
         if (locatedata.coordcvtProjParam != null) {
             let coordvt_proj = locatedata.coordcvtProjParam.split('|');
-            $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
+            if(coordvt_proj[0]!=""&&coordvt_proj[0]!=null){
+                $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
+            }
             $("#coordvt_proj_centralmeridian").val(coordvt_proj[1]);
             $("#coordvt_proj_scale").val(coordvt_proj[2]);
             $("#coordvt_proj_north").val(coordvt_proj[3]);
@@ -278,7 +287,7 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
             arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
         }
         if (setting.auxiliary != null) {
-            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length));
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length-1));
         }
         for(let i=0;i<arr.length;i++){
             if(i==0){
@@ -302,7 +311,12 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
             },
             async:false,
             success:function () {
-                layer.msg("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
         layer.close(layerindex);
@@ -393,92 +407,98 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
             },
             success: function (data) {
                 let device = data.data;
-                locatedata = device;
-                locatefunc.setdevice(device);
-                isDeviceOnline(sn);
-                if(parent.window.writeright==0){
-                    $("#locatesumbit").prop("disabled",true);
-                    $("#savemodel").prop("disabled",true);
-                    $("#errormsg").html("修改权限被限制");
-                    $("#locatesumbit").addClass("layui-btn-disabled");
-                    $("#savemodel").addClass("layui-btn-disabled");
-                }
-                if (device.coordcvtEnabled > 0) {
-                    $("#coordcvt_enable").prop('checked', true);
-                    document.getElementById("locate_content").innerHTML = locatefunc.locatetxt;
-                } else {
-                    $("#coordcvt_enable").prop('checked', false);
-                    document.getElementById("locate_content").innerHTML = "";
-                }
-                if (device.coordcvtDstDatum != null) {
-                    let coordcvt_dst = device.coordcvtDstDatum.split('|');
-                    $("#coordcvt_dst_datum_select").val(coordcvt_dst[0]);
-                    $("#coordvt_dst_datum_da").val(coordcvt_dst[1]);
-                    $("#coordvt_dst_datum_df").val(coordcvt_dst[2]);
-                    if(coordcvt_dst[0]!="CUSTOM"){
-                        $('#coordvt_dst_datum_da').attr('disabled',true);
-                        $('#coordvt_dst_datum_df').attr('disabled',true);
-                        $("#coordvt_dst_datum_da").addClass('layui-disabled');
-                        $('#coordvt_dst_datum_df').addClass('layui-disabled');
-                    }else{
-                        $('#coordvt_dst_datum_da').attr('disabled',false);
-                        $('#coordvt_dst_datum_df').attr('disabled',false);
-                        $("#coordvt_dst_datum_da").removeClass('layui-disabled');
-                        $('#coordvt_dst_datum_df').removeClass('layui-disabled');
+                if (device.rawName!=null) {
+                    locatedata = device;
+                    locatefunc.setdevice(device);
+                    // isDeviceOnline(sn);
+                    if (parent.window.writeright == 0) {
+                        $("#locatesumbit").prop("disabled", true);
+                        $("#savemodel").prop("disabled", true);
+                        $("#errormsg").html("修改权限被限制");
+                        $("#locatesumbit").addClass("layui-btn-disabled");
+                        $("#savemodel").addClass("layui-btn-disabled");
                     }
-                }
-
-
-                /*投影参数*/
-                if (device.coordcvtProjParam != null) {
-                    let coordvt_proj = device.coordcvtProjParam.split('|');
-                    $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
-                    let tmp=parseFloat(coordvt_proj[1]);
-                    tmp=(tmp*180/Math.PI).toFixed(10);
-                    $("#coordvt_proj_centralmeridian").val(tmp);
-                    $("#coordvt_proj_scale").val(coordvt_proj[2]);
-                    $("#coordvt_proj_north").val(coordvt_proj[3]);
-                    $("#coordvt_proj_east").val(coordvt_proj[4]);
-                    $("#coordvt_proj_height").val(coordvt_proj[5]);
-                    $("#coordvt_proj_lat").val(coordvt_proj[6]);
-                    basehidepara = "|" + (coordvt_proj[7]!=null?coordvt_proj[7]:"") + "|" + (coordvt_proj[8]!=null?coordvt_proj[8]:"") + "|" + (coordvt_proj[9]!=null?coordvt_proj[9]:"");
-                }
-
-                /*七参数*/
-                if (device.coordcvtSevenParam != null) {
-                    let coordvt_seven = device.coordcvtSevenParam.split('|');
-                    if (coordvt_seven[0] > 0) {
-                        $("#coordcvt_seven_use").prop('checked', true);
-                        document.getElementById("seven_use").innerHTML = locatefunc.sevenuse;
+                    if (device.coordcvtEnabled > 0) {
+                        $("#coordcvt_enable").prop('checked', true);
+                        document.getElementById("locate_content").innerHTML = locatefunc.locatetxt;
                     } else {
-                        $("#coordcvt_seven_use").prop('checked', false);
+                        $("#coordcvt_enable").prop('checked', false);
+                        document.getElementById("locate_content").innerHTML = "";
                     }
-                    $("#coordcvt_seven_tx").val(coordvt_seven[1]);
-                    $("#coordcvt_seven_ty").val(coordvt_seven[2]);
-                    $("#coordcvt_seven_tz").val(coordvt_seven[3]);
-                    $("#coordcvt_seven_rx").val(coordvt_seven[4]);
-                    $("#coordcvt_seven_ry").val(coordvt_seven[5]);
-                    $("#coordcvt_seven_rz").val(coordvt_seven[6]);
-                    $("#coordcvt_seven_scale").val(coordvt_seven[7]);
-                }
+                    if (device.coordcvtDstDatum != null) {
+                        let coordcvt_dst = device.coordcvtDstDatum.split('|');
+                        if (coordcvt_dst[0] != "" && coordcvt_dst[0] != null) {
+                            $("#coordcvt_dst_datum_select").val(coordcvt_dst[0]);
+                        }
+                        $("#coordvt_dst_datum_da").val(coordcvt_dst[1]);
+                        $("#coordvt_dst_datum_df").val(coordcvt_dst[2]);
+                        if (coordcvt_dst[0] != "CUSTOM") {
+                            $('#coordvt_dst_datum_da').attr('disabled', true);
+                            $('#coordvt_dst_datum_df').attr('disabled', true);
+                            $("#coordvt_dst_datum_da").addClass('layui-disabled');
+                            $('#coordvt_dst_datum_df').addClass('layui-disabled');
+                        } else {
+                            $('#coordvt_dst_datum_da').attr('disabled', false);
+                            $('#coordvt_dst_datum_df').attr('disabled', false);
+                            $("#coordvt_dst_datum_da").removeClass('layui-disabled');
+                            $('#coordvt_dst_datum_df').removeClass('layui-disabled');
+                        }
+                    }
 
-                /*四参数*/
-                if (device.coordcvtFourParam != null) {
-                    let coordvt_four = device.coordcvtFourParam.split('|');
-                    if (coordvt_four[0] > 0) {
-                        $("#coordcvt_four_use").prop('checked', true);
-                        document.getElementById("four_use").innerHTML = locatefunc.fouruse;
-                    } else {
-                        $("#coordcvt_four_use").prop('checked', false);
+
+                    /*投影参数*/
+                    if (device.coordcvtProjParam != null) {
+                        let coordvt_proj = device.coordcvtProjParam.split('|');
+                        if (coordvt_proj[0] != "" && coordvt_proj[0] != null) {
+                            $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
+                        }
+                        let tmp = parseFloat(coordvt_proj[1]);
+                        tmp = (tmp * 180 / Math.PI).toFixed(10);
+                        $("#coordvt_proj_centralmeridian").val(tmp);
+                        $("#coordvt_proj_scale").val(coordvt_proj[2]);
+                        $("#coordvt_proj_north").val(coordvt_proj[3]);
+                        $("#coordvt_proj_east").val(coordvt_proj[4]);
+                        $("#coordvt_proj_height").val(coordvt_proj[5]);
+                        $("#coordvt_proj_lat").val(coordvt_proj[6]);
+                        basehidepara = "|" + (coordvt_proj[7] != null ? coordvt_proj[7] : "") + "|" + (coordvt_proj[8] != null ? coordvt_proj[8] : "") + "|" + (coordvt_proj[9] != null ? coordvt_proj[9] : "");
                     }
-                    $("#coordcvt_four_tx").val(coordvt_four[1]);
-                    $("#coordcvt_four_ty").val(coordvt_four[2]);
-                    $("#coordcvt_four_rotate").val(coordvt_four[3]);
-                    $("#coordcvt_four_scale").val(coordvt_four[4]);
-                    fourhidepara = "|" + (coordvt_four[5]!=null?coordvt_four[5]:"") + "|" + (coordvt_four[6]!=null?coordvt_four[6]:"");
+
+                    /*七参数*/
+                    if (device.coordcvtSevenParam != null) {
+                        let coordvt_seven = device.coordcvtSevenParam.split('|');
+                        if (coordvt_seven[0] > 0) {
+                            $("#coordcvt_seven_use").prop('checked', true);
+                            document.getElementById("seven_use").innerHTML = locatefunc.sevenuse;
+                        } else {
+                            $("#coordcvt_seven_use").prop('checked', false);
+                        }
+                        $("#coordcvt_seven_tx").val(coordvt_seven[1]);
+                        $("#coordcvt_seven_ty").val(coordvt_seven[2]);
+                        $("#coordcvt_seven_tz").val(coordvt_seven[3]);
+                        $("#coordcvt_seven_rx").val(coordvt_seven[4]);
+                        $("#coordcvt_seven_ry").val(coordvt_seven[5]);
+                        $("#coordcvt_seven_rz").val(coordvt_seven[6]);
+                        $("#coordcvt_seven_scale").val(coordvt_seven[7]);
+                    }
+
+                    /*四参数*/
+                    if (device.coordcvtFourParam != null) {
+                        let coordvt_four = device.coordcvtFourParam.split('|');
+                        if (coordvt_four[0] > 0) {
+                            $("#coordcvt_four_use").prop('checked', true);
+                            document.getElementById("four_use").innerHTML = locatefunc.fouruse;
+                        } else {
+                            $("#coordcvt_four_use").prop('checked', false);
+                        }
+                        $("#coordcvt_four_tx").val(coordvt_four[1]);
+                        $("#coordcvt_four_ty").val(coordvt_four[2]);
+                        $("#coordcvt_four_rotate").val(coordvt_four[3]);
+                        $("#coordcvt_four_scale").val(coordvt_four[4]);
+                        fourhidepara = "|" + (coordvt_four[5] != null ? coordvt_four[5] : "") + "|" + (coordvt_four[6] != null ? coordvt_four[6] : "");
+                    }
+                    saveModel();
+                    form.render();
                 }
-                saveModel();
-                form.render();
             }
         })
     }

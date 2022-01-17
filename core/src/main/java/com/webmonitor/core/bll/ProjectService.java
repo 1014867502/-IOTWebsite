@@ -67,6 +67,10 @@ public class ProjectService {
         return dal.seekProjectsById(userid, content, pageno, limit);
     }
 
+    //查询所有项目的id号码
+    public List<Integer> getAllProjectId(){
+        return dal.getAllProjectId();
+    }
 
     /**根据用户身份返回项目数量**/
     public int getProjectCountByRight(String type,String comid){
@@ -87,12 +91,12 @@ public class ProjectService {
 
 
     /**根据项目id查找对应项目设备情况**/
-    public ProDevCount getProDevCountById(String projectid){
+    public ProDevCount getProDevCountById(String projectid,String agentNumber){
         ProDevCount proDevCount=new ProDevCount();
-        proDevCount.setSum(dal.getProDevCountById(projectid));
-        proDevCount.setOncount(dal.getProDevOnCountById(projectid));
-        proDevCount.setOutcount(dal.getProDevOutCountById(projectid));
-        proDevCount.setNewcount(dal.getProDevNewCountById(projectid));
+        proDevCount.setSum(dal.getProDevCountById(projectid,agentNumber));
+        proDevCount.setOncount(dal.getProDevOnCountById(projectid,agentNumber));
+        proDevCount.setOutcount(dal.getProDevOutCountById(projectid,agentNumber));
+        proDevCount.setNewcount(dal.getProDevNewCountById(projectid,agentNumber));
         return proDevCount;
     }
 

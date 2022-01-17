@@ -6,6 +6,8 @@ import com.webmonitor.core.idal.IProject;
 import com.webmonitor.core.idal.IStaffData;
 import com.webmonitor.core.model.StaffData;
 
+import java.util.List;
+
 public class StaffService {
     public static final StaffService me=new StaffService();
     private static IStaffData dal=new StaffDataMysqlDAL();
@@ -33,4 +35,6 @@ public class StaffService {
     public void updateauthor(String userid,String projectid){
         dal.updateAuthorityById(userid,projectid);
     }
+
+    public List<StaffData> getStaffByComId(String agentNumber){return  dal.getStaffDataByComid(agentNumber);}
 }

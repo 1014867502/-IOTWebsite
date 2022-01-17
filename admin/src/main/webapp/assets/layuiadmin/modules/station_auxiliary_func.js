@@ -78,7 +78,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     //传感器刷新
     function sensorflush() {
         if(locatedata.extSensorEnabled>0){
-            $("#sensor_power").val(locatedata.extSensorPower);
+            if(locatedata.extSensorPower!=""&&locatedata.extSensorPower!=null){
+                $("#sensor_power").val(locatedata.extSensorPower);
+            }
         }
     }
 
@@ -100,9 +102,17 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                     $(timeid).prop("checked",true);
                 }
             }
-            $("#scheduler_start_time").val(timepara1[1]);
-            $("#scheduler_run_time").val(timepara1[2]);
-            $("#scheduler_powerlevel").val(timepara1[3]);
+            if(timepara1[1]!=""&&timepara1[1]!=null){
+                $("#scheduler_start_time").val(timepara1[1]);
+            }
+            if(timepara1[2]!=""&&timepara1[2]!=null){
+                $("#scheduler_run_time").val(timepara1[2]);
+            }
+            if(timepara1[3]!=""&&timepara1[3]!=null){
+                $("#scheduler_powerlevel").val(timepara1[3]);
+            }
+
+
         }
     }
 
@@ -113,8 +123,14 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             $("#move_warn_dx").val(movewarn[0]);
             $("#move_warn_dy").val(movewarn[1]);
             $("#move_warn_dz").val(movewarn[2]);
-            $("#move_warn_mems").val(locatedata.moveWarnMems);
-            $("#move_warn_baud").val(locatedata.moveWarnBaud);
+            if(locatedata.moveWarnMems!=""&&locatedata.moveWarnMems!=null){
+                $("#move_warn_mems").val(locatedata.moveWarnMems);
+            }
+            if(locatedata.moveWarnBaud!=""&&locatedata.moveWarnBaud!=null){
+                $("#move_warn_baud").val(locatedata.moveWarnBaud);
+            }
+
+
             $("#move_warn_cmd").val(locatedata.moveWarnCmd);
         }
     }
@@ -166,6 +182,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">输出电源</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"sensor_power\" name=\"sensor_power\" lay-verify=\"required\">\n" +
+        "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"0\">关闭</option>\n" +
         "                                        <option value=\"1\">5V</option>\n" +
         "                                        <option value=\"2\">12V</option>\n" +
@@ -195,6 +212,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">输出电源</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"sensor_power\" name=\"sensor_power\" lay-verify=\"required\">\n" +
+        "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"0\">关闭</option>\n" +
         "                                        <option value=\"1\">5V</option>\n" +
         "                                        <option value=\"2\">12V</option>\n" +
@@ -232,6 +250,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">开机时间</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"scheduler_start_time\" name=\"scheduler_start_time\" lay-verify=\"required\">\n" +
+        "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"0\">00:00</option>\n" +
         "                                        <option value=\"4\">04:00</option>\n" +
         "                                        <option value=\"8\">08:00</option>\n" +
@@ -245,6 +264,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">工作时间</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"scheduler_run_time\" name=\"scheduler_work_time\" lay-verify=\"required\">\n" +
+        "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"2\">2小时</option>\n" +
         "                                        <option value=\"4\">4小时</option>\n" +
         "                                        <option value=\"8\">8小时</option>\n" +
@@ -257,6 +277,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">关机电量</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"scheduler_powerlevel\" name=\"scheduler_powerlevel\" lay-verify=\"required\">\n" +
+        "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"10\">10%</option>\n" +
         "                                        <option value=\"20\">20%</option>\n" +
         "                                        <option value=\"30\">30%</option>\n" +
@@ -302,6 +323,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">MEMS倾斜</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"move_warn_mems\" name=\"move_warn_mems\" lay-verify=\"required\">\n" +
+        "                                            <option value=\"\"></option>\n" +
         "                                            <option value=\"0\">关闭</option>\n" +
         "                                            <option value=\"0.3\">0.3度</option>\n" +
         "                                            <option value=\"0.5\">0.5度</option>\n" +
@@ -317,7 +339,8 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">串口输出</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"move_warn_baud\" name=\"move_warn_baud\" lay-verify=\"required\">\n" +
-        "                                        <option value=\"9600\" selected>(RS485)9600 bps</option>\n" +
+        "                                        <option value=\"\" ></option>\n" +
+        "                                        <option value=\"9600\" >(RS485)9600 bps</option>\n" +
         "                                        <option value=\"19200\">(RS485)19200 bps</option>\n" +
         "                                        <option value=\"38400\">(RS485)38400 bps</option>\n" +
         "                                        <option value=\"115200\">(RS485)115200 bps</option>\n" +

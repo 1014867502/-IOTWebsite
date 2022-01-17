@@ -88,7 +88,7 @@ layui.define(['form','drawer','table'], function (exports) {
             case "orderlog":
                 document.getElementById("orderlog").style.color="#00f0ff";
                 document.getElementById("orderlog1").style.color="#00f0ff";
-                beforeselect="other";
+                beforeselect="orderlog";
                 document.getElementById("iframe_a").style.height="757px";
                 document.getElementById("iframe_a").src="/devicelist/deviceorderlog?machinedata="+machinedata;
                 break;
@@ -103,7 +103,7 @@ layui.define(['form','drawer','table'], function (exports) {
         setIframeHeight(document.getElementById("iframe_a"));
     });
 
-    adaptauthority();
+    // adaptauthority();
     getauthority();
 
     /**根据权限显示不同页面内容**/

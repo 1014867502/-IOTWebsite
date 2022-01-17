@@ -156,6 +156,24 @@
     }
 </style>
 <body>
+
+<div class="site-text" style="margin: 5%; display: none" id="savewindow" target="test123">
+    <form class="layui-form" id="savebook" method="post" lay-filter="save">
+        <div class="layui-form-item">
+            <label class="layui-form-label">模板名称</label>
+            <div class="layui-input-block">
+                <input type="text" id="savetemplatename"  name="templatename" lay-verify="required|templatename" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding-top: 30px;text-align: center">
+            <div class="layui-input-block" style="margin-left: 0px!important;">
+                <button class="layui-btn" type="button"  lay-submit lay-filter="save">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
     <form class="layui-form" id="book" method="post" lay-filter="example">
         <div class="layui-form-item">
@@ -175,7 +193,7 @@
 
 <div class="layui-fluid" style="padding: 0px!important;">
     <div class="layui-row layui-col-space15" style="font-weight: bold">
-        <form class="layui-form" action="" id="formDemo" lay-filter="formDemo">
+        <form class="layui-form" action="" id="formDemo1" lay-filter="formDemo1">
             <div class="layui-card">
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
                     解算设置
@@ -198,12 +216,17 @@
 
 
                     <div style="display: flex">
-                        <div class="layui-form-item fastinput">
+                        <div class="layui-form-item fastinput" >
                             <label class="layui-form-label">测站编号</label>
                             <div class="layui-input-block">
                                 <input type="text" id="rawName" name="rawName" required
-                                       lay-verify="required" placeholder="请输入标题"
-                                       autocomplete="off" class="layui-input">
+                                       lay-verify="required" placeholder="请输入标题" class="layui-input">
+                            </div>
+                            <div class="layui-input-block" style="margin-left: 80px;">
+                                <input type="radio" name="nameType" value="0" title="不修改">
+                                <input type="radio" name="nameType" value="1" title="默认sn号">
+                                <input type="radio" name="nameType" value="2" title="编号递增">
+
                             </div>
                         </div>
                         <div id="timerecord">
@@ -213,6 +236,7 @@
                             <label class="layui-form-label">采样频率</label>
                             <div class="layui-input-block">
                                 <select id="selectList" name="rawRate" lay-filter="rawRate" lay-verify="required">
+                                    <option value=""></option>
                                     <option value="1000">1s</option>
                                     <option value="5000">5s</option>
                                     <option value="10000">10s</option>
@@ -275,7 +299,7 @@
 <script>
     var templatename  = "#(templatename)";
     var machinesn = "#(machinesn)";
-
+    var type="#(type)";
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

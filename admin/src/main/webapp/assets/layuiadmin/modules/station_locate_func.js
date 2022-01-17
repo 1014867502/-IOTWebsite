@@ -48,7 +48,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             case "base":
                 if (locatedata.coordcvtDstDatum != null) {
                     let coordcvt_dst = locatedata.coordcvtDstDatum.split('|');
-                    $("#coordcvt_dst_datum_select").val(coordcvt_dst[0]);
+                    if(coordcvt_dst[0]!=""&&coordcvt_dst[0]!=null){
+                        $("#coordcvt_dst_datum_select").val(coordcvt_dst[0]);
+                    }
                     $("#coordvt_dst_datum_da").val(coordcvt_dst[1]);
                     $("#coordvt_dst_datum_df").val(coordcvt_dst[2]);
                     if(coordcvt_dst[0]!="CUSTOM"){
@@ -67,7 +69,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                 /*投影参数*/
                 if (locatedata.coordcvtProjParam != null) {
                     let coordvt_proj = locatedata.coordcvtProjParam.split('|');
-                    $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
+                    if(coordvt_proj[0]!=""&&coordvt_proj[0]!=null){
+                        $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
+                    }
                     $("#coordvt_proj_centralmeridian").val(coordvt_proj[1]);
                     $("#coordvt_proj_scale").val(coordvt_proj[2]);
                     $("#coordvt_proj_north").val(coordvt_proj[3]);
@@ -148,6 +152,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">椭球名称</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"coordcvt_dst_datum_select\" lay-filter='datumselect' name=\"coordcvt_dst_datum_select\" lay-verify=\"required\">\n" +
+        "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"WGS84\">WGS84</option>\n" +
         "                                        <option value=\"BEIJING54\">北京54</option>\n" +
         "                                        <option value=\"XIAN80\">西安80</option>\n" +
@@ -184,6 +189,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">投影方式</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"corrdcvt_proj_mode_select\" name=\"corrdcvt_proj_mode_select\" lay-filter='modeselect' lay-verify=\"required\">\n" +
+        "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"0\">高斯</option>\n" +
         "                                        <option value=\"1\">UTM</option>\n" +
         "                                        <option value=\"2\">横轴墨卡托</option>\n" +

@@ -89,4 +89,12 @@ public abstract class BaseAgentData<M extends BaseAgentData<M>> extends Model<M>
 		return getStr("productCode");
 	}
 
+	public void setFirmwareType(java.lang.String firmwareType) {
+		set("firmwareType", firmwareType);
+	}
+	
+	public java.lang.String getFirmwareType() {
+		return getStr("firmwareType");
+	}
+
 }

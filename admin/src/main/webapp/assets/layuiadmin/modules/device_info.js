@@ -62,10 +62,10 @@ layui.define(['table', 'form','laydate','carousel', 'echarts'],function (exports
 
     // 获取项目位置信息
     $.post('/devicelist/getDeviceSetting?machineSerial='+machinedata,function(res){
-        Object.assign(device,res.data);
-        exbitDeviceMarker(res.data);
-        getProjectDetail1();
-        projectdetailflush();
+            Object.assign(device, res.data);
+            exbitDeviceMarker(res.data);
+            getProjectDetail1();
+            projectdetailflush();
     });
     function exbitDeviceMarker(obj) {
         if(obj.positionLat==""||obj.positionLat==null){
@@ -119,9 +119,32 @@ layui.define(['table', 'form','laydate','carousel', 'echarts'],function (exports
         $("#gpsfirmwareVer").html(device.gpsFirmwareVer);
         $("#gpsmodel").html(device.gpsModel);
         $("#hardware").html(device.hardwareVer);
-        $("#powerlevel").html(device.puwerLever);
+        if(device.puwerLever!=null&&device!=""){
+            $("#powerlevel").html(device.puwerLever+"%");
+        }else{
+            $("#powerlevel").html(device.puwerLever);
+        }
         $("#connecttime").html(device.updateTime);
         $("#voltage").html(device.extVoltage);
+        if(device.expireDate!=null){
+            switch(device.expireDate){
+                case "0":
+                    device.expireDate="未注册";
+                    break;
+                case "-1":
+                    device.expireDate="无需注册";
+                    break;
+                default:
+                    let now=new Date().getTime();
+                    let expire=new Date(device.expireDate).getTime();
+                    if(expire-now<0){
+                       device.expireDate=device.expireDate+"<span id=\"tip\">(注册已过期！)";
+                        $("#tip").css("color","#F53C3C");
+                    }
+            }
+            $("#expiredate").html(device.expireDate);
+
+        }
         let space=device.insideSpace!=null?device.insideSpace.split("|"):"0|0".split("|");
         let valuespace=space[0]!=0?space[0]/(1024*1024):0;
         let initspace=space[1]!=0?space[0]/(1024*1024):0;
@@ -148,6 +171,10 @@ layui.define(['table', 'form','laydate','carousel', 'echarts'],function (exports
                 $("#signallevel").html("弱");
                 break;
             case (test==0):
+                $("#iconsignal").attr("src", "/assets/images/icon_signal_no.png");
+                $("#signallevel").html("无");
+                break;
+            default:
                 $("#iconsignal").attr("src", "/assets/images/icon_signal_no.png");
                 $("#signallevel").html("无");
                 break;

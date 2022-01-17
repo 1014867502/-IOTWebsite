@@ -5,9 +5,13 @@ import com.google.gson.reflect.TypeToken;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.devicelist.DeviceListService;
+import com.webmonitor.admin.index.IndexService;
 import com.webmonitor.core.bll.AgentDataService;
 import com.webmonitor.core.bll.ProjectService;
+import com.webmonitor.core.bll.StaffService;
+import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.*;
+import com.webmonitor.core.model.userbase.BaseDevicemap;
 import com.webmonitor.core.model.userbase.BaseProjects;
 import com.webmonitor.core.model.userbase.ExportGNSSWord;
 import com.webmonitor.core.util.exception.ExceptionUtil;
@@ -30,6 +34,41 @@ public class ProjectController extends BaseController {
         render("projectdetail.html");
     }
 
+    /**获取所有的项目列表**/
+    public void getAllProjects(){
+        Result<List<BaseProjects>> result=Result.newOne();
+        List<BaseProjects> projectsData=new ArrayList<>();
+        String userid = getCookie(IndexService.me.accessUserId);
+        String agentnum=getPara("agentnum");
+        StaffData user = StaffService.me.getStaffById(userid);
+        try{
+            String type = RoleType.getString(user.getIRoleType());
+            switch (type) {
+                case "superadmin":
+                    projectsData= ProjectService.me.getProjectByComId(agentnum);
+                    break;
+                case "companyadmin":
+                    String agentNumber = StaffService.me.getStaffById(userid).getAgentNumber();
+                    projectsData= ProjectService.me.getProjectByComId(agentNumber);
+                    break;
+                case "user":
+                    String userproject = StaffService.me.getStaffById(userid).getGroupAssemble();
+                    String[] projects = userproject.split("@");
+                    for (int i = 0; i < projects.length; i++) {
+                       BaseProjects list1 =ProjectService.me.getProjectById(projects[i]);
+                       projectsData.add(list1);
+                    }
+                    break;
+                case "admin":
+                    projectsData= ProjectService.me.getProjectByComId(agentnum);
+                    break;
+            }
+            result.success(projectsData);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
 
 
     /**根据用户id获取对应的项目列表**/
@@ -50,10 +89,10 @@ public class ProjectController extends BaseController {
 
     /**根据项目id获取对应的项目**/
     public void getProjectById(){
-        String groupid=getLoginAccount().getUserName();
+        String projectid=getPara("projectid");
         Result<BaseProjects> result=Result.newOne();
         try{
-            BaseProjects page= ProjectService.me.getProjectById(groupid);
+            BaseProjects page= ProjectService.me.getProjectById(projectid);
             result.success(page);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result, e);
@@ -64,9 +103,11 @@ public class ProjectController extends BaseController {
     /**获取项目设备在线情况**/
     public void getProDevByGroupId(){
         String groupid=getPara("progroupid");
+        String userid = getCookie(IndexService.me.accessUserId);
+        String agentnum= StaffService.me.getStaffById(userid).getAgentNumber();
         Result result=Result.newOne();
         try{
-            ProDevCount proDevCount=ProjectService.me.getProDevCountById(groupid);
+            ProDevCount proDevCount=ProjectService.me.getProDevCountById(groupid,agentnum);
             result.success(proDevCount);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);

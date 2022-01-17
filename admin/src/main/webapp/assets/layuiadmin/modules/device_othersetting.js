@@ -32,7 +32,6 @@ layui.define(['table', 'form','laydate','carousel', 'echarts'],function (exports
                 }else{
                     layer.msg("已经是最新版本，无需升级");
                 }
-
             })
         }
     })
@@ -113,13 +112,22 @@ layui.define(['table', 'form','laydate','carousel', 'echarts'],function (exports
             },
             success: function (data) {
                 let result=data.data;
-                if(result!="fail"){
-                    latest=true;
-                    $("#tip").html("(已经是最新版本)");
-                    $("#tip").css("color","#5FB878");
-                }else{
-                    $("#tip").html("(有最新版本可供更新)");
-                    $("#tip").css("color","#FF5722");
+                switch(result){
+                    case "fail":
+                        $("#tip").html("(有最新版本可供更新)");
+                        $("#tip").css("color","#FF5722");
+                        break;
+                    case "ok":
+                        latest=true;
+                        $("#tip").html("(已经是最新版本)");
+                        $("#tip").css("color","#5FB878");
+                        break;
+                    case "fail2":
+                        $("#tip").html("(固件类型出错，无法升级)");
+                        $("#tip").css("color","#FF5722");
+                        $("#deviceupdate").addClass("layui-btn-disabled");
+                        $("#deviceupdate").attr("disabled","disabled");
+                        break;
                 }
             }
 

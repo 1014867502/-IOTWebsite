@@ -36,7 +36,12 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             },
             async:false,
             success:function () {
-                layer.msg("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
     }
@@ -188,7 +193,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                         $("#chongqing_mode").val("1");
                         chongqingshow("1");
                     }else{
-                        $("#chongqing_mode").val(locatedata.cqIotEnabled);
+                        if(locatedata.cqIotEnabled!=null&&locatedata.cqIotEnabled!=""){
+                            $("#chongqing_mode").val(locatedata.cqIotEnabled);
+                        }
                         chongqingshow(locatedata.cqIotEnabled);
                     }
                     $("#chongqing_iot_telecom").val(device.cqIotTelecom);
@@ -247,7 +254,9 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     }
 
     function onenetflush() {
-        $("#onenet_mode").find("option[value=" + locatedata.oneNetMode + "]").prop("selected", true);
+        if(locatedata.oneNetMode!=""&&locatedata.oneNetMode!=null){
+            $("#onenet_mode").find("option[value=" + locatedata.oneNetMode + "]").prop("selected", true);
+        }
         $("#onenet_id").val((locatedata.oneNetId!=null)?locatedata.oneNetId:"");
         $("#onenet_user").val((locatedata.oneNetUser!=null)?locatedata.oneNetUser:"");
         $("#onenet_key").val((locatedata.oneNetKey!=null)?locatedata.oneNetKey:"");
@@ -276,6 +285,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px 10px;\">模式</label>\n" +
         "                                <div class=\"layui-input-block\" style=\"margin: 0;\">\n" +
         "                                    <select id=\"onenet_mode\" name=\"onenet_mode\" lay-filter=\"onenet_mode\" lay-verify=\"required\">\n" +
+        "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"0\">MQTT</option>\n" +
         "                                        <option value=\"1\">MQTT-S</option>\n" +
         "                                        <option value=\"2\">MQTT-S自注册</option>\n" +
@@ -416,6 +426,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                        <div class=\"layui-input-block\" style=\"width: 300px\">\n" +
         "                            <select id=\"chongqing_mode\" name=\"chongqing_mode\" lay-filter=\"chongqing_mode\"\n" +
         "                                    lay-verify=\"required\">\n" +
+        "                                <option value=\"\"></option>\n" +
         "                                <option value=\"1\">NB-IOT</option>\n" +
         "                                <option value=\"2\">MQTT</option>\n" +
         "                            </select>\n" +

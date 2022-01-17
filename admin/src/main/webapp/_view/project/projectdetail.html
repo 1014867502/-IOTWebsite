@@ -156,7 +156,7 @@
     .untreated {
         color:  #FF5722;
         width: 30%;
-        border: solid 0.5px;
+        /*border: solid 0.5px;*/
         height: 27px;
         /*background-color: #FF5722;*/
     }
@@ -164,7 +164,7 @@
     .treated {
         color:  #01AAED;
         width: 30%;
-        border: solid 0.5px;
+        /*border: solid 0.5px;*/
         height: 27px;
         /*background-color: #01AAED;*/
     }
@@ -200,7 +200,7 @@
         margin: auto;
     }
     .tableeventbtn{
-        width: 55px;
+        width: 60px;
         height: 23px;
         border: 1px solid #01AAED;
         border-radius: 5px;
@@ -253,6 +253,33 @@
         color: #0c0c0c !important;
     }
 </style>
+
+<!--//选择模板弹窗-->
+<div class="site-text" style="margin: 5%; display: none" id="templatewindow" target="test123">
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+        <div class="layui-form-item" style="margin: auto">
+            <div class="layui-inline" style="width: 160px" id="templateselect">
+                <select id="templatetype" name="stats" lay-verify="" lay-filter="templatetype">
+                    <option value="0" selected>全部</option>
+<!--                    <option value="1">模板名字</option>-->
+                </select>
+            </div>
+            <div class="layui-inline">
+                <input type="text" class="layui-input" name="SN" id="SN3" placeholder=" 请输入设备sn号 ">
+            </div>
+            <div class="layui-inline">
+                <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
+                        id="datasumbit3" lay-filter="LAY-app-contlist-search">
+                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="layui-card-body">
+        <table class="layui-hide" name='table2' id='table2' lay-filter='table2'></table>
+    </div>
+</div>
+
 
 <!--//关联设备弹窗-->
 <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
@@ -322,7 +349,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-card-header">设备表格</div>
+                <div class="layui-card-body">
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    项目位置
+                </div>
+                <div class="layui-card-body">
+                    <div id='map' style="height: 500px;width: 100%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    设备表格
+                </div>
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
                     <div class="layui-form-item" style="margin: auto">
                         <div class="layui-inline" style="width: 122px;">
@@ -343,6 +389,11 @@
                         <div class="layui-inline" >
                             <button type="button" class="layui-btn" id="delete_device">
                                 <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #FFFFFF;"></i>批量取消关联
+                            </button>
+                        </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn" id="excute_template">
+                                <i class="layui-icon" style="font-size: 30px; color: #FFFFFF;"></i>配置设备
                             </button>
                         </div>
                     </div>
@@ -370,6 +421,12 @@
     : '
     <div class="untreated">离线</div>' }}
 </script>
+<script type="text/html" id="modeltype">
+    {{ d.type == 1 ? '
+    <div class="treated" style="width: 60%">快速设置</div>'
+    : '
+    <div class="untreated" style="width: 60%">详细设置</div>' }}
+</script>
 
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
 
@@ -380,7 +437,7 @@
         base: '/assets/layuiadmin/'
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'table', 'projectdetail']);
+    }).use(['index', 'table', 'projectdetail','devicemap']);
 </script>
 </body>
 </html>

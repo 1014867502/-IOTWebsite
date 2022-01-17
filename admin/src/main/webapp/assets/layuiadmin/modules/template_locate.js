@@ -6,11 +6,12 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
         , drawer = layui.drawer
         , table2 = layui.table
         ,locatefunc=layui.station_locate_func
+        // ,temcompute=layui.template_compute
+        // ,temauxiliary=layui.template_auxiliary
+        // ,templatform=layui.template_platform
         , form = layui.form
 
-    getDeviceSetting(templatename);
-
-    var locatedata;
+    var locatedata={};
     var fourhidepara;
     var basehidepara;
     var layerindex;
@@ -60,6 +61,27 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
             }
         }
     });
+
+    if(type==1){
+        getDeviceSetting(templatename);
+        $("#savemodel").click(function () {
+            if(form.doVerify("formDemo")){
+                saveModel();
+                updateModel();
+            }
+        })
+    }else{
+        getDeviceSetting("init");
+        $("#savemodel").click(function () {
+            if(form.doVerify("formDemo")){
+                saveModel();
+                addModel();
+            }
+        })
+        $("#reset").css("display","none");
+        $("#changename").css("display","none");
+    }
+
 
     $("#reset").click(function () {
         getDeviceSetting(templatename);
@@ -182,7 +204,9 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
         }
         if (locatedata.coordcvtProjParam != null) {
             let coordvt_proj = locatedata.coordcvtProjParam.split('|');
-            $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
+            if(coordvt_proj[0]!=""&&coordvt_proj[0]!=null){
+                $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
+            }
             $("#coordvt_proj_centralmeridian").val(coordvt_proj[1]);
             $("#coordvt_proj_scale").val(coordvt_proj[2]);
             $("#coordvt_proj_north").val(coordvt_proj[3]);
@@ -210,6 +234,54 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
         layer.close(layerindex);
     })
 
+    /**添加模板**/
+    form.on('submit(save)',function () {
+        let setting=parent.testmodel;
+        let jsondata="";
+        let arr=[];
+        if(setting.compute!=null){
+            arr.push(setting.compute.substring(1, setting.compute.length - 1));
+        }
+        if (setting.locate != null) {
+            arr.push(setting.locate.substring(1, setting.locate.length - 1));
+        }
+        if (setting.plaform != null) {
+            arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
+        }
+        if (setting.auxiliary != null) {
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length-1));
+        }
+        for(let i=0;i<arr.length;i++){
+            if(i==0){
+                jsondata+="{"+arr[i];
+            }else{
+                jsondata+=","+arr[i];
+                if(i==arr.length-1){
+                    jsondata+="}";
+                }
+            }
+        }
+        let data1 = form.val("save");
+        $.ajax({
+            url:'/template/addTemplate',
+            data:{
+                json:jsondata,
+                templatename:data1.templatename,
+                type:"2"
+            },
+            async:false,
+            success:function () {
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
+            }
+        })
+        layer.close(layerindex);
+    })
+
     /**更新模组**/
     function updateModel(){
         let setting=parent.testmodel
@@ -225,7 +297,7 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
             arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
         }
         if (setting.auxiliary != null) {
-            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length));
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length-1));
         }
         for(let i=0;i<arr.length;i++){
             if(i==0){
@@ -247,13 +319,17 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
             },
             async:false,
             success:function () {
-                layer.msg("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
     }
 
-
-    /**提交模组**/
+    /**修改模组名**/
     function changename(){
         layer.open({
             type: 1
@@ -261,6 +337,20 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
             , title: ['修改模板名称']
             , area: ['300px', '300px']
             , content: $("#window")
+            , success: function (layero, index) {
+                layerindex=index;
+            },
+        });
+    }
+
+    /**提交模组**/
+    function addModel(){
+        layer.open({
+            type: 1
+            ,id: 'layerDemo' //防止重复弹出
+            , title: ['保存模板']
+            , area: ['300px', '300px']
+            , content: $("#savewindow")
             , success: function (layero, index) {
                 layerindex=index;
             },
@@ -329,7 +419,6 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
         parent.testmodel.locate= JSON.stringify(jsondata);
     }
 
-
     /*初始化*/
     function getDeviceSetting(sn) {
         $.ajax({
@@ -338,96 +427,117 @@ layui.define(['form', 'drawer', 'table','station_locate_func'], function (export
                 name: sn
             },
             success: function (data) {
-                debugger
                 let device = data.data;
-                locatedata = device;
-                locatefunc.setdevice(device);
-                if(parent.window.writeright==0){
-                    $("#changename").prop("disabled",true);
-                    $("#errormsg").html("修改权限被限制");
-                    $("#changename").addClass("layui-btn-disabled");
-                    $("#savemodel").prop("disabled",true);
-                    $("#savemodel").addClass("layui-btn-disabled");
-                }
-                if (device.coordcvtEnabled > 0) {
-                    $("#coordcvt_enable").prop('checked', true);
-                    document.getElementById("locate_content").innerHTML = locatefunc.locatetxt;
-                } else {
-                    $("#coordcvt_enable").prop('checked', false);
-                    document.getElementById("locate_content").innerHTML = "";
-                }
-                if (device.coordcvtDstDatum != null) {
-                    let coordcvt_dst = device.coordcvtDstDatum.split('|');
-                    $("#coordcvt_dst_datum_select").val(coordcvt_dst[0]);
-                    $("#coordvt_dst_datum_da").val(coordcvt_dst[1]);
-                    $("#coordvt_dst_datum_df").val(coordcvt_dst[2]);
-                    if(coordcvt_dst[0]!="CUSTOM"){
-                        $('#coordvt_dst_datum_da').attr('disabled',true);
-                        $('#coordvt_dst_datum_df').attr('disabled',true);
-                        $("#coordvt_dst_datum_da").addClass('layui-disabled');
-                        $('#coordvt_dst_datum_df').addClass('layui-disabled');
-                    }else{
-                        $('#coordvt_dst_datum_da').attr('disabled',false);
-                        $('#coordvt_dst_datum_df').attr('disabled',false);
-                        $("#coordvt_dst_datum_da").removeClass('layui-disabled');
-                        $('#coordvt_dst_datum_df').removeClass('layui-disabled');
+                if (device.rawName!=null) {
+                    locatedata = device;
+                    locatefunc.setdevice(device);
+                    if (parent.window.writeright == 0) {
+                        $("#changename").prop("disabled", true);
+                        $("#errormsg").html("修改权限被限制");
+                        $("#changename").addClass("layui-btn-disabled");
+                        $("#savemodel").prop("disabled", true);
+                        $("#savemodel").addClass("layui-btn-disabled");
                     }
-                }
-
-                /*投影参数*/
-                if (device.coordcvtProjParam != null) {
-                    let coordvt_proj = device.coordcvtProjParam.split('|');
-                    $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
-                    let tmp=parseFloat(coordvt_proj[1]);
-                    tmp=(tmp*180/Math.PI).toFixed(10);
-                    $("#coordvt_proj_centralmeridian").val(tmp);
-                    $("#coordvt_proj_scale").val(coordvt_proj[2]);
-                    $("#coordvt_proj_north").val(coordvt_proj[3]);
-                    $("#coordvt_proj_east").val(coordvt_proj[4]);
-                    $("#coordvt_proj_height").val(coordvt_proj[5]);
-                    $("#coordvt_proj_lat").val(coordvt_proj[6]);
-                    basehidepara = "|" + coordvt_proj[7] + "|" + coordvt_proj[8] + "|" + coordvt_proj[9];
-                }
-
-                /*七参数*/
-                if (device.coordcvtSevenParam != null) {
-                    let coordvt_seven = device.coordcvtSevenParam.split('|');
-                    if (coordvt_seven[0] > 0) {
-                        $("#coordcvt_seven_use").prop('checked', true);
-                        document.getElementById("seven_use").innerHTML = locatefunc.sevenuse;
+                    if (device.coordcvtEnabled > 0) {
+                        $("#coordcvt_enable").prop('checked', true);
+                        document.getElementById("locate_content").innerHTML = locatefunc.locatetxt;
                     } else {
-                        $("#coordcvt_seven_use").prop('checked', false);
+                        $("#coordcvt_enable").prop('checked', false);
+                        document.getElementById("locate_content").innerHTML = "";
                     }
-                    $("#coordcvt_seven_tx").val(coordvt_seven[1]);
-                    $("#coordcvt_seven_ty").val(coordvt_seven[2]);
-                    $("#coordcvt_seven_tz").val(coordvt_seven[3]);
-                    $("#coordcvt_seven_rx").val(coordvt_seven[4]);
-                    $("#coordcvt_seven_ry").val(coordvt_seven[5]);
-                    $("#coordcvt_seven_rz").val(coordvt_seven[6]);
-                    $("#coordcvt_seven_scale").val(coordvt_seven[7]);
-                }
+                    if (device.coordcvtDstDatum != null) {
+                        let coordcvt_dst = device.coordcvtDstDatum.split('|');
+                        if (coordcvt_dst[0] != "" && coordcvt_dst[0] != null) {
+                            $("#coordcvt_dst_datum_select").val(coordcvt_dst[0]);
+                        }
+                        $("#coordvt_dst_datum_da").val(coordcvt_dst[1]);
+                        $("#coordvt_dst_datum_df").val(coordcvt_dst[2]);
+                        if (coordcvt_dst[0] != "CUSTOM") {
+                            $('#coordvt_dst_datum_da').attr('disabled', true);
+                            $('#coordvt_dst_datum_df').attr('disabled', true);
+                            $("#coordvt_dst_datum_da").addClass('layui-disabled');
+                            $('#coordvt_dst_datum_df').addClass('layui-disabled');
+                        } else {
+                            $('#coordvt_dst_datum_da').attr('disabled', false);
+                            $('#coordvt_dst_datum_df').attr('disabled', false);
+                            $("#coordvt_dst_datum_da").removeClass('layui-disabled');
+                            $('#coordvt_dst_datum_df').removeClass('layui-disabled');
+                        }
+                    }
 
-                /*四参数*/
-                if (device.coordcvtFourParam != null) {
-                    let coordvt_four = device.coordcvtFourParam.split('|');
-                    if (coordvt_four[0] > 0) {
-                        $("#coordcvt_four_use").prop('checked', true);
-                        document.getElementById("four_use").innerHTML = locatefunc.fouruse;
-                    } else {
-                        $("#coordcvt_four_use").prop('checked', false);
+                    /*投影参数*/
+                    if (device.coordcvtProjParam != null) {
+                        let coordvt_proj = device.coordcvtProjParam.split('|');
+                        if (coordvt_proj[0] != "" && coordvt_proj[0] != null) {
+                            $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
+                        }
+                        let tmp = parseFloat(coordvt_proj[1]);
+                        tmp = (tmp * 180 / Math.PI).toFixed(10);
+                        $("#coordvt_proj_centralmeridian").val(tmp);
+                        $("#coordvt_proj_scale").val(coordvt_proj[2]);
+                        $("#coordvt_proj_north").val(coordvt_proj[3]);
+                        $("#coordvt_proj_east").val(coordvt_proj[4]);
+                        $("#coordvt_proj_height").val(coordvt_proj[5]);
+                        $("#coordvt_proj_lat").val(coordvt_proj[6]);
+                        basehidepara = "|" + coordvt_proj[7] + "|" + coordvt_proj[8] + "|" + coordvt_proj[9];
                     }
-                    $("#coordcvt_four_tx").val(coordvt_four[1]);
-                    $("#coordcvt_four_ty").val(coordvt_four[2]);
-                    $("#coordcvt_four_rotate").val(coordvt_four[3]);
-                    $("#coordcvt_four_scale").val(coordvt_four[4]);
-                    fourhidepara = "|" + coordvt_four[5] + "|" + coordvt_four[6];
+
+                    /*七参数*/
+                    if (device.coordcvtSevenParam != null) {
+                        let coordvt_seven = device.coordcvtSevenParam.split('|');
+                        if (coordvt_seven[0] > 0) {
+                            $("#coordcvt_seven_use").prop('checked', true);
+                            document.getElementById("seven_use").innerHTML = locatefunc.sevenuse;
+                        } else {
+                            $("#coordcvt_seven_use").prop('checked', false);
+                        }
+                        $("#coordcvt_seven_tx").val(coordvt_seven[1]);
+                        $("#coordcvt_seven_ty").val(coordvt_seven[2]);
+                        $("#coordcvt_seven_tz").val(coordvt_seven[3]);
+                        $("#coordcvt_seven_rx").val(coordvt_seven[4]);
+                        $("#coordcvt_seven_ry").val(coordvt_seven[5]);
+                        $("#coordcvt_seven_rz").val(coordvt_seven[6]);
+                        $("#coordcvt_seven_scale").val(coordvt_seven[7]);
+                    }
+
+                    /*四参数*/
+                    if (device.coordcvtFourParam != null) {
+                        let coordvt_four = device.coordcvtFourParam.split('|');
+                        if (coordvt_four[0] > 0) {
+                            $("#coordcvt_four_use").prop('checked', true);
+                            document.getElementById("four_use").innerHTML = locatefunc.fouruse;
+                        } else {
+                            $("#coordcvt_four_use").prop('checked', false);
+                        }
+                        $("#coordcvt_four_tx").val(coordvt_four[1]);
+                        $("#coordcvt_four_ty").val(coordvt_four[2]);
+                        $("#coordcvt_four_rotate").val(coordvt_four[3]);
+                        $("#coordcvt_four_scale").val(coordvt_four[4]);
+                        fourhidepara = "|" + coordvt_four[5] + "|" + coordvt_four[6];
+                    }
+                    saveModel();
+                    form.render();
                 }
-                saveModel();
-                form.render();
             }
         })
     }
 
+    /**保存当前页面模板（）**/
+    function checksavemodel(){
+            if(form.doVerify("formDemo")){
+                saveModel();
+                return true;
+            }else{
+                layer.msg("坐标页面有误！");
+                return false;
+            }
+    }
 
-    exports('template_locate', {})
+    var temlocate = {
+        checksavemodel: function () {
+            checksavemodel();
+        }
+    }
+
+    exports('template_locate', temlocate)
 });

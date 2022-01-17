@@ -1,4 +1,4 @@
-layui.define(['form','drawer','table','laydate','layer'], function (exports) {
+layui.define(['form','drawer','table','laydate','layer','Global_variable'], function (exports) {
     var $ = layui.$
         ,setter = layui.setter
         ,admin = layui.admin
@@ -7,7 +7,8 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
         ,table=layui.table
         ,laydate=layui.laydate
         ,layer=layui.layer
-        ,table2=layui.table;
+        ,table2=layui.table
+        ,Global_variable=layui.Global_variable;
 
     var agentNumber;
     var layerindex;
@@ -15,6 +16,9 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
     var companylistfind;
     var companysearch;
     var companylist;
+    var editcompanylist;
+    var addcompanylist;//记录添加普通管理员选中的公司
+    var editchargecominit;//记录当前普通管理员选中的公司
     var projectlist;
     var initappauthorities;//权限显示
     var initwebauthorities;
@@ -107,6 +111,7 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
 
     /**添加用户页面**/
     form.on('select(type)',function(data){
+        debugger
         let type=data.value;
         newtype=type;
         if(type=="0"){
@@ -116,18 +121,35 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                 "                <div id=\"projectlist\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
                 "            </div>\n" +
                 "        </div>";
-            getprojectlist(agentNumber);
+            if(agentNumber!=null){
+                getprojectlist(agentNumber);
+            }
             document.getElementById("datekeep").innerHTML="<label class=\"layui-form-label\">账号时限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div style=\"width: 70%\">\n" +
                 "                    <input type=\"text\" class=\"layui-input\" lay-verify=\"required\" name=\"accounttime\" id=\"datasave\" placeholder=\"请输入账号到期时间\">\n" +
                 "                </div>\n" +
                 "            <span id=\"datetip\"></span></div>";
-            document.getElementById("showwebright").innerHTML="<label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
+            document.getElementById("showwebright").innerHTML="    <div class=\"layui-form-item\" >\n" +
+                "                <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
+                "                <div class=\"layui-input-block\">\n" +
+                "                    <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                </div>\n" +
+                "            </div>"
+            document.getElementById("showeditright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <input id=\"writeright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
                 "            </div>";
-            initwebauthoritylist();
+            document.getElementById("showappright").innerHTML="     <div class=\"layui-form-item\" >\n" +
+                "               <label class=\"layui-form-label\">app功能权限</label>\n" +
+                "               <div class=\"layui-input-block\">\n" +
+                "                   <div id=\"initappauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "               </div>\n" +
+                "           </div>";
+            if(agentNumber!=null){
+                initcomauthority(agentNumber);
+            }
+            document.getElementById("addmanagecompanylist").innerHTML="";
             laydate.render({
                 elem: '#datasave'
                 ,format: 'yyyy-MM-dd'
@@ -137,31 +159,81 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                 }
             });
         }
+        else if(type=="2"){
+            document.getElementById("showwebright").innerHTML="";
+            document.getElementById("showeditright").innerHTML="";
+            document.getElementById("showappright").innerHTML="";
+            document.getElementById("datekeep").innerHTML="";
+            document.getElementById("formproject").innerHTML="";
+            document.getElementById("addmanagecompanylist").innerHTML="";
+        }
         else if(type=="3"){
-            getprojectlist(agentNumber);
+            if(agentNumber!=null){
+                getprojectlist(agentNumber);
+            }
+            document.getElementById("addmanagecompanylist").innerHTML="";
             document.getElementById("showwebright").innerHTML="";
             document.getElementById("showeditright").innerHTML="";
             document.getElementById("datekeep").innerHTML="";
             document.getElementById("formproject").innerHTML="";
+            if(document.getElementById("showappright")!=null){
+                document.getElementById("showappright").innerHTML="     <div class=\"layui-form-item\" >\n" +
+                    "               <label class=\"layui-form-label\">app功能权限</label>\n" +
+                    "               <div class=\"layui-input-block\">\n" +
+                    "                   <div id=\"initappauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                    "               </div>\n" +
+                    "           </div>";
+            }
+            if(agentNumber!=null){
+                initcomauthority(agentNumber);
+            }
         }
-        else{
-            document.getElementById("showwebright").innerHTML="<label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
-                "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
-                "            </div>";
-            initwebauthoritylist();
+        else if(type=="4"){
             document.getElementById("formproject").innerHTML="";
             document.getElementById("datekeep").innerHTML="";
+            document.getElementById("addmanagecompanylist").innerHTML="<div class=\"layui-form-item\">\n" +
+                "                <label class=\"layui-form-label\" style=\"width: 84px;padding: 9px 13px;\">可查看的公司</label>\n" +
+                "                <div class=\"layui-input-block\">\n" +
+                "                    <div id=\"addcompanylist\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "                </div>\n" +
+                "            </div>";
+            document.getElementById("showwebright").innerHTML="";
+            document.getElementById("showappright").innerHTML="";
+            addchargecompanylist();
         }
+        else{
+            document.getElementById("showwebright").innerHTML="    <div class=\"layui-form-item\" >\n" +
+                "                <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
+                "                <div class=\"layui-input-block\">\n" +
+                "                    <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                </div>\n" +
+                "            </div>"
+            document.getElementById("showeditright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <input id=\"writeright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "            </div>";
+            document.getElementById("showappright").innerHTML="     <div class=\"layui-form-item\" >\n" +
+                "               <label class=\"layui-form-label\">app功能权限</label>\n" +
+                "               <div class=\"layui-input-block\">\n" +
+                "                   <div id=\"initappauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "               </div>\n" +
+                "           </div>";
+            if(agentNumber!=null){
+                initcomauthority(agentNumber);
+            }
+            document.getElementById("formproject").innerHTML="";
+            document.getElementById("datekeep").innerHTML="";
+            document.getElementById("addmanagecompanylist").innerHTML="";
+        }
+        form.render();
     });
 
     /**编辑用户页面**/
     form.on('select(type2)',function(data){
-        debugger
         let type=data.value;
         edittype=type;
-
         if(type=="0"){
+            document.getElementById("formcompanyedit").innerHTML="";
             document.getElementById("formprojectedit").innerHTML=" <div class=\"layui-form-item\">\n" +
                 "            <label class=\"layui-form-label\">用户允许访问项目</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
@@ -169,12 +241,25 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                 "            </div>\n" +
                 "        </div>";
             initprojectlist(agentNumber,"");
+            document.getElementById("editwebright").innerHTML=" <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "            </div>";
+            loadcomauthority(agentNumber);
             document.getElementById("datechange").innerHTML="<label class=\"layui-form-label\">账号时限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div style=\"width: 70%\">\n" +
                 "                    <input type=\"text\" class=\"layui-input\" lay-verify=\"required\" name=\"accounttime\" id=\"dataedit\" placeholder=\"请输入账号到期时间\">\n" +
                 "                 </div>\n" +
                 "            <span id=\"edittip\"></span> </div>"
+            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "            </div>";
+            document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "            </div>";
             laydate.render({
                 elem: '#dataedit'
                 ,format: 'yyyy-MM-dd'
@@ -183,26 +268,67 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                     editdatetip();
                 }
             });
-        }else if(type=="3"){
+
+        }    else if(type=="2"){
+            document.getElementById("editwebright").innerHTML="";
+            document.getElementById("displaywriteright").innerHTML="";
+            document.getElementById("editappright").innerHTML="";
+            document.getElementById("datechange").innerHTML="";
+            document.getElementById("formprojectedit").innerHTML="";
+            loadcomauthority(agentNumber);
+        }
+        else if(type=="3"){
             document.getElementById("editwebright").innerHTML="";
             document.getElementById("displaywriteright").innerHTML="";
             document.getElementById("datechange").innerHTML="";
             document.getElementById("formprojectedit").innerHTML="";
+            document.getElementById("formcompanyedit").innerHTML="";
+            document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "            </div>";
+            loadcomauthority(agentNumber);
+        }else if(type=="4"){
+            loadcompany(agentNumber);
+            document.getElementById("editwebright").innerHTML=" <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "            </div>";
+            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "            </div>";
+            document.getElementById("formcompanyedit").innerHTML="<div class=\"layui-form-item\">\n" +
+                "                <label class=\"layui-form-label\" style=\"width: 84px;padding: 9px 13px;\">可查看的公司</label>\n" +
+                "                <div class=\"layui-input-block\">\n" +
+                "                    <div id=\"editchargecompanylist\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "                </div>\n" +
+                "            </div>";
+            document.getElementById("datechange").innerHTML="";
+            document.getElementById("formprojectedit").innerHTML="";
+            document.getElementById("editwebright").innerHTML="";
+            document.getElementById("editappright").innerHTML="";
+            editchargecompanylist(editchargecominit);
         }
         else{
             document.getElementById("editwebright").innerHTML=" <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
                 "            </div>";
-            loadwebauthoritylist();
             document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
                 "                <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
                 "            </div>";
-            getwebauthority(id);
+            document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "            </div>";
+            loadcomauthority(agentNumber);
+            document.getElementById("formcompanyedit").innerHTML="";
             document.getElementById("datechange").innerHTML="";
             document.getElementById("formprojectedit").innerHTML="";
         }
+        form.render();
     });
 
     form.on('submit(formDemo1)', function(data){//添加用户提交
@@ -210,12 +336,17 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
         let group;
         let right;
         let appright;
+        let selectcom;
         let date=new Date();
         let company=companylist.getValue();
         json.agentNumber=company[0].value;
         json.iRoleType=json.type;
-        right=initwebauthorities.getValue('valueStr');
-        appright=initappauthorities.getValue('valueStr');
+        if(initwebauthorities!=null){
+            right=initwebauthorities.getValue('valueStr');
+        }
+        if(initappauthorities!=null){
+            appright=initappauthorities.getValue('valueStr');
+        }
         if(json.writePermission=="on"){
             json.writePermission=1;
         }else{
@@ -223,7 +354,15 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
         }
         if(json.type==0){
             group=projectlist.getValue('valueStr');
-        }else{
+        }
+        else if(json.type==4){
+            selectcom=addcompanylist.getValue('valueStr');
+            let yy = new Date().getFullYear()+100
+            let mm = new Date().getMonth() + 1
+            let dd = new Date().getDate()
+            json.accounttime=yy+"-"+mm+"-"+dd;
+        }
+        else{
             let yy = new Date().getFullYear()+100
             let mm = new Date().getMonth() + 1
             let dd = new Date().getDate()
@@ -236,7 +375,8 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                 json:jsondata,
                 select:group ,
                 webright:right,
-                appright:appright
+                appright:appright,
+                selectcom:selectcom
             },
             async:false,
             success:function (data) {
@@ -252,7 +392,12 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                 });
                 renderTable();
                 form.render();
-                layer.msg('提交成功');
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
 
@@ -265,13 +410,18 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
         let group;
         let right;
         let appright;
+        let selectcom;
         json.id=id;
         json.uPassword=json.editPassword;
         json.iRoleType=json.type2;
         let company=companylist.getValue();
         json.agentNumber=company[0].value;
-        right=loadwebauthorities.getValue('valueStr');
-        appright=loadappauthorities.getValue('valueStr');
+        if(loadwebauthorities!=null){
+            right=loadwebauthorities.getValue('valueStr');
+        }
+        if(loadappauthorities!=null){
+            appright=loadappauthorities.getValue('valueStr');
+        }
         if(json.writePermission=="on"){
             json.writePermission=1;
         }else{
@@ -282,7 +432,15 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
             if(json.accounttime==""){
                 delete json.accounttime;
             }
-        }else{
+        }
+        else if(json.type2==4){
+            selectcom=editcompanylist.getValue('valueStr');
+            let yy = new Date().getFullYear()+100
+            let mm = new Date().getMonth() + 1
+            let dd = new Date().getDate()
+            json.accounttime=yy+"-"+mm+"-"+dd;
+        }
+        else{
             let yy = new Date().getFullYear()+100
             let mm = new Date().getMonth() + 1
             let dd = new Date().getDate()
@@ -295,7 +453,8 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                 json:jsondata,
                 select:group,
                 webright:right,
-                appright:appright
+                appright:appright,
+                selectcom:selectcom
             },
             async:false,
             success:function (data) {
@@ -312,7 +471,12 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
 
                 });
                 renderTable();
-                layer.msg('提交成功');
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
                 if(id==userid){
                     logout();
                 }
@@ -330,8 +494,7 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
             content: $("#window"),
             success :function (layero, index) {
                 getcompanylist();
-                initwebauthoritylist();
-                initappauthoritylist();
+                // initcomauthority();
                 layerindex=index;
                 form.render();
             },
@@ -346,6 +509,10 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
         repasswordlist();
     })
 
+    $("#reauthor_com").click(function () {
+        editcomauthor();
+    })
+
     /**加载编辑页面**/
     function editwindow(data){
         $("#uaccountnum").val(data.uAccountNum);
@@ -355,13 +522,13 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
         agentNumber=data.agentNumber;
         $("#roletype").find("option[value=" + data.iRoleType + "]").prop("selected", true);
         if(data.iRoleType=="0"){
+            document.getElementById("formcompanyedit").innerHTML="";
             document.getElementById("formprojectedit").innerHTML="<div class=\"layui-form-item\">\n" +
                 "                <label class=\"layui-form-label\" style=\"width: 84px;padding: 9px 13px;\">可查看的项目</label>\n" +
                 "                <div class=\"layui-input-block\">\n" +
                 "                    <div id=\"projectlist2\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
                 "                </div>\n" +
                 "            </div>";
-            initcompany(data.agentNumber);
             initprojectlist(data.agentNumber,data.groupAssemble);
             document.getElementById("datechange").innerHTML="<label class=\"layui-form-label\">账号时限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
@@ -381,24 +548,60 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
                 "            </div>";
+            document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "            </div>";
             $("#dataedit").val(data.accounttime);
         }
+        else if(data.iRoleType=="2"){
+            document.getElementById("editwebright").innerHTML="";
+            document.getElementById("editappright").innerHTML="";
+            document.getElementById("displaywriteright").innerHTML="";
+            document.getElementById("datechange").innerHTML="";
+        }
         else if(data.iRoleType=="3"){
-            initcompany(data.agentNumber);
             document.getElementById("editwebright").innerHTML="";
             document.getElementById("displaywriteright").innerHTML="";
             document.getElementById("formprojectedit").innerHTML="";
             document.getElementById("datechange").innerHTML="";
+            document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "            </div>";
+        }
+        else  if(data.iRoleType=="4"){
+            let datainit=data.groupAgentNumber!=null?data.groupAgentNumber.split("@"):"";
+            document.getElementById("formcompanyedit").innerHTML="<div class=\"layui-form-item\">\n" +
+                "                <label class=\"layui-form-label\" style=\"width: 84px;padding: 9px 13px;\">可查看的公司</label>\n" +
+                "                <div class=\"layui-input-block\">\n" +
+                "                    <div id=\"editchargecompanylist\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "                </div>\n" +
+                "            </div>";;
+            document.getElementById("datechange").innerHTML="";
+            document.getElementById("formprojectedit").innerHTML="";
+            document.getElementById("editwebright").innerHTML="";
+            document.getElementById("editappright").innerHTML="";
+            editchargecompanylist(datainit);
         }
         else{
-            document.getElementById("editwebright").innerHTML="<label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
+            document.getElementById("editwebright").innerHTML=" <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
                 "            </div>";
-            document.getElementById("formprojectedit").innerHTML="";
+            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "            </div>";
+            document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
+                "            <div class=\"layui-input-block\">\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "            </div>";
+            document.getElementById("formcompanyedit").innerHTML="";
             document.getElementById("datechange").innerHTML="";
-            initcompany(data.agentNumber);
+            document.getElementById("formprojectedit").innerHTML="";
         }
+        loadcompany(data.agentNumber);
         form.render();
     }
     //监听查询
@@ -512,7 +715,7 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
 
             });
         } else if (obj.event === 'del') {
-            layer.confirm('真的删除行么', function(index){
+            layer.confirm('真的删除当前项吗？', function(index){
                 obj.del();
                 let id=data.id;
                 admin.req({
@@ -623,6 +826,162 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
     }
 
 
+    //修改公司权限弹窗
+    function editcomauthor() {
+            layer.open({
+                type: 1
+                , title: ['修改公司权限']
+                , area: ['650px', '400px']
+                , btn: ['确定', '取消']
+                , content: $("#authorwindow")
+                , success: function (layero, index) {
+                    $.ajax({
+                        url:'/company/getAllCompany',
+                        async:false,
+                        success: function(data){
+                            authorcompanylist(data.data);
+                        }
+                    })
+                }, yes: function (index, layero) {
+                    let data = form.val('authorexample');
+                    if(data.select!=null&&data.select!=""){
+                        let comweb="";
+                        let comapp="";
+                        for(let p in data){
+                            // 方法
+                            if(p.indexOf("webauthor_")>-1){
+                                let length=p.length;
+                                if(length<12){
+                                    comweb+=p.substring(length-1,length)+"@";
+                                }else{
+                                    comweb+=p.substring(length-2,length)+"@";
+                                }
+                            }
+                            else if(p.indexOf("appauthor_")>-1){
+                                let length=p.length;
+                                if(length<12){
+                                    comapp+=p.substring(length-1,length)+"@";
+                                }else{
+                                    comapp+=p.substring(length-2,length)+"@";
+                                }
+                            }
+                        }
+                        comweb=comweb.substring(0,comweb.length-1);
+                        comapp=comapp.substring(0,comapp.length-1);
+                        $.ajax({
+                            url:'/company/modifyCompanyAuthority',
+                            data:{
+                                agentnum:data.select,
+                                comweb:comweb,
+                                comapp:comapp
+                            },
+                            success:function(res){
+                                let data=res.data;
+                                layer.msg("修改成功")
+                                layer.close(index);
+                            }
+                        })
+                        $('#book')[0].reset();//重置表格
+                    }else{
+                        layer.msg("请选择修改的公司");
+                    }
+                },
+                btn2: function () {
+                    $('#book')[0].reset();
+                },
+                cancel: function () {
+                    $('#book')[0].reset();
+                }
+            });
+    }
+
+    /**加载公司列表(新增用户)**/
+    function authorcompanylist(json){
+        if(json!=null&&json.length>0){
+            var arrData = [];
+            var selectSn ="";
+            for(var i=0;i<json.length;i++){
+                var item = json[i];
+                var jsonStr = {};
+                jsonStr.name = item.agentName;
+                jsonStr.value = item.agentNumber;
+                arrData.push(jsonStr);
+            }
+            var authcompanylist = xmSelect.render({
+                el: '#authorcompanylist',
+                toolbar:{
+                    show: true,
+                },
+                data: arrData,
+                init:arrData[0].value,
+                layVerify: 'required',
+                radio:true,
+                clickClose:true,
+                theme: {
+                    color: '#01AAED',
+                },
+                layVerType: 'msg',
+                model:{
+                    label:{
+                        type:'block',
+                        block: {
+                            //最大显示数量, 0:不限制
+                            showCount: 0,
+                            //是否显示删除图标
+                            showIcon: false,
+                        }
+                    }
+                },
+                on: function(data){
+                    let change = data.change[0];
+                    $.ajax({
+                        url:'/company/getComAuthor',
+                        data:{
+                            agentnum:change.value
+                        },
+                        success:function(res){
+                            $("input[name*='webauthor_']").prop("checked",false);
+                            $("input[name*='appauthor_']").prop("checked",false);
+                            let allweb=res.data.webauthority;
+                            let allapp=res.data.appauthority;
+                            for(let i=0;i<allweb.length;i++){
+                                let node="#web_"+allweb[i].value;
+                                $(node).prop("checked", true);
+                            }
+                            for(let j=0;j<allapp.length;j++){
+                                let node="#app_"+allapp[j].value;
+                                $(node).prop("checked", true);
+                            }
+                            form.render();
+                        }
+                    })
+                }
+            });
+            $.ajax({
+                  url:'/manage/getAllAuthor',
+                  data:{
+                      agentnum:arrData[0].value
+                  },
+                  success:function(res){
+                      let allweb=res.data.webauthority;
+                      let allapp=res.data.appauthority;
+                      let webselect="";
+                      let appselect="";
+                      for(let i=0;i<allweb.length;i++){
+                          webselect+="<input type=\"checkbox\" id='web_"+i+"' name=\"webauthor_"+i+"\"  title="+allweb[i].name+">"
+                      }
+                      for(let j=0;j<allapp.length;j++){
+                          appselect+="<input type=\"checkbox\" id='app_"+j+"' name=\"appauthor_"+j+"\"  title="+allapp[j].name+">"
+                      }
+                      document.getElementById("webcontent").innerHTML=webselect;
+                      document.getElementById("appcontent").innerHTML=appselect;
+                      form.render();
+                  }
+              })
+        }
+    }
+
+
     /**获取项目列表(添加用户)**/
     function getprojectlist(id){
         $.ajax({
@@ -657,10 +1016,107 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
             url:'/company/getAllCompany',
             async:false,
             success: function(data){
-                loadcompanylist(data.data);
+                initcompanylist(data.data);
             }
         })
     }
+
+    /**/
+
+    /**加载普通管理员的公司列表**/
+    function addchargecompanylist(){
+        $.ajax({
+            url:'/company/getAllCompany',
+            async:false,
+            success: function(data){
+                let json=data.data;
+                var arrData = [];
+                var selectSn ="";
+                for(let i=0;i<json.length;i++){
+                    var item = json[i];
+                    var jsonStr = {};
+                    jsonStr.name = item.agentName;
+                    jsonStr.value = item.agentNumber;
+                    arrData.push(jsonStr);
+                }
+                addcompanylist = xmSelect.render({
+                    el: '#addcompanylist',
+                    toolbar: {
+                        show: true,
+                    },
+                    data: arrData,
+                    layVerify: 'required',
+                    theme: {
+                        color: '#01AAED',
+                    },
+                    layVerType: 'msg',
+                    model: {
+                        label: {
+                            type: 'block',
+                            block: {
+                                //最大显示数量, 0:不限制
+                                showCount: 0,
+                                //是否显示删除图标
+                                showIcon: false,
+                            }
+                        }
+                    },
+                })
+            }
+        })
+
+    }
+
+    /**加载普通管理员的公司列表**/
+    function editchargecompanylist(init){
+        $.ajax({
+            url:'/company/getAllCompany',
+            async:false,
+            success: function(data){
+                if(init==null){
+                    init=[];
+                }else{
+                    editchargecominit=init;
+                }
+                let json=data.data;
+                var arrData = [];
+                var selectSn ="";
+                for(let i=0;i<json.length;i++){
+                    var item = json[i];
+                    var jsonStr = {};
+                    jsonStr.name = item.agentName;
+                    jsonStr.value = item.agentNumber;
+                    arrData.push(jsonStr);
+                }
+                editcompanylist = xmSelect.render({
+                    el: '#editchargecompanylist',
+                    toolbar: {
+                        show: true,
+                    },
+                    data: arrData,
+                    layVerify: 'required',
+                    theme: {
+                        color: '#01AAED',
+                    },
+                    layVerType: 'msg',
+                    initValue: init,
+                    model: {
+                        label: {
+                            type: 'block',
+                            block: {
+                                //最大显示数量, 0:不限制
+                                showCount: 0,
+                                //是否显示删除图标
+                                showIcon: false,
+                            }
+                        }
+                    },
+                })
+            }
+        })
+
+    }
+
 
     /**获取公司列表(搜索栏)**/
     function getcompanylistsearch(){
@@ -673,20 +1129,20 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
         })
     }
 
-    /**获取公司列表(初始化)**/
-    function initcompany(init){
+    /**获取公司列表(编辑页面初始化)**/
+    function loadcompany(init){
         $.ajax({
             url:'/company/getAllCompany',
             async:false,
             success: function(data){
-                initcompanylist(data.data,init);
+                loadcompanylist(data.data,init);
             }
         })
     }
 
 
-    /**加载公司列表**/
-    function loadcompanylist(json){
+    /**加载公司列表(新增用户)**/
+    function initcompanylist(json){
         var arrData = [];
         var selectSn ="";
         for(var i=0;i<json.length;i++){
@@ -726,12 +1182,13 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                 if(document.getElementById("projectlist")!=null){
                     getprojectlist(change.value);
                 }
+                initcomauthority(agentNumber);
             },
         })
     }
 
-    /**加载公司列表(初始化)**/
-    function initcompanylist(json,init){
+    /**加载公司列表(编辑页面初始化)**/
+    function loadcompanylist(json,init){
         var arrData = [];
         var selectSn ="";
         for(var i=0;i<json.length;i++){
@@ -773,14 +1230,14 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                 if(edittype=="0"&&node!=null){
                     initprojectlist(change.value,"");
                 }
-
+                loadcomauthority(agentNumber);
             },
         })
     }
 
     /**加载项目列表**/
     function loadprojectlist(json){
-        var arrData = [{name:"无",value:"empty"}];
+        var arrData = [{name:"无",value:"0"}];
         var selectSn ="";
         for(var i=0;i<json.length;i++){
             var item = json[i];
@@ -789,58 +1246,60 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
             jsonStr.value = item.projectid;
             arrData.push(jsonStr);
         }
-        projectlist = xmSelect.render({
-            el: '#projectlist',
-            toolbar:{
-                show: true,
-            },
-            data: arrData,
-            theme: {
-                color: '#01AAED',
-            },
-            layVerType: 'msg',
-            model:{
-                label:{
-                    type:'block',
-                    block: {
-                        //最大显示数量, 0:不限制
-                        showCount: 0,
-                        //是否显示删除图标
-                        showIcon: false,
+        if(document.getElementById("projectlist")!=null) {
+            projectlist = xmSelect.render({
+                el: '#projectlist',
+                toolbar: {
+                    show: true,
+                },
+                data: arrData,
+                theme: {
+                    color: '#01AAED',
+                },
+                layVerType: 'msg',
+                model: {
+                    label: {
+                        type: 'block',
+                        block: {
+                            //最大显示数量, 0:不限制
+                            showCount: 0,
+                            //是否显示删除图标
+                            showIcon: false,
+                        }
                     }
-                }
-            },on: function(data){
-            //arr:  当前多选已选中的数据
-            let arr = data.arr;
-            //change, 此次选择变化的数据,数组
-            let change = data.change;
-            //isAdd, 此次操作是新增还是删除
-            let isAdd = data.isAdd;
-            if(isAdd) {
-                if (arr.length == json.length+1) {
-                    if (change[0].value == "empty"&&arr[0].value!="empty") {
-                        arr.splice(0,arr.length-1);
-                    }else{
-                        for (let i = 0; i < arr.length; i++) {
-                            if (arr[i].value == "empty") {
-                                arr.splice(i, 1);
+                }, on: function (data) {
+                    //arr:  当前多选已选中的数据
+                    let arr = data.arr;
+                    //change, 此次选择变化的数据,数组
+                    let change = data.change;
+                    //isAdd, 此次操作是新增还是删除
+                    let isAdd = data.isAdd;
+                    if (isAdd) {
+                        if (arr.length == json.length + 1) {
+                            if (change[0].value == "0" && arr[0].value != "0") {
+                                arr.splice(0, arr.length - 1);
+                            } else {
+                                for (let i = 0; i < arr.length; i++) {
+                                    if (arr[i].value == "0") {
+                                        arr.splice(i, 1);
+                                    }
+                                }
+                            }
+                        } else {
+                            if (change.length > 0 && change[0].value == "0") {
+                                arr.splice(0, arr.length - 1);
+                            } else {
+                                for (let k = 0; k < arr.length; k++) {
+                                    if (arr[k].value == "0") {
+                                        arr.splice(k, 1);
+                                    }
+                                }
                             }
                         }
                     }
-                } else {
-                    if (change.length>0&&change[0].value == "empty") {
-                        arr.splice(0,arr.length-1);
-                    }else{
-                        for(let k=0;k<arr.length;k++){
-                            if(arr[k].value=="empty"){
-                                arr.splice(k,1);
-                            }
-                        }
-                    }
                 }
-            }
+            })
         }
-        })
     }
 
     /**加载公司列表**/
@@ -900,15 +1359,17 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                 },
                 async:false,
                 success: function(data){
-                    if(data.data.writeright>0){
+                    if(data.data.writeright!=null&&data.data.writeright>0){
                         $("#editwriteright").prop('checked',true);
                     }else{
                         $("#editwriteright").prop('checked',false);
                     }
-                    let webright=data.data.webauthority==""?[]:data.data.webauthority.split('@');
-                    let appright=data.data.appauthority==""?[]:data.data.appauthority.split('@');
-                    loadwebauthoritylist(webright);
-                    loadappauthoritylist(appright);
+                    let webright=data.data.webauthority;
+                    let appright=data.data.appauthority;
+                    let comwebright=data.data.comwebauthor;
+                    let comappright=data.data.comappauthor;
+                    loadwebauthoritylist(webright,comwebright);
+                    loadappauthoritylist(appright,comappright);
                     form.render();
                 }
             })
@@ -920,19 +1381,17 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
     }
 
     /**加载web权限列表(编辑用户)**/
-    function loadwebauthoritylist(json) {
+    function loadwebauthoritylist(json,init) {
         if(document.getElementById("webauthority")!=null){
+            let realdata;
+            if(init==null||init==""){
+                realdata=json;
+            }else{
+                realdata=init;
+            }
             loadwebauthorities = xmSelect.render({
                 el: '#webauthority',
-                data: [
-                    {name: '快速设置', value: 0},
-                    {name: '解算设置',  value: 1},
-                    {name: '坐标系统',  value: 2},
-                    {name: '平台对接',  value: 3},
-                    {name: '辅助功能',  value: 4},
-                    {name: '下发命令',  value: 5},
-                    {name: '配置日志',  value: 6},
-                    {name: '其他设置',  value: 7}],
+                data:realdata,
                 layVerify: 'required',
                 theme: {
                     color: '#1E9FFF',
@@ -963,134 +1422,145 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
 
     }
 
+    /**获取当前公司web app权限内容*(编辑页面)**/
+    function loadcomauthority(data){
+        $.ajax({
+            url:'/company/getComAuthor',
+            data:{
+                agentnum:data
+            },
+            success:function(res){
+                loadwebauthoritylist(res.data.webauthority);
+                loadappauthoritylist(res.data.appauthority);
+            }
+        })
+    }
+
+    /**获取当前公司web app权限内容*(添加页面)**/
+    function initcomauthority(data){
+        $.ajax({
+            url:'/company/getComAuthor',
+            data:{
+                agentnum:data
+            },
+            success:function(res){
+                initwebauthoritylist(res.data.webauthority);
+                initappauthoritylist(res.data.appauthority);
+            }
+        })
+    }
+
+
     /**加载web权限列表(创建用户)**/
-    function initwebauthoritylist() {
-        initwebauthorities = xmSelect.render({
-            el: '#initwebauthority',
-            data: [
-                {name: '快速设置', value: 0},
-                {name: '解算设置',  value: 1},
-                {name: '坐标系统',  value: 2},
-                {name: '平台对接',  value: 3},
-                {name: '辅助功能',  value: 4},
-                {name: '下发命令',  value: 5},
-                {name: '配置日志',  value: 6},
-                {name: '其他设置',  value: 7}],
-            layVerify: 'required',
-            theme: {
-                color: '#1E9FFF',
-            },
-            initValue:[0,1,2,3,4,5,6,7,8,9],
-            tips: '请选择网页功能权限',
-            style: {
-                borderRadius: '6px',
-            },
-            toolbar: {
-                show: true,
-            },
-            model: {
-                label: {
-                    type: 'block',
-                    block: {
-                        //最大显示数量, 0:不限制
-                        showCount: 0,
-                        //是否显示删除图标
-                        showIcon: false,
+    function initwebauthoritylist(json) {
+        if(document.getElementById("initwebauthority")!=null) {
+            initwebauthorities = xmSelect.render({
+                el: '#initwebauthority',
+                data: json,
+                layVerify: 'required',
+                theme: {
+                    color: '#1E9FFF',
+                },
+                initValue: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                tips: '请选择网页功能权限',
+                style: {
+                    borderRadius: '6px',
+                },
+                toolbar: {
+                    show: true,
+                },
+                model: {
+                    label: {
+                        type: 'block',
+                        block: {
+                            //最大显示数量, 0:不限制
+                            showCount: 0,
+                            //是否显示删除图标
+                            showIcon: false,
+                        }
                     }
-                }
-            },
-        });
+                },
+            });
+        }
     }
 
     /**加载app权限列表（编辑用户）**/
-    function loadappauthoritylist(json) {
-       loadappauthorities = xmSelect.render({
-            el: '#appauthority',
-            data: [
-                {name: '设备信息', value: 0},
-                {name: '网络设置', value: 1},
-                {name: '站点设置', value: 2},
-                {name: '坐标系统', value: 3},
-                {name: '外界传感器',value: 4},
-                {name: '平台对接', value: 5},
-                {name: '设备控制', value: 6},
-                {name: '辅助功能', value: 7},
-                {name: '配置日志', value: 8},
-                {name: '固件升级', value: 9},
-                {name: '设备日志', value: 10}],
-            layVerify: 'required',
-            theme: {
-                color: '#1E9FFF',
-            },
-            toolbar: {
-                show: true,
-            },
-            tips: '请选择app功能权限',
-            style: {
-                borderRadius: '6px',
-            },
-            model: {
-                label: {
-                    type: 'block',
-                    block: {
-                        //最大显示数量, 0:不限制
-                        showCount: 0,
-                        //是否显示删除图标
-                        showIcon: false,
+    function loadappauthoritylist(json,init) {
+        if(document.getElementById("appauthority")!=null) {
+            let realdata;
+            if (init == null || init == "") {
+                realdata = json;
+            } else {
+                realdata = init;
+            }
+            loadappauthorities = xmSelect.render({
+                el: '#appauthority',
+                data: realdata,
+                layVerify: 'required',
+                theme: {
+                    color: '#1E9FFF',
+                },
+                toolbar: {
+                    show: true,
+                },
+                tips: '请选择app功能权限',
+                style: {
+                    borderRadius: '6px',
+                },
+                model: {
+                    label: {
+                        type: 'block',
+                        block: {
+                            //最大显示数量, 0:不限制
+                            showCount: 0,
+                            //是否显示删除图标
+                            showIcon: false,
+                        }
                     }
                 }
+            });
+            if (json != null && json.length > 0) {
+                loadappauthorities.setValue(json);
             }
-        });
-        if(json!=null&&json.length>0){
-            loadappauthorities.setValue(json);
         }
     }
 
     /**加载app权限列表(创建用户)**/
-    function initappauthoritylist() {
-        initappauthorities = xmSelect.render({
-            el: '#initappauthority',
-            data: [
-                {name: '设备信息', value: 0},
-                {name: '网络设置', value: 1},
-                {name: '站点设置', value: 2},
-                {name: '坐标系统', value: 3},
-                {name: '外界传感器',value: 4},
-                {name: '平台对接', value: 5},
-                {name: '设备控制', value: 6},
-                {name: '辅助功能', value: 7},
-                {name: '配置日志', value: 8},
-                {name: '固件升级', value: 9},
-                {name: '设备日志', value: 10}],
-            layVerify: 'required',
-            theme: {
-                color: '#1E9FFF',
-            },
-            toolbar: {
-                show: true,
-            },
-            initValue:[0,1,2,3,4,5,6,7,8,9,10],
-            tips: '请选择app功能权限',
-            style: {
-                borderRadius: '6px',
-            },
-            model: {
-                label: {
-                    type: 'block',
-                    block: {
-                        //最大显示数量, 0:不限制
-                        showCount: 0,
-                        //是否显示删除图标
-                        showIcon: false,
+    function initappauthoritylist(json) {
+        if(document.getElementById("initappauthority")!=null) {
+            initappauthorities = xmSelect.render({
+                el: '#initappauthority',
+                data: json,
+                layVerify: 'required',
+                theme: {
+                    color: '#1E9FFF',
+                },
+                toolbar: {
+                    show: true,
+                },
+                initValue: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                tips: '请选择app功能权限',
+                style: {
+                    borderRadius: '6px',
+                },
+                model: {
+                    label: {
+                        type: 'block',
+                        block: {
+                            //最大显示数量, 0:不限制
+                            showCount: 0,
+                            //是否显示删除图标
+                            showIcon: false,
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**加载项目列表(初始化)**/
     function initloadprojectlist(json,init){
-        var arrData = [{name:"无",mutex:1,value:"empty"}];
+        var arrData = [{name:"无",mutex:1,value:"0"}];
         let proidinit=init.split(',');
         for(var i=0;i<json.length;i++){
             var item = json[i];
@@ -1130,21 +1600,21 @@ layui.define(['form','drawer','table','laydate','layer'], function (exports) {
                 let isAdd = data.isAdd;
                 if(isAdd) {
                     if (arr.length == json.length+1) {
-                        if (change[0].value == "empty"&&arr[0].value!="empty") {
+                        if (change[0].value == "0"&&arr[0].value!="0") {
                             arr.splice(0,arr.length-1);
                         }else{
                             for (let i = 0; i < arr.length; i++) {
-                                if (arr[i].value == "empty") {
+                                if (arr[i].value == "0") {
                                     arr.splice(i, 1);
                                 }
                             }
                         }
                     } else {
-                        if (change.length>0&&change[0].value == "empty") {
+                        if (change.length>0&&change[0].value == "0") {
                             arr.splice(0,arr.length-1);
                         }else{
                             for(let k=0;k<arr.length;k++){
-                                if(arr[k].value=="empty"){
+                                if(arr[k].value=="0"){
                                     arr.splice(k,1);
                                 }
                             }

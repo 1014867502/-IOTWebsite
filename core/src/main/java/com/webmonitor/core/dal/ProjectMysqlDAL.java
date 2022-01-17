@@ -11,6 +11,7 @@ import com.webmonitor.core.model.ProjectPage;
 import com.webmonitor.core.model.ProjectsData;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.userbase.BaseProjects;
+import com.webmonitor.core.model.userbase.LonLat;
 import com.webmonitor.core.util.Tools;
 
 import java.text.DateFormat;
@@ -36,6 +37,18 @@ public class ProjectMysqlDAL implements IProject {
             baseProjects.setAgentname(item.getStr("agentName"));
             baseProjects.setProjectid(item.getStr("proGroupId"));
             baseProjects.setProgroupname(item.getStr("proGroupName"));
+            baseProjects.setProLongitude(item.getStr("proLongitude"));
+            baseProjects.setProLatitude(item.getStr("proLatitude"));
+            double lon=Double.parseDouble(item.getStr("proLongitude")==null?"0":item.getStr("proLongitude"));
+            double lat=Double.parseDouble(item.getStr("proLatitude")==null?"0":item.getStr("proLatitude"));
+            if(lat>0||lon>0){
+                LonLat blh = Tools.transform(lon,lat);
+                baseProjects.setProLatitude(String.valueOf(blh.getLat()));
+                baseProjects.setProLongitude(String.valueOf(blh.getLon()));
+            }else{
+                baseProjects.setProLongitude(item.getStr("proLongitude"));
+                baseProjects.setProLatitude(item.getStr("proLatitude"));
+            }
             sql="select count(*) from agent_data where proGroupId='"+item.getStr("proGroupId")+"'";
             Record  record1=Db.findFirst(sql);
             baseProjects.setDevicenum(record1.getInt("count(*)"));
@@ -51,16 +64,27 @@ public class ProjectMysqlDAL implements IProject {
                 " and a.proGroupId='"+projectid+"'";
         Record record= Db.findFirst(sql);
         BaseProjects baseProjects=new BaseProjects();
-        baseProjects.setId(record.getStr("id"));
-        baseProjects.setCreatetime(record.getStr("createTime"));
-        baseProjects.setAgentname(record.getStr("agentName"));
-        baseProjects.setProjectid(record.getStr("proGroupId"));
-        baseProjects.setProgroupname(record.getStr("proGroupName"));
-        baseProjects.setAgentnumber(record.getStr("agentNumber"));
-        sql="select count(*) from agent_data where proGroupId="+projectid;
-        record=Db.findFirst(sql);
-        baseProjects.setDevicenum(record.getInt("count(*)"));
-        return baseProjects;
+            String id=record.getStr("id")==null?record.getInt("Id").toString():record.getStr("id");
+            baseProjects.setId(id);
+            baseProjects.setCreatetime(record.getStr("createTime"));
+            baseProjects.setAgentname(record.getStr("agentName"));
+            baseProjects.setProjectid(record.getStr("proGroupId"));
+            baseProjects.setProgroupname(record.getStr("proGroupName"));
+            baseProjects.setAgentnumber(record.getStr("agentNumber"));
+            double lon=Double.parseDouble(record.getStr("proLongitude")==null?"0":record.getStr("proLongitude"));
+            double lat=Double.parseDouble(record.getStr("proLatitude")==null?"0":record.getStr("proLatitude"));
+            if(lat>0||lon>0){
+                LonLat blh = Tools.transform(lon,lat);
+                baseProjects.setProLatitude(String.valueOf(blh.getLat()));
+                baseProjects.setProLongitude(String.valueOf(blh.getLon()));
+            }else{
+                baseProjects.setProLongitude(record.getStr("proLongitude"));
+                baseProjects.setProLatitude(record.getStr("proLatitude"));
+            }
+            sql="select count(*) from agent_data where proGroupId="+projectid;
+            record=Db.findFirst(sql);
+            baseProjects.setDevicenum(record.getInt("count(*)"));
+            return baseProjects;
     }
 
 
@@ -95,6 +119,16 @@ public class ProjectMysqlDAL implements IProject {
             baseProjects.setAgentname(item.getStr("agentName"));
             baseProjects.setProjectid(item.getStr("proGroupId"));
             baseProjects.setProgroupname(item.getStr("proGroupName"));
+            double lon=Double.parseDouble(item.getStr("proLongitude")==null?"0":item.getStr("proLongitude"));
+            double lat=Double.parseDouble(item.getStr("proLatitude")==null?"0":item.getStr("proLatitude"));
+            if(lat>0||lon>0){
+                LonLat blh = Tools.transform(lon,lat);
+                baseProjects.setProLatitude(String.valueOf(blh.getLat()));
+                baseProjects.setProLongitude(String.valueOf(blh.getLon()));
+            }else{
+                baseProjects.setProLongitude(item.getStr("proLongitude"));
+                baseProjects.setProLatitude(item.getStr("proLatitude"));
+            }
             sql="select count(*) from agent_data  where proGroupId="+item.getStr("proGroupId");
             Record  record1=Db.findFirst(sql);
             baseProjects.setDevicenum(record1.getInt("count(*)"));
@@ -222,34 +256,73 @@ public class ProjectMysqlDAL implements IProject {
 
     /**获取项目里设备的数目**/
     @Override
-    public int getProDevCountById(String projectid) {
-        Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where a.proGroupId="+projectid);
-        int sum=count.getInt("count(*)");
+    public int getProDevCountById(String projectid,String agentNumber) {
+        int sum=0;
+        if(projectid.equals("0")){
+            Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial " +
+                    "where a.proGroupId="+projectid+" and a.agentNumber='"+agentNumber+"'");
+            sum=count.getInt("count(*)");
+        }else{
+            Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where a.proGroupId="+projectid);
+            sum=count.getInt("count(*)");
+        }
         return sum;
     }
 
     /**获取项目里在线设备的数目**/
     @Override
-    public int getProDevOnCountById(String projectid) {
-        Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where b.connectState=1 and a.proGroupId="+projectid);
-        int sum=count.getInt("count(*)");
+    public int getProDevOnCountById(String projectid,String agentNumber) {
+        int sum=0;
+        if(projectid.equals("0")){
+            Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial " +
+                    "where b.connectState=1 and a.proGroupId="+projectid+" and a.agentNumber='"+agentNumber+"'");
+            sum=count.getInt("count(*)");
+        }else{
+            Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where b.connectState=1 and a.proGroupId="+projectid);
+            sum=count.getInt("count(*)");
+        }
         return sum;
     }
 
     /**获取项目里离线设备的数目**/
     @Override
-    public int getProDevOutCountById(String projectid) {
-        Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where (b.connectState=0 or b.connectState is null) and a.proGroupId="+projectid);
-        int sum=count.getInt("count(*)");
+    public int getProDevOutCountById(String projectid,String agentNumber) {
+        int sum=0;
+        if(projectid.equals("0")){
+            Record count = Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial " +
+                    "where (b.connectState=0 or b.connectState is null) and a.proGroupId=" + projectid+" and a.agentNumber='"+agentNumber+"'");
+            sum = count.getInt("count(*)");
+        }else {
+            Record count = Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where (b.connectState=0 or b.connectState is null) and a.proGroupId=" + projectid);
+            sum = count.getInt("count(*)");
+        }
         return sum;
     }
 
     /**获取项目里最新导入设备的数目**/
     @Override
-    public int getProDevNewCountById(String projectid) {
-        Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(a.createTime)  and a.proGroupId="+projectid);
-        int sum=count.getInt("count(*)");
+    public int getProDevNewCountById(String projectid,String agentNumber) {
+        int sum=0;
+        if(projectid.equals("0")){
+            Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial " +
+                    "where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(a.createTime)  and a.proGroupId="+projectid+" and a.agentNumber='"+agentNumber+"'");
+            sum=count.getInt("count(*)");
+        }else {
+            Record count=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(a.createTime)  and a.proGroupId="+projectid);
+            sum=count.getInt("count(*)");
+        }
         return sum;
+    }
+
+    @Override
+    public List<Integer> getAllProjectId() {
+        List<Integer> list=new ArrayList<>();
+        String sql = "SELECT proGroupId  FROM projects_data ";
+        List<Record> recordList = Db.find(sql);
+        for (Record record : recordList) {
+            list.add(record.getInt("proGroupId"));
+        }
+        return list;
     }
 
 
@@ -259,6 +332,9 @@ public class ProjectMysqlDAL implements IProject {
         List<BaseProjects> projectsData=new ArrayList<>();
         String[] author=staffData.getGroupAssemble().split("@");
         for(int i=0;i<author.length;i++){
+            if (author[i].equals("0")){
+                break;
+            }
             BaseProjects projectsData1=getProjectById(author[i]);
             projectsData.add(projectsData1);
         }

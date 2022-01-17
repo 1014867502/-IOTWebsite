@@ -60,7 +60,7 @@ public class LoginSessionInterceptor implements Interceptor {
         }
         if (loginAccount == null) {
             c.removeCookie(IndexService.accessTokenName); // cookie 登录未成功，证明该 cookie 已经没有用处，删之
-            if (isAjax(c.getRequest())) {
+            if (c.getRequest()!=null&&isAjax(c.getRequest())) {
                 String tip = I18nKit.getI18nStr("error_login_timeout");
                 inv.getController().renderJson(new Result<>().error(tip));
             } else {
@@ -90,10 +90,12 @@ public class LoginSessionInterceptor implements Interceptor {
     }
 
     private boolean isAjax(HttpServletRequest request) {
-        String acceptHeader = request.getHeader("Accept");
-        if (acceptHeader.contains("application/json")
-                && "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"))) {
-            return true;
+        if(request!=null){
+            String acceptHeader = request.getHeader("Accept");
+            if (acceptHeader.contains("application/json")
+                    && "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"))) {
+                return true;
+            }
         }
         return false;
     }

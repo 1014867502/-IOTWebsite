@@ -222,17 +222,17 @@
                 </div>
             </div>
             <div class="iconcard" style="margin: auto">
-                <div><img id="connectimg" src="/assets/images/icon_link.png"/></div>
+                <div><img id="connectimg" src="/assets/images/icon_dislink.png"/></div>
                 <div>
                     <div class="icontitle">网络状态</div>
-                    <div class="iconcontent" id="connect">已连接</div>
+                    <div class="iconcontent" id="connect">未连接</div>
                 </div>
             </div>
             <div class="iconcard" style="margin: auto">
-                <div><img id="iconsignal" src="/assets/images/icon_signal_strong.png"/></div>
+                <div><img id="iconsignal" src="/assets/images/icon_signal_no.png"/></div>
                 <div>
                     <div class="icontitle">信号强度</div>
-                    <div class="iconcontent" id="signallevel">强</div>
+                    <div class="iconcontent" id="signallevel">无</div>
                 </div>
             </div>
             <div class="iconcard">
@@ -251,9 +251,9 @@
                         <div class="layui-card-body">
                             <div style="width: 100%;height: 300px">
                                 <div class="body-content" id="project"></div>
-                                <div class="body-content"><b>设备sn码：</b><span id="sncode">MG134580321</span><br></div>
+                                <div class="body-content"><b>设备sn码：</b><span id="sncode"></span><br></div>
                                 <div class="body-content" id="company"></div>
-                                <div class="body-content"><b>在线状态：</b><span id="online">在线</span><br></div>
+                                <div class="body-content"><b>在线状态：</b><span id="online"></span><br></div>
                                 <div class="body-content"><b>最后连接时间：</b><span id="connecttime"></span><br></div>
                                 <div class="body-content"><b>设备位置（经纬度）：</b><span id="latlon"></span><br></div>
                                 <!--                            <div class="body-content"><b>站点地址：</b><span id="address">深圳市</span><br></div>-->
@@ -341,6 +341,12 @@
                                         </div>
                                         <div class="tablecontent" id="timezone" style="padding-top: 13px;">
                                         </div>
+                                    </div>
+                                    <div style="display: flex">
+                                        <div class="tableindex">
+                                            <div style="padding: 7px 11px;">设备注册到期的日期</div>
+                                        </div>
+                                        <div class="tablecontent" id="expiredate"></div>
                                     </div>
                                     <div style="display: flex">
                                         <div class="tableindex">

@@ -109,7 +109,7 @@
         background-color: #1e9fff;
     }
     .tableeventbtn{
-          width: 55px;
+          width: 60px;
           height: 23px;
           border: 1px solid #01AAED;
           border-radius: 5px;
@@ -179,7 +179,7 @@
     }
 
     .untreated {
-        border: solid 0.5px;
+        /*border: solid 0.5px;*/
         height: 27px;
         color: #FF5722;
         width: 30%;
@@ -187,7 +187,7 @@
     }
 
     .treated {
-        border: solid 0.5px;
+        /*border: solid 0.5px;*/
         height: 27px;
         color: #01AAED;
         width: 30%;
@@ -269,7 +269,7 @@
             <div class="layui-inline" style="width: 160px" id="templateselect">
                 <select id="templatetype" name="stats" lay-verify="" lay-filter="templatetype">
                     <option value="0" selected>全部</option>
-                    <option value="1">模板名字</option>
+<!--                    <option value="1">模板名字</option>-->
                 </select>
             </div>
             <div class="layui-inline">
@@ -362,7 +362,15 @@
             <tbody id="demoList"></tbody>
         </table>
     </div>
-    <div style="text-align: center"><button type="button" class="layui-btn layui-btn-normal" id="uploadBtn"><i class="layui-icon"></i>上传文件</button></div>
+    <div style="text-align: center;display: flex;justify-content: center" id="uploadfilebtn">
+        <button type="button" class="layui-btn layui-btn-normal" id="uploadBtn"><i class="layui-icon"></i>上传文件</button>
+        <form class="layui-form" action="" lay-filter="uploadtype">
+            <div style="display: flex;margin-left: 10px">
+                <input type="radio" name="updateupload" value="0" title="覆盖导入">
+                <input type="radio" name="updateupload" value="1" title="不覆盖导入" checked>
+            </div>
+        </form>
+    </div>
 
     <div id="sqlprogress" style="display: none;margin-top:10px" class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="sqlprogress">
         <div id="upload_progress" class="layui-progress-bar layui-bg-blue" ></div>
@@ -557,12 +565,15 @@
                             <button type="button" class="layui-btn" id="move_device">批量设备迁移
                             </button>
                         </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn" id="update_device">批量设备升级
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="layui-card-body">
                     <table class="layui-hide" id="table-form" lay-filter="table-from"></table>
                     <script type="text/html" id="barDemo">
-
                     </script>
                 </div>
             </div>

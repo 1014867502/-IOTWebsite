@@ -3,6 +3,7 @@ package com.webmonitor.core.idal;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.core.model.StaffData;
 import com.webmonitor.core.model.StaffDataEntity;
+import com.webmonitor.core.model.userbase.FuncAuthor;
 
 import java.util.List;
 
@@ -37,8 +38,17 @@ public interface IStaffData {
 
     /**根据条件查询用户
      * @return**/
-    Page<StaffDataEntity> searchCustomByParam(String content,String agentnum,int pageno, int limit);
+    Page<StaffDataEntity> searchCustomByParam(StaffData staffData,String content,String agentnum,int pageno, int limit);
 
      /**根据公司编号返回用户**/
      Page<StaffDataEntity> getCustomByComId(String agentnum,String userid,int pageno,int limit);
+
+     /**根据公司编号返回用户**/
+     List<StaffData> getStaffDataByComid(String agentNumber);
+
+     /**返回用户web权限内容**/
+    List<FuncAuthor> getWebAuthorityById(String userid);
+
+    /**返回用户app权限内容**/
+    List<FuncAuthor> getAppAuthorityById(String userid);
 }

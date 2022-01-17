@@ -40,18 +40,19 @@ public interface IProject {
     void editproject(String projectid,String comid,String projctname);
 
     /**获取项目里设备的数目**/
-    int getProDevCountById(String projectid);
+    int getProDevCountById(String projectid,String agentNumber);
 
     /**获取项目里在线设备的数目**/
-    int getProDevOnCountById(String projectid);
+    int getProDevOnCountById(String projectid,String agentNumber);
 
     /**获取项目里离线设备的数目**/
-    int getProDevOutCountById(String projectid);
+    int getProDevOutCountById(String projectid,String agentNumber);
 
     /**获取项目里新导入设备数目**/
-    int getProDevNewCountById(String projectid);
+    int getProDevNewCountById(String projectid,String agentNumber);
 
-
+    //获取所有项目的id号
+    List<Integer> getAllProjectId();
 
     /**根据用户id获取对应的项目列表**/
     Page<BaseProjects> getProjectsById(String userid,int pageno,int limit);

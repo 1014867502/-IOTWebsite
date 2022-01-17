@@ -251,7 +251,12 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func','s
             success: function (data) {
                 curdecive={};
                 getDeviceSetting(machinesn);
-                alert("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
     })
@@ -268,7 +273,12 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func','s
             },
             async:false,
             success:function () {
-                layer.msg("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
         layer.close(layerindex);
@@ -314,79 +324,89 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func','s
             },
             success: function (data) {
                 device = data.data;
-                fastsettingfunc.setdevice(device);
-                if(device.rawName!=null&&device.rawName!=""){
-                    $("#rawName").val(device.rawName);
-                }else{
-                    $("#rawName").val(device.machineSerial);
-                }
-                $("#baseLon").val(device.baseLon);
-                $("#baseLat").val(device.baseLat);
-                if ($("#recordinterval") != null) {
-                    $("#recordInterval").find("option[value=" + device.recordInterval + "]").prop("selected", true);
-                }
-                $("#baseHeight").val(device.baseHeight);
-                $("#rawIp").val(device.rawIp);
-                $("#rawPort").val(device.rawPort)
-                $("#resultIp").val(device.resultIp);
-                $("#resultPort").val(device.resultPort);
-                $("#coordinatesX").val(device.coordinatesX);
-                $("#coordinatesY").val(device.coordinatesY);
-                $("#coordinatesZ").val(device.coordinatesZ);
-                $("#secondIp").val(device.scondIp);
-                $("#secondPort").val(device.scondPort);
-                $("#networkAddress").val(device.networkAddress);
-                $("#networkPort").val(device.networkPort);
-                $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
-                let ntriparg=device.ntripArg;
-                if(writeright==0){
-                    $("#fastsumbit").prop("disabled",true);
-                    $("#errormsg").html("修改权限被限制");
-                    $("#fastsumbit").addClass("layui-btn-disabled");
-                    $("#savemodel").prop("disabled",true);
-                    $("#savemodel").addClass("layui-btn-disabled");
-                }
-                if(ntriparg!=""&&ntriparg!=null){
-                    let arg=ntriparg.split('|');
-                    $("#rawntripaddress").val(arg[0]);
-                    $("#rawntripport").val(arg[1]);
-                    $("#networkMountpoint1").val(arg[2]);
-                    $("#coreuse1").val(arg[3]);
-                    $("#corepass1").val(arg[4]);
-                }
-                let secondarg=device.secondArg;
-                if(secondarg!=""&&secondarg!=null){
-                    let arg=secondarg.split('|');
-                    $("#secondntripaddress").val(arg[0]);
-                    $("#secondntripport").val(arg[1]);
-                    $("#secondMountpoint1").val(arg[2]);
-                    $("#coreuse2").val(arg[3]);
-                    $("#corepass2").val(arg[4]);
-                }
-                if(device.secondBase>0){
-                    $("#doublebase").prop('checked',true);
-                    $("input[name='networkAddress']").val(device.networkAddress);
-                    $("input[name='networkPort']").val(device.networkPort);
-                    doublebase=true;
-                    debugger
-                    if(device.ntrIpBase>0){
-                        $("input[name=downloadsource][value='1']").prop("checked",true);
-                        fastsettingfunc.altersource(doublebase,"1");
-                    }else{
-                        $("input[name=downloadsource][value='0']").prop("checked",true);
-                        fastsettingfunc.altersource(doublebase,"0");
+                if (device.rawName!=null) {
+                    fastsettingfunc.setdevice(device);
+                    if (device.rawName != null && device.rawName != "") {
+                        $("#rawName").val(device.rawName);
+                    } else {
+                        $("#rawName").val(device.machineSerial);
                     }
-                }else{
-                    doublebase=false;
+                    $("#baseLon").val(device.baseLon);
+                    $("#baseLat").val(device.baseLat);
+                    if ($("#recordinterval") != null && device.recordInterval != "") {
+                        $("#recordInterval").find("option[value=" + device.recordInterval + "]").prop("selected", true);
+                    }
+                    $("#baseHeight").val(device.baseHeight);
+                    $("#rawIp").val(device.rawIp);
+                    $("#rawPort").val(device.rawPort)
+                    $("#resultIp").val(device.resultIp);
+                    $("#resultPort").val(device.resultPort);
+                    $("#coordinatesX").val(device.coordinatesX);
+                    $("#coordinatesY").val(device.coordinatesY);
+                    $("#coordinatesZ").val(device.coordinatesZ);
+                    $("#secondIp").val(device.scondIp);
+                    $("#secondPort").val(device.scondPort);
+                    $("#networkAddress").val(device.networkAddress);
+                    $("#networkPort").val(device.networkPort);
+                    if (device.rawRate != null & device.rawRate != "") {
+                        $("#selectList").find("option[value=" + device.rawRate + "]").prop("selected", true);
+                    }
+                    let ntriparg = device.ntripArg;
+                    if (writeright == 0) {
+                        $("#fastsumbit").prop("disabled", true);
+                        $("#errormsg").html("修改权限被限制");
+                        $("#fastsumbit").addClass("layui-btn-disabled");
+                        $("#savemodel").prop("disabled", true);
+                        $("#savemodel").addClass("layui-btn-disabled");
+                    }
+                    if (ntriparg != "" && ntriparg != null) {
+                        let arg = ntriparg.split('|');
+                        $("#rawntripaddress").val(arg[0]);
+                        $("#rawntripport").val(arg[1]);
+                        $("#networkMountpoint1").val(arg[2]);
+                        $("#coreuse1").val(arg[3]);
+                        $("#corepass1").val(arg[4]);
+                    }
+                    let secondarg = device.secondArg;
+                    if (secondarg != "" && secondarg != null) {
+                        let arg = secondarg.split('|');
+                        $("#secondntripaddress").val(arg[0]);
+                        $("#secondntripport").val(arg[1]);
+                        $("#secondMountpoint1").val(arg[2]);
+                        $("#coreuse2").val(arg[3]);
+                        $("#corepass2").val(arg[4]);
+                    }
+                    if (device.secondBase > 0) {
+                        $("#doublebase").prop('checked', true);
+                        $("input[name='networkAddress']").val(device.networkAddress);
+                        $("input[name='networkPort']").val(device.networkPort);
+                        doublebase = true;
+                        if (device.ntrIpBase > 0) {
+                            $("input[name=downloadsource][value='1']").prop("checked", true);
+                            fastsettingfunc.altersource(doublebase, "1");
+                        } else {
+                            $("input[name=downloadsource][value='0']").prop("checked", true);
+                            fastsettingfunc.altersource(doublebase, "0");
+                        }
+                    } else {
+                        doublebase = false;
+                        if (device.ntrIpBase > 0) {
+                            $("input[name=downloadsource][value='1']").prop("checked", true);
+                            fastsettingfunc.altersource(doublebase, "1");
+                        } else {
+                            $("input[name=downloadsource][value='0']").prop("checked", true);
+                            fastsettingfunc.altersource(doublebase, "0");
+                        }
+                    }
+                    if (device.networkMountpointPass != "" && device.networkMountpointPass != null) {
+                        let userpass = device.networkMountpointPass.toString().split("|");
+                        $("#networkMountpointUse").val(userpass[0]);
+                        $("#networkMountpointPass").val(userpass[1]);
+                    }
+                    saveModel();
+                    listening();
+                    form.render();
                 }
-                if(device.networkMountpointPass!=""&&device.networkMountpointPass!=null){
-                    let userpass=device.networkMountpointPass.toString().split("|");
-                    $("#networkMountpointUse").val(userpass[0]);
-                    $("#networkMountpointPass").val(userpass[1]);
-                }
-                saveModel();
-                listening();
-                form.render();
             }
         })
     }
@@ -411,6 +431,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func','s
         Object.assign(data2,device);
         data2.rawMode=station;
         data2.rawSolution=compute;
+        data2.nameType=0;
         delete data2.baseLon;
         delete data2.baseLat;
         delete data2.baseHeight;
@@ -591,7 +612,6 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func','s
             },
             success: function (data) {
                 let result=data.data;
-
                 if(result=="online"){
                     $("#deviceonline").html("设备在线");
                     $("#deviceonline").css("color","#5FB878");
@@ -635,8 +655,8 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func','s
                         })
                     })
                 }else{
-                    $("#fastsumbit").addClass("layui-btn-disabled");
-                    $("#fastsumbit").attr("disabled","disabled");
+                    // $("#fastsumbit").addClass("layui-btn-disabled");
+                    // $("#fastsumbit").attr("disabled","disabled");
                     $("#deviceonline").html("设备不在线！");
                     $("#deviceonline").css("margin","auto");
                     $("#deviceonline").css("margin-left","10px");

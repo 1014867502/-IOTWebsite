@@ -33,4 +33,20 @@ public abstract class BaseAgentTable<M extends BaseAgentTable<M>> extends Model<
 		return getStr("agentName");
 	}
 
+	public void setAppAuthority(java.lang.String appAuthority) {
+		set("appAuthority", appAuthority);
+	}
+	
+	public java.lang.String getAppAuthority() {
+		return getStr("appAuthority");
+	}
+
+	public void setWebAuthority(java.lang.String webAuthority) {
+		set("webAuthority", webAuthority);
+	}
+	
+	public java.lang.String getWebAuthority() {
+		return getStr("webAuthority");
+	}
+
 }

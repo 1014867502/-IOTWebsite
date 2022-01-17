@@ -1,13 +1,16 @@
 package com.webmonitor.core.dal;
 
 public enum RoleType {
-    user(0),//普通用户
-    companyadmin(1),//供销商管理员
-    superadmin(2),//超级管理员
-    NONE(-1);
+    user(0,"user"),//普通用户
+    companyadmin(1, "companyadmin"),//供销商管理员
+    superadmin(2, "superadmin"),//超级管理员
+    admin(4, "admin"),//普通管理员
+    test(3,"tester"),//安装测试人员
+    NONE(-1, "NONE");
 
 
     private int index;
+    private String value;
 
     public boolean Compare(int i) {
         return this.index == i;
@@ -28,8 +31,8 @@ public enum RoleType {
         String s="";
         RoleType[] As = values();
         for(int i = 0; i < As.length; ++i) {
-            if (As[i].Compare(type)) {
-                return As[i].getIndex(i).toString();
+            if (As[i].getIndex()==type) {
+                return As[i].getValue();
             }
         }
         return "none";
@@ -49,6 +52,10 @@ public enum RoleType {
                 break;
             case 3:
                 name="安装测试人员";
+                break;
+            case 4:
+                name="普通管理员";
+                break;
         }
         return name;
     }
@@ -61,7 +68,16 @@ public enum RoleType {
         this.index = index;
     }
 
-    private RoleType(int index) {
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    private RoleType(int index, String user) {
         this.index = index;
+        this.value=user;
     }
 }

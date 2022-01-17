@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import javax.websocket.*;
 import java.util.List;
 
 public class SocketClient {
@@ -34,10 +35,12 @@ public class SocketClient {
     private InputStreamReader isr ;
     private BufferedReader br ;
     private boolean mRecycleFlag = true;
+    private boolean responefinish=true;
     private boolean onlineFlag=true;
     private long connectime=0;
     private long latesttime=0;
     public String realdata;
+    public Session session;
     public String response;
     public boolean isOnlineFlag() { return onlineFlag; }
     public void setOnlineFlag(boolean onlineFlag) { this.onlineFlag = onlineFlag; }
@@ -47,6 +50,16 @@ public class SocketClient {
     public void setConnectime(long connectime) { this.connectime = connectime; }
     public long getLatesttime() { return latesttime; }
     public void setLatesttime(long latesttime) { this.latesttime = latesttime; }
+
+    public Session getSession() {
+        return session;
+    }
+    public void setSession(Session session) {
+        this.session=session;
+    }
+
+
+
 
     public SocketClient() {
         mSocket = new Socket();
@@ -127,6 +140,7 @@ public class SocketClient {
     }
 
 
+
     class ReceiveDataRunnable implements Runnable {
         /**
          * 接收服务器消息 变量
@@ -152,24 +166,30 @@ public class SocketClient {
                     //接收数据
                     if((response=br.readLine())!=null) {//循环读取
 
-                        if(!response.equals("OK")&&!response.equals("test")&&!getall){
+                        if(!response.equals("OK")&&!response.equals("test")){
                             realdata=new String(response.getBytes(),"utf-8");
-//                            latesttime=System.currentTimeMillis();
+                            if(!realdata.equals("连接成功")&&session!=null){
+                                session.getBasicRemote().sendText(realdata);//推送发送的消息
+                            }
+
+//                           latesttime=System.currentTimeMillis();
+                        }else{
+                            responefinish=true;
                         }
-                        if(!response.equals("OK")&&!response.equals("test")&&getall){
-                            String result=new String(response.getBytes(),"utf-8");
-                            resultall.append(result+"\n");
+//                        if(!response.equals("OK")&&!response.equals("test")&&getall){
+//                            String result=new String(response.getBytes(),"utf-8");
+//                            resultall.append(result+"\n");
 //                            if(result.contains("@GNSS,GETALL,OK")){
 //                                realdata=resultall.toString();
 //                                getall=false;
 //                                resultall.delete(0,resultall.length());
 //                            }
-                        }
-                        if((response.equals("OK")||response.equals("test"))&&getall){
-                            realdata=resultall.toString();
-                            getall=false;
-                            resultall.delete(0,resultall.length());
-                        }
+//                        }
+//                        if((response.equals("OK")||response.equals("test"))&&getall){
+//                            realdata=resultall.toString();
+//                            getall=false;
+//                            resultall.delete(0,resultall.length());
+//                        }
 //                    Message message = new Message();
 //                    message.obj = "接收到服务器数据: " + response;
 //                    mHandler.sendMessage(message);

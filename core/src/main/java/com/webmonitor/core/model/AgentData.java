@@ -13,6 +13,7 @@ public class AgentData {
     private String agentName;
     private int progroupid;
     private String proGroupName;
+    private String firmwareType;
 
     public int getId() {
         return id;
@@ -86,5 +87,13 @@ public class AgentData {
 
     public void setProGroupName(String proGroupName) {
         this.proGroupName = proGroupName;
+    }
+
+    public String getFirmwareType() {
+        return firmwareType;
+    }
+
+    public void setFirmwareType(String firmwareType) {
+        this.firmwareType = firmwareType;
     }
 }

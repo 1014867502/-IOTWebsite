@@ -194,6 +194,7 @@
                             <label class="layui-form-label">采样频率</label>
                             <div class="layui-input-block">
                                 <select id="selectList" name="rawRate" lay-verify="required">
+                                    <option value=""></option>
                                     <option value="1000">1s</option>
                                     <option value="5000">5s</option>
                                     <option value="10000">10s</option>
@@ -393,6 +394,7 @@
                                 <label class="layui-form-label" style="width: 86px;padding: 9px;">RTK解算设置</label>
                                 <div class="layui-input-block">
                                     <select id="rtkPos" name="rtkPos" lay-verify="required">
+                                        <option value="0">关闭</option>
                                         <option value="1">正常模式（5分钟输出）</option>
                                         <option value="2">紧急模式（1秒输出）</option>
                                         <option value="3">紧急模式（5秒输出）</option>

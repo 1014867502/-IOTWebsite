@@ -8,7 +8,7 @@ layui.define(['form', 'drawer', 'table','station_platform_func'], function (expo
         ,platformfunc=layui.station_platform_func
         , form = layui.form
 
-    var locatedata;
+    var locatedata={};
     var layerindex;
     var chongqingturn=false;
 
@@ -63,17 +63,31 @@ layui.define(['form', 'drawer', 'table','station_platform_func'], function (expo
         }
     });
 
-    getDeviceSetting(templatename);
+    if(type==1){
+        getDeviceSetting(templatename);
+        $("#savemodel").click(function () {
+            if(form.doVerify("formDemo")){
+                saveModel();
+                updateModel();
+            }
+        })
+    }else{
+        getDeviceSetting("init");
+        $("#savemodel").click(function () {
+            if(form.doVerify("formDemo")){
+                saveModel();
+                addModel();
+            }
+        })
+        $("#reset").css("display","none");
+        $("#changename").css("display","none");
+    }
+
 
     $("#reset").click(function () {
         getDeviceSetting(templatename);
     })
-    $("#savemodel").click(function () {
-        if(form.doVerify("formDemo")){
-            saveModel();
-            updateModel();
-        }
-    })
+
 
     $("#changename").click(function () {
         changename();
@@ -117,7 +131,10 @@ layui.define(['form', 'drawer', 'table','station_platform_func'], function (expo
                 $("#chongqing_mode").val("1");
                 platformfunc.chongqingexhibit("1");
             }else{
-                $("#chongqing_mode").val(locatedata.cqIotEnabled);
+                if(locatedata.cqIotEnabled!=null&&locatedata.cqIotEnabled!=""){
+                    $("#chongqing_mode").val(locatedata.cqIotEnabled);
+                }
+
                 platformfunc.chongqingexhibit(locatedata.cqIotEnabled);
             }
             $("#chongqing_iot_telecom").val(locatedata.cqIotTelecom);
@@ -169,7 +186,7 @@ layui.define(['form', 'drawer', 'table','station_platform_func'], function (expo
             arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
         }
         if (setting.auxiliary != null) {
-            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length));
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length-1));
         }
         for(let i=0;i<arr.length;i++){
             if(i==0){
@@ -191,10 +208,64 @@ layui.define(['form', 'drawer', 'table','station_platform_func'], function (expo
             },
             async:false,
             success:function () {
-                layer.msg("提交成功");
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
             }
         })
     }
+
+    /**添加模板**/
+    form.on('submit(save)',function () {
+        let setting=parent.testmodel;
+        let jsondata="";
+        let arr=[];
+        if(setting.compute!=null){
+            arr.push(setting.compute.substring(1, setting.compute.length - 1));
+        }
+        if (setting.locate != null) {
+            arr.push(setting.locate.substring(1, setting.locate.length - 1));
+        }
+        if (setting.plaform != null) {
+            arr.push(setting.plaform.substring(1, setting.plaform.length - 1));
+        }
+        if (setting.auxiliary != null) {
+            arr.push(setting.auxiliary.substring(1, setting.auxiliary.length-1));
+        }
+        for(let i=0;i<arr.length;i++){
+            if(i==0){
+                jsondata+="{"+arr[i];
+            }else{
+                jsondata+=","+arr[i];
+                if(i==arr.length-1){
+                    jsondata+="}";
+                }
+            }
+        }
+        let data1 = form.val("save");
+        $.ajax({
+            url:'/template/addTemplate',
+            data:{
+                json:jsondata,
+                templatename:data1.templatename,
+                type:"2"
+            },
+            async:false,
+            success:function () {
+                layer.open({
+                    title: '提交'
+                    ,skin: 'demo-class'
+                    ,offset: 'auto'
+                    ,content: '提交成功'
+                });
+            }
+        })
+        layer.close(layerindex);
+    })
+
 
     /**提交模组**/
     function changename(){
@@ -219,75 +290,93 @@ layui.define(['form', 'drawer', 'table','station_platform_func'], function (expo
             },
             success: function (data) {
                 let device = data.data;
-                locatedata=device;
-                platformfunc.setdevice(device);
-                if(parent.window.writeright==0){
-                    $("#changename").prop("disabled",true);
-                    $("#errormsg").html("修改权限被限制");
-                    $("#changename").addClass("layui-btn-disabled");
-                    $("#savemodel").prop("disabled",true);
-                    $("#savemodel").addClass("layui-btn-disabled");
-                }
-                if(device.oneNetEnabled>0){
-                    $("#onenet_enable").prop('checked',true);
-                    document.getElementById("onenetcontent").innerHTML = platformfunc.onenetcontent;
-                    platformfunc.onenetexhibit(device.oneNetMode);
-                } else {
-                    $("#onenet_enable").prop('checked',false);
-                    document.getElementById("onenetcontent").innerHTML = "";
-                }
-                $("#onenet_id").val(device.oneNetId);
-                $("#onenet_user").val(device.oneNetUser);
-                $("#onenet_key").val(device.oneNetKey);
-                $("#onenet_data").val(device.oneNetGnssData)
-
-                /*地灾平台*/
-                if (device.dzIotEnabled>0) {
-                    $("#dz_iot_enable").prop('checked',true);
-                    document.getElementById("dzcontent").innerHTML =platformfunc.dznetcontent;
-                } else {
-                    $("#dz_iot_enable").prop('checked',false);
-                    document.getElementById("dzcontent").innerHTML = "";
-                }
-                $("#iot_ip").val(device.dzIotIp);
-                $("#iot_port").val(device.dzIotPort);
-                $("#iot_id").val(device.dzIotId);
-                $("#iot_key").val(device.dzIotKey);
-                $("#iot_http").val(device.dzIotHttp);
-                if(device.dzIotGnssData>0){
-                    $("#iot_gnss_data").prop('checked',true);
-                }else{
-                    $("#iot_gnss_data").prop('checked',false);
-                }
-                if(device.dzIotRtkResult>0){
-                    $("#iot_rtk_result").prop('checked',true);
-                }else{
-                    $("#iot_rtk_result").prop('checked',false);
-                }
-
-                /*重庆平台*/
-                if(device.cqIotEnabled>0){
-                    $("#chongqing_enable").prop('checked',true);
-                    document.getElementById("chongqing_select").innerHTML=platformfunc.chongqingselect;
-                    if(!locatedata.cqIotEnabled>0){
-                        $("#chongqing_mode").val("1");
-                        platformfunc.chongqingexhibit("1");
-                    }else{
-                        $("#chongqing_mode").val(locatedata.cqIotEnabled);
-                        platformfunc.chongqingexhibit(locatedata.cqIotEnabled);
+                if (device.rawName!=null) {
+                    locatedata = device;
+                    platformfunc.setdevice(device);
+                    if (parent.window.writeright == 0) {
+                        $("#changename").prop("disabled", true);
+                        $("#errormsg").html("修改权限被限制");
+                        $("#changename").addClass("layui-btn-disabled");
+                        $("#savemodel").prop("disabled", true);
+                        $("#savemodel").addClass("layui-btn-disabled");
                     }
-                    $("#chongqing_iot_telecom").val(device.cqIotTelecom);
-                    $("#chongqing_iot_id").val(device.cqIotId);
-                    $("#chongqing_iot_key").val(device.cqIotKey);
-                    $("#chongqing_iot_user").val(device.cqIotUser);
-                }else{
-                    document.getElementById("chongqing_select").innerHTML="";
-                    $("#chongqing_enable").prop('checked',false);
+                    if (device.oneNetEnabled > 0) {
+                        $("#onenet_enable").prop('checked', true);
+                        document.getElementById("onenetcontent").innerHTML = platformfunc.onenetcontent;
+                        platformfunc.onenetexhibit(device.oneNetMode);
+                    } else {
+                        $("#onenet_enable").prop('checked', false);
+                        document.getElementById("onenetcontent").innerHTML = "";
+                    }
+                    $("#onenet_id").val(device.oneNetId);
+                    $("#onenet_user").val(device.oneNetUser);
+                    $("#onenet_key").val(device.oneNetKey);
+                    $("#onenet_data").val(device.oneNetGnssData)
+
+                    /*地灾平台*/
+                    if (device.dzIotEnabled > 0) {
+                        $("#dz_iot_enable").prop('checked', true);
+                        document.getElementById("dzcontent").innerHTML = platformfunc.dznetcontent;
+                    } else {
+                        $("#dz_iot_enable").prop('checked', false);
+                        document.getElementById("dzcontent").innerHTML = "";
+                    }
+                    $("#iot_ip").val(device.dzIotIp);
+                    $("#iot_port").val(device.dzIotPort);
+                    $("#iot_id").val(device.dzIotId);
+                    $("#iot_key").val(device.dzIotKey);
+                    $("#iot_http").val(device.dzIotHttp);
+                    if (device.dzIotGnssData > 0) {
+                        $("#iot_gnss_data").prop('checked', true);
+                    } else {
+                        $("#iot_gnss_data").prop('checked', false);
+                    }
+                    if (device.dzIotRtkResult > 0) {
+                        $("#iot_rtk_result").prop('checked', true);
+                    } else {
+                        $("#iot_rtk_result").prop('checked', false);
+                    }
+
+                    /*重庆平台*/
+                    if (device.cqIotEnabled > 0) {
+                        $("#chongqing_enable").prop('checked', true);
+                        document.getElementById("chongqing_select").innerHTML = platformfunc.chongqingselect;
+                        if (!locatedata.cqIotEnabled > 0) {
+                            $("#chongqing_mode").val("1");
+                            platformfunc.chongqingexhibit("1");
+                        } else {
+                            if (locatedata.cqIotEnabled != null && locatedata.cqIotEnabled != "") {
+                                $("#chongqing_mode").val(locatedata.cqIotEnabled);
+                            }
+                            platformfunc.chongqingexhibit(locatedata.cqIotEnabled);
+                        }
+                        $("#chongqing_iot_telecom").val(device.cqIotTelecom);
+                        $("#chongqing_iot_id").val(device.cqIotId);
+                        $("#chongqing_iot_key").val(device.cqIotKey);
+                        $("#chongqing_iot_user").val(device.cqIotUser);
+                    } else {
+                        document.getElementById("chongqing_select").innerHTML = "";
+                        $("#chongqing_enable").prop('checked', false);
+                    }
+                    saveModel();
+                    form.render();
                 }
-                saveModel();
-                form.render();
             }
         })
+    }
+
+    /**提交模组**/
+    function addModel(){
+        layer.open({
+            type: 1
+            ,id: 'layerDemo' //防止重复弹出
+            , title: ['保存模板']
+            , area: ['300px', '300px']
+            , content: $("#savewindow")
+            , success: function (layero, index) {
+                layerindex=index;
+            },
+        });
     }
 
     /**保存模组**/
@@ -305,5 +394,22 @@ layui.define(['form', 'drawer', 'table','station_platform_func'], function (expo
         parent.testmodel.plaform=JSON.stringify(jsondata);
     }
 
-    exports('template_platform', {})
+    /**保存当前页面模板（）**/
+    function checksavemodel(){
+        if(form.doVerify("formDemo")){
+            saveModel();
+            return true;
+        }else{
+            layer.msg("平台对接页面有误！");
+            return false;
+        }
+    }
+
+    var templatform= {
+        checksavemodel: function () {
+            checksavemodel();
+        }
+    }
+
+    exports('template_platform',templatform)
 });

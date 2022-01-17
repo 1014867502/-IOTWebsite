@@ -163,7 +163,7 @@
     .untreated {
         color: #FF5722;
         width: 30%;
-        border: solid 0.5px;
+        /*border: solid 0.5px;*/
         height: 27px;
         /*background-color: #FF5722;*/
     }
@@ -171,7 +171,7 @@
     .treated {
         color: #01AAED;
         width: 30%;
-        border: solid 0.5px;
+        /*border: solid 0.5px;*/
         height: 27px;
         /*background-color: #01AAED;*/
     }
@@ -243,7 +243,7 @@
         border-radius: 0px 6px 6px 0px;
     }
     .tableeventbtn{
-        width: 55px;
+        width: 60px;
         height: 23px;
         border: 1px solid #01AAED;
         border-radius: 5px;
@@ -260,31 +260,60 @@
     }
 </style>
 
-<!--//关联设备弹窗-->
-<div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
-    <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
-        <div class="layui-form-item" style="margin: auto">
-            <div class="layui-inline" style="width: 160px">
-                <select id="stats2" name="stats" lay-verify="" lay-filter="stats">
-                    <option value="2">全部</option>
-                    <option value="1">设备名称</option>
-                </select>
-            </div>
-            <div class="layui-inline">
-                <input type="text" class="layui-input" name="SN" id="SN2" placeholder=" 请输入设备sn号 " dis>
-            </div>
-            <div class="layui-inline">
-                <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
-                        id="datasumbit2" lay-filter="LAY-app-contlist-search">
-                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="layui-card-body">
-        <table class="layui-hide" name='table3' id='table3' lay-filter='table3'></table>
-    </div>
+<div id="tableContent" name="tableContent" hidden>
+    <table class="layui-table" id="showtable">
+        <colgroup>
+            <col width="200">
+            <col width="200">
+        </colgroup>
+        <tbody>
+        <tr>
+            <td name="">项目名称</td>
+            <td name="name"></td>
+        </tr>
+        <tr>
+            <td name="">设备数</td>
+            <td name="count"></td>
+        </tr>
+        <tr>
+            <td name="">所属公司</td>
+            <td name="profile"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
+<div id="markerContent" name="markerContent" hidden>
+    <table class="layui-table" id="showmarker">
+        <colgroup>
+            <col width="200">
+            <col width="200">
+        </colgroup>
+        <tbody>
+        <tr>
+            <td name="">设备名称</td>
+            <td name="name"></td>
+        </tr>
+        <tr>
+            <td name="">设备数</td>
+            <td name="count"></td>
+        </tr>
+        <tr>
+            <td name="">所属公司</td>
+            <td name="profile"></td>
+        </tr>
+        <tr>
+            <td name="">设备状态</td>
+            <td name="state"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<script type="text/html" id="statusdemo">
+    <button class="layui-btn layui-btn-primary layui-btn-xs" style="background-color: #f19038;color: #F1F1F1">未关联
+    </button>
+</script>
 
 <!--//添加设备弹窗-->
 <div class="site-text" style="margin: 5%; display: none" id="addprowindow" target="test1234">
@@ -311,12 +340,6 @@
         </div>
     </form>
 </div>
-
-
-<script type="text/html" id="statusdemo">
-    <button class="layui-btn layui-btn-primary layui-btn-xs" style="background-color: #f19038;color: #F1F1F1">未关联
-    </button>
-</script>
 
 
 <div class="layui-fluid">
@@ -355,22 +378,42 @@
                 </div>
 
                 <div class="layui-card-body">
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    项目位置
+                </div>
+                <div class="layui-card-body">
+                    <div id='map' style="height: 500px;width: 100%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    项目表格
+                </div>
+                <div class="layui-card-body">
                     <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
                         <div class="layui-form-item" style="margin: auto">
                             <div class="layui-inline">
                                 <div style="display: flex">
-                                <input type="text" class="layui-input" name="SN" id="SN" placeholder=" 请输入项目名称 ">
-                                <button class="layui-btn searchbtn" lay-submit data-type="reload"
-                                        id="datasumbit" lay-filter="LAY-app-contlist-search">
-                                   查询
-                                </button>
+                                    <input type="text" class="layui-input" name="SN" id="SN" placeholder=" 请输入项目名称 ">
+                                    <button class="layui-btn searchbtn" lay-submit data-type="reload"
+                                            id="datasumbit" lay-filter="LAY-app-contlist-search">
+                                        查询
+                                    </button>
                                 </div>
                             </div>
-                            <div class="layui-inline">
-                                <button type="button" class="layui-btn" id="add_device2"><img
-                                        src="/assets/images/icon_add_device_28.png"/>添加设备
-                                </button>
-                            </div>
+<!--                            <div class="layui-inline">-->
+<!--                                <button type="button" class="layui-btn" id="add_device2"><img-->
+<!--                                        src="/assets/images/icon_add_device_28.png"/>添加设备-->
+<!--                                </button>-->
+<!--                            </div>-->
                             <div class="layui-inline" >
                                 <button type="button" class="layui-btn" id="delete_project">
                                     <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #FFFFFF;"></i>批量删除项目
@@ -405,11 +448,12 @@
 <script>
     var agentnum = "#(agentNum)";
     var projetid = "#(projetid)";
+    var userid = "#(userid)";
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'table', 'CompanyDetail']);
+    }).use(['index', 'table', 'CompanyDetail','projectmap']);
 </script>
 </body>
 </html>

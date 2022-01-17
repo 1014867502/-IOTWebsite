@@ -9,6 +9,7 @@ import com.webmonitor.admin.index.IndexService;
 import com.webmonitor.core.bll.*;
 import com.webmonitor.core.dal.RoleType;
 import com.webmonitor.core.model.*;
+import com.webmonitor.core.model.userbase.AuthorityEntity;
 import com.webmonitor.core.model.userbase.BaseProjects;
 import com.webmonitor.core.util.SocketTools;
 import com.webmonitor.core.util.Tools;
@@ -81,11 +82,18 @@ public class ManagerController extends BaseController {
         render("sensordata.html");
     }
 
-    /**管理员用户管理页面**/
+    /**超级管理员用户管理页面**/
     public void customermanage() {
         String userid = getCookie(IndexService.me.accessUserId);
         setAttr("userid", userid);
         render("customermanage.html");
+    }
+
+    /**普通管理员用户管理页面**/
+    public void comadminmanage() {
+        String userid = getCookie(IndexService.me.accessUserId);
+        setAttr("userid", userid);
+        render("comadminmanage.html");
     }
 
     public void comusermanage(){
@@ -219,11 +227,13 @@ public class ManagerController extends BaseController {
                     identity="user";
                     break;
                 case superadmin:
-                    identity="admin";
+                    identity="superadmin";
                     break;
                 case companyadmin:
                     identity="company";
                     break;
+                case admin:
+                    identity="admin";
             }
             result.success(identity);
             renderJson(result);
@@ -295,8 +305,10 @@ public class ManagerController extends BaseController {
                 proDevCount= CompanyAdminService.me.getDevCount(staffData.getAgentNumber());
                 break;
             case "user":
-                proDevCount= ConsumerService.me.getDevCount(staffData.getGroupAssemble().split("@"));
+                proDevCount= ConsumerService.me.getDevCount(staffData.getGroupAssemble().split("@"),staffData.getAgentNumber());
                 break;
+            case "admin":
+                proDevCount=CompanyService.me.getDeviceNumByAgentId(staffData.getGroupAgentNumber());
         }
         renderJson(result.success(proDevCount));
     }
@@ -319,6 +331,10 @@ public class ManagerController extends BaseController {
             case "user":
                agentTables=ConsumerService.me.getCompanyListById(id);
                 break;
+            case "admin":
+                agentTables=AdminService.me.getAdminCompanylist(id);
+                break;
+
         }
         renderJson(result.success(agentTables));
     }
@@ -327,11 +343,24 @@ public class ManagerController extends BaseController {
     /**获取所有公司的分页信息**/
     public void getAllCompanyPage(){
         Result<Page<CompanyPage>> result=Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        StaffData staffData=StaffService.me.getStaffById(userid);
+
         int pageno = getParaToInt("pageno", 1);
         int limit = getParaToInt("limit", 9);
         try{
-            Page<CompanyPage> page= CompanyService.me.getAllCompanys(pageno,limit);
-            result.success(page);
+            String role=RoleType.getString(staffData.getIRoleType());
+            switch(role){
+                case "superadmin":
+                    Page<CompanyPage> page= CompanyService.me.getAllCompanys(pageno,limit);
+                    result.success(page);
+                    break;
+                case "admin":
+                    String groupagentnum=staffData.getGroupAgentNumber()!=null?staffData.getGroupAgentNumber():"";
+                    Page<CompanyPage> page2=CompanyService.me.getAdminCompanys(groupagentnum,pageno,limit);
+                    result.success(page2);
+                    break;
+            }
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }
@@ -341,9 +370,21 @@ public class ManagerController extends BaseController {
     /**获取公司的数目**/
     public void getAllCompanyList(){
         Result<List<AgentTable>> result=Result.newOne();
-        try{
-            List<AgentTable> list=CompanyService.me.getAllCompany();
-            result.success(list);
+        String userid = getCookie(IndexService.me.accessUserId);
+        StaffData staffData=StaffService.me.getStaffById(userid);
+            try{
+                String role=RoleType.getString(staffData.getIRoleType());
+                switch(role){
+                    case "superadmin":
+                        List<AgentTable> list=CompanyService.me.getAllCompany();
+                        result.success(list);
+                        break;
+                    case "admin":
+                        String groupagent=staffData.getGroupAgentNumber()!=null?staffData.getGroupAgentNumber():"";
+                        List<AgentTable> list2=CompanyService.me.getAdminCompany(groupagent);
+                        result.success(list2);
+                        break;
+                }
         }catch(Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }
@@ -369,11 +410,23 @@ public class ManagerController extends BaseController {
     /**获取配置日志表数据**/
     public void getOrderLog(){
         Result<Page<CompanyPage>> result=Result.newOne();
-        int pageno = getParaToInt("pageno", 1);
+        int pageno = getParaToInt("page", 1);
         int limit = getParaToInt("limit", 9);
         try{
             Page<CompanyPage> page= CompanyService.me.getAllCompanys(pageno,limit);
             result.success(page);
+        }catch (Throwable e){
+            ExceptionUtil.handleThrowable(result,e);
+        }
+        renderJson(result);
+    }
+
+    /**获取所有功能权限**/
+    public void getAllAuthor(){
+        Result<AuthorityEntity> result=Result.newOne();
+        try{
+            AuthorityEntity authorityEntity=CompanyService.me.getAllAuthor();
+            result.success(authorityEntity);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }

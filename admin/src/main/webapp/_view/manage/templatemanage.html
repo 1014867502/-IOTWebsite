@@ -12,16 +12,16 @@
     }
 
     .untreated {
-        background-color: #FF5722;
-        color: #FFFF;
+        background-color: transparent;
+        color:  #FF5722;
         border: 0;
         width: 70px;
         height: 30px;
     }
 
     .treated {
-        background-color: #01AAED;
-        color: #FFFF;
+        background-color: transparent;
+        color: #01AAED;
         border: 0;
         width: 70px;
         height: 30px;
@@ -111,7 +111,7 @@
     }
 
     .tableeventbtn {
-        width: 55px;
+        width: 60px;
         height: 23px;
         border: 1px solid #01AAED;
         border-radius: 5px;
@@ -128,146 +128,25 @@
         margin-top: -7px;
     }
 </style>
-
 <div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
-    <form class="layui-form" action="">
+    <form class="layui-form" id="book" method="post" lay-filter="example" style="display: flex">
         <div class="layui-form-item">
-            <label class="layui-form-label">账号名</label>
-            <div class="layui-input-block">
-                <input style="width: 70%" type="text" name="uAccountNum" lay-verify="confirmaccount|required"
-                       placeholder="请输入标题" autocomplete="off" class="layui-input">
+            <div class="layui-inline" >
+                <button type="button" class="layui-btn" id="add_fasttemplate">
+                    <i class="layui-icon" style="font-size: 30px; color: #FFFFFF;"></i>添加快速设置模板
+                </button>
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">昵称</label>
-            <div class="layui-input-block">
-                <input style="width: 70%" type="text" name="uRealName" required lay-verify="required"
-                       placeholder="请输入标题" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">修改密码</label>
-            <div class="layui-input-block">
-                <input style="width: 70%" type="password" name="uPassword" required lay-verify="required"
-                       placeholder="请输入标题" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">再次输入密码</label>
-            <div class="layui-input-block">
-                <input style="width: 70%" type="password" name="againPassword" required
-                       lay-verify="required|confirmpass" placeholder="请输入标题" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">所属部门</label>
-            <div class="layui-input-block">
-                <input style="width: 70%" type="text" name="cDept" required lay-verify="required" placeholder="请输入标题"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">用户类型</label>
-            <div class="layui-input-block">
-                <div style="width: 70%">
-                    <select name="type" lay-filter="type" style="width: 70%">
-                        <option value="0" selected>普通用户</option>
-                        <option value="1">供销商管理员</option>
-                        <option value="2">超级管理员</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">所属公司</label>
-            <div class="layui-input-block">
-                <div id="companylist" class="xm-select-project" style="width: 70%"></div>
-            </div>
-        </div>
-        <div id="formproject">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">可查看的项目</label>
-                <div class="layui-input-block">
-                    <div id="projectlist" class="xm-select-project" style="width: 70%"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button id="sumbit" type="button" class="layui-btn" lay-submit lay-filter="formDemo1">提交</button>
-                <button id="reset" type="reset" class="layui-btn">重置</button>
+        <div class="layui-form-item layui-form-text">
+            <div class="layui-inline" >
+                <button type="button" class="layui-btn" id="add_stationtemplate">
+                    <i class="layui-icon" style="font-size: 30px; color: #FFFFFF;"></i>添加详细设置模板
+                </button>
             </div>
         </div>
     </form>
 </div>
 
-<div class="site-text" style="margin: 5%; display: none" id="editwindow" target="test1234">
-    <form class="layui-form" action="">
-        <div class="layui-form-item">
-            <label class="layui-form-label">账号名</label>
-            <div class="layui-input-block">
-                <input id="uaccountnum" style="width: 70%" type="text" name="uAccountNum"
-                       lay-verify="editaccount|required" placeholder="请输入账号" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">昵称</label>
-            <div class="layui-input-block">
-                <input id="urealname" style="width: 70%" type="text" name="uRealName" required lay-verify="required"
-                       placeholder="请输入昵称" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">修改密码</label>
-            <div class="layui-input-block">
-                <input id="upassword" style="width: 70%" type="password" name="editPassword" placeholder="请输入标题"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">再次输入密码</label>
-            <div class="layui-input-block">
-                <input id="againpassword" style="width: 70%" type="password" name="againPassword"
-                       lay-verify="confirmeditpass" placeholder="请输入标题" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">所属部门</label>
-            <div class="layui-input-block">
-                <input id="cDpet" style="width: 70%" type="text" name="cDept" required lay-verify="required"
-                       placeholder="请输入标题" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">用户类型</label>
-            <div class="layui-input-block">
-                <div style="width: 70%">
-                    <select id="roletype" name="type2" lay-filter="type2" style="width: 70%">
-                        <option value="0">普通用户</option>
-                        <option value="1">供销商管理员</option>
-                        <option value="2">超级管理员</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">所属公司</label>
-            <div class="layui-input-block">
-                <div id="companylistedit" class="xm-select-project" style="width: 70%"></div>
-            </div>
-        </div>
-        <div id="formprojectedit">
-
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button type="button" class="layui-btn" lay-submit lay-filter="formDemo2">提交修改</button>
-                <button type="reset" class="layui-btn ">重置</button>
-            </div>
-        </div>
-    </form>
-</div>
 
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
@@ -292,6 +171,11 @@
                         <div class="layui-inline" >
                             <button type="button" class="layui-btn" id="delete_template">
                                 <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #FFFFFF;"></i>批量删除模板
+                            </button>
+                        </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn" id="add_template">
+                                <i class="layui-icon" style="font-size: 30px; color: #FFFFFF;"></i>添加模板
                             </button>
                         </div>
 

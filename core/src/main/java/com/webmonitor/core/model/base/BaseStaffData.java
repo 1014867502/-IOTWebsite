@@ -129,4 +129,12 @@ public abstract class BaseStaffData<M extends BaseStaffData<M>> extends Model<M>
 		return getInt("setPermission");
 	}
 
+	public void setGroupAgentNumber(java.lang.String groupAgentNumber) {
+		set("groupAgentNumber", groupAgentNumber);
+	}
+	
+	public java.lang.String getGroupAgentNumber() {
+		return getStr("groupAgentNumber");
+	}
+
 }

@@ -5,6 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.common.kit.I18nKit;
+import com.webmonitor.admin.company.CompanyService;
+import com.webmonitor.admin.index.IndexService;
 import com.webmonitor.admin.permission.PermissionService;
 import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.config.annotation.Remark;
@@ -62,12 +64,15 @@ public class CustomerController extends BaseController {
         String webright=getPara("webright");
         String appright=getPara("appright");
         String select=getPara("select");
+        String selectcom=getPara("selectcom");
+        selectcom=(selectcom==null)?"":selectcom;
         select=(select==null)?"":select;
         select=select.replace(',','@');
         webright=(webright==null)?"":webright;
         webright=webright.replace(',','@');
         appright=(appright==null)?"":appright;
         appright=appright.replace(',','@');
+        selectcom=selectcom.replace(',','@');
         Result result=Result.newOne();
         Gson gson=new Gson();
         StaffDataEntity staffData= gson.fromJson(staffjson, new TypeToken<StaffDataEntity>(){}.getType());
@@ -77,7 +82,7 @@ public class CustomerController extends BaseController {
             staffData.setWritePermission(0);
         }
         try {
-           result=srv.save(staffData,select,webright,appright);
+           result=srv.save(staffData,select,webright,appright,selectcom);
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
         }
@@ -97,12 +102,15 @@ public class CustomerController extends BaseController {
         String select=getPara("select");
         String webright=getPara("webright");
         String appright=getPara("appright");
+        String selectcom=getPara("selectcom");
+        selectcom=(selectcom==null)?"":selectcom;
         select=(select==null)?"":select;
         webright=(webright==null)?"":webright;
         webright=webright.replace(',','@');
         appright=(appright==null)?"":appright;
         appright=appright.replace(',','@');
         select=select.replace(',','@');
+        selectcom=selectcom.replace(',','@');
         Gson gson=new Gson();
         StaffDataEntity staffData= gson.fromJson(staffjson, new TypeToken<StaffDataEntity>(){}.getType());
         StaffData staffData1=StaffData.dao.findById(staffData.getId());
@@ -110,7 +118,7 @@ public class CustomerController extends BaseController {
             staffData.setuPassword(staffData1.getUPassword());
         }
         try {
-            result = srv.update(staffData,select,webright,appright);
+            result = srv.update(staffData,select,webright,appright,selectcom);
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
         }
@@ -225,6 +233,16 @@ public class CustomerController extends BaseController {
         renderJson(result);
     }
 
+    /**根据用户id获取用户的权限身份**/
+    public void getprojectsById(){
+        Result result=Result.newOne();
+        String id=getLoginAccount().getUserName();
+        StaffData currentuser= StaffService.me.getStaffByName(id);
+        result.success(currentuser.getGroupAssemble());
+        renderJson(result);
+    }
+
+
     /**判断是否存在账号|获取**/
     public void getStaffByNum(){
         Result result=Result.newOne();
@@ -287,9 +305,11 @@ public class CustomerController extends BaseController {
         int pageno=getParaToInt("page",1);
         int limit =getParaToInt("limit",50);
         Result<Page<StaffDataEntity>> result=Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        StaffData currentuser = StaffService.me.getStaffById(userid);
         try{
-            Page<StaffDataEntity> customlist=CustomerService.me.searchCustomByParam(account.trim(),agentnum,pageno,limit);
-            result.success(customlist);
+                    Page<StaffDataEntity> customlist=CustomerService.me.searchCustomByParam(currentuser,account.trim(),agentnum,pageno,limit);
+                    result.success(customlist);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
         }
@@ -356,8 +376,11 @@ public class CustomerController extends BaseController {
         try{
             StaffData staffData=StaffService.me.getStaffById(userid);
             AuthorityEntity authorityEntity=new AuthorityEntity();
-            authorityEntity.setAppauthority(staffData.getAppPermission());
-            authorityEntity.setWebauthority(staffData.getWebPermission());
+            AuthorityEntity authorityEntity1=CompanyService.me.getComAuthorById(staffData.getAgentNumber());
+            authorityEntity.setAppauthority(CustomerService.me.getAppAuthorityById(userid));
+            authorityEntity.setWebauthority(CustomerService.me.getWebAuthorityById(userid));
+            authorityEntity.setComwebauthor(authorityEntity1.getWebauthority());
+            authorityEntity.setComappauthor(authorityEntity1.getAppauthority());
             authorityEntity.setWriteright(staffData.getSetPermission());
             result.success(authorityEntity);
         }catch (Throwable e){
@@ -365,4 +388,5 @@ public class CustomerController extends BaseController {
         }
         renderJson(result);
     }
+
 }

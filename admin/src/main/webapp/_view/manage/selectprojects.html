@@ -163,7 +163,7 @@
     .untreated {
         color: #FF5722;
         width: 30%;
-        border: solid 0.5px;
+        /*border: solid 0.5px;*/
         height: 27px;
         /*background-color: #FF5722;*/
     }
@@ -171,7 +171,7 @@
     .treated {
         color: #01AAED;
         width: 30%;
-        border: solid 0.5px;
+        /*border: solid 0.5px;*/
         height: 27px;
         /*background-color: #01AAED;*/
     }
@@ -243,7 +243,7 @@
         border-radius: 0px 6px 6px 0px;
     }
     .tableeventbtn{
-        width: 55px;
+        width: 60px;
         height: 23px;
         border: 1px solid #01AAED;
         border-radius: 5px;
@@ -284,6 +284,29 @@
     <div class="layui-card-body">
         <table class="layui-hide" name='table3' id='table3' lay-filter='table3'></table>
     </div>
+</div>
+
+<div id="tableContent" name="tableContent" hidden>
+    <table class="layui-table" id="showtable">
+        <colgroup>
+            <col width="200">
+            <col width="200">
+        </colgroup>
+        <tbody>
+        <tr>
+            <td name="">项目名称</td>
+            <td name="name"></td>
+        </tr>
+        <tr>
+            <td name="">设备数</td>
+            <td name="count"></td>
+        </tr>
+        <tr>
+            <td name="">所属公司</td>
+            <td name="profile"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <!--//添加设备弹窗-->
@@ -351,6 +374,26 @@
                 </div>
 
                 <div class="layui-card-body">
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    项目位置
+                </div>
+                <div class="layui-card-body">
+                    <div id='map' style="height: 500px;width: 100%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    项目表格
+                </div>
+                <div class="layui-card-body">
                     <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
                         <div class="layui-form-item" style="margin: auto">
                             <div class="layui-inline">
@@ -362,11 +405,11 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="layui-inline">
-                                <button type="button" class="layui-btn" id="add_device2"><img
-                                        src="/assets/images/icon_add_device_28.png"/>添加设备
-                                </button>
-                            </div>
+<!--                            <div class="layui-inline">-->
+<!--                                <button type="button" class="layui-btn" id="add_device2"><img-->
+<!--                                        src="/assets/images/icon_add_device_28.png"/>添加设备-->
+<!--                                </button>-->
+<!--                            </div>-->
                             <div class="layui-inline" >
                                 <button type="button" class="layui-btn" id="delete_project">
                                     <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #FFFFFF;"></i>批量删除项目
@@ -398,7 +441,7 @@
         base: '/assets/layuiadmin/'
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index','selectproject','drawer']);
+    }).use(['index','selectproject','drawer','projectmap']);
 </script>
 </body>
 </html>
