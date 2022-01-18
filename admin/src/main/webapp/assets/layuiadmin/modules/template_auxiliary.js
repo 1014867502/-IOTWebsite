@@ -1,4 +1,4 @@
-layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exports) {
+layui.define(['form', 'drawer', 'table','station_auxiliary_func','station_func'], function (exports) {
     var $ = layui.$
         , setter = layui.setter
         , admin = layui.admin
@@ -6,6 +6,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
         , drawer = layui.drawer
         ,table2=layui.table
         ,auxiliaryfunc=layui.station_auxiliary_func
+        ,stationfunc=layui.station_func
         // ,templatform=layui.template_platform
         // ,temcompute=layui.template_compute
         // ,temlocate=layui.template_locate
@@ -99,6 +100,9 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
         getDeviceSetting(templatename);
     })
 
+    $("#changename").click(function () {
+        changename();
+    })
 
 
 
@@ -161,7 +165,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
                 layer.open({
                     title: '提交'
                     ,skin: 'demo-class'
-                    ,offset: 'auto'
+                    ,offset: stationfunc.layerhieght().top + 100
                     ,content: '提交成功'
                 });
             }
@@ -378,6 +382,21 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
         })
     }
 
+    /**提交模组**/
+    function changename(){
+        let y = stationfunc.layerhieght().top + 100;
+        layer.open({
+            type: 1
+            ,id: 'layerDemo' //防止重复弹出
+            , title: ['修改模板名称']
+            ,offset:y
+            , area: ['300px', '300px']
+            , content: $("#window")
+            , success: function (layero, index) {
+                layerindex=index;
+            },
+        });
+    }
 
     /**添加模板**/
     form.on('submit(save)',function () {
@@ -419,7 +438,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
                 layer.open({
                     title: '提交'
                     ,skin: 'demo-class'
-                    ,offset: 'auto'
+                    ,offset: stationfunc.layerhieght().top + 100
                     ,content: '提交成功'
                 });
             }
@@ -467,7 +486,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
                 layer.open({
                     title: '提交'
                     ,skin: 'demo-class'
-                    ,offset: 'auto'
+                    ,offset: stationfunc.layerhieght().top + 100
                     ,content: '提交成功'
                 });
             }
@@ -481,6 +500,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
             ,id: 'layerDemo' //防止重复弹出
             , title: ['保存模板']
             , area: ['300px', '300px']
+            ,offset: stationfunc.layerhieght().top + 100
             , content: $("#savewindow")
             , success: function (layero, index) {
                 layerindex=index;

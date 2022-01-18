@@ -10,7 +10,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
         , element = layui.element;
 
 
-    var device;
+    var device={};
     var form21 = ["devicestatus", "observedata"];
     var form22 = ["statusresult", "observedata"];
     var form12 = ["statusresult","basedownload","timerecord"];
@@ -90,6 +90,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
                 addModel();
             }
         })
+
         $("#reset").css("display","none");
         $("#changename").css("display","none");
     }
@@ -142,10 +143,11 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
             },
             async:false,
             success:function () {
+                let y = fastsettingfunc.layerhieght().top + 100;
                 layer.open({
                     title: '提交'
                     ,skin: 'demo-class'
-                    ,offset: 'auto'
+                    ,offset: y
                     ,content: '提交成功'
                 });
             }
@@ -166,10 +168,11 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
             },
             async:false,
             success:function () {
+                let y = fastsettingfunc.layerhieght().top + 100;
                 layer.open({
                     title: '提交'
                     ,skin: 'demo-class'
-                    ,offset: 'auto'
+                    ,offset: y
                     ,content: '提交成功'
                 });
             }
@@ -235,7 +238,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
             },
             success: function (data) {
                 device = data.data;
-                if (device.rawName!=null) {
+                if (device!=null) {
                     fastsettingfunc.setdevice(device);
                     if (device.rawName != null && device.rawName != "") {
                         $("#rawName").val(device.rawName);
@@ -327,11 +330,13 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
 
     /**提交模组**/
     function changename(){
+        let y = fastsettingfunc.layerhieght().top + 100;
         layer.open({
             type: 1
             ,id: 'layerDemo' //防止重复弹出
             , title: ['修改模板名称']
             , area: ['300px', '300px']
+            ,offset:y
             , content: $("#window")
             , success: function (layero, index) {
                 layerindex=index;
@@ -349,10 +354,11 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
                 templatename:templatename,
                 type:"1"
             },success:function (res) {
+                let y =fastsettingfunc.layerhieght().top + 100;
                 layer.open({
                     title: '提交'
                     ,skin: 'demo-class'
-                    ,offset: 'auto'
+                    ,offset: y
                     ,content: '提交成功'
                 });
             }
@@ -361,10 +367,12 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
 
     /**提交模组**/
     function addModel(){
-        layer.open({
+        let y = fastsettingfunc.layerhieght().top + 100;
+      layer.open({
             type: 1
             ,id: 'layerDemo' //防止重复弹出
             , title: ['保存模板']
+            ,offset:y
             , area: ['300px', '300px']
             , content: $("#savewindow")
             , success: function (layero, index) {

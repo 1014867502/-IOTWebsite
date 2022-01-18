@@ -169,7 +169,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">模板名称</label>
             <div class="layui-input-block">
-                <input type="text" id="templatename"  name="templatename" lay-verify="required|templatename" autocomplete="off"
+                <input type="text" id="templatename" lay-verType='tips'  name="templatename" lay-verify="required|templatename" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
@@ -187,7 +187,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">传感器编号</label>
             <div class="layui-input-block">
-                <input id="machinname" style="width: 70%" type="text" name="sn"
+                <input id="machinname" style="width: 70%" type="text" name="sn" lay-verType='tips'
                        lay-verify="editaccount|required" placeholder="SN码" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -195,7 +195,7 @@
             <label class="layui-form-label">间隔</label>
             <div class="layui-input-block">
                 <div style="width: 70%">
-                    <select id="sensor_interval" name="interval"  style="width: 70%">
+                    <select id="sensor_interval" name="interval"  style="width: 70%"  lay-verType='tips' required>
                         <option value="10">10秒</option>
                         <option value="30">30秒</option>
                         <option value="60">一分钟</option>
@@ -217,7 +217,7 @@
             <label class="layui-form-label">传感器类型</label>
             <div class="layui-input-block">
                 <div style="width: 70%">
-                    <select id="sensor_type" name="type" lay-filter="type" style="width: 70%">
+                    <select id="sensor_type" name="type" lay-filter="type" style="width: 70%" lay-verType='tips' required>
                         <option value="LF">LF:裂缝计</option>
                         <option value="YL">YL:雨量计</option>
                         <option value="HS">HS:土壤水分计</option>
@@ -231,7 +231,7 @@
             <label class="layui-form-label">电压</label>
             <div class="layui-input-block">
                 <div style="width: 70%">
-                    <select id="sensor_voltage" name="voltage"  style="width: 70%">
+                    <select id="sensor_voltage" name="voltage"  style="width: 70%" lay-verType='tips' required>
                         <option value="12">12V</option>
                         <option value="5">5V</option>
                     </select>
@@ -242,7 +242,7 @@
             <label class="layui-form-label">传感器厂家</label>
             <div class="layui-input-block" >
                 <div style="width: 70%">
-                    <select  id="sensor_vender"   name="vender" required lay-filter="company" lay-verify="required">
+                    <select  id="sensor_vender"   name="vender" lay-verType='tips' required lay-filter="company" lay-verify="required">
                         <option value="1">深圳米朗</option>
                         <option value="2">湘银河</option>
                         <option value="3">南京葛南</option>
@@ -258,7 +258,7 @@
             <label class="layui-form-label">串口波特率</label>
             <div class="layui-input-block">
                 <div style="width: 70%">
-                    <select id="sensor_baud" name="bruad"  style="width: 70%">
+                    <select id="sensor_baud" name="bruad"  style="width: 70%" lay-verType='tips' required>
                         <option value="4800">4800 bps</option>
                         <option value="9600" selected>9600 bps</option>
                         <option value="19200">19200 bps</option>
@@ -272,14 +272,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label">查询命令</label>
             <div class="layui-input-block">
-                <input id="sensor_cmd" style="width: 70%" type="text" name="cmd" required
+                <input id="sensor_cmd" style="width: 70%" type="text" name="cmd" required lay-verType='tips'
                        lay-verify="required" placeholder="请输入查询命令" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">基准值</label>
             <div class="layui-input-block">
-                <input id="sensor_ref" style="width: 70%" type="text" name="ref" required
+                <input id="sensor_ref" style="width: 70%" type="text" name="ref" required lay-verType='tips'
                        lay-verify="required" placeholder="请输入基准值" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -317,7 +317,7 @@
                     <div class="layui-form-item">
                         <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
                         <div class="layui-input-block">
-                            <input id="scheduler_enable" lay-filter="scheduler_enable" type="checkbox" name="scheduler_enable" lay-skin="switch">
+                            <input id="scheduler_enable" lay-filter="scheduler_enable" type="checkbox" name="scheduler_enable" lay-skin="switch" >
                         </div>
                         <div id="timeswitch"></div>
                     </div>

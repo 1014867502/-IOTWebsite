@@ -162,7 +162,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">模板名称</label>
             <div class="layui-input-block">
-                <input type="text" id="savetemplatename"  name="templatename" lay-verify="required|templatename" autocomplete="off"
+                <input type="text" id="savetemplatename" lay-verType='tips'  name="templatename" lay-verify="required|templatename" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
@@ -179,7 +179,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">模板名称</label>
             <div class="layui-input-block">
-                <input type="text" id="templatename"  name="templatename" lay-verify="required|templatename" autocomplete="off"
+                <input type="text" id="templatename"  lay-verType='tips' name="templatename" lay-verify="required|templatename" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
@@ -220,10 +220,10 @@
                             <label class="layui-form-label">测站编号</label>
                             <div class="layui-input-block">
                                 <input type="text" id="rawName" name="rawName" required
-                                       lay-verify="required" placeholder="请输入标题" class="layui-input">
+                                       lay-verify="required" placeholder="请输入标题" lay-verType='tips' class="layui-input">
                             </div>
                             <div class="layui-input-block" style="margin-left: 80px;">
-                                <input type="radio" name="nameType" value="0" title="不修改">
+                                <input type="radio" id="unselect" name="nameType" value="0" title="不修改">
                                 <input type="radio" name="nameType" value="1" title="默认sn号">
                                 <input type="radio" name="nameType" value="2" title="编号递增">
 
@@ -235,7 +235,7 @@
                         <div class="layui-form-item  fastinput">
                             <label class="layui-form-label">采样频率</label>
                             <div class="layui-input-block">
-                                <select id="selectList" name="rawRate" lay-filter="rawRate" lay-verify="required">
+                                <select id="selectList" name="rawRate" lay-filter="rawRate" lay-verType='tips' lay-verify="required">
                                     <option value=""></option>
                                     <option value="1000">1s</option>
                                     <option value="5000">5s</option>

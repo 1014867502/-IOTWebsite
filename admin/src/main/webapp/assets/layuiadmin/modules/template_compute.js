@@ -1,4 +1,4 @@
-layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], function (exports) {
+layui.define(['element', 'form', 'drawer', 'table','station_compute_func','station_func'], function (exports) {
     var $ = layui.$
         , setter = layui.setter
         , admin = layui.admin
@@ -7,6 +7,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
         , table = layui.table
         , table2 = layui.table
         ,computefunc=layui.station_compute_func
+        ,stationfunc=layui.station_func
         , element = layui.element;
 
 
@@ -269,8 +270,10 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
             },
             success: function (data) {
                 getDeviceSetting(data.data);
+                let y = stationfunc.layerhieght().top + 100;
                 layer.open({
                     title: '提交'
+                    ,offset:y
                     ,skin: 'demo-class'
                     ,offset: 'auto'
                     ,content: '提交成功'
@@ -335,10 +338,11 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
             },
             async:false,
             success:function () {
+                let y = stationfunc.layerhieght().top + 100;
                 layer.open({
                     title: '提交'
                     ,skin: 'demo-class'
-                    ,offset: 'auto'
+                    ,offset: y
                     ,content: '提交成功'
                 });
             }
@@ -564,11 +568,13 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
 
     /**提交模组**/
     function addModel(){
+        let y = stationfunc.layerhieght().top + 100;
         layer.open({
             type: 1
             ,id: 'layerDemo' //防止重复弹出
             , title: ['保存模板']
             , area: ['300px', '300px']
+            ,offset:y
             , content: $("#savewindow")
             , success: function (layero, index) {
                 layerindex=index;
@@ -670,10 +676,11 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
             },
             async:false,
             success:function () {
+                let y = stationfunc.layerhieght().top + 100;
                 layer.open({
                     title: '提交'
                     ,skin: 'demo-class'
-                    ,offset: 'auto'
+                    ,offset: y
                     ,content: '提交成功'
                 });
             }
@@ -713,10 +720,12 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
 
     /**提交模组**/
     function changename(){
+        let y = stationfunc.layerhieght().top + 100;
         layer.open({
             type: 1
             ,id: 'layerDemo' //防止重复弹出
             , title: ['修改模板名称']
+            ,offset:y
             , area: ['300px', '300px']
             , content: $("#window")
             , success: function (layero, index) {
@@ -888,8 +897,8 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func'], func
                     " <div class=\"layui-form-item  fastinput\">\n" +
                     "                                        <label class=\"layui-form-label basecoreindex\" style='padding: 9px 4px;width: 98px;'>CORS①IP地址</label>\n" +
                     "                                        <div class=\"layui-input-block\">\n" +
-                    "                                            <input id=\"rawntripaddress\" type=\"text\" name=\"rawntripaddress\" required\n" +
-                    "                                                   lay-verify=\"ip\" placeholder=\"请输入IP地址\"\n" +
+                    "                                            <input id=\"rawntripaddress\" type=\"text\" name=\"rawntripaddress\" lay-verType='tips'\n" +
+                    "                                                   lay-verify=\"ip|required\" placeholder=\"请输入IP地址\"\n" +
                     "                                                   autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                        </div>\n" +
                     "                                    </div>\n" +
