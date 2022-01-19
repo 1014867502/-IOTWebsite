@@ -228,6 +228,10 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         searchUnconnectDev(input);
     });
 
+    $("#excute_update").on('click',function () {
+        updatedevices();
+    })
+
     renderTable();
 
     //每行记录的按钮事件
@@ -571,8 +575,14 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
                             "                                <option value=\"0\" selected>全部</option>\n" +
                             "                                <option value=\"2\">公司</option>\n" +
                             "                            </select>";
+                        $("#excute_update").css("display","block");
                         break;
-
+                    case "admin":
+                        document.getElementById("templateselect").innerHTML = "<select id=\"templatetype\" name=\"templatetype\" lay-verify=\"\" lay-filter=\"templatetype\">\n" +
+                            "                                <option value=\"0\" selected>全部</option>\n" +
+                            "                                <option value=\"2\">公司</option>\n" +
+                            "                            </select>";
+                        break;
                 }
                 form.render("select");
 
@@ -593,6 +603,30 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
             }
         })
     }
+
+    /**批量升级设备**/
+    function updatedevices(){
+        if (templatedevice != null && templatedevice.length > 2) {
+            $.ajax({
+                url: '/devicelist/updatedevices',
+                data: {
+                    json: templatedevice,
+                },
+                async: false,
+                success: function (res) {
+                    let data = res.data;
+                    let str="   一共选中"+data.sum+"台设备。其中正在升级的有"+data.outcount+"台设备，升级完成有"+data.oncount+"台设备。无法升级有"+data.unprojcount+"台设备。"
+                    layer.open({
+                        title: '执行结果'
+                        ,content: str
+                    });
+                }
+            })
+        }else{
+            layer.msg("请选择要升级的设备");
+        }
+    }
+
 
     function assignCompanyList(json){
         var arrData = [];

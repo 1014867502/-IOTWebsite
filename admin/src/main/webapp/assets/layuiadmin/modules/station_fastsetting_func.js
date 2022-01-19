@@ -334,14 +334,14 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">纬度</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id='baseLat' type=\"text\" name=\"baseLat\" lay-verType='tips' required lay-verify=\"stationLat\" placeholder=\"请输入纬度\"\n" +
+                    "                                    <input id='baseLat' type=\"text\" name=\"baseLat\" lay-verType='tips' required lay-verify=\"required|stationLat\" placeholder=\"请输入纬度\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +
                     "                            <div class=\"layui-form-item  fastinput\">\n" +
                     "                                <label class=\"layui-form-label\">经度</label>\n" +
                     "                                <div class=\"layui-input-block\">\n" +
-                    "                                    <input id='baseLon' type=\"text\" name=\"baseLon\" lay-verType='tips' required lay-verify=\"stationLon\" placeholder=\"请输入经度\"\n" +
+                    "                                    <input id='baseLon' type=\"text\" name=\"baseLon\" lay-verType='tips' required lay-verify=\"required|stationLon\" placeholder=\"请输入经度\"\n" +
                     "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
                     "                                </div>\n" +
                     "                            </div>\n" +

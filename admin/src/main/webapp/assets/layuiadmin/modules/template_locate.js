@@ -92,13 +92,6 @@ layui.define(['form', 'drawer', 'table','station_locate_func','station_func'], f
         changename();
     })
 
-    $("#savemodel").click(function () {
-        if(form.doVerify("formDemo")){
-            saveModel();
-            updateModel();
-        }
-    })
-
     form.on('switch(coordcvt_enable)', function (data) {
         if (this.checked) {
             document.getElementById("locate_content").innerHTML = locatefunc.locatetxt;
@@ -205,9 +198,6 @@ layui.define(['form', 'drawer', 'table','station_locate_func','station_func'], f
         }
         if (locatedata.coordcvtProjParam != null) {
             let coordvt_proj = locatedata.coordcvtProjParam.split('|');
-            if(coordvt_proj[0]!=""&&coordvt_proj[0]!=null){
-                $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
-            }
             $("#coordvt_proj_centralmeridian").val(coordvt_proj[1]);
             $("#coordvt_proj_scale").val(coordvt_proj[2]);
             $("#coordvt_proj_north").val(coordvt_proj[3]);
@@ -215,6 +205,7 @@ layui.define(['form', 'drawer', 'table','station_locate_func','station_func'], f
             $("#coordvt_proj_height").val(coordvt_proj[5]);
             $("#coordvt_proj_lat").val(coordvt_proj[6]);
         }
+        $("#corrdcvt_proj_mode_select").val(data.value);
     })
 
     //提交模板

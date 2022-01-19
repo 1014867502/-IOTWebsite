@@ -284,7 +284,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var onenetcontent = " <div class=\"layui-form-item  fastinput\" style=\"margin-top: 30px;display: flex\" >\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px 10px;\">模式</label>\n" +
         "                                <div class=\"layui-input-block\" style=\"margin: 0;\">\n" +
-        "                                    <select id=\"onenet_mode\" name=\"onenet_mode\" lay-filter=\"onenet_mode\" lay-verify=\"required\">\n" +
+        "                                    <select id=\"onenet_mode\" name=\"onenet_mode\" lay-filter=\"onenet_mode\" lay-verType='tips' lay-verify=\"required\">\n" +
         "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"0\">MQTT</option>\n" +
         "                                        <option value=\"1\">MQTT-S</option>\n" +
@@ -302,7 +302,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var devicecontent = " <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">设备ID</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='onenet_id' type=\"text\" name=\"onenet_id\" required lay-verify=\"required\"\n" +
+        "                                    <input id='onenet_id' type=\"text\" name=\"onenet_id\" lay-verType='tips' lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入ID\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -311,7 +311,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var productid = "  <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">产品ID</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='onenet_user' type=\"text\" name=\"onenet_user\" required lay-verify=\"required\"\n" +
+        "                                    <input id='onenet_user' type=\"text\" name=\"onenet_user\" lay-verType='tips' lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入ID\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -320,7 +320,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var devicekey = " <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">设备KEY</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='onenet_key' type=\"text\" name=\"onenet_key\" required lay-verify=\"required\"\n" +
+        "                                    <input id='onenet_key' type=\"text\" name=\"onenet_key\" lay-verType='tips' lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入KEY\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -329,7 +329,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var productkey = " <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">产品KEY</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='onenet_key' type=\"text\" name=\"onenet_key\" required lay-verify=\"required\"\n" +
+        "                                    <input id='onenet_key' type=\"text\" name=\"onenet_key\" lay-verType='tips' lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入KEY\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -338,7 +338,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
     var dataid = "   <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">数据流ID</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='onenet_data' type=\"text\" name=\"onenet_data\" required lay-verify=\"required\"\n" +
+        "                                    <input id='onenet_data' type=\"text\" name=\"onenet_data\" lay-verType='tips' lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入ID\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -348,7 +348,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">MQTT IP</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='iot_ip' type=\"text\" name=\"iot_ip\" required lay-verify=\"required\"\n" +
+        "                                    <input id='iot_ip' type=\"text\" name=\"iot_ip\" lay-verType='tips' lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入ip\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -356,25 +356,25 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">MQTT 端口</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='iot_port' type=\"text\" name=\"iot_port\" required lay-verify=\"required\"\n" +
+        "                                    <input id='iot_port' type=\"text\" name=\"iot_port\" lay-verType='tips' lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入端口\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
         "                            </div>\n" +
-        "                            <div class=\"layui-form-item  fastinput\">\n" +
+        "                            <div class=\"layui-form-item  fastinput\" id='iotid_show'>\n" +
         "                                <label class=\"layui-form-label  \">设备ID</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='iot_id' type=\"text\" name=\"iot_id\" required lay-verify=\"required\"\n" +
+        "                                    <input id='iot_id' type=\"text\" name=\"iot_id\" lay-verType='tips' lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入KEY\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
         "                            </div>\n" +
         "                        </div>\n" +
-        "                        <div style=\"display: flex;margin-top: 30px\">\n" +
-        "                            <div class=\"layui-form-item  fastinput\">\n" +
+        "                        <div style=\"display: flex;margin-top: 30px\" >\n" +
+        "                            <div class=\"layui-form-item  fastinput\" id='iotkey_show'>\n" +
         "                                <label class=\"layui-form-label  \">设备KEY</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='iot_key' type=\"text\" name=\"iot_key\" required lay-verify=\"required\"\n" +
+        "                                    <input id='iot_key' type=\"text\" name=\"iot_key\" lay-verType='tips' lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入KEY\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -382,7 +382,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">HTTP参数</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='iot_http' type=\"text\" name=\"iot_http\" required lay-verify=\"required\"\n" +
+        "                                    <input id='iot_http' type=\"text\" name=\"iot_http\" lay-verType='tips' \n" +
         "                                           placeholder=\"请输入http参数\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -414,7 +414,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">产品ID</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='chongqing_iot_user' type=\"text\" name=\"chongqing_iot_user\" required\n" +
+        "                                    <input id='chongqing_iot_user' type=\"text\" name=\"chongqing_iot_user\" lay-verType='tips'\n" +
         "                                           lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入ID\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
@@ -424,7 +424,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
 
     var chongqingselect="   <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px 10px;\">模式</label>\n" +
         "                        <div class=\"layui-input-block\" style=\"width: 300px\">\n" +
-        "                            <select id=\"chongqing_mode\" name=\"chongqing_mode\" lay-filter=\"chongqing_mode\"\n" +
+        "                            <select id=\"chongqing_mode\" name=\"chongqing_mode\" lay-verType='tips' lay-filter=\"chongqing_mode\"\n" +
         "                                    lay-verify=\"required\">\n" +
         "                                <option value=\"\"></option>\n" +
         "                                <option value=\"1\">NB-IOT</option>\n" +
@@ -437,7 +437,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">运营商</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
         "                                    <select id=\"chongqing_iot_telecom\" name=\"chongqing_iot_telecom\"\n" +
-        "                                            lay-verify=\"required\">\n" +
+        "                                       lay-verType='tips'  lay-verify=\"required\">\n" +
         "                                        <option value=\"1\">电信</option>\n" +
         "                                        <option value=\"2\">移动</option>\n" +
         "                                        <option value=\"3\">联通</option>\n" +
@@ -447,7 +447,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">设备ID</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='chongqing_iot_id' type=\"text\" name=\"chonqing_iot_id\" required\n" +
+        "                                    <input id='chongqing_iot_id' type=\"text\" name=\"chonqing_iot_id\" lay-verType='tips'\n" +
         "                                           lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入ID\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
@@ -456,7 +456,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">鉴权码</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='chongqing_iot_key' type=\"text\" name=\"chongqing_iot_key\" required\n" +
+        "                                    <input id='chongqing_iot_key' type=\"text\" name=\"chongqing_iot_key\" lay-verType='tips'\n" +
         "                                           lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入ID\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +

@@ -181,7 +181,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">输出电源</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <select id=\"sensor_power\" name=\"sensor_power\" lay-verify=\"required\">\n" +
+        "                                    <select id=\"sensor_power\" name=\"sensor_power\" lay-verType='tips' lay-verify=\"required\">\n" +
         "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"0\">关闭</option>\n" +
         "                                        <option value=\"1\">5V</option>\n" +
@@ -195,23 +195,23 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "<script type=\"text/html\" id=\"barDemo\"><a class=\"layui-btn layui-btn-danger layui-btn-xs\" lay-event=\"del\">删除</a> </script>"+
         "                            <button class=\"layui-btn btn_primary\" id='add_sensor' type='button'>新增传感器</button>\n" +
         "                        </div>\n" +
-        "                             <table class=\"layui-hide\" id=\"table-form\" lay-filter=\"table-form\"></table>"+
-        "                        <div style=\"display: flex;margin-top: 30px\">\n" +
-        "                            <div class=\"layui-form-item  fastinput\">\n" +
-        "                                <label class=\"layui-form-label  \">数据流ID</label>\n" +
-        "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='onenet_data' type=\"text\" name=\"coordvt_dst_datum_da\" required lay-verify=\"required\"\n" +
-        "                                           placeholder=\"请输入ID\"\n" +
-        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-        "                                </div>\n" +
-        "                            </div>\n" +
-        "                        </div>";
+        "                             <table class=\"layui-hide\" id=\"table-form\" lay-filter=\"table-form\"></table>";
+        // "                        <div style=\"display: flex;margin-top: 30px\">\n" +
+        // "                            <div class=\"layui-form-item  fastinput\">\n" +
+        // "                                <label class=\"layui-form-label  \">数据流ID</label>\n" +
+        // "                                <div class=\"layui-input-block\">\n" +
+        // "                                    <input id='onenet_data' type=\"text\" name=\"coordvt_dst_datum_da\" lay-verType='tips'  lay-verify=\"required\"\n" +
+        // "                                           placeholder=\"请输入ID\"\n" +
+        // "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+        // "                                </div>\n" +
+        // "                            </div>\n" +
+        // "                        </div>";
 
     var sensorcontent1="<div class=\"layui-form-item  fastinput\" style=\"margin-top: 30px\" >\n" +
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">输出电源</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <select id=\"sensor_power\" name=\"sensor_power\" lay-verify=\"required\">\n" +
+        "                                    <select id=\"sensor_power\" name=\"sensor_power\" lay-verType='tips' lay-verify=\"required\">\n" +
         "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"0\">关闭</option>\n" +
         "                                        <option value=\"1\">5V</option>\n" +
@@ -219,17 +219,17 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                                    </select>\n" +
         "                                </div>\n" +
         "                            </div>\n" +
-        "                        </div>\n" +
-        "                        <div style=\"display: flex;margin-top: 30px\">\n" +
-        "                            <div class=\"layui-form-item  fastinput\">\n" +
-        "                                <label class=\"layui-form-label  \">数据流ID</label>\n" +
-        "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='onenet_data' type=\"text\" name=\"coordvt_dst_datum_da\" required lay-verify=\"required\"\n" +
-        "                                           placeholder=\"请输入ID\"\n" +
-        "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
-        "                                </div>\n" +
-        "                            </div>\n" +
-        "                        </div>";
+        "                        </div>\n" ;
+        // "                        <div style=\"display: flex;margin-top: 30px\">\n" +
+        // "                            <div class=\"layui-form-item  fastinput\">\n" +
+        // "                                <label class=\"layui-form-label  \">数据流ID</label>\n" +
+        // "                                <div class=\"layui-input-block\">\n" +
+        // "                                    <input id='onenet_data' type=\"text\" name=\"coordvt_dst_datum_da\" lay-verType='tips' lay-verify=\"required\"\n" +
+        // "                                           placeholder=\"请输入ID\"\n" +
+        // "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
+        // "                                </div>\n" +
+        // "                            </div>\n" +
+        // "                        </div>";
 
     var timecontent=" <div id=\"chongqiselect\">\n" +
         "                            <div class=\"layui-form-item  fastinput\" style=\"margin-top: 30px\">\n" +
@@ -249,7 +249,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">开机时间</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <select id=\"scheduler_start_time\" name=\"scheduler_start_time\" lay-verify=\"required\">\n" +
+        "                                    <select id=\"scheduler_start_time\" name=\"scheduler_start_time\" lay-verType='tips' lay-verify=\"required\">\n" +
         "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"0\">00:00</option>\n" +
         "                                        <option value=\"4\">04:00</option>\n" +
@@ -263,7 +263,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">工作时间</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <select id=\"scheduler_run_time\" name=\"scheduler_work_time\" lay-verify=\"required\">\n" +
+        "                                    <select id=\"scheduler_run_time\" name=\"scheduler_work_time\" lay-verType='tips' lay-verify=\"required\">\n" +
         "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"2\">2小时</option>\n" +
         "                                        <option value=\"4\">4小时</option>\n" +
@@ -276,7 +276,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">关机电量</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <select id=\"scheduler_powerlevel\" name=\"scheduler_powerlevel\" lay-verify=\"required\">\n" +
+        "                                    <select id=\"scheduler_powerlevel\" name=\"scheduler_powerlevel\" lay-verType='tips' lay-verify=\"required\">\n" +
         "                                        <option value=\"\"></option>\n" +
         "                                        <option value=\"10\">10%</option>\n" +
         "                                        <option value=\"20\">20%</option>\n" +
@@ -296,7 +296,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">X位移阈值(mm)</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='move_warn_dx' type=\"text\" name=\"move_warn_dx\" required lay-verify=\"required\"\n" +
+        "                                    <input id='move_warn_dx' type=\"text\" name=\"move_warn_dx\" lay-verType='tips' lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -304,7 +304,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">Y位移阈值(mm)</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='move_warn_dy' type=\"text\" name=\"move_warn_dy\" required lay-verify=\"required\"\n" +
+        "                                    <input id='move_warn_dy' type=\"text\" name=\"move_warn_dy\" lay-verType='tips' lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -312,7 +312,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">H位移阈值(mm)</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='move_warn_dz' type=\"text\" name=\"move_warn_dz\" required lay-verify=\"required\"\n" +
+        "                                    <input id='move_warn_dz' type=\"text\" name=\"move_warn_dz\" lay-verType='tips' lay-verify=\"required|number\"\n" +
         "                                           placeholder=\"请输入数据\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -322,7 +322,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">MEMS倾斜</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <select id=\"move_warn_mems\" name=\"move_warn_mems\" lay-verify=\"required\">\n" +
+        "                                    <select id=\"move_warn_mems\" name=\"move_warn_mems\" lay-verType='tips' lay-verify=\"required\">\n" +
         "                                            <option value=\"\"></option>\n" +
         "                                            <option value=\"0\">关闭</option>\n" +
         "                                            <option value=\"0.3\">0.3度</option>\n" +
@@ -338,7 +338,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label\" style=\"width: 86px;padding: 9px;\">串口输出</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <select id=\"move_warn_baud\" name=\"move_warn_baud\" lay-verify=\"required\">\n" +
+        "                                    <select id=\"move_warn_baud\" name=\"move_warn_baud\" lay-verType='tips' lay-verify=\"required\">\n" +
         "                                        <option value=\"\" ></option>\n" +
         "                                        <option value=\"9600\" >(RS485)9600 bps</option>\n" +
         "                                        <option value=\"19200\">(RS485)19200 bps</option>\n" +

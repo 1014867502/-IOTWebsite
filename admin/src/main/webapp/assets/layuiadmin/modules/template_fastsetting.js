@@ -292,35 +292,43 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
                         $("#coreuse1").val(arg[3]);
                         $("#corepass1").val(arg[4]);
                     }
-                    let secondarg = device.secondArg;
-                    if (secondarg != "" && secondarg != null) {
-                        let arg = secondarg.split('|');
-                        $("#secondntripaddress").val(arg[0]);
-                        $("#secondntripport").val(arg[1]);
-                        $("#secondMountpoint1").val(arg[2]);
-                        $("#coreuse2").val(arg[3]);
-                        $("#corepass2").val(arg[4]);
+                    if(device.ntripArg!=null){
+                        $("input[name=downloadsource][value='1']").prop("checked", true);
+                        fastsettingfunc.altersource(doublebase, "1");
                     }
-                    if (device.secondBase != "0") {
-                        $("#doublebase").prop('checked', true);
-                        $("input[name='networkAddress']").val(device.networkAddress);
-                        $("input[name='networkPort']").val(device.networkPort);
-                        doublebase = true;
-                        if (device.ntrIpBase > 0) {
-                            $("input[name=downloadsource][value='1']").prop("checked", true);
-                            fastsettingfunc.altersource(doublebase, "1");
-                        } else {
-                            $("input[name=downloadsource][value='0']").prop("checked", true);
-                            fastsettingfunc.altersource(doublebase, "0");
-                        }
-                    } else {
-                        doublebase = false;
+                    else{
+                        $("input[name=downloadsource][value='0']").prop("checked", true);
+                        fastsettingfunc.altersource(doublebase, "0");
                     }
-                    if (device.networkMountpointPass != "" && device.networkMountpointPass != null) {
-                        let userpass = device.networkMountpointPass.toString().split("|");
-                        $("#networkMountpointUse").val(userpass[0]);
-                        $("#networkMountpointPass").val(userpass[1]);
-                    }
+                    // let secondarg = device.secondArg;
+                    // if (secondarg != "" && secondarg != null) {
+                    //     let arg = secondarg.split('|');
+                    //     $("#secondntripaddress").val(arg[0]);
+                    //     $("#secondntripport").val(arg[1]);
+                    //     $("#secondMountpoint1").val(arg[2]);
+                    //     $("#coreuse2").val(arg[3]);
+                    //     $("#corepass2").val(arg[4]);
+                    // }
+                    // if (device.secondBase != "0") {
+                    //     $("#doublebase").prop('checked', true);
+                    //     $("input[name='networkAddress']").val(device.networkAddress);
+                    //     $("input[name='networkPort']").val(device.networkPort);
+                    //     doublebase = true;
+                    //     if (device.ntrIpBase > 0) {
+                    //         $("input[name=downloadsource][value='1']").prop("checked", true);
+                    //         fastsettingfunc.altersource(doublebase, "1");
+                    //     } else {
+                    //         $("input[name=downloadsource][value='0']").prop("checked", true);
+                    //         fastsettingfunc.altersource(doublebase, "0");
+                    //     }
+                    // } else {
+                    //     doublebase = false;
+                    // }
+                    // if (device.networkMountpointPass != "" && device.networkMountpointPass != null) {
+                    //     let userpass = device.networkMountpointPass.toString().split("|");
+                    //     $("#networkMountpointUse").val(userpass[0]);
+                    //     $("#networkMountpointPass").val(userpass[1]);
+                    // }
                     saveModel();
                     form.render();
                 }
@@ -410,18 +418,13 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
             data2.networkMountpointUse=data1.coreuse2;
             data2.networkMountpointPass=data1.corepass2;
         }
-        // if(downloadsource==1){
-        //     data2.ntripArg= data1.rawntripaddress+"|"+data1.rawntripport+"|"+data1.networkMountpoint1+"|"+data1.coreuse1+"|"+data1.corepass1;
-        // }
-        if(doublebase){
-            if(data1.secondMountpoint1!=null||data1.corepass2!=null||data1.coreuse2!=null||data1.secondntripaddress!=null||data1.secondntripport){
-                data2.secondArg= data1.secondntripaddress+"|"+data1.secondntripport+"|"+data1.secondMountpoint1+"|"+data1.coreuse2+"|"+data1.corepass2;
-            }else{
-                data2.secondArg=device.secondArg;
-            }
-            data2.secondBase=1;
-        }else{
-            data2.secondBase=0;
+        if(data1.downloadsource==1&&data1.rawntripaddress!=null&&data1.rawntripport!=null&&data1.networkMountpoint1!=null&&data1.coreuse1!=null&&data1.corepass1){
+            let address=(data1.rawntripaddress!=null)?data1.rawntripaddress:data1.rawntripaddress;
+            let port=(data1.rawntripport!=null)?data1.rawntripport:data1.rawntripport;
+            let point=(data1.networkMountpoint1!=null)?data1.networkMountpoint1:data1.networkMountpoint1;
+            let user=(data1.coreuse1!=null)?data1.coreuse1:data1.coreuse1;
+            let pass=(data1.corepass1!=null)?data1.corepass1:data1.corepass1;
+            data1.ntripArg=address+"|"+port+"|"+point+"|"+user+"|"+pass;
         }
         Object.assign(data2,data1);
         let stringtest=JSON.stringify(data1);

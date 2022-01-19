@@ -1482,7 +1482,8 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div style=\"width: 19%\">\n" +
                 "                    <select id=\"rawreturnbaud\" name=\"rawBackBaud\" lay-verType='tips' lay-filter=\"rawBackBaud\" lay-verify='required' >\n" +
-                "                        <option value=\"4800\">4800 bps</option>\n" +
+                "                       <option value=\"\"></option>\n" +
+                "                       <option value=\"4800\">4800 bps</option>\n" +
                 "                        <option value=\"9600\" selected>9600 bps</option>\n" +
                 "                        <option value=\"19200\">19200 bps</option>\n" +
                 "                        <option value=\"38400\">38400 bps</option>\n" +
@@ -1494,7 +1495,8 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                 "        </div>" +
                 "                        </div>";
             let baud = (device.rawBackBaud != null) ? device.rawBackBaud : "";
-            $("#rawreturnbaud").val(baud);
+            $("#rawreturnbaud").find("option[value=\"\"" + baud + "]").prop("selected", true);
+            // $("#rawreturnbaud").val(baud);
             form.render();
         }
     }

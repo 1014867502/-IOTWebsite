@@ -95,17 +95,17 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
     })
 
     form.on('switch(onenet_enable)', function (data) {
-        if (this.checked) {
-            document.getElementById("onenetcontent").innerHTML = platformfunc.onenetcontent;
-            if(locatedata.oneNetMode!=null){
-                platformfunc.onenetexhibit(locatedata.oneNetMode);
-                platformfunc.onenetupdate();
-            }else{
-                platformfunc.onenetexhibit("0");
-            }
-        } else {
-            document.getElementById("onenetcontent").innerHTML = "";
-        }
+        // if (this.checked) {
+        //     document.getElementById("onenetcontent").innerHTML = platformfunc.onenetcontent;
+        //     if(locatedata.oneNetMode!=null){
+        //         platformfunc.onenetexhibit(locatedata.oneNetMode);
+        //         platformfunc.onenetupdate();
+        //     }else{
+        //         platformfunc.onenetexhibit("0");
+        //     }
+        // } else {
+        //     document.getElementById("onenetcontent").innerHTML = "";
+        // }
         form.render();
     })
 
@@ -113,6 +113,8 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
         if (this.checked) {
             document.getElementById("dzcontent").innerHTML =platformfunc.dznetcontent;
             platformfunc.dzIotupdate();
+            document.getElementById("iotid_show").innerHTML="";
+            document.getElementById("iotkey_show").innerHTML="";
         } else {
             document.getElementById("dzcontent").innerHTML = "";
         }
@@ -121,7 +123,7 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
 
     form.on('select(onenet_mode)', function (data) {
         let select = data.value;
-        platformfunc.onenetexhibit(select);
+        // platformfunc.onenetexhibit(select);
     });
 
     form.on('switch(chongqing_enable)',function (data) {
@@ -304,16 +306,16 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
                     }
                     if (device.oneNetEnabled > 0) {
                         $("#onenet_enable").prop('checked', true);
-                        document.getElementById("onenetcontent").innerHTML = platformfunc.onenetcontent;
-                        platformfunc.onenetexhibit(device.oneNetMode);
+                        // document.getElementById("onenetcontent").innerHTML = platformfunc.onenetcontent;
+                        // platformfunc.onenetexhibit(device.oneNetMode);
                     } else {
                         $("#onenet_enable").prop('checked', false);
                         document.getElementById("onenetcontent").innerHTML = "";
                     }
-                    $("#onenet_id").val(device.oneNetId);
-                    $("#onenet_user").val(device.oneNetUser);
-                    $("#onenet_key").val(device.oneNetKey);
-                    $("#onenet_data").val(device.oneNetGnssData)
+                    // $("#onenet_id").val(device.oneNetId);
+                    // $("#onenet_user").val(device.oneNetUser);
+                    // $("#onenet_key").val(device.oneNetKey);
+                    // $("#onenet_data").val(device.oneNetGnssData)
 
                     /*地灾平台*/
                     if (device.dzIotEnabled > 0) {
@@ -325,8 +327,8 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
                     }
                     $("#iot_ip").val(device.dzIotIp);
                     $("#iot_port").val(device.dzIotPort);
-                    $("#iot_id").val(device.dzIotId);
-                    $("#iot_key").val(device.dzIotKey);
+
+                    $("#iotkey_show").css("width","0");
                     $("#iot_http").val(device.dzIotHttp);
                     if (device.dzIotGnssData > 0) {
                         $("#iot_gnss_data").prop('checked', true);
@@ -360,6 +362,8 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
                         document.getElementById("chongqing_select").innerHTML = "";
                         $("#chongqing_enable").prop('checked', false);
                     }
+                    document.getElementById("iotid_show").innerHTML="";
+                    document.getElementById("iotkey_show").innerHTML="";
                     saveModel();
                     form.render();
                 }
@@ -397,22 +401,22 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
         parent.testmodel.plaform=JSON.stringify(jsondata);
     }
 
-    /**保存当前页面模板（）**/
-    function checksavemodel(){
-        if(form.doVerify("formDemo")){
-            saveModel();
-            return true;
-        }else{
-            layer.msg("平台对接页面有误！");
-            return false;
-        }
-    }
+    // /**保存当前页面模板（）**/
+    // function checksavemodel(){
+    //     if(form.doVerify("formDemo")){
+    //         saveModel();
+    //         return true;
+    //     }else{
+    //         layer.msg("平台对接页面有误！");
+    //         return false;
+    //     }
+    // }
+    //
+    // var templatform= {
+    //     checksavemodel: function () {
+    //         checksavemodel();
+    //     }
+    // }
 
-    var templatform= {
-        checksavemodel: function () {
-            checksavemodel();
-        }
-    }
-
-    exports('template_platform',templatform)
+    exports('template_platform', {})
 });

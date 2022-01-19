@@ -436,6 +436,7 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
                         document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n" +
                             "                        <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"change\">设备迁移</a>" +
                             "<a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"delete\">删除</a>";
+                        $("#update_device").css("display","block");
                         break;
                     case "admin":
                         $("#projectheader").css("display", "none");
