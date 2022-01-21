@@ -1,4 +1,4 @@
-layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func'], function (exports) {
+layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','station_func'], function (exports) {
     var $ = layui.$
         , setter = layui.setter
         , admin = layui.admin
@@ -7,6 +7,7 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func'], fun
         , table = layui.table
         , table2 = layui.table
         , computefunc = layui.station_compute_func
+        ,stationfunc=layui.station_func
         , element = layui.element;
 
 
@@ -410,6 +411,7 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func'], fun
                 getDeviceSetting(data.data);
                 layer.open({
                     title: '提交'
+                    ,offset:stationfunc.layerhieght().top + 100
                     ,skin: 'demo-class'
                     ,offset: 'auto'
                     ,content: '提交成功'
@@ -459,7 +461,7 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func'], fun
                 layer.open({
                     title: '提交'
                     ,skin: 'demo-class'
-                    ,offset: 'auto'
+                    ,offset:stationfunc.layerhieght().top + 100
                     ,content: '提交成功'
                 });
             }
@@ -764,6 +766,7 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func'], fun
             type: 1
             , id: 'layerDemo' //防止重复弹出
             , title: ['保存模板']
+            ,offset:stationfunc.layerhieght().top + 100
             , area: ['300px', '300px']
             , content: $("#window")
             , success: function (layero, index) {
@@ -861,7 +864,6 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func'], fun
                 rtkflush();
                 break;
         }
-        getDeviceSetting(machineserial);
         /**判断当前设备是否在线**/
         isDeviceOnline(machineserial);
         getDeviceSetting(machineserial);

@@ -1,4 +1,4 @@
-layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exports) {
+layui.define(['form', 'drawer', 'table','station_auxiliary_func','station_func'], function (exports) {
     var $ = layui.$
         , setter = layui.setter
         , admin = layui.admin
@@ -6,6 +6,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
         , drawer = layui.drawer
         ,table2=layui.table
         ,auxiliaryfunc=layui.station_auxiliary_func
+        ,stationfunc=layui.station_func
         ,form=layui.form
 
     var locatedata;
@@ -143,7 +144,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
                 layer.open({
                     title: '提交'
                     ,skin: 'demo-class'
-                    ,offset: 'auto'
+                    ,offset: stationfunc.layerhieght().top + 100
                     ,content: '提交成功'
                 });
             }
@@ -320,7 +321,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
                 layer.open({
                     title: '提交'
                     ,skin: 'demo-class'
-                    ,offset: 'auto'
+                    ,offset: stationfunc.layerhieght().top + 100
                     ,content: '提交成功'
                 });
             }
@@ -442,6 +443,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func'], function (exp
             , title: ['保存模板']
             , area: ['300px', '300px']
             , content: $("#window")
+            ,offset: stationfunc.layerhieght().top + 100
             , success: function (layero, index) {
                 layerindex=index;
             },

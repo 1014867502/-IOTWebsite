@@ -128,7 +128,7 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
             getprojectlist(agentnum);
             document.getElementById("datekeep").innerHTML="<label class=\"layui-form-label\">账号时限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div style=\"width: 70%\">\n" +
+                "                <div style=\"width: 100%\">\n" +
                 "                    <input type=\"text\" class=\"layui-input\" lay-verify=\"required\" name=\"accounttime\" id=\"datasave\" placeholder=\"请输入账号到期时间\">\n" +
                 "                </div>\n" +
                 "            <span id=\"datetip\"></span></div>"
@@ -209,7 +209,7 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
             initprojectlist(agentnum,"");
             document.getElementById("datechange").innerHTML="<label class=\"layui-form-label\">账号时限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div style=\"width: 70%\">\n" +
+                "                <div style=\"width: 100%\">\n" +
                 "                    <input type=\"text\" class=\"layui-input\" lay-verify=\"required\" name=\"accounttime\" id=\"dataedit\" placeholder=\"请输入账号到期时间\">\n" +
                 "                </div>\n" +
                 "          <span id=\"edittip\"></span>    </div>";
@@ -219,7 +219,7 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
                 "            </div>";
             document.getElementById("datechange").innerHTML="<label class=\"layui-form-label\">账号时限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div style=\"width: 70%\">\n" +
+                "                <div style=\"width: 100%\">\n" +
                 "                    <input type=\"text\" class=\"layui-input\" lay-verify=\"required\" name=\"accounttime\" id=\"dataedit\" placeholder=\"请输入账号到期时间\">\n" +
                 "                 </div>\n" +
                 "            <span id=\"edittip\"></span> </div>"
@@ -416,7 +416,7 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
             initprojectlist(data.agentNumber,data.groupAssemble);
             document.getElementById("datechange").innerHTML="<label class=\"layui-form-label\">账号时限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div style=\"width: 70%\">\n" +
+                "                <div style=\"width: 100%\">\n" +
                 "                    <input type=\"text\" class=\"layui-input\" lay-verify=\"required\" name=\"accounttime\" id=\"dataedit\" placeholder=\"请输入账号到期时间\">\n" +
                 "                </div>\n" +
                 "           <span id=\"edittip\"></span>   </div>"

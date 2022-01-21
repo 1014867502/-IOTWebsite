@@ -818,6 +818,8 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func','stati
         }
         if(type==1){
             getDeviceSetting(machineserial);
+        }else{
+            getDeviceSetting("init");
         }
         form.render();
     }

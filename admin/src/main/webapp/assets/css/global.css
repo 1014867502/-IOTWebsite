@@ -1,0 +1,100 @@
+/*表格页面提交按钮的位置*/
+.formsumbitlocate{
+    position: fixed;
+    z-index: 99;
+    bottom: 30px;
+}
+/*表格页面内的提交按钮样式*/
+.sumbitbtn{
+    background-color: #FFFFFF;
+    width: 200px;
+    color: #01AAED;
+    border: 1px solid #01AAED;
+    border-radius: 6px 6px 6px 6px;
+}
+/*搜索按钮的样式*/
+.searchbtn{
+    background-color: #FFFFFF;
+    color: #01AAED;
+    border: 1px solid #01AAED;
+    border-radius: 0px 6px 6px 0px;
+}
+
+.layui-form-checked[lay-skin=primary] i {
+    border-color: #1E9FFF !important;
+    background-color: #1E9FFF !important;
+    color: #fff !important;
+    font-weight: bold;
+}
+
+.layui-form-radio > i:hover, .layui-form-radioed > i {
+    color: #597FC0 !important;
+}
+
+.layui-form-checkbox[lay-skin=primary]:hover i {
+    color: #597FC0 !important;
+    border-color: #1E9FFF !important;
+    color: #fff;
+}
+.layui-form-checked span, .layui-form-checked:hover span {
+    background-color: #01aaed;
+}
+
+.layui-form-select dl dd.layui-this {
+    background-color: #1E9FFF !important;
+    color: #fff;
+}
+
+.layui-laydate .layui-this {
+    background-color: #1E9FFF !important;
+    color: #fff !important;
+}
+
+.layui-laydate-content td.laydate-selected {
+    background-color: #31e6ff;
+!important;
+}
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    padding: 1px;
+    width: 100%;
+    height: 100%;
+    background-color: #1e9fff;
+}
+.tableeventbtn{
+    width: 60px;
+    height: 23px;
+    border: 1px solid #01AAED;
+    border-radius: 5px;
+    font-size: 11px;
+    background-color: #FFFFFF;
+    color: #01AAED;
+}
+.layui-btn:hover {
+    opacity: .8;
+    filter: alpha(opacity=80);
+    color: #ffffff;
+    background-color: #1e9fff;
+}
+.layui-card-header .layui-icon {
+    line-height: unset;
+    position: initial;
+    right: 15px;
+    top: 50%;
+    margin-top: -7px;
+}
+.layui-btn:hover {
+    opacity: .8;
+    filter: alpha(opacity=80);
+    color: #ffffff;
+    background-color: #1e9fff;
+}
+.untreated {
+    background-color: #FF5722;
+}
+
+.treated {
+    background-color: #01AAED;
+}

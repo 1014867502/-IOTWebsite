@@ -90,7 +90,7 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func','station_func']
     }else{
         getDeviceSetting("init");
         $("#savemodel").click(function () {
-            if(form.doVerify("formDemo")){
+            if(form.doVerify("formDemo2")){
                 saveModel();
                 addModel();
             }

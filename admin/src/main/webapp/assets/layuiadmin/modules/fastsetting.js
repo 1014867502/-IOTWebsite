@@ -461,6 +461,9 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func','s
             let user=(data1.coreuse1!=null)?data1.coreuse1:data1.coreuse1;
             let pass=(data1.corepass1!=null)?data1.corepass1:data1.corepass1;
             data1.ntripArg=address+"|"+port+"|"+point+"|"+user+"|"+pass;
+            data1.ntrIpBase=1;
+        }else{
+            data1.ntrIpBase=0;
         }
         Object.assign(data2,data1);
         let stringtest=JSON.stringify(data1);

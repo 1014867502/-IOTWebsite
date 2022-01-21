@@ -18,7 +18,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
             l = node.document.documentElement.scrollLeft;
             w = node.document.documentElement.scrollWidth;
             h = node.document.documentElement.scrollHeight;
-        } else if(parent.parent.iframe2.document.body) {
+        } else  {
             t = node.document.body.scrollTop;
             l = node.document.body.scrollLeft;
             w = node.document.body.scrollWidth;

@@ -115,6 +115,7 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
             platformfunc.dzIotupdate();
             document.getElementById("iotid_show").innerHTML="";
             document.getElementById("iotkey_show").innerHTML="";
+            $("#iotkey_show").css("width","0");
         } else {
             document.getElementById("dzcontent").innerHTML = "";
         }
@@ -321,13 +322,14 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
                     if (device.dzIotEnabled > 0) {
                         $("#dz_iot_enable").prop('checked', true);
                         document.getElementById("dzcontent").innerHTML = platformfunc.dznetcontent;
+                        document.getElementById("iotid_show").innerHTML="";
+                        document.getElementById("iotkey_show").innerHTML="";
                     } else {
                         $("#dz_iot_enable").prop('checked', false);
                         document.getElementById("dzcontent").innerHTML = "";
                     }
                     $("#iot_ip").val(device.dzIotIp);
                     $("#iot_port").val(device.dzIotPort);
-
                     $("#iotkey_show").css("width","0");
                     $("#iot_http").val(device.dzIotHttp);
                     if (device.dzIotGnssData > 0) {
@@ -362,8 +364,7 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
                         document.getElementById("chongqing_select").innerHTML = "";
                         $("#chongqing_enable").prop('checked', false);
                     }
-                    document.getElementById("iotid_show").innerHTML="";
-                    document.getElementById("iotkey_show").innerHTML="";
+
                     saveModel();
                     form.render();
                 }

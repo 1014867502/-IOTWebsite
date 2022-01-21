@@ -466,7 +466,9 @@ layui.define(['form', 'drawer', 'table','station_locate_func','station_func'], f
                             $("#corrdcvt_proj_mode_select").val(coordvt_proj[0]);
                         }
                         let tmp = parseFloat(coordvt_proj[1]);
-                        tmp = (tmp * 180 / Math.PI).toFixed(10);
+                        if(tmp!=0){
+                            tmp = (tmp * 180 / Math.PI).toFixed(10);
+                        }
                         $("#coordvt_proj_centralmeridian").val(tmp);
                         $("#coordvt_proj_scale").val(coordvt_proj[2]);
                         $("#coordvt_proj_north").val(coordvt_proj[3]);

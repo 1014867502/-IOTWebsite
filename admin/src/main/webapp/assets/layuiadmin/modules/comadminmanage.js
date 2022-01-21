@@ -126,7 +126,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             }
             document.getElementById("datekeep").innerHTML="<label class=\"layui-form-label\">账号时限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div style=\"width: 70%\">\n" +
+                "                <div style=\"width: 100%\">\n" +
                 "                    <input type=\"text\" class=\"layui-input\" lay-verify=\"required\" name=\"accounttime\" id=\"datasave\" placeholder=\"请输入账号到期时间\">\n" +
                 "                </div>\n" +
                 "            <span id=\"datetip\"></span></div>";
@@ -186,7 +186,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("addmanagecompanylist").innerHTML="<div class=\"layui-form-item\">\n" +
                 "                <label class=\"layui-form-label\" style=\"width: 84px;padding: 9px 13px;\">可查看的公司</label>\n" +
                 "                <div class=\"layui-input-block\">\n" +
-                "                    <div id=\"addcompanylist\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "                    <div id=\"addcompanylist\" class=\"xm-select-project\" style=\"width: 100%\"></div>\n" +
                 "                </div>\n" +
                 "            </div>";
             document.getElementById("showwebright").innerHTML="";
@@ -240,7 +240,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
 
             document.getElementById("datechange").innerHTML="<label class=\"layui-form-label\">账号时限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div style=\"width: 70%\">\n" +
+                "                <div style=\"width: 100%\">\n" +
                 "                    <input type=\"text\" class=\"layui-input\" lay-verify=\"required\" name=\"accounttime\" id=\"dataedit\" placeholder=\"请输入账号到期时间\">\n" +
                 "                 </div>\n" +
                 "            <span id=\"edittip\"></span> </div>"
@@ -285,7 +285,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("formcompanyedit").innerHTML="<div class=\"layui-form-item\">\n" +
                 "                <label class=\"layui-form-label\" style=\"width: 84px;padding: 9px 13px;\">可查看的公司</label>\n" +
                 "                <div class=\"layui-input-block\">\n" +
-                "                    <div id=\"editchargecompanylist\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "                    <div id=\"editchargecompanylist\" class=\"xm-select-project\" style=\"width: 100%\"></div>\n" +
                 "                </div>\n" +
                 "            </div>";
             document.getElementById("datechange").innerHTML="";
@@ -511,7 +511,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             initprojectlist(data.agentNumber,data.groupAssemble);
             document.getElementById("datechange").innerHTML="<label class=\"layui-form-label\">账号时限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div style=\"width: 70%\">\n" +
+                "                <div style=\"width: 100%\">\n" +
                 "                    <input type=\"text\" class=\"layui-input\" lay-verify=\"required\" name=\"accounttime\" id=\"dataedit\" placeholder=\"请输入账号到期时间\">\n" +
                 "                </div>\n" +
                 "            <span id=\"edittip\"></span> </div>"
@@ -548,7 +548,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("formcompanyedit").innerHTML="<div class=\"layui-form-item\">\n" +
                 "                <label class=\"layui-form-label\" style=\"width: 84px;padding: 9px 13px;\">可查看的公司</label>\n" +
                 "                <div class=\"layui-input-block\">\n" +
-                "                    <div id=\"editchargecompanylist\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "                    <div id=\"editchargecompanylist\" class=\"xm-select-project\" style=\"width: 100%\"></div>\n" +
                 "                </div>\n" +
                 "            </div>";
             document.getElementById("datechange").innerHTML="";
