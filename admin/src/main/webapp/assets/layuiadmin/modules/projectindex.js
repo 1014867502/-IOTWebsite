@@ -418,6 +418,7 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
                         $("#delete_device").css("display", "none");
                         $("#add_device3").css("display", "none");
                         $("#nohostdev").css("display","none");
+                        $("#update_device").css("display","none");
                         document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n";
                         break;
                     case "companyadmin":
@@ -425,6 +426,7 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
                         $("#move_device").css("display", "none");
                         $("#delete_device").css("display", "none");
                         $("#add_device3").css("display", "none");
+                        $("#update_device").css("display","none");
                         document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n";
                         break;
                     case "superadmin":
@@ -436,7 +438,7 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
                         document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n" +
                             "                        <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"change\">设备迁移</a>" +
                             "<a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"delete\">删除</a>";
-                        $("#update_device").css("display","block");
+
                         break;
                     case "admin":
                         $("#projectheader").css("display", "none");
@@ -447,7 +449,7 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
                         document.getElementById("barDemo").innerHTML = "   <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n" +
                             "                        <a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"change\">设备迁移</a>" +
                             "<a class=\"layui-btn tableeventbtn layui-btn-xs\" lay-event=\"delete\">删除</a>";
-
+                        $("#update_device").css("display","none");
                         break;
                 }
                 roletype=data.data;
@@ -823,7 +825,7 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
                 if (once) {
                     once = false;
                     let type=form.val("uploadtype").updateupload;
-                    debugger
+
                     $("#columwindow").css("display", "block");
                     delete this.files[index];
                     // for(let i=0;i<columnlist.length;i++){

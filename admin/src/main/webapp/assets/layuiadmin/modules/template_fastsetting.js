@@ -157,7 +157,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
 
     form.on('submit(save)',function () {
         let jsondata=parent.fastmodel;
-        debugger
+
         let data1 = form.val("save");
         $.ajax({
             url:'/template/addTemplate',

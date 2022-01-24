@@ -111,7 +111,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
 
     /**添加用户页面**/
     form.on('select(type)',function(data){
-        debugger
+
         let type=data.value;
         newtype=type;
         if(type=="0"){

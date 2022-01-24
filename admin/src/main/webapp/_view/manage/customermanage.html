@@ -278,7 +278,7 @@
             <div class="layui-card">
                 <div class="layui-card-header">用户列表</div>
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
-                    <div class="layui-form-item" style="margin: auto">
+                    <div class="layui-form-item" style="margin: auto;display: flex">
                         <!--                        <div class="layui-input-inline">-->
                         <!--                下拉框            <div id="projectlist" class="xm-select-project"></div>-->
                         <!--                        </div>-->
@@ -295,24 +295,32 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <div class="layui-btn-group" style="display: flex">
-                                <button type="button" lay-tips="添加用户" class="layui-btn sumbitbtn" style="width: 62px;border: 1px solid #01AAED" id="add_device">
-                                    <i class="layui-icon" style="font-size: 25px;">&#xe654;</i>
-                                </button>
-                                <button type="button" class="layui-btn sumbitbtn" lay-tips="批量删除用户" style="width: 62px" id="delete_user">
-                                    <i class="layui-icon layui-icon-delete" style="font-size: 26px;"></i>
-                                </button>
-                                <button type="button" class="layui-btn sumbitbtn" lay-tips="批量重置密码" style="width: 62px" id="repassword_user">
-                                    <i class="layui-icon layui-icon-key" style="font-size: 23px;"></i>
-                                </button>
-                                <button type="button" class="layui-btn sumbitbtn" style="width: 62px" lay-tips="修改公司功能权限" id="reauthor_com">
-                                    <i class="layui-icon layui-icon-auz" style="font-size: 23px;"></i>
+                            <div style="margin: auto">
+                                <button type="button" class="layui-btn functionbtn"  id="add_device">
+                                    <i class="layui-icon  layui-icon-addition" style="font-size: 30px;"></i>添加用户
                                 </button>
                             </div>
+                        </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn functionbtn"  id="delete_user">
+                                <i class="layui-icon layui-icon-delete" style="font-size: 30px;"></i>删除用户
+                            </button>
+                        </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn functionbtn"  id="repassword_user">
+                                <i class="layui-icon layui-icon-password" style="font-size: 26px;"></i>重置密码
+                            </button>
+                        </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn functionbtn" id="reauthor_com">
+                                <i class="layui-icon layui-icon-auz" style="font-size: 26px;"></i>修改功能权限
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="layui-col-md12">
 <!--            <div class="layui-card" style="display: flex ;smargin: auto;">-->
 <!--                <ul style="display: flex ;margin: auto;">-->
 <!--                    <li class="little">-->
@@ -331,7 +339,6 @@
 
 <!--            </div>-->
             <div class="layui-card">
-
             </div>
             <div class="layui-card">
                 <div class="layui-card-body">
@@ -348,9 +355,9 @@
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
 <script type="text/html" id="barDemo">
-    <a class="layui-btn tableeventbtn layui-btn-xs" lay-tips="编辑" lay-event="edit">编辑</a>
-    <a class="layui-btn tableeventbtn layui-btn-xs" lay-tips="删除" lay-event="del">删除</a>
-    <a class="layui-btn tableeventbtn layui-btn-xs" lay-tips="重置密码" lay-event="repass">重置密码</a>
+    <a class="layui-btn tableeventbtn layui-btn-xs"  lay-event="edit">编辑</a>
+    <a class="layui-btn tableeventbtn layui-btn-xs"  lay-event="del">删除</a>
+    <a class="layui-btn tableeventbtn layui-btn-xs"  lay-event="repass">重置密码</a>
 </script>
 
 <script>

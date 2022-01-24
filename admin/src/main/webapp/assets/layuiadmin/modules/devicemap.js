@@ -94,7 +94,7 @@ layui.define(['table'],function (exports) {
 
     }
 
-    debugger
+
     var map = L.map("map", {
         center: [23.234, 113.5923],
         zoom: 20,
@@ -174,7 +174,7 @@ layui.define(['table'],function (exports) {
         if(devicejson!=null&&devicejson.length>0){
             for (let i = 0; i < devicejson.length; i++) {
                 var station = devicejson[i];
-                debugger
+
                 let $icon = L.icon({
                     stationname: station.sn,
                     className: 'iconDiv',
@@ -209,7 +209,7 @@ layui.define(['table'],function (exports) {
         for (let i = 0; i < markers.length; i++) {//以后循环要用let
             markers[i].on("mouseover", function () {
                 let markera = markers[i];
-                debugger
+
                 getDeviceDetail(markera,markers[i].options.icon.options.stationname);
                 // markers[i].bindPopup().openPopup();
             });
@@ -244,7 +244,7 @@ layui.define(['table'],function (exports) {
                 sn: name
             },
             success: function (res) {
-                debugger
+
                 let sn = res.data.name;
                 let device=res.data;
                 let typename;

@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
     <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
     <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/css/global.css">
     <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
     <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
     <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
@@ -100,6 +101,9 @@
 <body>
 
 <style>
+    .functionbtn{
+        width: 113px!important;
+    }
     .header-Data {
         width: 100%;
         justify-content: left;
@@ -168,9 +172,7 @@
         height: 27px;
         /*background-color: #01AAED;*/
     }
-    body {
-        min-width: 1000px;
-    }
+
 
     .projectname {
         font-size: 25px;
@@ -199,15 +201,7 @@
         text-align: center;
         margin: auto;
     }
-    .tableeventbtn{
-        width: 60px;
-        height: 23px;
-        border: 1px solid #01AAED;
-        border-radius: 5px;
-        font-size: 11px;
-        background-color: #FFFFFF;
-        color: #01AAED;
-    }
+
     .layui-form-checked[lay-skin=primary] i {
         border-color: #1e9fff !important;
         background-color: #1e9fff;
@@ -221,18 +215,6 @@
         width: 100%;
         height: 100%;
         background-color: #1e9fff;
-    }
-    .layui-btn:hover {
-        opacity: .8;
-        filter: alpha(opacity=80);
-        color: #ffffff;
-        background-color: #1e9fff;
-    }
-    .searchbtn{
-        background-color: #FFFFFF;
-        color: #01AAED;
-        border: 1px solid #01AAED;
-        border-radius: 0px 6px 6px 0px;
     }
     .layui-card-header .layui-icon {
         line-height: unset;
@@ -291,13 +273,13 @@
                 </select>
             </div>
             <div class="layui-inline">
-                <input type="text" class="layui-input" name="SN" id="SN2" placeholder=" 请输入设备sn号" dis>
-            </div>
-            <div class="layui-inline">
-                <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
-                        id="datasumbit2" lay-filter="LAY-app-contlist-search">
-                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
-                </button>
+                <div style="display: flex">
+                    <input type="text" class="layui-input" name="SN" id="SN2" placeholder=" 请输入设备sn号" dis>
+                    <button type="button" class="layui-btn searchbtn" lay-submit data-type="reload"
+                            id="datasumbit2" lay-filter="LAY-app-contlist-search">
+                        <i class="layui-icon layui-icon-search ">查询</i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -307,7 +289,7 @@
 </div>
 
 <script type="text/html" id="statusdemo">
-    <button class="layui-btn layui-btn-primary layui-btn-xs" style="background-color: #f19038;color: #F1F1F1">未关联</button>
+    <div style="color: #f19038">未关联</div>
 </script>
 
 
@@ -370,7 +352,7 @@
                     设备表格
                 </div>
                 <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
-                    <div class="layui-form-item" style="margin: auto">
+                    <div class="layui-form-item" style="margin: auto;display: flex">
                         <div class="layui-inline" style="width: 122px;">
                             <div id="online" class="xm-select-demo" ></div>
                         </div>
@@ -384,21 +366,23 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <button type="button" class="layui-btn" id="add_device"><img src="/assets/images/icon_add_device_28.png"/>关联设备</button>
-                        </div>
-                        <div class="layui-inline" >
-                            <button type="button" class="layui-btn" id="delete_device">
-                                <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #FFFFFF;"></i>批量取消关联
+                            <button type="button" class="layui-btn functionbtn" id="add_device">
+                                <i class="layui-icon layui-icon-link" style="font-size: 23px;"></i>关联设备
                             </button>
                         </div>
                         <div class="layui-inline" >
-                            <button type="button" class="layui-btn" id="excute_template">
-                                <i class="layui-icon" style="font-size: 30px; color: #FFFFFF;"></i>配置设备
+                            <button type="button" class="layui-btn functionbtn" id="delete_device">
+                                <i class="layui-icon layui-icon-delete" style="font-size: 30px;"></i>取消关联
                             </button>
                         </div>
                         <div class="layui-inline" >
-                            <button type="button" class="layui-btn" id="excute_update" style="display: none">
-                                <i class="layui-icon" style="font-size: 30px; color: #FFFFFF;"></i>批量升级设备
+                            <button type="button" class="layui-btn functionbtn" id="excute_template">
+                                <i class="layui-icon layui-icon-list" style="font-size: 30px;"></i>配置设备
+                            </button>
+                        </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn functionbtn" id="excute_update" style="display: none">
+                                <i class="layui-icon layui-icon-refresh" style="font-size: 23px;"></i>升级设备
                             </button>
                         </div>
                     </div>

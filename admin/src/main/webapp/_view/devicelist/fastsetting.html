@@ -4,6 +4,7 @@
     #@meta("GNSS位移统计")
     <script src="/assets/lib/xm-select.js"></script>
     <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/global.css">
     <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
     <script src="/assets/lib/leaflet/leaflet.js"></script>
     <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
@@ -245,9 +246,9 @@
             </div>
         </div>
         <div class="layui-input-block" style="padding-top: 30px;text-align: center">
-            <button id="fastsumbit" type="button" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-            <button id="savemodel" type="button" class="layui-btn">保存为模板</button>
-            <button id="reset" type="button" class="layui-btn ">刷新</button>
+            <button id="fastsumbit" type="button" class="layui-btn sumbitbtn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button id="savemodel" type="button" class="layui-btn sumbitbtn">保存为模板</button>
+            <button id="reset" type="button" class="layui-btn sumbitbtn">刷新</button>
         </div>
             <div id="errormsg" style="color: #cc0000"></div>
         </form>

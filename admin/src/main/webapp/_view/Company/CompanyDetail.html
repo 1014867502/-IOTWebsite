@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
     <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
     <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/css/global.css">
     <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
     <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
     <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
@@ -105,13 +106,6 @@
         justify-content: left;
         display: flex;
         align-items: stretch;
-    }
-
-    .layui-btn:hover {
-        opacity: .8;
-        filter: alpha(opacity=80);
-        color: #ffffff;
-        background-color: #1e9fff;
     }
 
     .header-Data-content {
@@ -236,21 +230,7 @@
     .layui-breadcrumb a {
         color: #0c0c0c !important;
     }
-    .searchbtn{
-        background-color: #FFFFFF;
-        color: #01AAED;
-        border: 1px solid #01AAED;
-        border-radius: 0px 6px 6px 0px;
-    }
-    .tableeventbtn{
-        width: 60px;
-        height: 23px;
-        border: 1px solid #01AAED;
-        border-radius: 5px;
-        font-size: 11px;
-        background-color: #FFFFFF;
-        color: #01AAED;
-    }
+
     .layui-card-header .layui-icon {
         line-height: unset;
         position: initial;
@@ -398,8 +378,8 @@
                     项目表格
                 </div>
                 <div class="layui-card-body">
-                    <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
-                        <div class="layui-form-item" style="margin: auto">
+                    <div class="layui-form " style="display: flex">
+                        <div class="layui-form-item" style="margin: auto;display: flex;">
                             <div class="layui-inline">
                                 <div style="display: flex">
                                     <input type="text" class="layui-input" name="SN" id="SN" placeholder=" 请输入项目名称 ">
@@ -415,8 +395,8 @@
 <!--                                </button>-->
 <!--                            </div>-->
                             <div class="layui-inline" >
-                                <button type="button" class="layui-btn" id="delete_project">
-                                    <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #FFFFFF;"></i>批量删除项目
+                                <button type="button" class="layui-btn functionbtn" id="delete_project">
+                                    <i class="layui-icon layui-icon-delete" style="font-size: 30px"></i>删除项目
                                 </button>
                             </div>
                         </div>

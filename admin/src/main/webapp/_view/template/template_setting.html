@@ -5,6 +5,7 @@
     <script src="/assets/lib/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
     <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <link rel="stylesheet" type="text/css" href="/assets/css/global.css">
     <script src="/assets/lib/leaflet/leaflet.js"></script>
     <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
     <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
@@ -195,7 +196,7 @@
     var authority1="#(webauthority)";
     var type="#(type)";
     var modeltype="#(modeltype)";
-    debugger
+
     var iframe=window.frames[0];
 
     layui.config({
@@ -204,7 +205,7 @@
         index: 'lib/index' //主入口模块
     }).use(['index']);
 
-    debugger
+
     showtype(type);
     function  iframechange() {
         var iframes = document.getElementsByTagName('iframe_a');

@@ -27,6 +27,10 @@ layui.define(['form', 'drawer', 'table','station_locate_func','station_func'], f
                 return '标题至少得5个字符啊';
             }
         }
+        ,number:[
+            /^[0-9]\.[0-9]([0-9])?$/
+            ,"输入数字有误！"
+        ]
         , Ndouble: [
             /^[1-9]\d*$/
             , '只能输入整数哦'

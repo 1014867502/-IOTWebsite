@@ -111,14 +111,13 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
 
     /**添加用户页面**/
     form.on('select(type)',function(data){
-        debugger
         let type=data.value;
         newtype=type;
         if(type=="0"){
             document.getElementById("formproject").innerHTML=" <div class=\"layui-form-item\">\n" +
                 "            <label class=\"layui-form-label\">用户允许访问项目</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"projectlist\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"projectlist\" class=\"xm-select-project\" style=\"width: 100%\"></div>\n" +
                 "            </div>\n" +
                 "        </div>";
             if(agentNumber!=null){
@@ -133,7 +132,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("showwebright").innerHTML="    <div class=\"layui-form-item\" >\n" +
                 "                <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
                 "                <div class=\"layui-input-block\">\n" +
-                "                    <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                    <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "                </div>\n" +
                 "            </div>"
             document.getElementById("showeditright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
@@ -143,7 +142,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("showappright").innerHTML="     <div class=\"layui-form-item\" >\n" +
                 "               <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "               <div class=\"layui-input-block\">\n" +
-                "                   <div id=\"initappauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                   <div id=\"initappauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "               </div>\n" +
                 "           </div>";
             if(agentNumber!=null){
@@ -172,7 +171,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 document.getElementById("showappright").innerHTML="     <div class=\"layui-form-item\" >\n" +
                     "               <label class=\"layui-form-label\">app功能权限</label>\n" +
                     "               <div class=\"layui-input-block\">\n" +
-                    "                   <div id=\"initappauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                    "                   <div id=\"initappauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                     "               </div>\n" +
                     "           </div>";
             }
@@ -197,7 +196,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("showwebright").innerHTML="    <div class=\"layui-form-item\" >\n" +
                 "                <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
                 "                <div class=\"layui-input-block\">\n" +
-                "                    <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                    <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "                </div>\n" +
                 "            </div>"
             document.getElementById("showeditright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
@@ -207,7 +206,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("showappright").innerHTML="     <div class=\"layui-form-item\" >\n" +
                 "               <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "               <div class=\"layui-input-block\">\n" +
-                "                   <div id=\"initappauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                   <div id=\"initappauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "               </div>\n" +
                 "           </div>";
             if(agentNumber!=null){
@@ -229,13 +228,13 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("formprojectedit").innerHTML=" <div class=\"layui-form-item\">\n" +
                 "            <label class=\"layui-form-label\">用户允许访问项目</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"projectlist2\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"projectlist2\" class=\"xm-select-project\" style=\"width: 100%\"></div>\n" +
                 "            </div>\n" +
                 "        </div>";
             initprojectlist(agentNumber,"");
             document.getElementById("editwebright").innerHTML=" <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
 
             document.getElementById("datechange").innerHTML="<label class=\"layui-form-label\">账号时限</label>\n" +
@@ -250,7 +249,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "            </div>";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
             loadcomauthority(agentNumber);
             laydate.render({
@@ -269,14 +268,14 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("formcompanyedit").innerHTML="";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
             loadcomauthority(agentNumber);
         }else if(type=="4"){
             loadcompany(agentNumber);
             document.getElementById("editwebright").innerHTML=" <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
             document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
@@ -297,7 +296,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
         else{
             document.getElementById("editwebright").innerHTML=" <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
             document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
@@ -305,7 +304,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "            </div>";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
             loadcomauthority(agentNumber);
             document.getElementById("formcompanyedit").innerHTML="";
@@ -367,7 +366,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 drawer.render({
                     title: '添加用户',  //标题
                     offset: 'r',    //r:抽屉在右边、l:抽屉在左边
-                    width: "600px", //r、l抽屉可以设置宽度
+                    width: "450px", //r、l抽屉可以设置宽度
                     content: $("#window"),
                     success :function (layero, index) {
                         getcompanylist();
@@ -445,7 +444,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 drawer.render({
                     title: '修改用户',  //标题
                     offset: 'r',    //r:抽屉在右边、l:抽屉在左边
-                    width: "600px", //r、l抽屉可以设置宽度
+                    width: "450px", //r、l抽屉可以设置宽度
                     content: $("#editwindow"),
                     success :function (layero, index) {
                         editwindow(data);
@@ -474,7 +473,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
         drawer.render({
             title: '添加用户',  //标题
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
-            width: "600px", //r、l抽屉可以设置宽度
+            width: "450px", //r、l抽屉可以设置宽度
             content: $("#window"),
             success :function (layero, index) {
                 getcompanylist();
@@ -505,7 +504,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("formprojectedit").innerHTML="<div class=\"layui-form-item\">\n" +
                 "                <label class=\"layui-form-label\" style=\"width: 84px;padding: 9px 13px;\">可查看的项目</label>\n" +
                 "                <div class=\"layui-input-block\">\n" +
-                "                    <div id=\"projectlist2\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "                    <div id=\"projectlist2\" class=\"xm-select-project\" style=\"width: 100%\"></div>\n" +
                 "                </div>\n" +
                 "            </div>";
             initprojectlist(data.agentNumber,data.groupAssemble);
@@ -525,11 +524,11 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             });
             document.getElementById("editwebright").innerHTML="<label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
             $("#dataedit").val(data.accounttime);
         }
@@ -540,7 +539,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("datechange").innerHTML="";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
         }
         else  if(data.iRoleType=="4"){
@@ -560,7 +559,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
         else{
             document.getElementById("editwebright").innerHTML=" <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
             document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
@@ -568,7 +567,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "            </div>";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
             document.getElementById("formcompanyedit").innerHTML="";
             document.getElementById("datechange").innerHTML="";
@@ -677,7 +676,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             drawer.render({
                 title: '修改用户',  //标题
                 offset: 'r',    //r:抽屉在右边、l:抽屉在左边
-                width: "600px", //r、l抽屉可以设置宽度
+                width: "450px", //r、l抽屉可以设置宽度
                 content: $("#editwindow"),
                 success :function (layero, index) {
                     editwindow(data);

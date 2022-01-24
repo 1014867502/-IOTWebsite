@@ -1,4 +1,9 @@
 /*表格页面提交按钮的位置*/
+body {
+    min-width: 1000px;
+    overflow-x: auto;
+}
+
 .formsumbitlocate{
     position: fixed;
     z-index: 99;
@@ -63,6 +68,18 @@
     height: 100%;
     background-color: #1e9fff;
 }
+/*功能按钮样式*/
+.functionbtn{
+    width: 125px;
+    margin-bottom: 6px;
+    height: 38px;
+    border: 1px solid #01AAED;
+    border-radius: 5px;
+    font-size: 11px;
+    background-color: #FFFFFF;
+    color: #01AAED;
+}
+/*表格数据项的按钮样式*/
 .tableeventbtn{
     width: 60px;
     height: 23px;
@@ -78,6 +95,12 @@
     color: #ffffff;
     background-color: #1e9fff;
 }
+.layui-btn .layui-icon:hover {
+    opacity: .8;
+    filter: alpha(opacity=80);
+    color: #ffffff;
+}
+
 .layui-card-header .layui-icon {
     line-height: unset;
     position: initial;
@@ -91,10 +114,69 @@
     color: #ffffff;
     background-color: #1e9fff;
 }
-.untreated {
-    background-color: #FF5722;
+/*.untreated {*/
+/*    background-color: #FF5722;*/
+/*}*/
+
+/*.treated {*/
+/*    background-color: #01AAED;*/
+/*}*/
+
+.header-Data {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    align-items: stretch;
 }
 
-.treated {
-    background-color: #01AAED;
+.header-Data-content {
+    height: 300px;
+    width: 25%;
+    /*justify-content: center;*/
+    margin-right: 0.5%;
+    display: flex;
+    align-items: center;
+    overflow: hidden; /*  新加的 */
+    background-color: #ffFFFF;
+    border-radius: 18px;
+    border: 2px solid #ffFFFF;
+    box-shadow: 0 0 1px 3px #E8EAF0;
+}
+
+.header-Data-map {
+    height: 363px;
+    width: 25%;
+    /*justify-content: center;*/
+    margin-right: 0.5%;
+    align-items: center;
+    overflow: hidden; /*  新加的 */
+    background-color: #ffFFFF;
+    border-radius: 18px;
+    border: 2px solid #ffFFFF;
+    box-shadow: 0 0 1px 3px #E8EAF0;
+}
+
+.header-Data-contentEx {
+    width: 50%;
+    /*justify-content: center;*/
+    align-items: center;
+    overflow: hidden; /*  新加的 */
+    background-color: #ffFFFF;
+    border-radius: 18px;
+    box-shadow: 0 0 1px 3px #E8EAF0;
+}
+.layui-form-checked[lay-skin=primary] i {
+    border-color: #1e9fff !important;
+    background-color: #1e9fff;
+    color: #fff;
+}
+
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    padding: 1px;
+    width: 100%;
+    height: 100%;
+    background-color: #1e9fff;
 }

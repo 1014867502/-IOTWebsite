@@ -123,7 +123,7 @@ layui.define(['form','drawer','table'], function (exports) {
             document.getElementById("formprojectedit").innerHTML=" <div class=\"layui-form-item\">\n" +
                 "            <label class=\"layui-form-label\">用户允许访问项目</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
-                "                <div id=\"projectlist2\" class=\"xm-select-project\" style=\"width: 70%\"></div>\n" +
+                "                <div id=\"projectlist2\" class=\"xm-select-project\" style=\"width: 100%\"></div>\n" +
                 "            </div>\n" +
                 "        </div>";
             initprojectlist(agentNumber,"");
