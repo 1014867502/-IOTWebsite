@@ -106,54 +106,72 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
         // } else {
         //     document.getElementById("onenetcontent").innerHTML = "";
         // }
+        setIframeHeight();
         form.render();
     })
 
     form.on('switch(dz_iot_enable)', function (data) {
-        if (this.checked) {
-            document.getElementById("dzcontent").innerHTML =platformfunc.dznetcontent;
-            platformfunc.dzIotupdate();
-            document.getElementById("iotid_show").innerHTML="";
-            document.getElementById("iotkey_show").innerHTML="";
-            $("#iotkey_show").css("width","0");
-        } else {
-            document.getElementById("dzcontent").innerHTML = "";
-        }
+        new Promise((resolve, reject) => {
+            if (this.checked) {
+                document.getElementById("dzcontent").innerHTML =platformfunc.dznetcontent;
+                platformfunc.dzIotupdate();
+                document.getElementById("iotid_show").innerHTML="";
+                document.getElementById("iotkey_show").innerHTML="";
+                $("#iotkey_show").css("width","0");
+            } else {
+                document.getElementById("dzcontent").innerHTML = "";
+            }
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         form.render();
     })
 
     form.on('select(onenet_mode)', function (data) {
         let select = data.value;
         // platformfunc.onenetexhibit(select);
+        setIframeHeight();
     });
 
     form.on('switch(chongqing_enable)',function (data) {
-        if(this.checked){
-            chongqingturn=true;
-            document.getElementById("chongqing_select").innerHTML=platformfunc.chongqingselect;
-            if(locatedata.cqIotEnabled=="0"){
-                $("#chongqing_mode").val("1");
-                platformfunc.chongqingexhibit("1");
-            }else{
-                if(locatedata.cqIotEnabled!=null&&locatedata.cqIotEnabled!=""){
-                    $("#chongqing_mode").val(locatedata.cqIotEnabled);
-                }
+        new Promise((resolve, reject) => {
+            if(this.checked){
+                chongqingturn=true;
+                document.getElementById("chongqing_select").innerHTML=platformfunc.chongqingselect;
+                if(locatedata.cqIotEnabled=="0"){
+                    $("#chongqing_mode").val("1");
+                    platformfunc.chongqingexhibit("1");
+                }else{
+                    if(locatedata.cqIotEnabled!=null&&locatedata.cqIotEnabled!=""){
+                        $("#chongqing_mode").val(locatedata.cqIotEnabled);
+                    }
 
-                platformfunc.chongqingexhibit(locatedata.cqIotEnabled);
+                    platformfunc.chongqingexhibit(locatedata.cqIotEnabled);
+                }
+                $("#chongqing_iot_telecom").val(locatedata.cqIotTelecom);
+                $("#chongqing_iot_id").val(locatedata.cqIotId);
+                $("#chongqing_iot_key").val(locatedata.cqIotKey);
+                $("#chongqing_iot_user").val(locatedata.cqIotUser);
+            }else{
+                chongqingturn=false;
+                document.getElementById("chongqing_select").innerHTML="";
             }
-            $("#chongqing_iot_telecom").val(locatedata.cqIotTelecom);
-            $("#chongqing_iot_id").val(locatedata.cqIotId);
-            $("#chongqing_iot_key").val(locatedata.cqIotKey);
-            $("#chongqing_iot_user").val(locatedata.cqIotUser);
-        }else{
-            chongqingturn=false;
-            document.getElementById("chongqing_select").innerHTML="";
-        }
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
+
     })
 
     form.on('select(chongqing_mode)', function (data) {
         let select = data.value;
-        platformfunc.chongqingexhibit(select);
+        new Promise((resolve, reject) => {
+            platformfunc.chongqingexhibit(select);
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
     });
 
 
@@ -401,6 +419,13 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
         delete jsondata.dzIotId;
         parent.testmodel.plaform=JSON.stringify(jsondata);
     }
+
+    function setIframeHeight() {
+        let height=$("#templateplatform").height();
+        height+=30;
+        parent.setplatformheight(height);
+        parent.parent.setsettingheight(height);
+    };
 
     // /**保存当前页面模板（）**/
     // function checksavemodel(){

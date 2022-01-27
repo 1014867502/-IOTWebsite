@@ -59,7 +59,7 @@
         <!-- 主体内容 -->
         <div class="layui-body" id="LAY_app_body">
             <div class="layadmin-tabsbody-item layui-show">
-                <iframe src="/projectindex" frameborder="0" class="layadmin-iframe" userid="#(userid)" writeright="#(writeright)" name="homepageiframe"></iframe>
+                <iframe id="homepage" src="/projectindex" frameborder="0" style="height: 100%" class="layadmin-iframe" userid="#(userid)" writeright="#(writeright)" name="homepageiframe"></iframe>
             </div>
         </div>
         <!-- 辅助元素，一般用于移动设备下遮罩 -->
@@ -76,6 +76,10 @@
     var userid="#(userid)";
     var agentnum="#(agentnum)";
     var iframe2=window.frames[0];
+    var height;
+    function sethomeheight(height) {
+        $("#homepage").height(height+"px");
+    }
     layui.config({
         base: '/assets/layuiadmin/' //静态资源所在路径
     }).extend({
@@ -99,6 +103,8 @@
         //   }
         // })
         adaptauthority();
+
+
 
         function adaptauthority(){
             $.ajax({

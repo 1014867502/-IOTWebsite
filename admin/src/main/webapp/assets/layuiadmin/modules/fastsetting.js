@@ -96,12 +96,23 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func','s
     form.on('radio(compute)', function (data) {
         compute = data.value;
         curdecive.rawSolution=compute;
-        showform(compute, station);
+        new Promise((resolve, reject) => {
+            showform(compute, station);
+            resolve();
+        }).then(() => {
+            height();
+        });
     });
     form.on('radio(station)', function (data) {
         station = data.value;
         curdecive.rawMode=station;
         showform(compute, station);
+        new Promise((resolve, reject) => {
+            showform(compute, station);
+            resolve();
+        }).then(() => {
+            height();
+        });
     });
     form.on('select(rawRate)', function(data){
         curdecive.rawRate=data.value;
@@ -468,6 +479,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func','s
         Object.assign(data2,data1);
         let stringtest=JSON.stringify(data1);
         parent.fastmodel=stringtest;
+        height();
     }
 
     function listening() {
@@ -714,6 +726,12 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func','s
 
             }
         })
+    }
+
+    function height() {
+        let height=$("#fastsetting").height()+50;
+        parent.height=height;
+        parent.setsettingheight(height);
     }
 
     function mounted() {

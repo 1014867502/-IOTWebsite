@@ -169,7 +169,7 @@
 
 </style>
 <body>
-<div class="layui-fluid" style="background-color:#F0F5FA;">
+<div class="layui-fluid">
     <div style="text-align: center;display: flex;justify-content: center;align-items: center;">
         <div style="width:100%;margin-top: 5px;margin-bottom: 10px">
             <div class="layui-card" style="display: flex">
@@ -215,7 +215,7 @@
                     </li>
                     <li class="little" id="other">
                         <div style="display: flex;justify-content: center;"><i class="icon"><i id="other1" class="icon" style="background: url(/assets/images/othersetting_black.png) no-repeat center;"></i></i></div>
-                        <div>其他设置</div>
+                        <div>升级设置</div>
                     </li>
                 </ul>
             </div>
@@ -223,7 +223,7 @@
     </div>
     <div style="width: 100%;">
         <iframe id="iframe_a" src="/devicelist/deviceinform" frameborder="0" machinesn="#(machinedata)" name="iframe_a"
-                width="100%" scrolling="no" frameborder="0" style="height: 869px;background-color: #7ca7d2;"></iframe>
+                width="100%" scrolling="no" frameborder="0" style="height: 869px;"></iframe>
     </div>
 </div>
 </div>
@@ -234,7 +234,8 @@
 <script src="/assets/layuiadmin/layui/layui.js"></script>
 <script>
     var machinedata = "#(machinedata)";
-    var webauthority="#(webauthority)"
+    var webauthority="#(webauthority)";
+    var height;
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({
@@ -242,6 +243,11 @@
     }).use(['index','devicesetting']);
 
     var updatefinsih=false;
+
+    function setsettingheight(height){
+        $("#iframe_a").height(height+"px");
+        parent.frames[0].document.documentElement.clientHeight=height;
+    }
 
     function  iframechange() {
         var iframes = document.getElementsByTagName('iframe_a');

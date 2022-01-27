@@ -83,16 +83,21 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
             }
         })
     }else{
-        showform(0,2);
-        $("#savemodel").click(function () {
-            if(form.doVerify("formDemo")){
-                saveModel();
-                addModel();
-            }
-        })
+        new Promise((resolve, reject) => {
+            showform(0,2);
+            $("#savemodel").click(function () {
+                if(form.doVerify("formDemo")){
+                    saveModel();
+                    addModel();
+                }
+            })
 
-        $("#reset").css("display","none");
-        $("#changename").css("display","none");
+            $("#reset").css("display","none");
+            $("#changename").css("display","none");
+        resolve();
+        }).then(() => {
+            height();
+        });
     }
 
 
@@ -106,11 +111,22 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
     })
     form.on('radio(compute)', function (data) {
         compute = data.value;
-        showform(compute, station);
+        new Promise((resolve, reject) => {
+            showform(compute, station);
+            resolve();
+        }).then(() => {
+            height();
+        });
     });
     form.on('radio(station)', function (data) {
         station = data.value;
         showform(compute, station);
+        new Promise((resolve, reject) => {
+            showform(compute, station);
+            resolve();
+        }).then(() => {
+            height();
+        });
     });
     form.on('radio(mark)', function (data) {
         mark = data.value;
@@ -432,6 +448,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
         Object.assign(data2,data1);
         let stringtest=JSON.stringify(data1);
         parent.fastmodel=stringtest;
+        height();
     }
 
     function showform(data1, data2) {
@@ -504,6 +521,12 @@ layui.define(['element', 'form', 'drawer', 'table','station_fastsetting_func'], 
         }
         getDeviceSetting(templatename);
         form.render();
+    }
+
+    function height() {
+        let height=$("#templatefast").height()+50;
+        parent.height=height;
+        parent.setsettingheight(height);
     }
 
     exports('template_fastsetting', {})

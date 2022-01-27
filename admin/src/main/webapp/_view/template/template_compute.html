@@ -192,7 +192,7 @@
     </form>
 </div>
 
-<div class="layui-fluid" style="padding: 0px!important;">
+<div class="layui-fluid" id="templatecompute" style="padding: 0px!important;">
     <div class="layui-row layui-col-space15" style="font-weight: bold">
         <form class="layui-form" action="" id="formDemo1" lay-filter="formDemo1">
             <div class="layui-card">
@@ -301,6 +301,12 @@
     var templatename  = "#(templatename)";
     var machinesn = "#(machinesn)";
     var type="#(type)";
+    function setIframeHeight() {
+        let height=$("#templatecompute").height();
+        height+=30;
+        parent.setcomputeheight(height);
+        parent.parent.setsettingheight(height);
+    };
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

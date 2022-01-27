@@ -104,15 +104,28 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
 
     init(machinesn);
 
+
     form.on('radio(compute)', function (data) {
         compute = data.value;
         curdecive.rawSolution = compute;
-        showform(compute, station);
+        new Promise((resolve, reject) => {
+            showform(compute, station);
+            resolve();
+        }).then(() => {
+            getDeviceSetting(machineserial);
+            setIframeHeight();
+        });
     });
     form.on('radio(station)', function (data) {
         station = data.value;
         curdecive.rawMode = station;
-        showform(compute, station);
+        new Promise((resolve, reject) => {
+            showform(compute, station);
+            resolve();
+        }).then(() => {
+            getDeviceSetting(machineserial);
+            setIframeHeight();
+        });
     });
     form.on('select(rawRate)', function (data) {
         curdecive.rawRate = data.value;
@@ -205,8 +218,13 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
         downloadsource = data.value;
         curdecive.ntrIpBase=data.value;
         device.ntrIpBase=data.value;
-        changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
-        rtkcore();
+        new Promise((resolve, reject) => {
+            changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
+            rtkcore();
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         listening();
         form.render();
         // setIframeHeight();
@@ -215,8 +233,13 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
         downloadsource2 = data.value;
         curdecive.secondNtripBase=data.value;
         device.secondNtripBase=data.value;
-        changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
-        rtkcore();
+        new Promise((resolve, reject) => {
+            changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
+            rtkcore();
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         listening();
         // setIframeHeight();
         form.render();
@@ -243,12 +266,16 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
             device.secondBase=0;
         }
         let source = $('input[name="downloadsource"]:checked').val();
-        changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
-        rtkcore();
+        new Promise((resolve, reject) => {
+            changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
+            rtkcore();
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         listening();
         // setIframeHeight();
         form.render();
-
     })
     form.on('select(rtkPos)', function (data) {
         curdecive.rtkPos = data.value;
@@ -293,11 +320,15 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
             document.getElementById("rtkcontent").innerHTML = "";
             document.getElementById("rtkcontent").style.display = "none";
         }
-        rtkcore();
+        new Promise((resolve, reject) => {
+            rtkcore();
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         listening();
         // setIframeHeight();
         form.render();
-
     })
     /*监听原始数据回传按钮*/
     form.on('switch(rawdataturn)', function (data) {
@@ -324,9 +355,11 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
             document.getElementById("rawdatacontent").innerHTML = "";
             document.getElementById("rawdatacontent").style.display = "none";
         }
+        setIframeHeight();
         listening();
         // setIframeHeight();
         form.render();
+
     })
     /*监听原始数据回传的通信设置*/
     form.on('select(rawBackEnabled)', function (data) {
@@ -492,10 +525,14 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
                 } else {
                     $("input[name='rawMode'][value='2']").prop("checked", true);
                 }
-                showform(solution, mode);
-                compute = solution;
-                station = mode;
-                getDeviceSetting(sn);
+                new Promise((resolve, reject) => {
+                    showform(solution, mode);
+                    compute = solution;
+                    station = mode;
+                    resolve();
+                }).then(() => {
+                    getDeviceSetting(sn);
+                });
                 // isDeviceOnline(sn);
             }
         });
@@ -758,6 +795,7 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
         Object.assign(data2, data1);
         let stringtest = JSON.stringify(data2);
         parent.testmodel.compute = stringtest;
+        setIframeHeight();
     }
 
     /**提交模组**/
@@ -866,7 +904,6 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
         }
         /**判断当前设备是否在线**/
         isDeviceOnline(machineserial);
-        getDeviceSetting(machineserial);
         // setIframeHeight();
         // console.log(document.body.clientHeight);
         // let height=document.body.clientHeight+"px";
@@ -1392,29 +1429,10 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
     }
 
     function setIframeHeight() {
-        let height1=parent.document.getElementById("iframe_compute");
-        let height2=parent.parent.document.getElementById("iframe_a");
-        let height3=document.getElementById("formDemo");
-        let hnum1=0,hnum2=0,hnum3=0;
-        if (height1&&height2) {
-            let iframeWin1 = height1.contentWindow || height1.contentDocument.parentWindow;
-            let iframeWin2 = height2.contentWindow || height2.contentDocument.parentWindow;
-             hnum3=height3.clientHeight;
-            if (iframeWin1.document.body) {
-                hnum1 =(iframeWin1.document.documentElement.scrollHeight||iframeWin1.document.body.scrollHeight);
-                hnum2 =(iframeWin2.document.documentElement.scrollHeight||iframeWin2.document.body.scrollHeight);
-            }
-            hnum1=hnum3;
-            if(hnum1>hnum2){
-                height1.style.height=hnum1+"px";
-                hnum2=hnum1+100;
-                height2.style.height=hnum2+"px";
-            }else{
-                height1.style.height=hnum1+"px";
-                height2.style.height=hnum2+"px";
-            }
-
-        }
+        let height=$("#station_compute").height();
+        height+=30;
+        parent.setcomputeheight(height);
+        parent.parent.setsettingheight(height);
     };
 
 

@@ -102,7 +102,12 @@ layui.define(['form', 'drawer', 'table','station_locate_func','station_func'], f
         } else {
             document.getElementById("locate_content").innerHTML = "";
         }
-        locatefunc.updatedata("base");
+        new Promise((resolve, reject) => {
+            locatefunc.updatedata("base");
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         form.render();
     })
 
@@ -112,7 +117,12 @@ layui.define(['form', 'drawer', 'table','station_locate_func','station_func'], f
         } else {
             document.getElementById("seven_use").innerHTML = "";
         }
-        locatefunc.updatedata("seven");
+        new Promise((resolve, reject) => {
+            locatefunc.updatedata("seven");
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         form.render();
     })
 
@@ -122,7 +132,13 @@ layui.define(['form', 'drawer', 'table','station_locate_func','station_func'], f
         } else {
             document.getElementById("four_use").innerHTML = "";
         }
-        locatefunc.updatedata("four");
+        new Promise((resolve, reject) => {
+            locatefunc.updatedata("four");
+
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         form.render();
     })
 
@@ -533,11 +549,21 @@ layui.define(['form', 'drawer', 'table','station_locate_func','station_func'], f
             }
     }
 
+    function setIframeHeight() {
+        debugger
+        let height=$("#templatelocal").height();
+        height+=30;
+        parent.setlocateheight(height);
+        parent.parent.setsettingheight(height);
+    };
+
     var temlocate = {
         checksavemodel: function () {
             checksavemodel();
         }
     }
+
+
 
     exports('template_locate', temlocate)
 });

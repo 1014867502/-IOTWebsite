@@ -141,27 +141,27 @@
 
 
 <div class="layui-fluid" style="padding: 0px;">
-    <div class="layui-tab">
+    <div class="layui-tab" lay-filter="demo">
         <ul class="layui-tab-title" style="color: #1e9fff;background-color: #FFF;border-color:#FFF;">
             <li id="setting0" class="tabborder">解算设置</li>
             <li id="setting1" class="tabborder">坐标系统</li>
             <li id="setting2" class="tabborder">平台对接</li>
             <li id="setting3" class="tabborder">辅助功能</li>
         </ul>
-        <div class="layui-tab-content" style="padding: 0px">
-            <div id="compute" class="layui-tab-item ">
-                <iframe id="iframe_compute" src="" frameborder="0" name="iframe_compute"  onload="this.height=iframe_compute.document.body.scrollHeight"
-                        width="100%" scrolling="no" frameborder="0" style="height: 2150px"></iframe>
+        <div class="layui-tab-content" style="padding: 0px" >
+            <div id="compute" class="layui-tab-item " lay-filter="compute">
+                <iframe id="iframe_compute" src="" frameborder="0" name="iframe_compute"
+                        width="100%" scrolling="no" frameborder="0"></iframe>
             </div>
-            <div id="locate" class="layui-tab-item">
-                <iframe id="iframe_locate" src="" frameborder="0"  name="iframe_locate" onload="this.height=iframe_locate.document.body.scrollHeight"
-                        width="100%" scrolling="no" frameborder="0" style="height: 1600px"></iframe>
+            <div id="locate" class="layui-tab-item"  lay-filter="locate">
+                <iframe id="iframe_locate" src="" frameborder="0"  name="iframe_locate"
+                        width="100%" scrolling="no" frameborder="0"></iframe>
             </div>
-            <div id="platform" class="layui-tab-item">
+            <div id="platform" class="layui-tab-item" lay-filter="platform">
                 <iframe id="iframe_platform" src="" name="iframe_platform" frameborder="0"  onload="this.height=iframe_platform.document.body.scrollHeight"
                         width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>
             </div>
-            <div id="auxiliary" class="layui-tab-item">
+            <div id="auxiliary" class="layui-tab-item" lay-filter="auxiliary">
                 <iframe id="iframe_auxiliary" src="" frameborder="0" name="iframe_auxiliary" onload="this.height=iframe_auxiliary.document.body.scrollHeight"
                         width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>
             </div>
@@ -183,7 +183,22 @@
     var writeright="#(writeright)";
     var testmodel={};//详细模板数据
     var fastmodel="";//快速设置模板
+    var height;
     src();
+
+    function setcomputeheight(height) {
+        $("#iframe_compute").height(height);
+    }
+    function setlocateheight(height) {
+        $("#iframe_locate").height(height);
+    }
+    function setplatformheight(height) {
+        $("#iframe_platform").height(height);
+    }
+    function setauxiliaryheight(height) {
+        $("#iframe_auxiliary").height(height);
+    }
+
     function src() {
                 let arr=[];
                 if(authority.indexOf("1")!=-1){
@@ -237,7 +252,35 @@
         base: '/assets/layuiadmin/'
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'table','element']);
+    }).use(['index', 'table','element'], function(){
+        var $=layui.$,
+            element=layui.element;
+
+        element.on('tab(demo)', function(data){
+            debugger
+            switch(data.index){
+                case 0:
+                    let compute=document.getElementById("iframe_compute");
+                    compute.contentWindow.setIframeHeight();
+                    break
+                case 1:
+                    let loacte=document.getElementById("iframe_locate");
+                    loacte.contentWindow.setIframeHeight();
+                    break
+                case 2:
+                    let platform=document.getElementById("iframe_platform");
+                    platform.contentWindow.setIframeHeight();
+                    break
+                case 3:
+                    let auxiliary=document.getElementById("iframe_auxiliary");
+                    auxiliary.contentWindow.setIframeHeight();
+                    break
+            }
+            // let loacte=document.getElementById("iframe_locate");
+            // loacte.contentWindow.setIframeHeight();
+            console.log(data);
+        });
+    });
 </script>
 </body>
 </html>

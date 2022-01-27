@@ -110,11 +110,23 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func','stati
 
     form.on('radio(compute)', function (data) {
         compute = data.value;
-        showform(compute, station);
+        new Promise((resolve, reject) => {
+            showform(compute, station);
+            resolve();
+        }).then(() => {
+            getDeviceSetting(machineserial);
+            setIframeHeight();
+        });
     });
     form.on('radio(station)', function (data) {
         station = data.value;
-        showform(compute, station);
+        new Promise((resolve, reject) => {
+            showform(compute, station);
+            resolve();
+        }).then(() => {
+            getDeviceSetting(machineserial);
+            setIframeHeight();
+        });
     });
     form.on('radio(mark)', function (data) {
         mark = data.value;
@@ -123,16 +135,26 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func','stati
     form.on('radio(downloadsource)', function (data) {
         downloadsource = data.value;
         device.ntrIpBase=data.value;
-        changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
-        rtkcore();
+        new Promise((resolve, reject) => {
+            changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
+            rtkcore();
+            resolve();
+        }).then(() => {
+            getDeviceSetting(machineserial);
+            setIframeHeight();
+        });
         form.render();
     })
     form.on('radio(downloadsource2)', function (data) {
         downloadsource2 = data.value;
-
         device.secondNtripBase=data.value;
-        changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
-        rtkcore();
+        new Promise((resolve, reject) => {
+            changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
+            rtkcore();
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         form.render();
     })
     /*监听双基站按钮*/
@@ -153,8 +175,13 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func','stati
             document.getElementById("secondbase").innerHTML="" ;
         }
         let source = $('input[name="downloadsource"]:checked').val();
-        changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
-        rtkcore();
+        new Promise((resolve, reject) => {
+            changesoure(rtkturn, doublebase, downloadsource,downloadsource2);
+            rtkcore();
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         form.render();
     })
     /*监听rtk数据按钮*/
@@ -181,7 +208,12 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func','stati
             document.getElementById("rtkcontent").innerHTML = "";
             document.getElementById("rtkcontent").style.display = "none";
         }
-        rtkcore();
+        new Promise((resolve, reject) => {
+            rtkcore();
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         form.render();
     })
     /*监听原始数据回传按钮*/
@@ -207,6 +239,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func','stati
             document.getElementById("rawdatacontent").innerHTML="";
             document.getElementById("rawdatacontent").style.display = "none";
         }
+        setIframeHeight();
         form.render();
     })
     /*监听原始数据回传的通信设置*/
@@ -637,6 +670,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func','stati
         Object.assign(data2,data1);
         let stringtest=JSON.stringify(data2);
         parent.testmodel.compute=stringtest;
+        setIframeHeight();
     }
 
 
@@ -1133,6 +1167,13 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func','stati
     //     }
     // }
 
+    function setIframeHeight() {
+        debugger
+        let height=$("#templatecompute").height();
+        height+=30;
+        parent.setcomputeheight(height);
+        parent.parent.setsettingheight(height);
+    };
 
    var temcompute={
         checksavemodel:function () {

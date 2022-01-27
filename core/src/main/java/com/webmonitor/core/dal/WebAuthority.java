@@ -8,7 +8,7 @@ public enum WebAuthority {
     auxiliaryset(4,"辅助功能"),
     orderset(5,"下发命令"),
     logset(6,"配置日志"),
-    otherset(7,"其他设置"),
+    otherset(7,"升级设置"),
     NONE(-1, "NONE");
 
     private int index;

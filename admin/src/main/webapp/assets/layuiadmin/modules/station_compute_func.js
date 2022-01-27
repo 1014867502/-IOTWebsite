@@ -835,6 +835,14 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     break;
             }
         }
+        // let node=parent.parent.parent.iframe2;
+        // let node2=parent.frames[0];
+        // let node3=document.getElementById("station_compute").clientHeight;
+        // console.log(node.document.documentElement.scrollHeight);
+        // console.log(node.document.documentElement.clientHeight);
+        // console.log(node2.document.documentElement.clientHeight);
+        // console.log(node3);
+
     }
 
     function changemark(type) {

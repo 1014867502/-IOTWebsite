@@ -293,7 +293,7 @@
     </form>
 </div>
 
-<div class="layui-fluid" style="padding: 0px;">
+<div class="layui-fluid" id="station_auxiliary" style="padding: 0px;">
     <div class="layui-row layui-col-space15" style="font-weight: bold">
         <form class="layui-form" action="" id="formDemo2" lay-filter="formDemo2">
             <div class="layui-card">
@@ -360,6 +360,12 @@
 <script>
     var agentnum = "#(agentNum)";
     var machinesn = "#(machinesn)";
+    function setIframeHeight() {
+        let height=$("#station_auxiliary").height();
+        height+=30;
+        parent.setauxiliaryheight(height);
+        parent.parent.setsettingheight(height);
+    };
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

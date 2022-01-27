@@ -181,8 +181,8 @@
         </div>
     </div>
     <div style="width: 100%;" id="content">
-        <iframe id="iframe_a" src="" frameborder="0" name="iframe_a" onload="this.height=iframe_a.document.body.scrollHeight"
-                width="100%" scrolling="no" frameborder="0" style="height: 2000px"></iframe>
+        <iframe id="iframe_a" src="" frameborder="0" name="iframe_a"
+                width="100%" scrolling="no" frameborder="0" ></iframe>
     </div>
 </div>
 </div>
@@ -198,7 +198,10 @@
     var modeltype="#(modeltype)";
 
     var iframe=window.frames[0];
-
+    function setsettingheight(height){
+        $("#iframe_a").height(height+"px");
+        parent.frames[0].document.documentElement.clientHeight=height;
+    }
     layui.config({
         base: '/assets/layuiadmin/'
     }).extend({

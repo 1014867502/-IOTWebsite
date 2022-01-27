@@ -77,61 +77,88 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
     })
 
     form.on('switch(onenet_enable)', function (data) {
-        if (this.checked) {
-            document.getElementById("onenetcontent").innerHTML = platformfunc.onenetcontent;
-            if(locatedata.oneNetMode!=null){
-                platformfunc.onenetexhibit((locatedata.oneNetMode=="")?"0":locatedata.oneNetMode);
-                platformfunc.onenetupdate();
-            }else{
-                platformfunc.onenetexhibit("0");
+        new Promise((resolve, reject) => {
+            if (this.checked) {
+                document.getElementById("onenetcontent").innerHTML = platformfunc.onenetcontent;
+                if(locatedata.oneNetMode!=null){
+                    platformfunc.onenetexhibit((locatedata.oneNetMode=="")?"0":locatedata.oneNetMode);
+                    platformfunc.onenetupdate();
+                }else{
+                    platformfunc.onenetexhibit("0");
+                }
+            } else {
+                document.getElementById("onenetcontent").innerHTML = "";
             }
-        } else {
-            document.getElementById("onenetcontent").innerHTML = "";
-        }
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         form.render();
     })
 
     form.on('switch(dz_iot_enable)', function (data) {
-        if (this.checked) {
-            document.getElementById("dzcontent").innerHTML =platformfunc.dznetcontent;
-            platformfunc.dzIotupdate();
-        } else {
-            document.getElementById("dzcontent").innerHTML = "";
-        }
+        new Promise((resolve, reject) => {
+            if (this.checked) {
+                document.getElementById("dzcontent").innerHTML =platformfunc.dznetcontent;
+                platformfunc.dzIotupdate();
+            } else {
+                document.getElementById("dzcontent").innerHTML = "";
+            }
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         form.render();
     })
 
     form.on('select(onenet_mode)', function (data) {
         let select = data.value;
-        platformfunc.onenetexhibit(select);
+        new Promise((resolve, reject) => {
+            platformfunc.onenetexhibit(select);
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
+
     });
 
     form.on('switch(chongqing_enable)',function (data) {
-        if(this.checked){
-            chongqingturn=true;
-            document.getElementById("chongqing_select").innerHTML=platformfunc.chongqingselect;
-            if(locatedata.cqIotEnabled=="0"){
-                $("#chongqing_mode").val("1");
-                platformfunc.chongqingexhibit("1");
-            }else{
-                if(locatedata.cqIotEnabled!=null&&locatedata.cqIotEnabled!=""){
-                    $("#chongqing_mode").val(locatedata.cqIotEnabled);
+        new Promise((resolve, reject) => {
+            if(this.checked){
+                chongqingturn=true;
+                document.getElementById("chongqing_select").innerHTML=platformfunc.chongqingselect;
+                if(locatedata.cqIotEnabled=="0"){
+                    $("#chongqing_mode").val("1");
+                    platformfunc.chongqingexhibit("1");
+                }else{
+                    if(locatedata.cqIotEnabled!=null&&locatedata.cqIotEnabled!=""){
+                        $("#chongqing_mode").val(locatedata.cqIotEnabled);
+                    }
+                    platformfunc.chongqingexhibit(locatedata.cqIotEnabled);
                 }
-                platformfunc.chongqingexhibit(locatedata.cqIotEnabled);
+                $("#chongqing_iot_telecom").val(locatedata.cqIotTelecom);
+                $("#chongqing_iot_id").val(locatedata.cqIotId);
+                $("#chongqing_iot_key").val(locatedata.cqIotKey);
+                $("#chongqing_iot_user").val(locatedata.cqIotUser);
+            }else{
+                chongqingturn=false;
+                document.getElementById("chongqing_select").innerHTML="";
             }
-            $("#chongqing_iot_telecom").val(locatedata.cqIotTelecom);
-            $("#chongqing_iot_id").val(locatedata.cqIotId);
-            $("#chongqing_iot_key").val(locatedata.cqIotKey);
-            $("#chongqing_iot_user").val(locatedata.cqIotUser);
-        }else{
-            chongqingturn=false;
-            document.getElementById("chongqing_select").innerHTML="";
-        }
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
     })
 
     form.on('select(chongqing_mode)', function (data) {
         let select = data.value;
-        platformfunc.chongqingexhibit(select);
+        new Promise((resolve, reject) => {
+            platformfunc.chongqingexhibit(select);
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
+
     });
 
     form.on('submit(formDemo)',function (data) {
@@ -339,6 +366,13 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
         delete jsondata.dzIotId;
         parent.testmodel.plaform=JSON.stringify(jsondata);
     }
+
+    function setIframeHeight() {
+        let height=$("#station_platform").height();
+        height+=30;
+        parent.setplatformheight(height);
+        parent.parent.setsettingheight(height);
+    };
 
     exports('station_platform', {})
 });

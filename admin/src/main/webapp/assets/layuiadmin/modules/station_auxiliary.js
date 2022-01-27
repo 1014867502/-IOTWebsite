@@ -87,45 +87,61 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func','station_func']
 
 
     form.on('switch(sensor_enable)', function (data) {
-        if (this.checked) {
-          document.getElementById("connectsensor").innerHTML=auxiliaryfunc.sensorcontent;
-            /*添加设备*/
-            $("#add_sensor").click(function () {
-                drawer.render({
-                    title: '添加设备',  //标题
-                    offset: 'r',    //r:抽屉在右边、l:抽屉在左边
-                    width: "600px", //r、l抽屉可以设置宽度
-                    content: $("#addprowindow"),
-                    success :function (layero, index) {
-                        layerindex=index;
-                    },
-                });
-            })
-            auxiliaryfunc.sensorupdate();
-            rendersensortable();
-        } else {
-           document.getElementById("connectsensor").innerHTML="";
-        }
+        new Promise((resolve, reject) => {
+            if (this.checked) {
+                document.getElementById("connectsensor").innerHTML=auxiliaryfunc.sensorcontent;
+                /*添加设备*/
+                $("#add_sensor").click(function () {
+                    drawer.render({
+                        title: '添加设备',  //标题
+                        offset: 'r',    //r:抽屉在右边、l:抽屉在左边
+                        width: "600px", //r、l抽屉可以设置宽度
+                        content: $("#addprowindow"),
+                        success :function (layero, index) {
+                            layerindex=index;
+                        },
+                    });
+                })
+                auxiliaryfunc.sensorupdate();
+                rendersensortable();
+            } else {
+                document.getElementById("connectsensor").innerHTML="";
+            }
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         form.render();
     })
 
     form.on('switch(scheduler_enable)',function (data) {
-        if(this.checked){
-            document.getElementById("timeswitch").innerHTML=auxiliaryfunc.timecontent;
-            auxiliaryfunc.timeupdate();
-        }else{
-            document.getElementById("timeswitch").innerHTML="";
-        }
+        new Promise((resolve, reject) => {
+            if(this.checked){
+                document.getElementById("timeswitch").innerHTML=auxiliaryfunc.timecontent;
+                auxiliaryfunc.timeupdate();
+            }else{
+                document.getElementById("timeswitch").innerHTML="";
+            }
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
         form.render();
     })
 
     form.on('switch(move_warn_enable)',function (data) {
-        if(this.checked){
-            document.getElementById("warning").innerHTML=auxiliaryfunc.warncontent;
-            auxiliaryfunc.warnupdate();
-        }else{
-            document.getElementById("warning").innerHTML="";
-        }
+        new Promise((resolve, reject) => {
+            if(this.checked){
+                document.getElementById("warning").innerHTML=auxiliaryfunc.warncontent;
+                auxiliaryfunc.warnupdate();
+            }else{
+                document.getElementById("warning").innerHTML="";
+            }
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
+
         form.render();
     })
 
@@ -515,6 +531,12 @@ layui.define(['form', 'drawer', 'table','station_auxiliary_func','station_func']
         })
     }
 
+    function setIframeHeight() {
+        let height=$("#station_auxiliary").height();
+        height+=30;
+        parent.setauxiliaryheight(height);
+        parent.parent.setsettingheight(height);
+    };
 
     exports('station_auxiliary', {})
 });

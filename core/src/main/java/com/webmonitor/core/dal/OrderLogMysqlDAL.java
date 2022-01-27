@@ -68,7 +68,7 @@ public class OrderLogMysqlDAL implements IOrderLog {
                         map.setSetFromwork("辅助功能");
                         break;
                     default:
-                        map.setSetFromwork("其他设置");
+                        map.setSetFromwork("升级设置");
                         break;
                 }
             }
@@ -151,7 +151,7 @@ public class OrderLogMysqlDAL implements IOrderLog {
                         map.setSetFromwork("辅助功能");
                         break;
                     default:
-                        map.setSetFromwork("其他设置");
+                        map.setSetFromwork("升级设置");
                         break;
                 }
             }
@@ -214,7 +214,7 @@ public class OrderLogMysqlDAL implements IOrderLog {
                         map.setSetFromwork("辅助功能");
                         break;
                     default:
-                        map.setSetFromwork("其他设置");
+                        map.setSetFromwork("升级设置");
                         break;
                 }
             }
@@ -277,7 +277,7 @@ public class OrderLogMysqlDAL implements IOrderLog {
                         map.setSetFromwork("辅助功能");
                         break;
                     default:
-                        map.setSetFromwork("其他设置");
+                        map.setSetFromwork("升级设置");
                         break;
                 }
             }

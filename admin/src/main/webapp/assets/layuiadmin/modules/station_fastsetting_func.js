@@ -541,6 +541,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            </div>"
                 break;
         }
+
     }
 
     function changemark(type) {
@@ -647,7 +648,7 @@ layui.define(['element', 'form', 'drawer', 'table'], function (exports) {
                     "                            </div>";
                 break;
         }
-        mark2compute();
+        markcompute();
     }
 
     function changesoure(doubleturn, type){
