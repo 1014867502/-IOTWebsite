@@ -1,6 +1,7 @@
 package com.webmonitor.admin.manage;
 
 import com.jfinal.i18n.Res;
+import com.jfinal.kit.PathKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
 import com.webmonitor.admin.company.CompanyService;
@@ -16,6 +17,11 @@ import com.webmonitor.core.util.Tools;
 import com.webmonitor.core.util.exception.ExceptionUtil;
 import com.webmonitor.core.vo.Result;
 
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -119,6 +125,13 @@ public class ManagerController extends BaseController {
         String useid=getLoginAccount().getUserName();
         setAttr("userid",useid);
         render("orderlog.html");
+    }
+
+    /**app和固件下载页面**/
+    public void downloadhelp(){
+        String userid = getCookie(IndexService.me.accessUserId);
+        setAttr("userid",userid);
+        render("helpmanage.html");
     }
 
 
@@ -432,4 +445,8 @@ public class ManagerController extends BaseController {
         }
         renderJson(result);
     }
+
+    /****/
+
+
 }

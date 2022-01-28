@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow: auto">
+<head>
+    #@meta("下载帮助页面")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/css/global.css">
+</head>
+<body class="layui-layout-body">
+<style>
+    xm-select > .xm-body .xm-toolbar .toolbar-tag {
+        color: #00F7DE;
+    }
+    .normalnotice {
+        text-align: center;
+        font-size: 20px;
+        display: inline-block;
+        float: right;
+        height: 50px;
+        width: 200px;
+        background-color: #C9E7FB;
+        color: #0C0C0C;
+        border-color: #87CDFB;
+        border-style: solid;
+        border-width: 2px;
+    }
+
+    .layui-card-header.layuiadmin-card-header-auto {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        height: 42px;
+    }
+
+    .layui-form-onswitch {
+        border-color: #1e9fff;
+        background-color: #1e9fff;
+    }
+    .little{
+        text-align: center;
+        width: 200px;
+        margin-left: 10%;
+        line-height:40px;
+    }
+
+</style>
+
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">下载列表</div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="table-form" lay-filter="table-form"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn tableeventbtn layui-btn-xs"  lay-event="download">下载</a>
+</script>
+
+<script>
+
+    //var projectid = window.location.hash.substr(1);
+    var userid = "#(userid)";
+    var projectid = "#(projetid)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'helpmanage','drawer']);
+</script>
+</body>
+</html>

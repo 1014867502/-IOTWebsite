@@ -1039,6 +1039,7 @@ public class DeviceController extends BaseController {
             int progress = ThreadHashMap.get(filename).getProgress();
             result.success(progress);
         } catch (Throwable e) {
+            result.error("error");
             ExceptionUtil.handleThrowable(result, e);
         }
         renderJson(result);
@@ -1158,5 +1159,9 @@ public class DeviceController extends BaseController {
         }
         renderJson(result);
     }
+
+   /****/
+
+
 
 }

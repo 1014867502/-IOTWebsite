@@ -200,7 +200,7 @@ public class UploadThread{
                     String columnvalue="";//插入语句的数值
                     String value="";
                     String[] values=line.split(",",-1);
-                    if(AgentDataService.me.getDeviceDetailBySn(values[4])!=null){
+                    if(AgentDataService.me.isExistDeviceDetailBySn(values[4])){
                         excutecount++;
                         progress=excutecount*100/rowCount;
                         continue;

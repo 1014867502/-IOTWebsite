@@ -45,6 +45,11 @@ public class AgentDataService {
         return  dal.getDeviceDetailBySn(machineserial);
     }
 
+    /**根据设备serial码判断是否存在**/
+    public boolean isExistDeviceDetailBySn(String machineserial){
+        return  dal.isExistDeviceDetailBySn(machineserial);
+    }
+
 
     public ProDevCount getDevCount(){
         return dal.getDevCountAdmin();

@@ -47,6 +47,9 @@ public interface IAgentData {
     /**根据设备serial码获取设备相关信息**/
     AgentData getDeviceDetailBySn(String machineserial);
 
+    /**根据设备serial码获取设备相关信息**/
+    boolean isExistDeviceDetailBySn(String machineserial);
+
     /**取消关联设备（项目）**/
     void deleteDeviceBySerial(String sn);
 

@@ -139,6 +139,7 @@ public class StaffDataMysqlDAL implements IStaffData {
                 staffDataEntity.setcDept(item.getStr("cDept"));
                 staffDataEntity.setuRealName(item.getStr("uRealName"));
                 staffDataEntity.setAccounttime(item.getStr("AccountTime"));
+                staffDataEntity.setiAccountType(item.getStr("iAccountType"));
                 staffDataEntity.setiRoleType(item.getInt("iRoleType"));
                 staffDataEntity.setGroupAgentNumber(item.getStr("groupAgentNumber") != null ? item.getStr("groupAgentNumber") : "");
                 if (item.getStr("groupAssemble") != null && !item.getStr("groupAssemble").equals("")) {
@@ -286,6 +287,7 @@ public class StaffDataMysqlDAL implements IStaffData {
             staffDataEntity.setuAccountNum(record.getStr("uAccountNum"));
             staffDataEntity.setuPassword(record.getStr("uPassword"));
             staffDataEntity.setcDept(record.getStr("cDept"));
+            staffDataEntity.setiAccountType(record.getStr("iAccountType"));
             staffDataEntity.setuRealName(record.getStr("uRealName"));
             staffDataEntity.setiRoleType(record.getInt("iRoleType"));
             staffDataEntity.setAccounttime(record.getStr("AccountTime"));

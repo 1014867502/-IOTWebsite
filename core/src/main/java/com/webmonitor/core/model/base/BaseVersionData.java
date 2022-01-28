@@ -41,4 +41,12 @@ public abstract class BaseVersionData<M extends BaseVersionData<M>> extends Mode
 		return getInt("versionType");
 	}
 
+	public void setVersionContent(java.lang.String versionContent) {
+		set("versionContent", versionContent);
+	}
+	
+	public java.lang.String getVersionContent() {
+		return getStr("versionContent");
+	}
+
 }

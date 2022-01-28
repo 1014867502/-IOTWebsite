@@ -37,6 +37,7 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
     var curprogress=0;//当前进度
     var once = true;//上传一次
     var progressfinish;
+    var inputresult="";
 
     form.verify({
         confirmserial: function (value) {
@@ -881,8 +882,10 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
                                 async:false,
                                 success:function (data) {
                                     if(data.data=="文件上传成功！"){
+                                        inputresult="success";
                                         layer.msg(data.data);
                                     }else{
+                                        inputresult="error";
                                         layer.msg(data.data);
                                         $("#upload_error").html("警告:"+data.data+" 执行已中止！");
                                         $("#upload_progress").removeClass("layui-bg-blue");
@@ -902,8 +905,12 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
                             },
                             success:function (data) {
                                 curprogress=data.data;
+                                debugger;
                                 if(data.data==100){
                                     layer.msg("导入成功");
+                                    window.clearInterval(progressfinish);
+                                }
+                                if(inputresult.indexOf("error")>=0){
                                     window.clearInterval(progressfinish);
                                 }
                                 element.progress("sqlprogress",data.data+"%")

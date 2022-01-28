@@ -184,10 +184,18 @@
                 <span id="datetip"></span>
             </div>
         </div>
-        <div id="showeditright" class="layui-form-item">
-            <label class="layui-form-label" style="padding: 10px 10px;width: 113px;">修改设备功能权限</label>
-            <div class="layui-input-block">
-                <input id="writeright" type="checkbox" name="writePermission" lay-skin="switch" lay-filter="editdevice">
+        <div style="display: flex">
+            <div class="layui-form-item" id="showeditright">
+                <label class="layui-form-label" style="padding: 10px 0px;width: 118px;">修改设备功能权限</label>
+                <div class="layui-input-block" style="margin-left: 135px;">
+                    <input id="writeright" type="checkbox" name="writePermission" lay-skin="switch" lay-filter="editdevice">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="padding: 9px 0px;width: 100px;">安装功能权限</label>
+                <div class="layui-input-block">
+                    <input id="showinstallright" type="checkbox" name="iAccountType" lay-skin="switch">
+                </div>
             </div>
         </div>
         <div class="layui-form-item" >
@@ -268,10 +276,18 @@
                 <span id="edittip"></span>
             </div>
         </div>
-        <div class="layui-form-item" id="displaywriteright">
-            <label class="layui-form-label" style="padding: 10px 10px;width: 113px;">修改设备功能权限</label>
-            <div class="layui-input-block">
-                <input id="editwriteright" type="checkbox" name="writePermission" lay-skin="switch" lay-filter="editdevice">
+        <div style="display: flex">
+            <div class="layui-form-item" id="displaywriteright">
+                <label class="layui-form-label" style="padding: 10px 0px;width: 118px;">修改设备功能权限</label>
+                <div class="layui-input-block" style="margin-left: 135px;">
+                    <input id="editwriteright" type="checkbox" name="writePermission" lay-skin="switch" lay-filter="editdevice">
+                </div>
+            </div>
+            <div class="layui-form-item" id="installright">
+                <label class="layui-form-label" style="padding: 9px 0px;width: 100px;">安装功能权限</label>
+                <div class="layui-input-block">
+                    <input id="editinstallright" type="checkbox" name="iAccountType" lay-skin="switch">
+                </div>
             </div>
         </div>
 <!--        <div class="layui-form-item">-->

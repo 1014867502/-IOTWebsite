@@ -111,7 +111,6 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
 
     /**添加用户页面**/
     form.on('select(type)',function(data){
-
         let type=data.value;
         newtype=type;
         if(type=="0"){
@@ -136,10 +135,10 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "                    <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "                </div>\n" +
                 "            </div>"
-            document.getElementById("showeditright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
-                "            <div class=\"layui-input-block\">\n" +
-                "                <input id=\"writeright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
-                "            </div>";
+            document.getElementById("showeditright").innerHTML="  <label class=\"layui-form-label\" style=\"padding: 10px 0px;width: 118px;\">修改设备功能权限</label>\n" +
+                "                <div class=\"layui-input-block\" style=\"margin-left: 135px;\">\n" +
+                "                    <input id=\"writeright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "                </div>";
             document.getElementById("showappright").innerHTML="     <div class=\"layui-form-item\" >\n" +
                 "               <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "               <div class=\"layui-input-block\">\n" +
@@ -166,6 +165,8 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("datekeep").innerHTML="";
             document.getElementById("formproject").innerHTML="";
             document.getElementById("addmanagecompanylist").innerHTML="";
+            $("#showinstallright").prop('checked',true);
+            $("#writeright").prop('checked',true);
         }
         else if(type=="3"){
             if(agentNumber!=null){
@@ -199,6 +200,8 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "            </div>";
             document.getElementById("showwebright").innerHTML="";
             document.getElementById("showappright").innerHTML="";
+            $("#showinstallright").prop('checked',true);
+            $("#writeright").prop('checked',true);
             addchargecompanylist();
         }
         else{
@@ -208,10 +211,10 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "                    <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "                </div>\n" +
                 "            </div>"
-            document.getElementById("showeditright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
-                "            <div class=\"layui-input-block\">\n" +
-                "                <input id=\"writeright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
-                "            </div>";
+            document.getElementById("showeditright").innerHTML="  <label class=\"layui-form-label\" style=\"padding: 10px 0px;width: 118px;\">修改设备功能权限</label>\n" +
+                "                <div class=\"layui-input-block\" style=\"margin-left: 135px;\">\n" +
+                "                    <input id=\"writeright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "                </div>";
             document.getElementById("showappright").innerHTML="     <div class=\"layui-form-item\" >\n" +
                 "               <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "               <div class=\"layui-input-block\">\n" +
@@ -224,6 +227,8 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             document.getElementById("formproject").innerHTML="";
             document.getElementById("datekeep").innerHTML="";
             document.getElementById("addmanagecompanylist").innerHTML="";
+            $("#showinstallright").prop('checked',true);
+            $("#writeright").prop('checked',true);
         }
         form.render();
     });
@@ -254,10 +259,10 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "                 </div>\n" +
                 "            <span id=\"edittip\"></span> </div>"
             $("#datechange").addClass("layui-form-item");
-            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
-                "            <div class=\"layui-input-block\">\n" +
-                "                <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
-                "            </div>";
+            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 0px;width: 118px;\">修改设备功能权限</label>\n" +
+                "                <div class=\"layui-input-block\" style=\"margin-left: 135px;\">\n" +
+                "                    <input id=\"writeright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "                </div>";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
@@ -299,7 +304,6 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             $("#editwebright").removeClass("layui-form-item");
             $("#displaywriteright").removeClass("layui-form-item");
             $("#formprojectedit").removeClass("layui-form-item");
-            $("#editappright").removeClass("layui-form-item");
             $("#datechange").removeClass("layui-form-item");
             loadcomauthority(agentNumber);
         }else if(type=="4"){
@@ -329,10 +333,10 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
-            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
-                "            <div class=\"layui-input-block\">\n" +
-                "                <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
-                "            </div>";
+            document.getElementById("displaywriteright").innerHTML="<label class=\"layui-form-label\" style=\"padding: 10px 0px;width: 118px;\">修改设备功能权限</label>\n" +
+                "                <div class=\"layui-input-block\" style=\"margin-left: 135px;\">\n" +
+                "                    <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "                </div>";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
@@ -371,6 +375,11 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             json.writePermission=1;
         }else{
             json.writePermission=0;
+        }
+        if(json.iAccountType=="on"){
+            json.iAccountType=1;
+        }else{
+            json.iAccountType=0;
         }
         if(json.type==0){
             group=projectlist.getValue('valueStr');
@@ -447,6 +456,11 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
         }else{
             json.writePermission=0;
         }
+        if(json.iAccountType=="on"){
+            json.iAccountType=1;
+        }else{
+            json.iAccountType=0;
+        }
         if(json.type2==0){
             group=projectlist.getValue('valueStr');
             if(json.accounttime==""){
@@ -488,7 +502,6 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                         id=data.id;
                         layerindex=index;
                     },
-
                 });
                 renderTable();
                 layer.open({
@@ -541,6 +554,11 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
         $("#cDpet").val(data.cDept);
         agentNumber=data.agentNumber;
         $("#roletype").find("option[value=" + data.iRoleType + "]").prop("selected", true);
+        if(data.iAccountType!=null&&data.iAccountType>0){
+            $("#editinstallright").prop('checked',true);
+        }else{
+            $("#editinstallright").prop('checked',false);
+        }
         if(data.iRoleType=="0"){
             document.getElementById("formcompanyedit").innerHTML="";
             $("#formcompanyedit").removeClass("layui-form-item");
@@ -575,6 +593,11 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
             $("#dataedit").val(data.accounttime);
+            if(data.iAccountType!=null){
+
+            }else{
+
+            }
             $("#editwebright").addClass("layui-form-item");
             $("#editappright").addClass("layui-form-item");
         }
@@ -628,10 +651,10 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
-            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
-                "            <div class=\"layui-input-block\">\n" +
-                "                <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
-                "            </div>";
+            document.getElementById("displaywriteright").innerHTML="<label class=\"layui-form-label\" style=\"padding: 10px 0px;width: 118px;\">修改设备功能权限</label>\n" +
+                "                <div class=\"layui-input-block\" style=\"margin-left: 135px;\">\n" +
+                "                    <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "                </div>";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
@@ -664,7 +687,6 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             , where: { 'content': input, 'agentnumber': companynum}
             , cols: [[
                 {type: 'checkbox'}
-                ,{field: 'id', title: "序号", align: 'center'}
                 , {field: 'agentName', title: "隶属公司", align: 'center'}
                 , {field: 'uAccountNum', title: "登录账号", align: 'center'}
                 , {field: 'uRealName', title: "昵称", align: 'center'}

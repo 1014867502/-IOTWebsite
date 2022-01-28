@@ -262,6 +262,8 @@ public class DeviceListService {
         return dal.getDeviceUpdatelog(machineserial, pageno, limit);
     }
 
+
+
 //    /**执行上传文件(可自选)**/
 //    public String excuteUpload(HashMap<String,Integer> agentFile,File file){
 //        try {

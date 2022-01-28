@@ -138,10 +138,10 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
                 "                    <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "                </div>\n" +
                 "            </div>"
-            document.getElementById("showeditright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
-                "            <div class=\"layui-input-block\">\n" +
-                "                <input id=\"writeright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
-                "            </div>";
+            document.getElementById("showeditright").innerHTML="  <label class=\"layui-form-label\" style=\"padding: 10px 0px;width: 118px;\">修改设备功能权限</label>\n" +
+                "                <div class=\"layui-input-block\" style=\"margin-left: 135px;\">\n" +
+                "                    <input id=\"writeright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "                </div>";
             document.getElementById("showappright").innerHTML="     <div class=\"layui-form-item\" >\n" +
                 "               <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "               <div class=\"layui-input-block\">\n" +
@@ -171,16 +171,20 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
             }
         }
         else{
+            if(type=="1"){
+                $("#showinstallright").prop('checked',true);
+                $("#writeright").prop('checked',true);
+            }
             document.getElementById("showwebright").innerHTML="    <div class=\"layui-form-item\" >\n" +
                 "                <label class=\"layui-form-label\" style=\"width: 84px;\">网页功能权限</label>\n" +
                 "                <div class=\"layui-input-block\">\n" +
                 "                    <div id=\"initwebauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "                </div>\n" +
                 "            </div>"
-            document.getElementById("showeditright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
-                "            <div class=\"layui-input-block\">\n" +
-                "                <input id=\"writeright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
-                "            </div>";
+            document.getElementById("showeditright").innerHTML="  <label class=\"layui-form-label\" style=\"padding: 10px 0px;width: 118px;\">修改设备功能权限</label>\n" +
+                "                <div class=\"layui-input-block\" style=\"margin-left: 135px;\">\n" +
+                "                    <input id=\"writeright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "                </div>";
             document.getElementById("showappright").innerHTML="     <div class=\"layui-form-item\" >\n" +
                 "               <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "               <div class=\"layui-input-block\">\n" +
@@ -223,10 +227,10 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
                 "                    <input type=\"text\" class=\"layui-input\" lay-verify=\"required\" name=\"accounttime\" id=\"dataedit\" placeholder=\"请输入账号到期时间\">\n" +
                 "                 </div>\n" +
                 "            <span id=\"edittip\"></span> </div>"
-            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
-                "            <div class=\"layui-input-block\">\n" +
-                "                <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
-                "            </div>";
+            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 0px;width: 118px;\">修改设备功能权限</label>\n" +
+                "                <div class=\"layui-input-block\" style=\"margin-left: 135px;\">\n" +
+                "                    <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "                </div>";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
@@ -255,10 +259,10 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
-            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
-                "            <div class=\"layui-input-block\">\n" +
-                "                <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
-                "            </div>";
+            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 0px;width: 118px;\">修改设备功能权限</label>\n" +
+                "                <div class=\"layui-input-block\" style=\"margin-left: 135px;\">\n" +
+                "                    <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "                </div>";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
@@ -271,7 +275,6 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
     });
 
     form.on('submit(formDemo1)', function(data){//添加用户提交
-
         let json=data.field;
         let group;
         let right;
@@ -288,6 +291,11 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
             json.writePermission=1;
         }else{
             json.writePermission=0;
+        }
+        if(json.iAccountType=="on"){
+            json.iAccountType=1;
+        }else{
+            json.iAccountType=0;
         }
         if(json.type==0){
             group=projectlist.getValue('valueStr');
@@ -342,6 +350,11 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
             json.writePermission=1;
         }else{
             json.writePermission=0;
+        }
+        if(json.iAccountType=="on"){
+            json.iAccountType=1;
+        }else{
+            json.iAccountType=0;
         }
         if(json.type2==0){
             group=projectlist.getValue('valueStr');
@@ -406,6 +419,11 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
         $("#cDpet").val(data.cDept);
         agentNumber=data.agentNumber;
         $("#roletype").find("option[value=" + data.iRoleType + "]").prop("selected", true);
+        if(data.iAccountType!=null&&data.iAccountType>0){
+            $("#editinstallright").prop('checked',true);
+        }else{
+            $("#editinstallright").prop('checked',false);
+        }
         if(data.iRoleType=="0"){
             document.getElementById("formprojectedit").innerHTML="<div class=\"layui-form-item\">\n" +
                 "                <label class=\"layui-form-label\" style=\"width: 84px;padding: 9px 13px;\">可查看的项目</label>\n" +
@@ -448,10 +466,10 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"webauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
                 "            </div>";
-            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 10px;width: 113px;\">修改设备功能权限</label>\n" +
-                "            <div class=\"layui-input-block\">\n" +
-                "                <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
-                "            </div>";
+            document.getElementById("displaywriteright").innerHTML=" <label class=\"layui-form-label\" style=\"padding: 10px 0px;width: 118px;\">修改设备功能权限</label>\n" +
+                "                <div class=\"layui-input-block\" style=\"margin-left: 135px;\">\n" +
+                "                    <input id=\"editwriteright\" type=\"checkbox\" name=\"writePermission\" lay-skin=\"switch\" lay-filter=\"editdevice\">\n" +
+                "                </div>";
             document.getElementById("editappright").innerHTML="    <label class=\"layui-form-label\">app功能权限</label>\n" +
                 "            <div class=\"layui-input-block\">\n" +
                 "                <div id=\"appauthority\" class=\"xm-select-demo\" style=\"width: 100%\"></div>\n" +
@@ -475,7 +493,6 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
             , where: { 'content': input,'agentnumber':companynum}
             , cols: [[
                 {type: 'checkbox'}
-                ,{field: 'id', title: "序号", align: 'center'}
                 , {field: 'agentName', title: "隶属公司", align: 'center'}
                 , {field: 'uAccountNum', title: "登录账号", align: 'center'}
                 , {field: 'uRealName', title: "昵称", align: 'center'}

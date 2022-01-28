@@ -745,17 +745,27 @@ public class AgentDataMysqlDAL implements IAgentData {
         AgentData agentData=new AgentData();
         agentData.setAgentName(result.getStr("agentName")!=null?result.getStr("agentName"):"");
         if(result.getStr("onlineState")!=null){
-            agentData.setOnlineState(Integer.parseInt(result.getStr("onlineState")));
-        }else {
-            agentData.setOnlineState(0);
-        }
-        agentData.setProgroupid(result.getInt("proGroupId")!=null?result.getInt("proGroupId"):0);
-        agentData.setAgentNumber(result.getStr("agentNumber")!=null?result.getStr("agentNumber"):"");
-        agentData.setMachineName(result.getStr("machineName")!=null?result.getStr("machineName"):"");
-        agentData.setMachineSerial(result.getStr("machineSerial")!=null?result.getStr("machineSerial"):"");
-        agentData.setProGroupName(result.getStr("ProGroupName")!=null?result.getStr("ProGroupName"):"");
-        agentData.setFirmwareType(result.getStr("firmwareType")!=null?result.getStr("firmwareType"):"");
+                agentData.setOnlineState(Integer.parseInt(result.getStr("onlineState")));
+            }else {
+                agentData.setOnlineState(0);
+            }
+            agentData.setProgroupid(result.getInt("proGroupId")!=null?result.getInt("proGroupId"):0);
+            agentData.setAgentNumber(result.getStr("agentNumber")!=null?result.getStr("agentNumber"):"");
+            agentData.setMachineName(result.getStr("machineName")!=null?result.getStr("machineName"):"");
+            agentData.setMachineSerial(result.getStr("machineSerial")!=null?result.getStr("machineSerial"):"");
+            agentData.setProGroupName(result.getStr("ProGroupName")!=null?result.getStr("ProGroupName"):"");
+            agentData.setFirmwareType(result.getStr("firmwareType")!=null?result.getStr("firmwareType"):"");
         return agentData;
+    }
+
+    @Override
+    public boolean isExistDeviceDetailBySn(String machineserial) {
+        String sql="select a.*,b.agentName,c.ProGroupName from agent_data a LEFT JOIN agent_table b on a.agentNumber=b.agentNumber LEFT JOIN projects_data c ON a.ProGroupId=c.ProGroupId where a.machineSerial='"+machineserial+"'";
+        Record result=Db.findFirst(sql);
+        if(result!=null){
+            return true;
+        }
+        return false;
     }
 
 

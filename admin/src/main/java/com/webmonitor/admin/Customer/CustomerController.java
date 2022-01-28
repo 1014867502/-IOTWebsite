@@ -76,10 +76,18 @@ public class CustomerController extends BaseController {
         Result result=Result.newOne();
         Gson gson=new Gson();
         StaffDataEntity staffData= gson.fromJson(staffjson, new TypeToken<StaffDataEntity>(){}.getType());
-        if(staffData.getiRoleType()==3){
-            staffData.setGroupAssemble("all");
-            webright="";
-            staffData.setWritePermission(0);
+        switch (staffData.getiRoleType()){
+            case 3:
+                staffData.setGroupAssemble("all");
+                webright="";
+                staffData.setWritePermission(0);
+                break;
+            case 4:
+                staffData.setWritePermission(1);
+                break;
+            case 2:
+                staffData.setWritePermission(1);
+                break;
         }
         try {
            result=srv.save(staffData,select,webright,appright,selectcom);

@@ -113,7 +113,6 @@ public class CustomerService {
         staffData1.setCDept(staffData.getcDept());
         staffData1.setIAccountType(staffData.getiAccountType());
         staffData1.setIRoleType(staffData.getiRoleType());
-        staffData1.setIAccountType(staffData2.getIAccountType());
         staffData1.setAccountTime(staffData.getAccounttime());
         staffData1.setSetPermission(staffData.getWritePermission());
         String password=staffData.getuPassword();

@@ -11,6 +11,6 @@ public class _MetaBuilder extends MetaBuilder {
     }
 
     protected boolean isSkipTable(String tableName){
-        return !tableName.startsWith("machine_data");
+        return !tableName.startsWith("version_data");
     }
 }
