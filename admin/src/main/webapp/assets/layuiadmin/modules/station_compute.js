@@ -59,8 +59,8 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
             if (value.length < 5) {
                 return '标题至少得5个字符啊';
             }
-            l
         }
+        ,name:[/^[a-zA-Z][0-9a-zA-Z_]*$/,"开头不能为特殊符号且内容只能由下划线和字母组成"]
         , Ndouble: [
             /^[1-9]\d*$/
             , '只能输入整数哦'

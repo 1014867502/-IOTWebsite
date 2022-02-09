@@ -43,13 +43,13 @@ layui.define(['jquery','layer'],function (exports) {
                 type: 1
                 ,title: false //不显示标题栏
                 ,closeBtn: 1
+                ,move: false
                 ,area: '336px;'
                 ,anim:-1
                 ,shade: 0.8
                 ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
                 ,btnAlign: 'c'
                 ,isOutAnim:false
-                ,moveType: 1 //拖拽模式，0或者1
                 ,content: ''
             },e));
         }

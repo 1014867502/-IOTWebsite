@@ -12,7 +12,7 @@ import java.util.List;
 public class VersionDataMysqlDAL implements IVersion {
     @Override
     public Page<VersionData> getAllVersion(int pageno, int limit) {
-        String sql="from version_data where id in(1,4,5,6,7)";
+        String sql="from version_data where id in(3,4,5,6,7)";
         Page<Record> page = Db.paginate(pageno, limit, "select *",sql);
         List<Record> recordList = page.getList();
         List<VersionData> rslist = new ArrayList<>();

@@ -28,6 +28,7 @@ public class LoginSessionInterceptor implements Interceptor {
         excludes.add("/addregister");
         excludes.add("/retrievePassword");
         excludes.add("/reportcharts/**");
+        excludes.add("/version/downloadFileByCode");
         excludes.add("/rtcm32");
     }
 

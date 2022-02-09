@@ -164,7 +164,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">长半轴</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_dst_datum_da' type=\"text\" name=\"coordvt_dst_datum_da\" lay-verType='tips' lay-verify=\"required|number\"\n" +
+        "                                    <input id='coordvt_dst_datum_da' type=\"text\" name=\"coordvt_dst_datum_da\" lay-verType='tips' lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入长半轴\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +
@@ -172,7 +172,7 @@ layui.define(['form', 'drawer', 'table'], function (exports) {
         "                            <div class=\"layui-form-item  fastinput\">\n" +
         "                                <label class=\"layui-form-label  \">扁率倒数</label>\n" +
         "                                <div class=\"layui-input-block\">\n" +
-        "                                    <input id='coordvt_dst_datum_df' type=\"text\" name=\"coordvt_dst_datum_df\" lay-verType='tips'lay-verify=\"required|number\"\n" +
+        "                                    <input id='coordvt_dst_datum_df' type=\"text\" name=\"coordvt_dst_datum_df\" lay-verType='tips'lay-verify=\"required\"\n" +
         "                                           placeholder=\"请输入端口\"\n" +
         "                                           autocomplete=\"off\" class=\"layui-input\">\n" +
         "                                </div>\n" +

@@ -13,10 +13,12 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
     var agentNumber;
     var layerindex;
     var userselected;
+    var code="";
     var id;//当前用户的id
 
 
     renderTable();
+    mounted();
     //表格刷新
     function renderTable(){
         var stats = $("#stats").val();
@@ -59,12 +61,84 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
         }else if(obj.event === 'download'){
             if(data.downloadUrl.indexOf("http")>=0){
-                window.open(data.downloadUrl);
+                window.open(data.downloadUrl,"_self");
             }else{
                 window.open("/version/downloadFile?filename="+data.downloadUrl,"_self");
+            }
+        }else if(obj.event==='codedownload'){
+            let path="/version/downloadcode?filename="+data.downloadUrl;
+            if(data.downloadUrl.indexOf("http")>=0){
+                let content="<img style=\"height: 200px; width: 200px;margin-left: 9px;\" src=\""+path+"\" />";
+                layer.open({
+                    title: '扫码下载'
+                    ,skin: 'demo-class'
+                    ,area: ['240px', '330px']
+                    ,offset: 'auto'
+                    ,content: content
+                });
+            }else{
+                $.ajax({
+                    url:'/version/developCode',
+                    data:{
+                        userid:userid
+                    },
+                    success:function (res) {
+                        code=res.data;
+                        let path="/version/downloadcode?filename="+data.downloadUrl+"&&userid="+userid+"&&code="+code;
+                            let content = "<img style=\"height: 200px; width: 200px;margin-left: 9px;\" src=\"" + path + "\" />";
+                            layer.open({
+                                title: '扫码下载'
+                                , skin: 'demo-class'
+                                , area: ['240px', '330px']
+                                , offset: 'auto'
+                                ,btn: ['关闭']
+                                , content: content
+                                ,yes: function(index, layero){
+                                    clear();
+                                    layer.close(index)
+                                }
+                                ,cancel: function(index, layero) {
+                                    clear();
+                                    layer.close(index)
+                                }
+                            });
+                        }
+                })
             }
         }
     });
 
+    //清除对应用户的验证码
+    function clear(){
+        if(code!=""){
+            $.ajax({
+                url:'/version/clearCode',
+                data:{
+                    userid:userid,
+                    code:code
+                },
+                success:function(res){
+                    if(res.data!=""){
+                        code="";
+                    }
+                }
+            })
+        }
+    }
+
+    function mounted() {
+        window.addEventListener('unload',function () {
+            clear();
+        });
+        window.onunload=function(){
+            clear();
+        };
+        window.addEventListener('beforeunload',function (e) {
+            clear();
+        });
+        window.onbeforeunload=function(){
+            clear();
+        }
+    }
     exports('helpmanage',{})
 });

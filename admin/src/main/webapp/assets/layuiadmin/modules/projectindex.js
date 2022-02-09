@@ -117,7 +117,7 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
         drawer.render({
             title: '添加设备',  //标题
             offset: 'r',    //r:抽屉在右边、l:抽屉在左边
-            width: "600px", //r、l抽屉可以设置宽度
+            width: "450px", //r、l抽屉可以设置宽度
             content: $("#addprowindow"),
             success: function (layero, index) {
                 getCompanyListByRoleAdd(userid);
@@ -944,7 +944,6 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
                 filename: userid + filename,
             },
             success: function () {
-
             }
         })
     }
