@@ -72,7 +72,6 @@ layui.define(['form','drawer','table'], function (exports) {
             , id: 'table-form'
             , page: true
             , parseData: function (res) {
-                console.log(res);
                 return {
                     "code": res.code,
                     "msg": res.msg,

@@ -275,4 +275,43 @@ public class OrderConstants  {
     public static String RAW_SECOND_NTRIP_ARG="SET,DEVICE.RAW.SECOND_NTRIP_ARG,";//第二cores
 
     public static String EXT_SENSOR_CMD="SET,DEVICE.EXT_SENSOR.CMD,";//增加设备传感器
+
+    public static String GK_CLOUD_ENABLED="SET,DEVICE.GK_CLOUD.ENABLED,";
+
+    public static String GK_CLOUD_IP="SET,DEVICE.GK_CLOUD.IP,";
+
+    public static String GK_CLOUD_PORT="SET,DEVICE.GK_CLOUD.PORT,";
+
+    public static String GK_CLOUD_ID="SET,DEVICE.GK_CLOUD.ID,";
+
+    public static String GK_CLOUD_CHANNEL="SET,DEVICE.GK_CLOUD.CHANNEL,";
+
+    public static String GK_CLOUD_STATUS="SET,DEVICE.GK_CLOUD.STATUS,";
+
+    public static String LIANZHI_ENABLED="SET,DEVICE.LIANZHI.ENABLED,";
+
+    public static String LIANZHI_IP="SET,DEVICE.LIANZHI.IP,";
+
+    public static String LIANZHI_PORT="SET,DEVICE.LIANZHI.PORT,";
+
+    public static String LIANZHI_ID="SET,DEVICE.LIANZHI.ID,";
+
+    public static String LIANZHI_PHONE_NUMBER="SET,DEVICE.LIANZHI.PHONE_NUMBER,";
+
+    public static String LIANZHI_GNSS_DATA="SET,DEVICE.LIANZHI.GNSS_DATA,";
+
+    public static String LIANZHI_STATUS="SET,DEVICE.LIANZHI.STATUS,";
+
+    public static String WULING_ENABLED="SET,DEVICE.WULING.ENABLED,";
+
+    public static String WULING_ID="SET,DEVICE.WULING.ID,";
+
+    public static String WULING_USER="SET,DEVICE.WULING.USER,";
+
+    public static String WULING_KEY="SET,DEVICE.WULING.KEY,";
+
+    public static String WULING_STATUS="SET,DEVICE.WULING.STATUS,";
+
+    public static String WULING_INTERVAL="SET,DEVICE.WULING.INTERVAL,";
+
 }

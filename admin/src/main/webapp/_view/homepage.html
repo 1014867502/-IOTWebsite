@@ -22,12 +22,12 @@
 
 <div id="LAY_app">
     <div class="layui-layout layui-layout-admin">
-        <div class="layui-header" style="background-color: #ffFFFF;">
+        <div class="layui-header" style="background-color: #ffFFFF;" >
             <!-- 头部区域 -->
             #include("/_view/_common/_header.html")
         </div>
         <!-- 侧边菜单 -->
-        <div class="layui-side layui-side-menu">
+        <div class="layui-side layui-side-menu" id="menuarea">
             #include("/_view/_common/_menu.html")
         </div>
         <!-- 页面标签 -->
@@ -102,6 +102,8 @@
         //     return false;
         //   }
         // })
+        var docconente=['docintroduce','docdevicemanage','docprojectmanage','doctemplatemanage','docdownload'];
+
         adaptauthority();
 
 
@@ -113,17 +115,17 @@
                 success:function (data) {
                     switch (data.data) {
                         case "user":
-                            document.getElementById("companymanage").style.display="none";
-                            document.getElementById("devicemanage").style.display="none";
-                            document.getElementById("usermanage").style.display="none";
-                            document.getElementById("orderlogmanage").style.display="none";
+                            $("#companymanage").css("display","none");
+                            $("#devicemanage").css("display","none");
+                            $("#usermanage").css("display","none");
+                            $("#orderlogmanage").css("display","none");
                             break;
                         case "companyadmin":
                             document.getElementById("changePassword").style.display="none";
                             document.getElementById("companymanage").style.display="none";
                             document.getElementById("devicemanage").style.display="none";
                             document.getElementById("usermanage2").setAttribute("lay-href","/manage/comusermanage");
-                            $("#projectmanage a").attr("lay-href","/company/CompanyDetail?agentNumber="+agentnum);
+                            $("#projectmanage").attr("lay-href","/company/CompanyDetail?agentNumber="+agentnum);
                             break;
                         case "superadmin":
                             document.getElementById("changePassword").style.display="none";
@@ -141,6 +143,17 @@
             })
         }
 
+        function docauthority(){
+            for(let i=0;i<docconente.length;i++){
+                let data="#"+docconente[i];
+                $(data).css('display','block');
+            }
+
+        }
+
+        $("#docopen").on("click",function () {
+            document.getElementById("menuarea").innerHTML="<% include /_view/_common/_wordmenu.html %>";
+        })
     });
 
 </script>

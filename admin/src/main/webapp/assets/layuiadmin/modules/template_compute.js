@@ -50,7 +50,7 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func','stati
                 return '标题至少得5个字符啊';
             }
         }
-        ,name:[/^[a-zA-Z][0-9a-zA-Z_]*$/,"开头不能为特殊符号且内容只能由下划线和字母组成"]
+        ,name:[/^[0-9a-zA-Z][0-9a-zA-Z_]*$/,"开头不能为特殊符号且内容只能由下划线和字母组成"]
         , Ndouble: [
             /^[1-9]\d*$/
             , '只能输入整数哦'
@@ -317,7 +317,6 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func','stati
 
     form.on('submit(example)',function () {
         let setting=parent.testmodel;
-
         let data1 = form.val("example");
         $.ajax({
             url:'/template/updateModelNameByName',
@@ -1168,7 +1167,6 @@ layui.define(['element', 'form', 'drawer', 'table','station_compute_func','stati
     // }
 
     function setIframeHeight() {
-        debugger
         let height=$("#templatecompute").height();
         height+=30;
         parent.setcomputeheight(height);

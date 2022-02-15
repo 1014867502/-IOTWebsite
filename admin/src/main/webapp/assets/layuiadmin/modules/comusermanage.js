@@ -506,7 +506,6 @@ layui.define(['form','drawer','table','laydate','Global_variable'], function (ex
             , id: 'table-form'
             , page: true
             , parseData: function (res) {
-                console.log(res);
                 return {
                     "code": res.code,
                     "msg": res.msg,

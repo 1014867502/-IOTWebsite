@@ -75,6 +75,8 @@ layui.define(['table', 'form','laydate','carousel'],function (exports) {
                     $("#btn").addClass("layui-btn-disabled");
                     orderlist.update({disabled: true});
                     $("#btn").attr("disabled", "disabled");
+                    $("#download").attr("disabled", "disabled");
+                    $("#download").addClass("layui-btn-disabled");
                     $("#text").attr("disabled", "disabled");
                     $("#text").addClass("layui-btn-disabled");
                 }
@@ -93,6 +95,10 @@ layui.define(['table', 'form','laydate','carousel'],function (exports) {
         }
     }
 
+    $("#download").on('click',function () {
+        let textdata=$("#returninform").val();
+        download("设备数据返回",textdata);
+    })
 
     // $("#test").on('click',function () {
     //     $.ajax({
@@ -214,7 +220,6 @@ layui.define(['table', 'form','laydate','carousel'],function (exports) {
             :
             new Date().getSeconds()
         dateTime = yy + '-' + mm + '-' + dd + ' ' + hh + ':' + mf + ':' + ss
-        console.log(dateTime)
         return dateTime
     }
 
@@ -249,19 +254,29 @@ layui.define(['table', 'form','laydate','carousel'],function (exports) {
     }
 
 
+
+    //下载接收到的数据
+    function download(filename,content) {
+        var blob = new Blob([content], {type: 'text/plain'});
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+
+        a.style = "display: none";
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+
+        setTimeout(function () {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 5);
+    }
+
     function mounted() {
-        window.addEventListener('unload',function () {
-            closesocket();
-        });
-        window.onunload=function(){
-            closesocket();
-        };
         window.addEventListener('beforeunload',function (e) {
             closesocket();
         });
-        window.onbeforeunload=function(){
-            closesocket();
-        }
     }
 
 

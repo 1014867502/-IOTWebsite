@@ -32,6 +32,10 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
             /^(([^0][0-9]+|0)\.([0-9]{1,2})$)|^(([^0][0-9]+|0)$)|^(([1-9]+)\.([0-9]{1,20})$)|^(([1-9]+)$)/
             ,"输入数字有误！"
         ]
+        , port: [
+            /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
+            , '端口号有误'
+        ]
         , Lon: [
             /^(((\d|[1-9]\d|1[1-7]\d|0)\.\d{0,2})|(\d|[1-9]\d|1[1-7]\d|0{1,3})|180\.0{0,2}|180)$/
             , '经度输入有误'
@@ -161,6 +165,51 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
 
     });
 
+    form.on('switch(gk_enable)', function (data) {
+        new Promise((resolve, reject) => {
+            if (this.checked) {
+                document.getElementById("gk_select").innerHTML =platformfunc.gkcontent;
+                platformfunc.gkupdate();
+            } else {
+                document.getElementById("gk_select").innerHTML = "";
+            }
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
+        form.render();
+    })
+
+    form.on('switch(lianzhi_enable)', function (data) {
+        new Promise((resolve, reject) => {
+            if (this.checked) {
+                document.getElementById("lianzhi_select").innerHTML =platformfunc.lianzhicontent;
+                platformfunc.lianzhiupdate();
+            } else {
+                document.getElementById("lianzhi_select").innerHTML = "";
+            }
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
+        form.render();
+    })
+
+    form.on('switch(wuling_enable)', function (data) {
+        new Promise((resolve, reject) => {
+            if (this.checked) {
+                document.getElementById("wuling_select").innerHTML =platformfunc.wulingcontent;
+                platformfunc.wulingupdate();
+            } else {
+                document.getElementById("wuling_select").innerHTML = "";
+            }
+            resolve();
+        }).then(() => {
+            setIframeHeight();
+        });
+        form.render();
+    })
+
     form.on('submit(formDemo)',function (data) {
         let test=data.field;
         let jsondata=platformfunc.datachange(test);
@@ -256,6 +305,7 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
             },
             success: function (data) {
                 let device = data.data;
+                debugger
                 if (device.rawName!=null) {
                     locatedata = device;
                     platformfunc.setdevice(device);
@@ -324,6 +374,43 @@ layui.define(['form', 'drawer', 'table','station_platform_func','station_func'],
                     } else {
                         document.getElementById("chongqing_select").innerHTML = "";
                         $("#chongqing_enable").prop('checked', false);
+                    }
+                    //基康云平台
+                    if (device.gkCloudEnabled > 0) {
+                        $("#gk_enable").prop('checked', true);
+                        document.getElementById("gk_select").innerHTML = platformfunc.gkcontent;
+                        $("#gk_ip").val(locatedata.gkCloudIp);
+                        $("#gk_id").val(locatedata.gkCloudId);
+                        $("#gk_port").val(locatedata.gkCloudPort);
+                        $("#gk_channel").val(locatedata.gkCloudChannel);
+                    } else {
+                        document.getElementById("gk_select").innerHTML = "";
+                        $("#gk_enable").prop('checked', false);
+                    }
+                    //联智云平台
+                    if (device.lianZhiEnabled > 0) {
+                        $("#lianzhi_enable").prop('checked', true);
+                        document.getElementById("lianzhi_select").innerHTML = platformfunc.lianzhicontent;
+                        $("#lianzhi_ip").val(locatedata.lianZhiIp);
+                        $("#lianzhi_port").val(locatedata.lianZhiPort);
+                        $("#lianzhi_id").val(locatedata.lianZhiId);
+                        $("#lianzhi_phonenumber").val(locatedata.lianZhiPhoneNum);
+                        $("#lianzhi_gnssdata").val(locatedata.lianZhiGnssData);
+                    } else {
+                        document.getElementById("lianzhi_select").innerHTML = "";
+                        $("#lianzhi_enable").prop('checked', false);
+                    }
+                    //五凌物流
+                    if (device.wuLingEnabled > 0) {
+                        $("#wuling_enable").prop('checked', true);
+                        document.getElementById("wuling_select").innerHTML = platformfunc.wulingcontent;
+                        $("#wuling_id").val(locatedata.wuLingId);
+                        $("#wuling_user").val(locatedata.wuLingUser);
+                        $("#wuling_key").val(locatedata.wuLingKey);
+                        $("#wuling_interval").val(locatedata.wuLingInterval);
+                    } else {
+                        document.getElementById("wuling_select").innerHTML = "";
+                        $("#wuling_enable").prop('checked', false);
                     }
                     saveModel();
                     form.render();

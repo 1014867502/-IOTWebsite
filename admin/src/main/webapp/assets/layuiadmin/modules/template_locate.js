@@ -550,7 +550,6 @@ layui.define(['form', 'drawer', 'table','station_locate_func','station_func'], f
     }
 
     function setIframeHeight() {
-        debugger
         let height=$("#templatelocal").height();
         height+=30;
         parent.setlocateheight(height);

@@ -905,7 +905,6 @@ layui.define(['form', 'drawer', 'table', 'upload','layer'], function (exports) {
                             },
                             success:function (data) {
                                 curprogress=data.data;
-                                debugger;
                                 if(data.data==100){
                                     layer.msg("导入成功");
                                     window.clearInterval(progressfinish);

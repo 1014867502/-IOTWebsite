@@ -183,7 +183,6 @@ layui.define(['table', 'form','laydate','carousel', 'echarts'],function (exports
             , id: 'update-form'
             , page: true
             , parseData: function (res) {
-                console.log(res);
                 return {
                     "code": res.code,
                     "msg": res.msg,

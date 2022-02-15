@@ -657,7 +657,6 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             , id: 'table-form'
             , page: true
             , parseData: function (res) {
-                console.log(res);
                 return {
                     "code": res.code,
                     "msg": res.msg,

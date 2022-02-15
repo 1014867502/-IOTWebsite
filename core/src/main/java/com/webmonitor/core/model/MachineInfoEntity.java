@@ -217,6 +217,22 @@ public class MachineInfoEntity {
     private String glonass;
     private String gaLileo;
     private String expiredate;
+    private String gkCloudEnabled;
+    private String gkCloudIp;
+    private String gkCloudPort;
+    private String gkCloudChannel;
+    private String gkCloudId;
+    private String lianZhiEnabled;
+    private String lianZhiIp;
+    private String lianZhiPort;
+    private String lianZhiId;
+    private String lianZhiPhoneNum;
+    private String lianZhiGnssData;
+    private String wuLingEnabled;
+    private String wuLingId;
+    private String wuLingUser;
+    private String wuLingKey;
+    private String wuLingInterval;
     public MachineInfoEntity(Long _id, String machineSerial, String machineModel,
             String mcuVer, String firmwareVer, String puwerLever, String extVoltage,
             String insideSpace, String dataLink, String timeZone, String rtkPos,
@@ -564,15 +580,10 @@ public class MachineInfoEntity {
     public String getDzIotIp() {
         return this.dzIotIp;
     }
-
     public String getNetworkMountpointUse() {
         return networkMountpointUse;
     }
-
-    public void setNetworkMountpointUse(String networkMountpointUse) {
-        this.networkMountpointUse = networkMountpointUse;
-    }
-
+    public void setNetworkMountpointUse(String networkMountpointUse) { this.networkMountpointUse = networkMountpointUse; }
     public void setDzIotIp(String dzIotIp) {
         this.dzIotIp = dzIotIp;
     }
@@ -801,9 +812,7 @@ public class MachineInfoEntity {
     public String getNetworkMountpointPass() {
         return this.networkMountpointPass;
     }
-    public void setNetworkMountpointPass(String networkMountpointPass) {
-        this.networkMountpointPass = networkMountpointPass;
-    }
+    public void setNetworkMountpointPass(String networkMountpointPass) { this.networkMountpointPass = networkMountpointPass; }
     public String getNetworkUploadGga() {
         return this.networkUploadGga;
     }
@@ -924,21 +933,18 @@ public class MachineInfoEntity {
     public void setRawBackBaud(String rawBackBaud) {
         this.rawBackBaud = rawBackBaud;
     }
-
     public String getWifiIp() {
         return this.wifiIp;
     }
     public void setWifiIp(String wifiIp) {
         this.wifiIp = wifiIp;
     }
-
     public String getResultStatus() {
         return this.resultStatus;
     }
     public void setResultStatus(String resultStatus) {
         this.resultStatus = resultStatus;
     }
-
     public int getConnectState() {
         return this.connectState;
     }
@@ -951,7 +957,6 @@ public class MachineInfoEntity {
     public void setExtSensorPower(String extSensorPower) {
         this.extSensorPower = extSensorPower;
     }
-
     public String getNtrIpBase() {
         return this.ntrIpBase;
     }
@@ -1032,7 +1037,6 @@ public class MachineInfoEntity {
     public void setSecondArg(String secondArg) { this.secondArg = secondArg; }
     public String getSecondNtripBase() { return secondNtripBase; }
     public void setSecondNtripBase(String secondNtripBase) { this.secondNtripBase = secondNtripBase; }
-
     public String getGpsSerial() { return gpsSerial; }
     public void setGpsSerial(String gpsSerial) { this.gpsSerial = gpsSerial; }
     public String getGpsModel() { return gpsModel; }
@@ -1051,4 +1055,36 @@ public class MachineInfoEntity {
     public void setNameType(int nameType) { this.nameType = nameType; }
     public String getExpiredate() { return expiredate; }
     public void setExpiredate(String expiredate) { this.expiredate = expiredate; }
+    public String getGkCloudEnabled() { return gkCloudEnabled; }
+    public void setGkCloudEnabled(String gkCloudEnabled) { this.gkCloudEnabled = gkCloudEnabled; }
+    public String getGkCloudIp() { return gkCloudIp; }
+    public void setGkCloudIp(String gkCloudIp) { this.gkCloudIp = gkCloudIp; }
+    public String getGkCloudChannel() { return gkCloudChannel; }
+    public String getGkCloudPort() { return gkCloudPort; }
+    public void setGkCloudPort(String gkCloudPort) { this.gkCloudPort = gkCloudPort; }
+    public String getGkCloudId() { return gkCloudId; }
+    public void setGkCloudId(String gkCloudId) { this.gkCloudId = gkCloudId; }
+    public void setGkCloudChannel(String gkCloudChannel) { this.gkCloudChannel = gkCloudChannel; }
+    public String getLianZhiEnabled() { return lianZhiEnabled; }
+    public void setLianZhiEnabled(String lianZhiEnabled) { this.lianZhiEnabled = lianZhiEnabled; }
+    public String getLianZhiPort() { return lianZhiPort; }
+    public String getLianZhiIp() { return lianZhiIp; }
+    public void setLianZhiIp(String lianZhiIp) { this.lianZhiIp = lianZhiIp; }
+    public void setLianZhiPort(String lianZhiPort) { this.lianZhiPort = lianZhiPort; }
+    public String getLianZhiId() { return lianZhiId; }
+    public void setLianZhiId(String lianZhiId) { this.lianZhiId = lianZhiId; }
+    public String getLianZhiPhoneNum() { return lianZhiPhoneNum; }
+    public void setLianZhiPhoneNum(String lianZhiPhoneNum) { this.lianZhiPhoneNum = lianZhiPhoneNum; }
+    public String getWuLingEnabled() { return wuLingEnabled; }
+    public void setWuLingEnabled(String wuLingEnabled) { this.wuLingEnabled = wuLingEnabled; }
+    public String getWuLingId() { return wuLingId; }
+    public void setWuLingId(String wuLingId) { this.wuLingId = wuLingId; }
+    public String getWuLingUser() { return wuLingUser; }
+    public void setWuLingUser(String wuLingUser) { this.wuLingUser = wuLingUser; }
+    public String getWuLingKey() { return wuLingKey; }
+    public void setWuLingKey(String wuLingKey) { this.wuLingKey = wuLingKey; }
+    public String getLianZhiGnssData() { return lianZhiGnssData; }
+    public void setLianZhiGnssData(String lianZhiGnssData) { this.lianZhiGnssData = lianZhiGnssData; }
+    public String getWuLingInterval() { return wuLingInterval; }
+    public void setWuLingInterval(String wuLingInterval) { this.wuLingInterval = wuLingInterval; }
 }

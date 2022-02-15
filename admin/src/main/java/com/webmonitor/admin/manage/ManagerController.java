@@ -134,6 +134,21 @@ public class ManagerController extends BaseController {
         render("helpmanage.html");
     }
 
+    /**测试主页**/
+    public void mainpage(){
+        String userid = getCookie(IndexService.me.accessUserId);
+        setAttr("userid",userid);
+        render("mainpage.html");
+    }
+
+    public void menuside(){
+        render("_menu.html");
+    }
+
+    public void docmenuside(){
+        render("_wordmenu.html");
+    }
+
 
 
 

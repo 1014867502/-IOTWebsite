@@ -688,6 +688,54 @@ public class DeviceListService {
                 break;
             case "secondArg":
                 realorder=OrderConstants.RAW_SECOND_NTRIP_ARG;
+                break;
+            case "gkCloudEnabled":
+                realorder=OrderConstants.GK_CLOUD_ENABLED;
+                break;
+            case "gkCloudIp":
+                realorder=OrderConstants.GK_CLOUD_IP;
+                break;
+            case "gkCloudChannel":
+                realorder=OrderConstants.GK_CLOUD_CHANNEL;
+                break;
+            case "gkCloudID":
+                realorder=OrderConstants.GK_CLOUD_ID;
+                break;
+            case "gkCloudPort":
+                realorder=OrderConstants.GK_CLOUD_PORT;
+                break;
+            case "lianZhiEnabled":
+                realorder=OrderConstants.LIANZHI_ENABLED;
+                break;
+            case "lianZhiIp":
+                realorder=OrderConstants.LIANZHI_IP;
+                break;
+            case "lianZhiPort":
+                realorder=OrderConstants.LIANZHI_PORT;
+                break;
+            case "lianZhiId":
+                realorder=OrderConstants.LIANZHI_ID;
+                break;
+            case "lianZhiPhoneNum":
+                realorder=OrderConstants.LIANZHI_PHONE_NUMBER;
+                break;
+            case "lianZhiGnssData":
+                realorder=OrderConstants.LIANZHI_GNSS_DATA;
+                break;
+            case "wuLingEnabled":
+                realorder=OrderConstants.WULING_ENABLED;
+                break;
+            case "wuLingId":
+                realorder=OrderConstants.WULING_ID;
+                break;
+            case "wuLingUser":
+                realorder=OrderConstants.WULING_USER;
+                break;
+            case "wuLingKey":
+                realorder=OrderConstants.WULING_KEY;
+                break;
+            case "wuLingInterval":
+                realorder=OrderConstants.WULING_INTERVAL;
         }
         return realorder;
     }
