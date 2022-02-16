@@ -61,9 +61,9 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
             location.href = '/gnssdevice/gnssdatahome?projid='+proId+'&sn='+data.devicenumber+'&type='+data.typeid+'&stationname='+data.name;
         }else if(obj.event === 'download'){
             if(data.downloadUrl.indexOf("http")>=0){
-                window.open(data.downloadUrl,"_self");
+                window.open(data.downloadUrl,"_blank");
             }else{
-                window.open("/version/downloadFile?filename="+data.downloadUrl,"_self");
+                window.open("/version/downloadFile?filename="+data.downloadUrl,"_blank");
             }
         }else if(obj.event==='codedownload'){
             let path="/version/downloadcode?filename="+data.downloadUrl;
@@ -124,6 +124,20 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 }
             })
         }
+    }
+
+    function goTo(data)
+    {
+        var newA = document.createElement("a");
+        newA.id='gg'
+        newA.target='_blank';
+        // newA.href=;
+
+
+        document.body.appendChild(newA);
+        newA.click();
+        document.body.removeChild(newA);
+
     }
 
     function mounted() {

@@ -142,7 +142,30 @@ public class ManagerController extends BaseController {
     }
 
     public void menuside(){
-        render("_menu.html");
+        Result result=Result.newOne();
+        try {
+            String userid = getCookie(IndexService.me.accessUserId);
+            StaffData currentuser = StaffService.me.getStaffById(userid);
+            setCookie(IndexService.me.accessUserId, currentuser.getId().toString(), 24 * 60 * 60, true);
+            int roletype = currentuser.getIRoleType();
+            RoleType role = RoleType.getIndex(roletype);
+            switch (role) {
+                case user:
+                    render("menu_user.html");
+                    break;
+                case superadmin:
+                    render("menu_superadmin.html");
+                    break;
+                case companyadmin:
+                    render("menu_companyadmin.html");
+                    break;
+                case admin:
+                    render("menu_admin.html");
+                    break;
+            }
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
     }
 
     public void docmenuside(){

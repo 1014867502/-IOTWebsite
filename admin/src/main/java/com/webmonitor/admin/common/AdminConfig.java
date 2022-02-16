@@ -31,6 +31,7 @@ import com.webmonitor.admin.directive.SelectDirective;
 import com.webmonitor.admin.directive.StoreSelectDirective;
 import com.webmonitor.admin.directive.TableBadgeDirective;
 import com.webmonitor.admin.directive.TableLabelDirective;
+import com.webmonitor.admin.document.DocumentController;
 import com.webmonitor.admin.index.IndexController;
 import com.webmonitor.admin.manage.ManagerController;
 import com.webmonitor.admin.orderlog.OrderLogController;
@@ -96,6 +97,7 @@ public class AdminConfig extends JfinalCoreConfig {
         me.add("/template", TemplateController.class);
         me.add("/orderlog", OrderLogController.class);
         me.add("/version", VersionController.class);
+        me.add("/document", DocumentController.class);
         //me.add("/permission", PermissionController.class);
         //业务路由
     }

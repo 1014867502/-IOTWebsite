@@ -37,7 +37,7 @@ public class VersionController extends BaseController {
         String filename = getPara("filename");
         filename = filename.replace(":", "");
         String basepath = "C:\\FirmwareUpdate\\Latest";
-        String path = basepath + "\\" + filename +".bin";
+        String path = basepath + "\\" + filename;
         File report = new File(path);
         if (report.exists()) {
             renderFile(report);
@@ -97,7 +97,7 @@ public class VersionController extends BaseController {
             }
             filename = filename.replace(":", "");
             String basepath = "C:\\FirmwareUpdate\\Latest";
-            String path = basepath + "\\" + filename +".bin";
+            String path = basepath + "\\" + filename;
             File report = new File(path);
             if (report.exists()) {
                 renderFile(report);

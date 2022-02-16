@@ -27,8 +27,8 @@
             #include("/_view/_common/_header.html")
         </div>
         <!-- 侧边菜单 -->
-        <div class="layui-side layui-side-menu" id="menuarea">
-            #include("/_view/_common/_menu.html")
+        <div class="layui-side layui-side-menu"  style="overflow-y: hidden">
+            <iframe  id="menuarea" height="100%" width="100%" src="/manage/menuside" scrolling : no></iframe>
         </div>
         <!-- 页面标签 -->
         <div class="layadmin-pagetabs" id="LAY_app_tabs">
@@ -80,6 +80,15 @@
     function sethomeheight(height) {
         $("#homepage").height(height+"px");
     }
+
+    function setherf(src){
+        $("#homepage").attr("src",src);
+    }
+
+
+
+
+
     layui.config({
         base: '/assets/layuiadmin/' //静态资源所在路径
     }).extend({
@@ -106,8 +115,6 @@
 
         adaptauthority();
 
-
-
         function adaptauthority(){
             $.ajax({
                 url:'/custom/getauthorById',
@@ -115,28 +122,17 @@
                 success:function (data) {
                     switch (data.data) {
                         case "user":
-                            $("#companymanage").css("display","none");
-                            $("#devicemanage").css("display","none");
-                            $("#usermanage").css("display","none");
-                            $("#orderlogmanage").css("display","none");
                             break;
                         case "companyadmin":
                             document.getElementById("changePassword").style.display="none";
-                            document.getElementById("companymanage").style.display="none";
-                            document.getElementById("devicemanage").style.display="none";
-                            document.getElementById("usermanage2").setAttribute("lay-href","/manage/comusermanage");
-                            $("#projectmanage").attr("lay-href","/company/CompanyDetail?agentNumber="+agentnum);
+                            window.frames[0].$("#projectmanage2").attr("href","/company/CompanyDetail?agentNumber="+agentnum);
                             break;
                         case "superadmin":
-                            document.getElementById("changePassword").style.display="none";
-                            document.getElementById("devicemanage").style.display="none";
-                            document.getElementById("projectmanage").style.display="none";
+                            $("#changePassword").css("display","none");
                             break;
                         case "admin":
                                 document.getElementById("changePassword").style.display="none";
-                                document.getElementById("devicemanage").style.display="none";
-                                document.getElementById("projectmanage").style.display="none";
-                            document.getElementById("usermanage2").setAttribute("lay-href","/manage/comadminmanage");
+                                document.getElementById("usermanage2").setAttribute("lay-href","/manage/comadminmanage");
                                 break;
                     }
                 }
@@ -152,7 +148,7 @@
         }
 
         $("#docopen").on("click",function () {
-            document.getElementById("menuarea").innerHTML="<% include /_view/_common/_wordmenu.html %>";
+            $("#menuarea").attr("src","/document/webuserdoc");
         })
     });
 
