@@ -28,7 +28,7 @@
         </div>
         <!-- 侧边菜单 -->
         <div class="layui-side layui-side-menu"  style="overflow-y: hidden">
-            <iframe  id="menuarea" height="100%" width="100%" src="/manage/menuside" scrolling : no></iframe>
+            <iframe  id="menuarea" height="100%" width="100%" src="/manage/menuside" scrolling : no style="border-width: 0px;"></iframe>
         </div>
         <!-- 页面标签 -->
         <div class="layadmin-pagetabs" id="LAY_app_tabs">
@@ -149,6 +149,11 @@
 
         $("#docopen").on("click",function () {
             $("#menuarea").attr("src","/document/webuserdoc");
+        })
+
+        $("#systemopen").on("click",function () {
+            $("#menuarea").attr("src","/manage/menuside");
+            $("#homepage").attr("src","/projectindex");
         })
     });
 

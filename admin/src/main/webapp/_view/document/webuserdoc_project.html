@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow-y: auto;background-color: #FFFF;">
+<head>
+    #@meta("设备管理页面")
+    <script src="/assets/lib/xm-select.js"></script>
+</head>
+<body class="layui-layout-body">
+<style>
+    .site-h1 {
+        margin-bottom: 20px;
+        line-height: 60px;
+        padding-bottom: 10px;
+        color: #393D49;
+        border-bottom: 1px solid #eee;
+        font-size: 28px;
+        font-weight: 300;
+    }
+
+    .site-title {
+        margin: 30px 0 20px;
+    }
+
+    .site-title fieldset {
+        border: none;
+        padding: 0;
+        border-top: 1px solid #eee;
+    }
+
+    .layui-layer-title {
+        padding: 0 80px 0 20px;
+        height: 50px;
+        line-height: 50px;
+        border-bottom: 1px solid #F0F0F0;
+        font-size: 14px;
+        color: #333;
+        overflow: hidden;
+        border-radius: 2px 2px 0 0;
+    }
+
+    body .layui-layer-dir .layui-layer-content {
+        padding: 10px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        position: relative;
+        overflow: auto;
+    }
+
+    .picture{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .enlarge {
+        cursor: pointer;
+    }
+
+</style>
+
+
+<div class="layui-fluid">
+    <div class="layui-col-md9 site-content">
+        <h1 class="site-h1">项目管理</h1>
+        <blockquote class="site-text layui-elem-quote">
+            项目管理页面中可以查看编辑项目
+        </blockquote>
+        <div class="site-title">
+            <fieldset>
+                <legend><a name="use">用法</a></legend>
+            </fieldset>
+        </div>
+        <div >
+            <p>项目管理如图3-1所示，可以看到用户管理的项目信息和项目在地图上的位置。</p>
+            <div class="picture"> <img class="enlarge" height="265" width="600" src="/assets/images/webuser3-1.png">
+                <div>图3-1</div>
+            </div>
+            <div class="picture"> <img class="enlarge" height="265" width="600" src="/assets/images/webuser3-2.png">
+                <div>图3-2</div>
+            </div>
+            <p>选择一个项目，点击【详情】如图3-2所示，可以看到项目中的设备数目及设备在地图上的位置。</p>
+            <p>在此界面，选择一条设备信息，点击【编辑】和在首页里编辑项目设置内容一致。</p>
+            <p>在此界面，选择一条设备信息，点击【取消关联】后则将选中的设备移出当前项目。</p>
+            <p>在此界面，点击【关联设备】如图3-3所示，可以看到隶属当前用户公司但未关联项目的设备，选中一台或多台设备后点击【关联设备】后即可将设备关联到当前项目中。</p>
+            <div class="picture"> <img class="enlarge" height="265" width="600" src="/assets/images/webuser3-3.png">
+                <div>图3-3</div>
+            </div>
+            <blockquote class="site-text layui-elem-quote">
+                注意：在此界面，选中一台或多台设备后，点击【批量配置设备】首页里【批量配置设备】设置内容一致。
+            </blockquote>
+        </div>
+    </div>
+</div>
+</div>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+
+    //var projectid = window.location.hash.substr(1);
+    var projectid = "#(projetid)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table','document_global']);
+</script>
+</body>
+</html>
