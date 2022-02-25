@@ -88,6 +88,7 @@ public class UploadThread{
                         put("RU-G01-5401", "MIS20");
                         put("SWZX-18", "MIS20");
                         put("MIS30","MIS30");
+                        put("MIS10","MIS10");
                         put("M3II","MIS20");
                         put("NET10 PLUS", "minicors");
                         put("mini CORS", "minicors");
@@ -174,6 +175,7 @@ public class UploadThread{
                     put("GS101", "MIS20");
                     put("MIS20", "MIS20");
                     put("GS101", "MIS20");
+                    put("MIS10","MIS10");
                     put("RU-G01-5402", "MIS20");
                     put("RU-G01-5401", "MIS20");
                     put("SWZX-18", "MIS20");

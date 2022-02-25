@@ -381,10 +381,13 @@ public class CustomerController extends BaseController {
     public void getAuthority(){
         Result<AuthorityEntity> result=Result.newOne();
         String userid=getPara("userid");
+        String userid2 = getCookie(IndexService.me.accessUserId);
+        StaffData currentuser = StaffService.me.getStaffById(userid2);
+        int roletype = currentuser.getIRoleType();
         try{
             StaffData staffData=StaffService.me.getStaffById(userid);
             AuthorityEntity authorityEntity=new AuthorityEntity();
-            AuthorityEntity authorityEntity1=CompanyService.me.getComAuthorById(staffData.getAgentNumber());
+            AuthorityEntity authorityEntity1=CompanyService.me.getComAuthorById(roletype,staffData.getAgentNumber());
             authorityEntity.setAppauthority(CustomerService.me.getAppAuthorityById(userid));
             authorityEntity.setWebauthority(CustomerService.me.getWebAuthorityById(userid));
             authorityEntity.setComwebauthor(authorityEntity1.getWebauthority());

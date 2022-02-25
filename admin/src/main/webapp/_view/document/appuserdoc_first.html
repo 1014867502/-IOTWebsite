@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow-y: auto;background-color: #FFFF;">
+<head>
+    #@meta("app用户版文档首页页面")
+    <script src="/assets/lib/xm-select.js"></script>
+</head>
+<body class="layui-layout-body">
+<style>
+    .site-h1 {
+        margin-bottom: 20px;
+        line-height: 60px;
+        padding-bottom: 10px;
+        color: #393D49;
+        border-bottom: 1px solid #eee;
+        font-size: 28px;
+        font-weight: 300;
+    }
+
+    .site-title {
+        margin: 30px 0 20px;
+    }
+
+    .site-title fieldset {
+        border: none;
+        padding: 0;
+        border-top: 1px solid #eee;
+    }
+
+    .layui-layer-title {
+        padding: 0 80px 0 20px;
+        height: 50px;
+        line-height: 50px;
+        border-bottom: 1px solid #F0F0F0;
+        font-size: 14px;
+        color: #333;
+        overflow: hidden;
+        border-radius: 2px 2px 0 0;
+    }
+
+    body .layui-layer-dir .layui-layer-content {
+        padding: 10px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        position: relative;
+        overflow: auto;
+    }
+
+    .picture{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .enlarge {
+        cursor: pointer;
+    }
+
+    .site-title fieldset legend {
+        margin-left: 20px;
+        padding: 0 10px;
+        font-size: 22px;
+        font-weight: 300;
+    }
+
+
+</style>
+
+
+<div class="layui-fluid">
+    <div class="layui-col-md9 site-content">
+        <h1 class="site-h1">APP介绍（用户版）</h1>
+        <blockquote class="site-text layui-elem-quote">
+            设备管理平台主要管理的是普适型监测设备，分为网页版和APP版。此文主要说明APP版设备管理平台的使用方法。
+        </blockquote>
+        <div class="site-title">
+            <fieldset>
+                <legend><a name="use">用法</a></legend>
+            </fieldset>
+        </div>
+        <div >
+            <p>在Android设备上安装GeoRemote app后，运行app如图1-1所示，输入账号、密码、设置是否记录密码后，点击【登录】进入app中。</p>
+            <div style="display: flex;justify-content: space-around;">
+                <div class="picture"> <img class="enlarge" height="600" width="265" src="/assets/images/appuser/appuser1-1.png">
+                    <div>图1-1</div>
+                </div>
+                <div class="picture"> <img class="enlarge" height="600" width="265" src="/assets/images/appuser/appuser1-2.png">
+                    <div>图1-2</div>
+                </div>
+            </div>
+            <p>首页如图1-2所示，分为两类信息，用户信息和项目信息。 点击用户头像如图1-3所示，可以查看当前用户的信息及软件版本信息。</p>
+            <div style="display: flex;justify-content: space-around;">
+                <div class="picture"> <img class="enlarge" height="600" width="265" src="/assets/images/appuser/appuser1-3.png">
+                    <div>图1-3</div>
+                </div>
+                <div class="picture"> <img class="enlarge" height="600" width="265" src="/assets/images/appuser/appuser1-4.png">
+                    <div>图1-4</div>
+                </div>
+            </div>
+            <p>项目信息包括搜索、地图、排序、项目列表。点击右上角的【 地图】如图1-4所示，可以在地图上看到项目列表中的项目在地图上的位置。地图可以在标准地图和卫星地图之间切换。点击地图上项目图标，会进入项目详情页。</p>
+            <p>在首页点击搜索框如图1-5所示，可以按照设备、项目进行搜索。选择“按项目搜索”输入项目名称可以搜索对应项目。选择“按设备搜索”输入设备SN码或者设备型号可以搜索对应设备。设备型号大致归类为：监测站、基准站、MS10、MS20、MS30。</p>
+            <p>当设备在您身边，点击【 扫一扫】可以扫描机身二维码查找该设备。</p>
+            <div style="display: flex;justify-content: space-around;">
+                <div class="picture"> <img class="enlarge" height="600" width="265" src="/assets/images/appuser/appuser1-5.png">
+                    <div>图1-5</div>
+                </div>
+                <div class="picture"> <img class="enlarge" height="600" width="265" src="/assets/images/appuser/appuser1-6.png">
+                    <div>图1-6</div>
+                </div>
+            </div>
+            <p>
+                在首页点击【 排序】如图1-6所示，项目列表中的项目可以按照项目名称首字母、项目内设备数量、新建项目时间、最近打开项目时间排序。点击第一次是正序，点击第二次是倒序。
+            </p>
+            <p>在首页点击【最新上线设备】可以看到近一周新录入的设备信息。点击一个项目名称如图1-7所示，进入设备列表界面。</p>
+            <p>在设备列表界面，点击右上角的【 地图】按钮，可以在地图上看到设备在地图上的位置。地图可以在标准地图和卫星地图之间切换。点击地图上设备图标，会进入设备设置页面。</p>
+            <p>点击【全部设备】可以看到该项目下的全部设备；点击【在线设备】可以看到该项目下的所有在线设备；点击【离线设备】可以看到该项目下的所有离线设备；点击【批量设置】如图1-8所示，可以多选设备，进行批量设置，点击【取消设置】可以退出批量设置界面。</p>
+            <div style="display: flex;justify-content: space-around;">
+                <div class="picture"> <img class="enlarge" height="600" width="265" src="/assets/images/appuser/appuser1-7.png">
+                    <div>图1-7</div>
+                </div>
+                <div class="picture"> <img class="enlarge" height="600" width="265" src="/assets/images/appuser/appuser1-8.png">
+                    <div>图1-8</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+
+    //var projectid = window.location.hash.substr(1);
+    var projectid = "#(projetid)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table','document_global']);
+</script>
+</body>
+</html>

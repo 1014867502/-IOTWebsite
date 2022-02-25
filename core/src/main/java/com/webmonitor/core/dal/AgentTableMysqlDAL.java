@@ -16,6 +16,8 @@ import sun.management.Agent;
 
 import java.util.*;
 
+import static com.webmonitor.core.dal.RoleType.superadmin;
+
 public class AgentTableMysqlDAL implements IAgent {
 
 
@@ -299,7 +301,7 @@ public class AgentTableMysqlDAL implements IAgent {
 
     /**获取公司功能权限**/
     @Override
-    public AuthorityEntity getComAuthorById(String agentNumber) {
+    public AuthorityEntity getComAuthorById(int roletype,String agentNumber) {
         AgentTable agentTable=getAgentTableById(agentNumber);
 
         String[] app=agentTable.getAppAuthority().split("@");
@@ -311,8 +313,12 @@ public class AgentTableMysqlDAL implements IAgent {
         AuthorityEntity authorityEntity=new AuthorityEntity();
         if(agentTable.getWebAuthority()!=null&&agentTable.getWebAuthority()!=""){
         String[] web=agentTable.getWebAuthority().split("@");
+        RoleType role = RoleType.getIndex(roletype);
         for(int i=0;i<web.length;i++){
             FuncAuthor funcAuthor=new FuncAuthor();
+            if(WebAuthority.getString(Integer.parseInt(web[i])).equals("下发命令")&&role!=superadmin){
+                continue;
+            }
             funcAuthor.setName(WebAuthority.getString(Integer.parseInt(web[i])));
             funcAuthor.setValue(web[i]);
             weblist.add(funcAuthor);

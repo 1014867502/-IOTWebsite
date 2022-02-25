@@ -133,7 +133,7 @@ layui.define(['form','drawer','table'], function (exports) {
             document.getElementById("devicesetting").style.display="none";
         }
         if(webright.indexOf("5")==-1){
-            document.getElementById("deviceorder").style.display="none";
+            document.getElementById("deviceorder").style.display="none"
         }
         if(webright.indexOf("6")==-1){
             document.getElementById("orderlog").style.display="none";

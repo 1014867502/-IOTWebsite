@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    #@meta("GNSS位移统计")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style type="text/css">
+        .layui-layout-admin.layui-header {
+            background-color: rgba(24, 24, 87, 0.79);
+        }
+
+        .layui-nav-tree .layui-nav-bar {
+            background-color:#e7efef ;
+        }
+        .layui-layout-admin .layui-header .layui-nav .layui-nav-more {
+            border-top-color: #333333 !important;
+        }
+        .layui-nav {
+            position: relative;
+            background-color: #FFFFFF;
+            color: #333333;
+            border-radius: 2px;
+            font-size: 0;
+            box-sizing: border-box;
+        }
+
+        .layui-nav-tree .layui-nav-item a {
+            position: relative;
+            height: 56px;
+            line-height: 45px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            color: #333333;
+            white-space: nowrap;
+        }
+
+        .layui-nav-tree .layui-nav-item {
+            display: block;
+            width: 100%;
+            line-height: 45px;
+        }
+
+
+        .layui-nav-tree .layui-nav-bar {
+            background-color: #1E9FFF;
+        }
+
+        .layui-nav-tree .layui-nav-item a:hover {
+            background-color: #f7f7f7;
+
+        }
+
+        .layui-nav .layui-nav-item a:hover, .layui-nav .layui-this a {
+            color: #1E9FFF
+        }
+
+        .layui-nav-tree .layui-nav-child dd.layui-this, .layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this > a, .layui-nav-tree .layui-this > a:hover {
+            background-color:  #1E9FFF;
+            color: #fff;
+        }
+
+        .layui-nav-tree .layui-nav-item a {
+            line-height: 40px;
+            padding-top: 5px;
+            padding-left: 45px;
+            padding-right: 30px;
+        }
+
+
+
+    </style>
+    <script src="/assets/lib/xm-select.js"></script>
+<body style="height: 100%">
+<div class="layui-side-scroll" style="background-color: #FFFFFF">
+    <div style="height: auto;color: #FFF;text-align: center;font-size: 20px;padding-top: 5px;width: 220px;display: flex;" lay-href="javascript:;">
+        <img src="/assets/images/logo-blue.png">
+        <div style="margin: auto;color: #333333">平台文档中心</div>
+    </div>
+
+    <div>
+        <ul class="layui-nav layui-nav-tree"  lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu"
+            style="margin-top: 30px;width: 100%">
+            <li data-name="business-menu" class="layui-nav-item  layui-this" id="homepage">
+                <a href="/document/appuserdoc_first" data-i18n-tips=""  lay-tips="监测大屏" lay-direction="2">
+                    <cite style="font-size: 18px;"   id="indexpage">设备平台App介绍</cite>
+                </a>
+            </li>
+            <li data-name="business-menu" class="layui-nav-item" id="companymanage"  style="display: block">
+                <a href="/document/appuserdoc_setdevice" data-i18n-tips=""  lay-tips="项目管理" lay-direction="2">
+                    <cite style="font-size: 18px;" >配置设备</cite>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+</div>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    $(".layui-nav-item a").click(function(e){
+        debugger
+        e.preventDefault();
+        console.log($(this).attr("href"));
+        let s=$(this).attr("href");
+        parent.setherf(s);
+    });
+
+    parent.setherf("/document/appuserdoc_first");
+
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+</script>
+</body>
+</html>

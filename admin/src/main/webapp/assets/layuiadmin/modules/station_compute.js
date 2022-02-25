@@ -1383,7 +1383,7 @@ layui.define(['element', 'form', 'drawer', 'table', 'station_compute_func','stat
             async: false,
             success: function (res) {
                 if (res.data == "设备结果返回超时") {
-
+                    layer.msg("设备结果返回超时!");
                 } else {
                     let datalist = res.data.split(',');
                     let data = datalist[4].split('*');

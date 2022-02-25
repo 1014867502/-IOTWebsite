@@ -814,6 +814,9 @@ public class DeviceController extends BaseController {
 //                    if ((socketClient.getLatesttime() - socketClient.getConnectime() > 10000)) {
 //                        break;
 //                    }
+                    if ((System.currentTimeMillis() - socketClient.getConnectime() > 5000)) {
+                        break;
+                    }
                 }
             } else {
                 while ((socketClient.realdata == null || socketClient.realdata.equals(""))) {

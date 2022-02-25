@@ -76,8 +76,8 @@ public class CompanyService {
     }
 
     /**获取公司功能权限列表**/
-    public AuthorityEntity getComAuthorById(String agentNumber){
-        return dal.getComAuthorById(agentNumber);
+    public AuthorityEntity getComAuthorById(int roletype,String agentNumber){
+        return dal.getComAuthorById(roletype,agentNumber);
     }
 
     /**获取所有功能权限列表**/

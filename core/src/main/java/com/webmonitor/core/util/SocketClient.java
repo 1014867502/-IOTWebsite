@@ -36,7 +36,7 @@ public class SocketClient {
     private BufferedReader br ;
     private boolean mRecycleFlag = true;
     private boolean responefinish=true;
-    private boolean onlineFlag=true;
+    private boolean onlineFlag=false;
     private long connectime=0;
     private long latesttime=0;
     public String realdata;
@@ -102,6 +102,7 @@ public class SocketClient {
                     DebugRunnable debugRunnable=new DebugRunnable(userid,machineserial);
                     new Thread(debugRunnable).start();
                     //TODO
+                    onlineFlag=true;
                 }
             } catch (IOException e) {
                 onlineFlag=false;

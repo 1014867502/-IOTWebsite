@@ -3,6 +3,7 @@
 <head>
     #@meta("设备管理页面")
     <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/css/global.css">
 </head>
 <body class="layui-layout-body">
 <style>
@@ -19,7 +20,8 @@
     .site-title {
         margin: 30px 0 20px;
     }
-    .site-text{
+
+    .site-text {
         margin-bottom: 10px;
     }
 
@@ -72,10 +74,84 @@
         cursor: pointer;
     }
 
+    a:hover {
+        color: #1E9FFF;;
+    }
+
+    .site-dir a em {
+        padding-left: 5px;
+        font-size: 12px;
+        color: #c2c2c2;
+        font-style: normal;
+    }
+
+    .site-dir a cite{
+        font-size: 15px;
+    }
+
+    .site-dir li{
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .catalog2{
+        margin-left: 15px;
+    }
+    .catalog2 li{
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .site-dir li a.layui-this {
+        color: #01AAED;
+    }
+
+    .catalog-this{
+        color: #1e9fff;
+    }
+
+    .layui-layer {
+        -webkit-overflow-scrolling: touch;
+        top: 150px;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        -webkit-background-clip: content;
+        border-radius: 2px;
+        box-shadow: 1px 1px 10px rgb(0 0 0 / 30%);
+    }
+    .catalogcontent{
+        height:314px
+    }
+
 </style>
 
 
 <div class="layui-fluid">
+    <div class="layui-layer layui-layer-page layui-layer-dir" id="catalog" type="page" times="1" showtime="0"
+         contype="object" style="z-index: 19891015; position: fixed; top: 317.5px; left: 1757px; margin-left: -15px;">
+        <div class="layui-layer-title" style="cursor: move;">目录</div>
+        <div id="catalogcontent" class="layui-layer-content catalogcontent">
+            <ul class="site-dir layui-layer-wrap" style="display: block;">
+                <li><a class="catalogclick" href="#use"><cite>设备信息</cite></a></li>
+                <li><a class="catalogclick" href="#fast"><cite>快速设置</cite></a></li>
+                <ul class="catalog2">
+                    <li><a class="catalogclick" href="#frontcompute">前端解算</a></li>
+                    <li><a class="catalogclick" href="#backcompute">后端解算</a></li>
+                </ul>
+                <li><a class="catalogclick" href="#detail"><cite>测站设置</cite></a></li>
+                <ul class="catalog2">
+                    <li><a class="catalogclick" href="#compute">解算设置</a></li>
+                    <li><a class="catalogclick" href="#local">坐标系统</a></li>
+                    <li><a class="catalogclick" href="#platform">平台对接</a></li>
+                    <li><a class="catalogclick" href="#auxiliary">辅助功能</a></li>
+                </ul>
+                <li><a class="catalogclick" href="#log"><cite>配置日志</cite></a></li>
+                <li><a class="catalogclick" href="#update"><cite>升级设置</cite></a></li>
+            </ul>
+        </div>
+        <span class="layui-layer-setwin"></span><span class="layui-layer-resize"></span></div>
     <div class="layui-col-md9 site-content">
         <h1 class="site-h1">首页</h1>
         <blockquote class="site-text layui-elem-quote">
@@ -88,47 +164,47 @@
         </div>
         <div>
             <p>设备统计信息包括设备总数、设备离线数、设备在线数、最新上线的设备。设备离线和在线是根据设备信息有没有回传到此平台进行判定。最新上线的设备是指从当前日期往前推7天新录入的设备。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-1.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-1.png">
                 <div>图2-1</div>
             </div>
             <p>在设备列表中，用户能看到自己负责管理的全部设备。可对表格中的设备进行搜索、配置操作。搜索设备的关键词是设备SN号。</p>
             <p>在设备列表中，点击一行最前面的矩形可以单选或多选设备，点击【配置设备】如图2-2所示，可以使用模板快速设置设备的工作模式。这里的模板种类请参考章节4数据模板管理。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-2.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-2.png">
                 <div>图2-2</div>
             </div>
             <p>在设备列表中，选择一条设备信息，点击【编辑】进入如图2-3所示界面，可以查看设备信息并单独配置设备的工作状态。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-3.png">
                 <div>图2-3</div>
             </div>
         </div>
 
         <div class="site-title">
             <fieldset>
-                <legend><a name="size">快速设置</a></legend>
+                <legend><a name="fast">快速设置</a></legend>
             </fieldset>
         </div>
         <div class="site-text">
             <p>【快速设置】如图2.2-1所示，可以快速配置设备工作解算状态。解算模式分为前端解算和后端解算。</p>
             <p>页面底部有“保存为模板”按钮，点击此按钮后，所有配置的信息都会被记录，在“数据模板管理”中可以查看详情，在“首页”配置设备可以调用。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-2-1.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-2-1.png">
                 <div>图2.2-1</div>
             </div>
             <p>前端解算指的是接收机对采集的数据进行解算，将结果传回服务器上的软件中。后端解算指的是接收机将采集的原始数据传回服务器上的软件，软件对这些原始数据进行解算处理。</p>
 
-            <p>1.前端解算</p>
+            <h2  style="margin-top: 10px"><a name="frontcompute">1.前端解算</a></h2>
             <hr>
-            <p>基准站</p>
+            <p class="level2title"> 基准站</p>
             <p>解算模式选择【前端解算】，测站类型选择【基准站】。</p>
             <p>测站编号一般默认为主机SN码，根据需要可修改。记录间隔、采集频率都采取默认值。</p>
             <p><cite style="font-weight: bold">基准站坐标：</cite>点击【获取当前坐标】可以得到基准站坐标。</p>
             <p><cite style="font-weight: bold">设备状态回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的结果回传端口一致。</p>
-            <p><cite style="font-weight: bold">基站文件回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的基站回传端口1一致。如果要部署两台基站，第二台基站设备的端口和GeoMS软件里对应项目的基站回传端口2一致。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-2-1-1.png">
+            <p><cite style="font-weight: bold">基站文件回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的基站回传端口1一致。如果要部署两台基站，第二台基站设备的端口和GeoMS软件里对应项目的基站回传端口2一致。
+            </p>
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-2-1-1.png">
                 <div>图2.2.1-1</div>
             </div>
 
-            <p>监测站</p>
-            <hr>
+            <p class="level2title">监测站</p>
             <p>解算模式选择【前端解算】，测站类型选择【监测站】。</p>
             <p>测站名称一般默认为主机SN码，根据需要可修改。记录间隔、采集频率都采取默认值。</p>
             <p><cite style="font-weight: bold">变形基准坐标：</cite>用于计算变形量的基准值，无需填写，系统自动计算。</p>
@@ -136,59 +212,60 @@
             <p><cite style="font-weight: bold">基站数据下载：</cite>
                 未启用双基站，选择数据来源为【基站文件】，IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的测站调用端口1一致。选择数据来源为【CORS数据】，IP和端口和CORS数据站的IP端口一致。
             </p>
-            <p>启用双基站，选择数据来源为【基站文件】，基站IP1是GeoMS软件运行的服务器IP地址，基站端口1需要和GeoMS软件里对应项目的测站调用端口1一致；基站IP2是GeoMS软件运行的服务器IP地址，基站端口2需要和GeoMS软件里对应项目的测站调用端口2一致。选择数据来源为【CORS数据】，输入两个CORS数据来源的IP和端口，IP和端口和CORS数据站的IP端口一致。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-2-1-2.png">
+            <p>
+                启用双基站，选择数据来源为【基站文件】，基站IP1是GeoMS软件运行的服务器IP地址，基站端口1需要和GeoMS软件里对应项目的测站调用端口1一致；基站IP2是GeoMS软件运行的服务器IP地址，基站端口2需要和GeoMS软件里对应项目的测站调用端口2一致。选择数据来源为【CORS数据】，输入两个CORS数据来源的IP和端口，IP和端口和CORS数据站的IP端口一致。</p>
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-2-1-2.png">
                 <div>图2.2.1-2</div>
             </div>
 
-            <p>2.后端解算</p>
+            <h2 style="margin-top: 10px"><a name="backcompute">2.后端解算</a></h2>
             <hr>
-            <p>基准站</p>
+            <p class="level2title">基准站</p>
             <p>解算模式选择【后端解算】，测站类型选择【基准站】。</p>
             <p>测站编号一般默认为主机SN码，根据需要可修改。记录间隔、采集频率都采取默认值。</p>
             <p><cite style="font-weight: bold">设备状态回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的结果回传端口一致。</p>
             <p><cite style="font-weight: bold">观测数据回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应接收机后端解算的端口一致。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-2-2-1.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-2-2-1.png">
                 <div>图2.2.2-1</div>
             </div>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-2-2-2.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-2-2-2.png">
                 <div>图2.2.2-2</div>
             </div>
 
-            <p>监测站</p>
-            <hr>
+            <p class="level2title">监测站</p>
             <p>解算模式选择【后端解算】，测站类型选择【监测站】。</p>
             <p>测站名称一般默认为主机SN码，根据需要可修改。记录间隔、采集频率都采取默认值。</p>
             <p><cite style="font-weight: bold">状态结果回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的结果回传端口一致。</p>
             <p><cite style="font-weight: bold">观测数据回传</cite>
                 IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应接收机后端解算的端口一致。
             </p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-2-2-3.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-2-2-3.png">
                 <div>图2.2.2-3</div>
             </div>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-2-2-4.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-2-2-4.png">
                 <div>图2.2.2-4</div>
             </div>
         </div>
 
         <div class="site-title">
             <fieldset>
-                <legend><a name="radius">测站设置</a></legend>
+                <legend><a name="detail">测站设置</a></legend>
             </fieldset>
         </div>
         <div class="site-text">
-            <p>3.1 解算设置</p>
+            <p class="level2title"><a name="compute">3.1 解算设置</a></p>
             <p>点击【测站设置】->【解算设置】如图2.3.1-1所示，可以设置主机解算模式。以下将详细介绍解算模式。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-1-1.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-3-1-1.png">
                 <div>图2.3.1-1</div>
             </div>
-            <p>前端解算-基准站</p>
+            <p class="level3title">前端解算-基准站</p>
             <hr>
             <p>解算模式选择【前端解算】，测站类型选择【基准站】，如图2.3.1-1所示。</p>
             <p>测站编号一般默认为主机SN码，根据需要可修改。记录间隔、采集频率根据作业情况进行修改。</p>
             <p><cite style="font-weight: bold">基准站坐标：</cite>点击【获取当前坐标】可以得到基准站坐标。</p>
             <p><cite style="font-weight: bold">设备状态回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的结果回传端口一致。</p>
-            <p><cite style="font-weight: bold">基站文件回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的基站回传端口1一致。如果要部署两台基站，第二台基站设备的端口和GeoMS软件里对应项目的基站回传端口2一致。</p>
+            <p><cite style="font-weight: bold">基站文件回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的基站回传端口1一致。如果要部署两台基站，第二台基站设备的端口和GeoMS软件里对应项目的基站回传端口2一致。
+            </p>
             <p>如果启用原始数据回传，选择通讯设置、数据类型，输入IP和端口。
                 将以上信息都设置完毕后，点击【提交】，弹出提交成功的信息表示主机的解算模式已修改成功。
             </p>
@@ -196,10 +273,10 @@
                 设备状态回传、基站文件回传、原始数据回传都有提示设置IP端口此时的状态。请关注这些提示信息，如果出现红色提示语，说明此时主机未按照要求工作。
             </blockquote>
 
-            <p>前端解算-监测站</p>
+            <p class="level3title">前端解算-监测站</p>
             <hr>
             <p>解算模式选择【前端解算】，测站类型选择【监测站】，如图2.3.1-2所示。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-1-2.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-3-1-2.png">
                 <div>图2.3.1-2</div>
             </div>
             <p>测站编号一般默认为主机SN码，根据需要可修改。记录间隔、采集频率根据作业情况进行修改。双周期解算和结果平滑默认打开。</p>
@@ -208,14 +285,15 @@
             <p><cite style="font-weight: bold">基站数据下载：</cite>
                 未启用双基站，选择数据来源为【基站文件】，IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的测站调用端口1一致。选择数据来源为【CORS数据】，IP和端口和CORS数据站的IP端口一致。
             </p>
-            <p>启用双基站，选择数据来源为【基站文件】，基站IP1是GeoMS软件运行的服务器IP地址，基站端口1需要和GeoMS软件里对应项目的测站调用端口1一致；基站IP2是GeoMS软件运行的服务器IP地址，基站端口2需要和GeoMS软件里对应项目的测站调用端口2一致。选择数据来源为【CORS数据】，输入两个CORS数据来源的IP和端口，IP和端口和CORS数据站的IP端口一致。</p>
+            <p>
+                启用双基站，选择数据来源为【基站文件】，基站IP1是GeoMS软件运行的服务器IP地址，基站端口1需要和GeoMS软件里对应项目的测站调用端口1一致；基站IP2是GeoMS软件运行的服务器IP地址，基站端口2需要和GeoMS软件里对应项目的测站调用端口2一致。选择数据来源为【CORS数据】，输入两个CORS数据来源的IP和端口，IP和端口和CORS数据站的IP端口一致。</p>
             <p>如果启用RTK解算，如图2.3.1-3所示，设置RTK解算模式、IMU触发RTK紧急模式角度，选择通讯协议，根据通讯协议设置IP端口获取数据。</p>
             <p>当【基站数据下载】启用双基站模式获取CORS数据，可以设置RTK数据获取来源和双基站其中一个基站数据同源。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-1-3.png">
+            <div class="picture"><img class="enlarge" src="/assets/images/webuser/webuser2-3-1-3.png">
                 <div>图2.3.1-3</div>
             </div>
             <p>如果启用原始数据回传，如图2.3.1-4所示，选择通讯设置、数据类型，输入IP和端口。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-1-4.png">
+            <div class="picture"><img class="enlarge" src="/assets/images/webuser/webuser2-3-1-4.png">
                 <div>图2.3.1-4</div>
             </div>
             <p>将以上信息都设置完毕后，点击【提交】，弹出提交成功的信息表示主机的解算模式已修改成功。</p>
@@ -223,37 +301,39 @@
                 注：状态结果回传、基站数据下载、RTK解算、原始数据回传都有提示设置IP端口此时的状态。请关注这些提示信息，如果出现红色提示语，说明此时主机未按照要求工作。
             </blockquote>
 
-            <p>后端解算-基准站</p>
+            <p class="level3title">后端解算-基准站</p>
             <hr>
             <p>解算模式选择【后端解算】，测站类型选择【基准站】，如图2.3.1-5所示。</p>
             <p>测站编号一般默认为主机SN码，根据需要可修改。记录间隔、采集频率都采取默认值。</p>
             <p><cite style="font-weight: bold">基准站坐标：</cite>点击【获取当前坐标】可以得到基准站坐标。</p>
             <p><cite style="font-weight: bold">设备状态回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的结果回传端口一致。</p>
             <p><cite style="font-weight: bold">观测数据回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应接收机后端解算的端口一致。</p>
-            <p><cite style="font-weight: bold">原始数据回传：</cite>原始数据回传一般是将数据转发给第三方的时候才启用。启用原始数据回传，选择“TCP客户端”、数据格式，填写IP是要转发原始数据的服务器IP地址，端口和服务器端口一致。</p>
+            <p><cite style="font-weight: bold">原始数据回传：</cite>原始数据回传一般是将数据转发给第三方的时候才启用。启用原始数据回传，选择“TCP客户端”、数据格式，填写IP是要转发原始数据的服务器IP地址，端口和服务器端口一致。
+            </p>
             <p>将以上信息都设置完毕后，点击【提交】，弹出提交成功的信息表示主机的解算模式已修改成功。</p>
             <blockquote class="site-text layui-elem-quote">
                 注：设备状态回传、基站文件回传、原始数据回传都有提示设置IP端口此时的状态。请关注这些提示信息，如果出现红色提示语，说明此时主机未按照要求工作。
             </blockquote>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-1-5.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-3-1-5.png">
                 <div>图2.3.1-5</div>
             </div>
 
-            <p>后端解算-监测站</p>
+            <p class="level3title">后端解算-监测站</p>
             <hr>
             <p>解算模式选择【后端解算】，测站类型选择【监测站】，如图2.3.1-6所示。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-1-6.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-3-1-6.png">
                 <div>图2.3.1-6</div>
             </div>
             <p>测站编号一般默认为主机SN码，根据需要可修改。采集频率根据作业情况进行修改。</p>
             <p><cite style="font-weight: bold">状态结果回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应项目的结果回传端口一致。</p>
             <p><cite style="font-weight: bold">观测数据回传：</cite>IP是GeoMS软件运行的服务器IP地址，端口需要和GeoMS软件里对应接收机后端解算的端口一致。</p>
             <p>如果启用RTK解算，如图2.3.1-3所示，设置RTK解算模式、IMU触发RTK紧急模式角度，选择通讯协议，根据通讯协议设置IP端口获取数据。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-1-7.png">
+            <div class="picture"><img class="enlarge" src="/assets/images/webuser/webuser2-3-1-7.png">
                 <div>图2.3.1-7</div>
             </div>
-            <p><cite style="font-weight: bold">原始数据回传：</cite>原始数据回传一般是将数据转发给第三方的时候才启用。启用原始数据回传，选择“TCP客户端”、数据格式，填写IP是要转发原始数据的服务器IP地址，端口和服务器端口一致。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-1-8.png">
+            <p><cite style="font-weight: bold">原始数据回传：</cite>原始数据回传一般是将数据转发给第三方的时候才启用。启用原始数据回传，选择“TCP客户端”、数据格式，填写IP是要转发原始数据的服务器IP地址，端口和服务器端口一致。
+            </p>
+            <div class="picture"><img class="enlarge" src="/assets/images/webuser/webuser2-3-1-8.png">
                 <div>图2.3.1-8</div>
             </div>
             <p>将以上信息都设置完毕后，点击【提交】，弹出提交成功的信息表示主机的解算模式已修改成功。</p>
@@ -262,58 +342,60 @@
             </blockquote>
 
 
-            <p>3.2 坐标系统</p>
+            <p class="level2title"><a name="local">3.2 坐标系统</a></p>
             <hr>
             <p>点击【测站设置】->【坐标系统】如图2.3.2-1所示，可以设置主机前端解算时的坐标系统。</p>
-            <p>接收机默认坐标系统为CGCS2000坐标，会通过单点定位获得的坐标，自动设置中央经线，东偏移默认为500000。如果需要自定义或者选择其他坐标系统，在这里启用坐标系统输出，设置目标椭球参数、投影参数。根据需要启用七参数或者四参数。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-2-1.png">
+            <p>
+                接收机默认坐标系统为CGCS2000坐标，会通过单点定位获得的坐标，自动设置中央经线，东偏移默认为500000。如果需要自定义或者选择其他坐标系统，在这里启用坐标系统输出，设置目标椭球参数、投影参数。根据需要启用七参数或者四参数。</p>
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-3-2-1.png">
                 <div>图2.3.2-1</div>
             </div>
 
-            <p>3.3 平台对接</p>
+            <p class="level2title"><a name="platform">3.3 平台对接</a></p>
             <hr>
             <p>点击【测站设置】->【平台对接】如图2.3.3-1所示，可以设置启用哪些平台，当启用平台后，主机数据会传入此平台。</p>
             <p>目前主机已经可以接入地灾物联网平台、中移动OneNET平台、重庆地灾平台、五凌物联平台、联智云平台、基康云平台。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-3-1.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-3-3-1.png">
                 <div>图2.3.3-1</div>
             </div>
 
-            <p>3.4 辅助功能</p>
+            <p class="level2title"><a name="auxiliary" >3.4 辅助功能</a></p>
             <hr>
             <p>点击【站点设置】->【辅助功能】如图2.3.4-1所示，可以设置外接传感器、主机定时开关机和触发报警。</p>
 
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-4-1.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-3-4-1.png">
                 <div>图2.3.4-1</div>
             </div>
             <p>启用外接传感器如图2.3.4-2所示，可以新增外接传感器。</p>
-            <p>输入传感器的编号、数据传输间隔、传感器类型、电压、传感器厂家、串口波特率、查询命令和基准值，点击【提交】保存数据。新增完毕后在传感器列表可以看到新添加的传感器数据。在传感器列表可以对传感器数据进行删除操作。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-3-4-2.png">
+            <p>
+                输入传感器的编号、数据传输间隔、传感器类型、电压、传感器厂家、串口波特率、查询命令和基准值，点击【提交】保存数据。新增完毕后在传感器列表可以看到新添加的传感器数据。在传感器列表可以对传感器数据进行删除操作。</p>
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-3-4-2.png">
                 <div>图2.3.4-2</div>
             </div>
             <p>启用定时开关机如图2.3.4-3所示，设置开机日期、开机时间和工作时长后，提交这些设置参数后，主机会按照设置定时开关机。</p>
-            <div class="picture"><img class="enlarge"  src="/assets/images/webuser2-3-4-3.png">
+            <div class="picture"><img class="enlarge" src="/assets/images/webuser/webuser2-3-4-3.png">
                 <div>图2.3.4-3</div>
             </div>
             <p>启用触发报警如图2.3.4-4所示，输入X、Y、Z的位移阈值，选择MEMS倾斜、串口输出，设置报警命令和阿里云报警短信，点击【提交】，如果主机相关数据超过设置阈值，会收到报警信息。</p>
-            <div class="picture"><img class="enlarge"   src="/assets/images/webuser2-3-4-4.png">
+            <div class="picture"><img class="enlarge" src="/assets/images/webuser/webuser2-3-4-4.png">
                 <div>图2.3.4-4</div>
             </div>
         </div>
 
-        <div class="site-title">
-            <fieldset>
-                <legend><a name="icon">下发命令</a></legend>
-            </fieldset>
-        </div>
-        <div class="site-text">
-            <p>点击【下发命令】如图2.4-1所示，需要设备是在线状态，可以在“下发命令”输入框输入机器指令，在“设备返回信息”中可以看到发送指令的返回结果。在“发送命令”点击下拉框有很多快捷指令（图2.4-2）。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-4-1.png">
-                <div>图2.4-1</div>
-            </div>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-4-2.png">
-                <div>图2.4-2</div>
-            </div>
-        </div>
+<!--        <div class="site-title">-->
+<!--            <fieldset>-->
+<!--                <legend><a name="order">下发命令</a></legend>-->
+<!--            </fieldset>-->
+<!--        </div>-->
+<!--        <div class="site-text">-->
+<!--            <p>点击【下发命令】如图2.4-1所示，需要设备是在线状态，可以在“下发命令”输入框输入机器指令，在“设备返回信息”中可以看到发送指令的返回结果。在“发送命令”点击下拉框有很多快捷指令（图2.4-2）。</p>-->
+<!--            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-4-1.png">-->
+<!--                <div>图2.4-1</div>-->
+<!--            </div>-->
+<!--            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-4-2.png">-->
+<!--                <div>图2.4-2</div>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <div class="site-title">
             <fieldset>
@@ -322,7 +404,7 @@
         </div>
         <div class="site-text">
             <p>点击【配置日志】如图2.5-1所示，可以看到对这台设备发送配置命令的历史。可以看到某个时间发送的指令是否执行成功。</p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-5-1.png">
+            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser2-5-1.png">
                 <div>图2.5-1</div>
             </div>
         </div>
@@ -336,7 +418,7 @@
             <p>点击【升级设置】如图2.6-1所示，可以升级固件和查看固件升级历史。
                 当显示有最新版本固件，设备是在线状态，点击【升级固件】就可以做其他操作了。在“固件升级记录”中可以看到固件是否升级成功。
             </p>
-            <div class="picture"><img class="enlarge" height="265" width="600" src="/assets/images/webuser2-6-1.png">
+            <div class="picture"><img class="enlarge" src="/assets/images/webuser/webuser2-6-1.png">
                 <div>图2.6-1</div>
             </div>
         </div>

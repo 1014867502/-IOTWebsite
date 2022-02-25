@@ -122,8 +122,12 @@
                 success:function (data) {
                     switch (data.data) {
                         case "user":
+                            document.getElementById("webadmin").style.display="none";
+                            document.getElementById("appadmin").style.display="none";
                             break;
                         case "companyadmin":
+                            document.getElementById("webuser").style.display="none";
+                            document.getElementById("appuser").style.display="none";
                             document.getElementById("changePassword").style.display="none";
                             window.frames[0].$("#projectmanage2").attr("href","/company/CompanyDetail?agentNumber="+agentnum);
                             break;
@@ -147,8 +151,17 @@
 
         }
 
-        $("#docopen").on("click",function () {
+        $("#webuser").on("click",function () {
             $("#menuarea").attr("src","/document/webuserdoc");
+        })
+        $("#webadmin").on("click",function () {
+            $("#menuarea").attr("src","/document/webadmindoc");
+        })
+        $("#appuser").on("click",function () {
+            $("#menuarea").attr("src","/document/appuserdoc");
+        })
+        $("#appadmin").on("click",function () {
+            $("#menuarea").attr("src","/document/appadmindoc");
         })
 
         $("#systemopen").on("click",function () {

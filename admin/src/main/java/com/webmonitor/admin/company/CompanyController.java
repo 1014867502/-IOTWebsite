@@ -174,8 +174,12 @@ public class CompanyController extends BaseController {
     public void getComAuthor(){
         String agentnum=getPara("agentnum");
         Result<AuthorityEntity> result=Result.newOne();
+        String userid = getCookie(IndexService.me.accessUserId);
+        StaffData currentuser = StaffService.me.getStaffById(userid);
+        int roletype = currentuser.getIRoleType();
+        RoleType role = RoleType.getIndex(roletype);
         try{
-           AuthorityEntity authorityEntity=CompanyService.me.getComAuthorById(agentnum);
+           AuthorityEntity authorityEntity=CompanyService.me.getComAuthorById(roletype,agentnum);
            result.success(authorityEntity);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);

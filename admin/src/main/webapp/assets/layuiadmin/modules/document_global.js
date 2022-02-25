@@ -6,11 +6,58 @@ layui.define(['form','drawer','table'], function (exports) {
         ,drawer=layui.drawer
         ,table=layui.table
 
-
+    changecatalog();
 
     $(".enlarge").on('click',function () {
         openFile(this);
     })
+
+    $(".catalogclick").on('click',function () {
+        $(".catalog-this").removeClass("catalog-this");
+        $(this).addClass("catalog-this");
+    })
+
+    window.addEventListener("resize", changecatalog);
+
+    
+    function changecatalog() {
+        let width = document.documentElement.clientWidth;
+        let height=document.documentElement.clientHeight;
+        let adminheight=441;
+        let userheight=331;
+        if(width<1000){
+            $("#catalog").css("display","none");
+        }else{
+            $("#catalog").css("display","block");
+            let realwidth=width*0.8
+            $("#catalog").css("left",realwidth.toString()+"px");
+        }
+        if(height>700){
+            let realheight=height*0.2;
+            $("#catalog").css("top",realheight.toString()+"px");
+            $("#catalogcontent").css("height","100%");
+            $("#catalogapp").css("height","100%");
+        }else{
+            if(height>200){
+                let realheight=height*0.5;
+                $("#catalog").css("top",realheight.toString()+"px");
+                if(document.getElementById("catalogapp")!=null){
+                    let reallogheigh=adminheight*0.4;
+                    $("#catalogapp").css("height",reallogheigh.toString()+"px");
+                }
+                if(document.getElementById("catalogcontent")!=null){
+                    let reallogheigh=userheight*0.5;
+                    $("#catalogcontent").css("height",reallogheigh.toString()+"px");
+                }
+
+            }else{
+                let realheight=height*0.5;
+                $("#catalog").css("top",realheight.toString()+"px");
+                $("#catalogcontent").css("height","100%");
+            }
+        }
+    }
+
 
     function openFile(e){
         let src2=" <img class=\"enlarge\" src="+$(e).attr('src')+">";
@@ -35,6 +82,7 @@ layui.define(['form','drawer','table'], function (exports) {
         //弹出层
         layer.open({
             type: 1,
+            id:"pic1",
             title: false,//不显示标题
             closeBtn: 0,
             area: ['auto', 'auto'],

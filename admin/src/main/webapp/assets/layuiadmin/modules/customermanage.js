@@ -146,7 +146,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "               </div>\n" +
                 "           </div>";
             if(agentNumber!=null){
-                initcomauthority(agentNumber);
+                initcomauthority(type,agentNumber);
             }
             document.getElementById("addmanagecompanylist").innerHTML="";
             laydate.render({
@@ -186,7 +186,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                     "           </div>";
             }
             if(agentNumber!=null){
-                initcomauthority(agentNumber);
+                initcomauthority(type,agentNumber);
             }
         }
         else if(type=="4"){
@@ -222,7 +222,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 "               </div>\n" +
                 "           </div>";
             if(agentNumber!=null){
-                initcomauthority(agentNumber);
+                initcomauthority(type,agentNumber);
             }
             document.getElementById("formproject").innerHTML="";
             document.getElementById("datekeep").innerHTML="";
@@ -1249,7 +1249,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 if(document.getElementById("projectlist")!=null){
                     getprojectlist(change.value);
                 }
-                initcomauthority(agentNumber);
+                initcomauthority(newtype,agentNumber);
             },
         })
     }
@@ -1504,14 +1504,14 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
     }
 
     /**获取当前公司web app权限内容*(添加页面)**/
-    function initcomauthority(data){
+    function initcomauthority(type,data){
         $.ajax({
             url:'/company/getComAuthor',
             data:{
                 agentnum:data
             },
             success:function(res){
-                initwebauthoritylist(res.data.webauthority);
+                initwebauthoritylist(type,res.data.webauthority);
                 initappauthoritylist(res.data.appauthority);
             }
         })
@@ -1519,8 +1519,14 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
 
 
     /**加载web权限列表(创建用户)**/
-    function initwebauthoritylist(json) {
+    function initwebauthoritylist(type,json) {
         if(document.getElementById("initwebauthority")!=null) {
+            let init;
+            if(type!="2"){
+                init=[0, 1, 2, 3, 4, 6, 7, 8, 9];
+            }else{
+                init=[0, 1, 2, 3, 4,5, 6, 7, 8, 9];
+            }
             initwebauthorities = xmSelect.render({
                 el: '#initwebauthority',
                 data: json,
@@ -1528,7 +1534,7 @@ layui.define(['form','drawer','table','laydate','layer','Global_variable'], func
                 theme: {
                     color: '#1E9FFF',
                 },
-                initValue: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                initValue: init,
                 tips: '请选择网页功能权限',
                 style: {
                     borderRadius: '6px',

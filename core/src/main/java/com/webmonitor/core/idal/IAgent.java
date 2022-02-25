@@ -47,7 +47,7 @@ public interface IAgent {
      boolean modifyCompanyAuthority(String agentNumber,String web,String app);
 
     /**获取公司功能权限**/
-    AuthorityEntity getComAuthorById(String agentNumber);
+    AuthorityEntity getComAuthorById(int roletype,String agentNumber);
 
     /**获取全部功能权限**/
     AuthorityEntity getAllAuthor();
