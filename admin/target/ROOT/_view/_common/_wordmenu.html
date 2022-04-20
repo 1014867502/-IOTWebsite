@@ -1,0 +1,39 @@
+<div class="layui-side-scroll" style="background-color: #0E41CC">
+    <div style="height: auto;text-align: center;font-size: 20px;margin-top: 20px;width: 220px;" lay-href="javascript:;">
+        <img src="/assets/images/IOTlogo.png">
+        <div>设备管理平台</div>
+    </div>
+    <div>
+        <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu"
+            style="margin-top: 20px">
+            <li data-name="business-menu" class="layui-nav-item">
+                <a lay-href="/projectindex" data-i18n-tips=""  lay-direction="2">
+                    <cite style="font-size: 18px" id="indexpage">设备管理平台介绍</cite>
+                </a>
+            </li>
+            <li data-name="business-menu" class="layui-menu-item-group" lay-options="{type:'group',isAllowSpread:true}" id="docdevicemanage" style="display: block">
+               <div class=""></div>
+                    <cite style="font-size: 18px" id="devicemange1">首页</cite>
+            </li>
+            <li data-name="business-menu" class="layui-nav-item" id="companymanage"  style="display: block">
+                <a lay-href="/manage/companymanage" data-i18n-tips=""  lay-direction="2">
+                    <cite style="font-size: 18px" >项目管理</cite>
+                </a>
+            </li>
+            <li data-name="business-menu" class="layui-nav-item" id="projectmanage"  style="display: block">
+                <a lay-href="/manage/selectprojects" data-i18n-tips=""  lay-direction="2">
+                    <cite style="font-size: 18px" >数据模板管理</cite>
+                </a>
+            </li>
+            <li data-name="business-menu" class="layui-nav-item">
+                <a lay-href="/manage/templatemanage" data-i18n-tips=""  lay-direction="2">
+                    <cite style="font-size: 18px" id="modelmanage">下载帮助</cite>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>

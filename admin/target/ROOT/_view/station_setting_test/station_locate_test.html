@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html><!--测站设置的坐标设置-->
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("GNSS位移统计")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style type="text/css">
+        .layui-form-checked span, .layui-form-checked:hover span {
+            background-color: #FF5722;
+        }
+
+        .layui-form-checked i, .layui-form-checked:hover i {
+            color: #FF5722;
+        }
+
+        .layui-btn.onlinebtn {
+            background-color: #009688;
+            color: #FFFFFF;
+        }
+
+        .layui-btn.offlinebtn {
+            background-color: #ff0000;
+            color: #FFFFFF;
+        }
+
+        .layui-card-body.layui-layout-box {
+            width: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            /*border-style: solid;*/
+            background-color: #1e9fff;
+            /*!*border-image: url(/img/bg.png) 4 4 4 4 fill round;*!*/
+            /*border-image: url(/img/bg.png) 4 4 4 4 fill stretch;*/
+            box-sizing: border-box;
+            /*height: calc(100% - 42px);*/
+            height: 130px;
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .data {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+        }
+
+        .layadmin-carousel.history {
+            height: 400px !important;
+        }
+    </style>
+</head>
+<style>
+    .fastinput {
+        width: 400px;
+    }
+
+    .btn_primary {
+        border-color: #1e9fff;
+        background-color: #F1F1F1;
+        color: #1e9fff;
+
+    }
+
+    .btn_primary:hover {
+        background-color: #1e9fff;
+        color: #F1F1F1;
+    }
+
+    .layui-form-radio > i:hover, .layui-form-radioed > i {
+        color: #1e9fff;
+    }
+
+    .layui-form-label {
+        float: left;
+        display: block;
+        padding: 9px 15px;
+        width: 80px;
+        font-weight: bold;
+        line-height: 20px;
+        text-align: right;
+    }
+
+    .layui-form-onswitch {
+        border-color: #1e9fff;
+        background-color: #1e9fff;
+    }
+
+    .layui-form-select dl dd.layui-this {
+        background-color: #1e9fff;
+        color: #fff;
+    }
+
+    .circle {
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        background-color: #1e9fff;
+        margin-top: 7px;
+        margin-right: 6px;
+        /* 宽度和高度需要相等 */
+    }
+
+    .basecoreindex {
+        width: 100px;
+        padding: 9px 5px;
+    }
+</style>
+<body>
+<div class="layui-fluid" style="padding: 0px">
+    <div class="layui-row layui-col-space15" style="font-weight: bold">
+        <form class="layui-form" action="">
+            <div class="layui-card" >
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                    坐标系统
+                </div>
+                <div class="layui-form-item">
+                    <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用输出</label>
+                    <div class="layui-input-block">
+                        <input id="coordcvt_enable" type="checkbox" name="coordcvt_enable" lay-skin="switch">
+                    </div>
+                </div>
+                <div class="layui-card-body" style="padding: 0px 15px">
+                    <div class="layui-form-item">
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="circle"></div>
+                            <div>目标概述</div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label" style="width: 86px;padding: 9px;">椭球名称</label>
+                                <div class="layui-input-block">
+                                    <select id="corrdcvt_dst_datum_slect" name="rtkPos" lay-verify="required">
+                                        <option value="WGS84">WGS84</option>
+                                        <option value="BEIJING54">北京54</option>
+                                        <option value="XIAN80">西安80</option>
+                                        <option value="CGCS2000">CGCS2000</option>
+                                        <option value="CUSTOM">自定义</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">长半轴</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_dst_datum_da' type="text" name="coordvt_dst_datum_da" required lay-verify="required"
+                                           placeholder="请输入长半轴"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">扁率倒数</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_dst_datum_df' type="text" name="coordvt_dst_datum_df" required lay-verify="required"
+                                           placeholder="请输入端口"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="circle"></div>
+                            <div>投影参数</div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label" style="width: 86px;padding: 9px;">投影方式</label>
+                                <div class="layui-input-block">
+                                    <select id="corrdcvt_proj_mode_select" name="corrdcvt_proj_mode_select" lay-verify="required">
+                                        <option value=""></option>
+                                        <option value="0">高斯</option>
+                                        <option value="1">UTM</option>
+                                        <option value="2">横轴墨卡托</option>
+                                        <option value="3">倾斜赤平投影</option>
+                                        <option value="4">双赤平投影</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">中央子午线</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_proj_centralmeridian' type="text" name="coordvt_proj_centralmeridian" required lay-verify="required"
+                                           placeholder="请输入中央子午线"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">北加常数</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_proj_north' type="text" name="coordvt_proj_north" required lay-verify="required"
+                                           placeholder="请输入北加常数"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">东加常数</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_proj_east' type="text" name="coordvt_proj_east" required lay-verify="required"
+                                           placeholder="请输入东加常数"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">投影比例尺</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_proj_scale' type="text" name="coordvt_proj_scale" required lay-verify="required"
+                                           placeholder="请输入比例尺"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">投影高</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_proj_height' type="text" name="coordvt_proj_height" required lay-verify="required"
+                                           placeholder="请输入投影高"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">基准纬度</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_proj_lat' type="text" name="coordvt_proj_height" required lay-verify="required"
+                                           placeholder="请输入基准纬度"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="circle"></div>
+                            <div>七参数</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
+                            <div class="layui-input-block">
+                                <input id="coordcvt_seven_use" type="checkbox" name="coordcvt_seven_use" lay-skin="switch">
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label" style="width: 86px;padding: 9px;">模型</label>
+                                <div class="layui-input-block">
+                                    <select id="corrdcvt_seven_model" name="rtkPos" lay-verify="required">
+                                        <option value="1" checked>布尔沙</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">△X</label>
+                                <div class="layui-input-block">
+                                    <input id='coordcvt_seven_tx' type="text" name="coordcvt_seven_tx" required lay-verify="required"
+                                           placeholder="请输入数据"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">△Y</label>
+                                <div class="layui-input-block">
+                                    <input id='coordcvt_seven_ty' type="text" name="coordcvt_seven_ty" required lay-verify="required"
+                                           placeholder="请输入数据"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">△Z</label>
+                                <div class="layui-input-block">
+                                    <input id='coordcvt_seven_tz' type="text" name="coordvt_proj_east" required lay-verify="required"
+                                           placeholder="请输入数据"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">△α(秒)</label>
+                                <div class="layui-input-block">
+                                    <input id='coordcvt_seven_rx' type="text" name="coordvt_proj_scale" required lay-verify="required"
+                                           placeholder="请输入数据"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">△β(秒)</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_seven_ry' type="text" name="coordvt_proj_height" required lay-verify="required"
+                                           placeholder="请输入数据"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">△γ(秒)</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_seven_rz' type="text" name="coordvt_proj_east" required lay-verify="required"
+                                           placeholder="请输入数据"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">△比例尺(ppm)</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_seve_scale' type="text" name="coordvt_proj_scale" required lay-verify="required"
+                                           placeholder="请输入比例尺"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="circle"></div>
+                            <div>四参数</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label style="width: 86px;padding: 9px 10px;" class="layui-form-label">启用</label>
+                            <div class="layui-input-block">
+                                <input id="coordcvt_four_use" type="checkbox" name="coordcvt_four_use" lay-skin="switch">
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">x平移</label>
+                                <div class="layui-input-block">
+                                    <input id='coordcvt_four_tx' type="text" name="coordcvt_four_tx" required lay-verify="required"
+                                           placeholder="请输入数据"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">y平移</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_four_ty' type="text" name="coordvt_four_ty" required lay-verify="required"
+                                           placeholder="请输入数据"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex;margin-top: 30px">
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">旋转</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_four_rt' type="text" name="coordvt_four_rt" required lay-verify="required"
+                                           placeholder="请输入数据"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item  fastinput">
+                                <label class="layui-form-label  ">缩放</label>
+                                <div class="layui-input-block">
+                                    <input id='coordvt_four_scale' type="text" name="coordvt_four_scale" required lay-verify="required"
+                                           placeholder="请输入数据"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding-top: 30px;text-align: center">
+                <div class="layui-input-block" style="margin-left: 0px!important;">
+                    <button type="button" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+    var agentnum = "#(agentNum)";
+    var machinesn = "#(machinesn)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'station_locate']);
+</script>
+</body>
+</html>

@@ -209,7 +209,7 @@ public class AgentTableMysqlDAL implements IAgent {
         record=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial "+
                 " where b.connectState=0 and a.agentNumber='"+agentNumber+"'");
         companyPage.setDeadsum(record.getInt("count(*)"));
-        record=Db.findFirst("select count(*) from projects_data where agentNumber='"+agentNumber+"'");
+        record=Db.findFirst(" select count(*) from projects_data d where d.agentNumber='"+agentNumber+"' and (select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.proGroupId=d.proGroupId)>0");
         companyPage.setProjectsum(record.getInt("count(*)"));
         record=Db.findFirst("select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial "+
                 "where a.agentNumber='"+agentNumber+"'");
@@ -350,7 +350,7 @@ public class AgentTableMysqlDAL implements IAgent {
             String[] allweb = WebAuthority.getAllString().split("@");
             for (int k = 0; k < allweb.length; k++) {
                 FuncAuthor funcAuthor = new FuncAuthor();
-                funcAuthor.setName(AppAuthority.getString(Integer.parseInt(allweb[k])));
+                funcAuthor.setName(WebAuthority.getString(Integer.parseInt(allweb[k])));
                 funcAuthor.setValue(allweb[k]);
                 allweblist.add(funcAuthor);
             }

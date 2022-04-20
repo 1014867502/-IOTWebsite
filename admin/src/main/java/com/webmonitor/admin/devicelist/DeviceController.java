@@ -581,6 +581,11 @@ public class DeviceController extends BaseController {
     }
 
     /**
+     * 导入文件批量修改设备的公司归属（只有设备名）
+     **/
+
+
+    /**
      * 获取设备外接传感器列表
      **/
     public void getDeviceSensorList() {
@@ -609,9 +614,7 @@ public class DeviceController extends BaseController {
         DeviceSensorList deviceSensorList = gson.fromJson(data, new TypeToken<DeviceSensorList>() {
         }.getType());
         try {
-            DeviceListService.me.addSensorByData(deviceSensorList, machinesn);
-            SocketTools socketTools = new SocketTools();
-            socketTools.updateSocket(userid, machinesn);
+            DeviceListService.me.addSensorByData(userid,deviceSensorList, machinesn);
             result.success("成功");
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
@@ -631,9 +634,7 @@ public class DeviceController extends BaseController {
         DeviceSensorList deviceSensorList = gson.fromJson(data, new TypeToken<DeviceSensorList>() {
         }.getType());
         try {
-            DeviceListService.me.delSensorByData(deviceSensorList, machinesn);
-            SocketTools socketTools = new SocketTools();
-            socketTools.updateSocket(userid, machinesn);
+            DeviceListService.me.delSensorByData(userid,deviceSensorList, machinesn);
             result.success("成功");
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
@@ -665,7 +666,7 @@ public class DeviceController extends BaseController {
         Result<String> result = Result.newOne();
         String machinesn = getPara("machinesn");
         String devicetype= AgentDataService.me.getDeviceDetailBySn(machinesn).getFirmwareType();
-        if (devicetype!=null&&!devicetype.equals("")&&DeviceListService.me.isLatestVersion(machinesn)) {
+        if (!Tools.isEmpty(devicetype)&&DeviceListService.me.isLatestVersion(machinesn)) {
             result.success("ok");
         } else {
             if(devicetype.equals("")){
@@ -747,18 +748,19 @@ public class DeviceController extends BaseController {
         int error2=0;
         try {
             for(int i=0;i<sList.size();i++){
+                    String clientid=createRandomUse(userid);
                     SocketClient socketClient = new SocketClient();
                     AgentData agentData=AgentDataService.me.getDeviceDetailBySn(sList.get(i).getMachineSerial());
                     if(agentData.getFirmwareType().equals("")){
                         error2++;
                         continue;
                     }
-                    socketClient.connect(sList.get(i).getMachineSerial(), userid);
+                    socketClient.connect(sList.get(i).getMachineSerial(), clientid);
                     if (socketClient.isOnlineFlag()) {
                         socketClient.setConnectime(System.currentTimeMillis());
-                        socketClient.sendData("WebClient" + userid + "&" + sList.get(i).getMachineSerial() + "&" + order);
+                        socketClient.sendData("WebClient" + clientid + "&" + sList.get(i).getMachineSerial() + "&" + order);
                         SocketTools socketTools=new SocketTools();
-                        socketTools.updateSocket(userid,sList.get(i).getMachineSerial());//通知更新
+                        socketTools.updateSocket(clientid,clientid,sList.get(i).getMachineSerial());//通知更新
                         socketClient.realdata = "";
                         socketClient.getall = true;
                         while ((socketClient.realdata == null || socketClient.realdata.equals(""))) {
@@ -797,7 +799,7 @@ public class DeviceController extends BaseController {
         Result<String> result = Result.newOne();
         String order = getPara("order").replace("\n", "");
         String machinesn = getPara("machinesn");
-        String userid = getCookie(IndexService.me.accessUserId);
+        String userid = getPara("userid");
         String test = "";
         try {
 //            SocketTools socketTools=new SocketTools();
@@ -807,18 +809,25 @@ public class DeviceController extends BaseController {
             socketClient.realdata = "";
             socketClient.sendData("WebClient" + userid + "&" + machinesn + "&" + order);
             if (!order.equals("")) {
-                socketClient.getall = true;
-                while ((socketClient.realdata == null || socketClient.realdata.equals(""))) {
-                    TimeUnit.SECONDS.sleep(1);
-//                    socketClient.setLatesttime(System.currentTimeMillis());
-//                    if ((socketClient.getLatesttime() - socketClient.getConnectime() > 10000)) {
-//                        break;
-//                    }
-                    if ((System.currentTimeMillis() - socketClient.getConnectime() > 5000)) {
-                        break;
+                if(order.equals("SET,DEVICE.FTP_UPDATE,GEO")){//判断升级
+                    socketClient.getall = true;
+                    while ((socketClient.realdata == null || socketClient.realdata.equals(""))) {
+                        TimeUnit.SECONDS.sleep(1);
+                        if ((System.currentTimeMillis() - socketClient.getConnectime() > 10*60*1000)) {
+                            break;
+                        }
+                    }
+                }else{
+                    socketClient.getall = true;
+                    while ((socketClient.realdata == null || socketClient.realdata.equals(""))) {
+                        TimeUnit.SECONDS.sleep(1);
+                        if ((System.currentTimeMillis() - socketClient.getConnectime() > 10000)) {
+                            break;
+                        }
                     }
                 }
-            } else {
+            }
+            else {
                 while ((socketClient.realdata == null || socketClient.realdata.equals(""))) {
                     TimeUnit.SECONDS.sleep(1);
                     socketClient.setLatesttime(System.currentTimeMillis());
@@ -846,25 +855,32 @@ public class DeviceController extends BaseController {
      * 连接socket
      **/
     public void condevsocket() {
-        Result<String> result = Result.newOne();
+        Result<ConnectData> result = Result.newOne();
         String machinesn = getPara("machinesn");
         String userid = getCookie(IndexService.me.accessUserId);
+        userid=createRandomUse(userid);
+        ConnectData connectData=new ConnectData();
         try {
             if (!socketClientHashMap.containsKey(userid)) {
                 SocketClient socketClient = new SocketClient();
                 socketClient.connect(machinesn, userid);
                 socketClientHashMap.put(userid, socketClient);
                 if (socketClient.isOnlineFlag()) {
-                    result.success("连接成功");
+                    connectData.setResult("连接成功");
+                    connectData.setUserid(userid);
+                    result.success(connectData);
                 } else {
-                    result.success("连接失败");
+                    connectData.setResult("连接失败");
                 }
             } else {
-                result.success("连接成功");
+                connectData.setResult("连接成功");
+                connectData.setUserid(userid);
+                result.success(connectData);
             }
         } catch (Throwable e) {
             ExceptionUtil.handleThrowable(result, e);
-            result.success("连接失败");
+            connectData.setResult("连接失败");
+            result.success(connectData);
         }
         renderJson(result);
     }
@@ -874,7 +890,7 @@ public class DeviceController extends BaseController {
      **/
     public void closesocket() {
         Result<String> result = Result.newOne();
-        String userid = getCookie(IndexService.me.accessUserId);
+        String userid = getPara("userid");
         try {
             SocketClient socketClient = socketClientHashMap.get(userid);
             socketClient.closeConnect();
@@ -1006,6 +1022,36 @@ public class DeviceController extends BaseController {
     }
 
     /**
+     * 导入sn号文件迁移
+    * */
+    public void movefileinput() {
+        Result<String> result = Result.newOne();
+        String type = getPara("type");
+        String company=getPara("agentnum");
+        String userid = getPara("userid") == null ? "" : getPara("userid");
+        String stop = getPara("stop") == null ? "" : getPara("stop");
+        String filename = getPara("filename") == null ? "" : getPara("filename");
+        try {
+//            String filename= new String(getPara("filename").toString().getBytes("iso8859_1"),"utf-8");
+            if (stop.equals("")) {
+                UploadThread thread = new UploadThread(FileClientHashMap.get(userid + filename), userid + filename);
+                thread.setCompany(company);
+                ThreadHashMap.put(userid + filename, thread);
+                String sqlresult = "";
+                sqlresult = thread.movedevice();
+                result.success(sqlresult);
+            } else {
+                UploadThread thread = ThreadHashMap.get(userid + filename);
+                thread.setInterrupted(true);
+                result.success("执行已中止");
+            }
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /**
      * 删除上传文件
      **/
     public void deleteuploadfile() {
@@ -1081,11 +1127,20 @@ public class DeviceController extends BaseController {
                     break;
                 case "user":
                     String userproject = StaffService.me.getStaffById(userid).getGroupAssemble();
-                    String[] projects = userproject.split("@");
-                    for (int i = 0; i < projects.length; i++) {
-                        String j = projects[i];
-                        List<BaseDevicemap> list1 = DeviceListService.me.getProjectGnssDevices(j);
-                        devicemapList.add(list1);
+                    if(userproject.equals("all")){
+                        List<BaseProjects> project2 = ProjectService.me.getProjectByComId(StaffService.me.getStaffById(userid).getAgentNumber());
+                        for (int i = 0; i < project2.size(); i++) {
+                            String j = project2.get(i).getProjectid();
+                            List<BaseDevicemap> list1 = DeviceListService.me.getProjectGnssDevices(j);
+                            devicemapList.add(list1);
+                        }
+                    }else{
+                        String[] projects = userproject.split("@");
+                        for (int i = 0; i < projects.length; i++) {
+                            String j = projects[i];
+                            List<BaseDevicemap> list1 = DeviceListService.me.getProjectGnssDevices(j);
+                            devicemapList.add(list1);
+                        }
                     }
                     result.success(devicemapList);
                     break;
@@ -1164,7 +1219,83 @@ public class DeviceController extends BaseController {
     }
 
    /****/
+    public String createRandomUse(String userid){
+        Random random=new Random(1);
+        int no=0;
+        String test="";
+        no=random.nextInt(100);
+        test=userid+no;
+        while(socketClientHashMap.containsKey(test)){
+            no=random.nextInt(100);
+            test=userid+no;
+        };
+        return test;
+    }
 
 
+    /**判断设备号是否存在**/
+    public void  isExistMachineSerial(){
+        Result<String> result = Result.newOne();
+        String machineserial=getPara("machineSerial");
+        try {
+            if(AgentDataService.me.isExistDeviceDetailBySn(machineserial)){
+                result.success("true");
+            }else{
+                result.error("false");
+            }
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /**获取传感器的厂家信息**/
+    public void getSensorCompanyList(){
+        Result<List<SensorData>> result = Result.newOne();
+        String type=getPara("type");
+        try {
+            List<SensorData> sensorDataList=DeviceListService.me.getSensorListByType(type);
+            result.success(sensorDataList);
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /**获取项目中各类型设备对应的数目**/
+    public void getDeviceTypeCount(){
+        Result<List<DeviceType>> result = Result.newOne();
+        try {
+            List<DeviceType> sensorDataList=DeviceListService.me.getDeviceTypeCount();
+            result.success(sensorDataList);
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /**获取在半年内每个月对应的新增设备数目**/
+    public void  getAddDeviceCount(){
+        Result<List<DeviceType>> result = Result.newOne();
+        try {
+            List<DeviceType> sensorDataList=DeviceListService.me.getAddDeviceCount();
+            result.success(sensorDataList);
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
+
+    /**获取一个月内新设备前五的公司及对应的设备数**/
+    public void  getAddCompanyCount(){
+        Result<List<Incredevicemonth>> result = Result.newOne();
+        try {
+            List<Incredevicemonth> sensorDataList=DeviceListService.me.getAddCompanyCount();
+            result.success(sensorDataList);
+        } catch (Throwable e) {
+            ExceptionUtil.handleThrowable(result, e);
+        }
+        renderJson(result);
+    }
 
 }

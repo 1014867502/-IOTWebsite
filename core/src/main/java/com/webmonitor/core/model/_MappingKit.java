@@ -16,6 +16,8 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 public class _MappingKit {
 	
 	public static void mapping(ActiveRecordPlugin arp) {
+		arp.addMapping("sensor_data", "id", SensorData.class);
+		arp.addMapping("borrow_data", "id", BorrowData.class);
 		arp.addMapping("version_data", "id", VersionData.class);
 		arp.addMapping("staff_data", "id", StaffData.class);
 		arp.addMapping("machine_data", "id", MachineData.class);

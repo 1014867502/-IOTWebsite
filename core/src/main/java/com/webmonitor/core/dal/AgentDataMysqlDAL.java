@@ -13,10 +13,7 @@ import sun.rmi.server.InactiveGroupException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class AgentDataMysqlDAL implements IAgentData {
 
@@ -272,6 +269,13 @@ public class AgentDataMysqlDAL implements IAgentData {
         return new Page<AgentData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());
     }
 
+    @Override
+    public List<SensorData> getSensorDataListByType(String type) {
+        String sql="select * from sensor_data where sensorType='"+type+"'";
+        List<SensorData> sensorDataList=SensorData.dao.find(sql);
+        return sensorDataList;
+    }
+
 
     /**公司详情页上的搜索框**/
     public Page<AgentData> searchDeviceByCom(String content,String agentnum,String state,int pageno,int limit){
@@ -471,7 +475,11 @@ public class AgentDataMysqlDAL implements IAgentData {
                 sql=AdminService.me.getAllDeviceById(pageno, limit);
                 break;
             case "user":
-                sql= ConsumerService.me.getAllDevice(userid);
+                if(currentuser.getGroupAssemble().equals("all")){
+                    sql= CompanyAdminService.me.getAllDevice(currentuser.getAgentNumber());
+                }else{
+                    sql= ConsumerService.me.getAllDevice(userid);
+                }
                 break;
             case "companyadmin":
                 sql= CompanyAdminService.me.getAllDevice(currentuser.getAgentNumber());
@@ -600,12 +608,12 @@ public class AgentDataMysqlDAL implements IAgentData {
     }
 
     @Override
-    public void addDevice(String sn, String comid, String state,String machinename) {
+    public void addDevice(String sn, String comid, String state,String machinename,String model) {
         Date date=new Date();
         DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
         String time=format.format(date);
         Record device=new Record().set("machineSerial",sn).set("machineName",machinename).set("onlineState",Integer.parseInt(state))
-                .set("agentNumber",comid).set("createTime",time).set("proGroupId",0);
+                .set("agentNumber",comid).set("createTime",time).set("proGroupId",0).set("firmwareType",model);
 //        MachineData machineData=MachineData.dao.findFirst("select * from machine_data where machineSerial='"+sn+"'");
 //        if(machineData==null){
 //            Record machine=new Record().set("machineSerial",sn).set("connectState",Integer.parseInt(state))
@@ -683,8 +691,30 @@ public class AgentDataMysqlDAL implements IAgentData {
                     deviceSensorList.setBruad(2<sensor.length?sensor[2]:"");
                     deviceSensorList.setCmd(3<sensor.length?sensor[3]:"");
                     deviceSensorList.setSn(4<sensor.length?sensor[4]:"");
-                    deviceSensorList.setType(5<sensor.length?sensor[5]:"");
-                    deviceSensorList.setVender(6<sensor.length?sensor[6]:"");
+                    String type=5<sensor.length?sensor[5]:"";
+
+                    String vender=6<sensor.length?sensor[6]:"";
+                    String sql2="select * from sensor_data where sensorType='"+type+"' and sensorVender='"+vender+"'";
+                    SensorData sensorData=SensorData.dao.findFirst(sql2);
+                    switch (type){
+                        case "LF":
+                            type="裂缝计";
+                            break;
+                        case "NW":
+                            type="泥位计";
+                            break;
+                        case "HS":
+                            type="土壤水分计";
+                            break;
+                        case "YL":
+                            type="雨量计";
+                            break;
+                        case "QJ":
+                            type="倾角计";
+                            break;
+                    }
+                    deviceSensorList.setType(type);
+                    deviceSensorList.setVender(Tools.isEmpty(sensorData.getVenderName())?"":sensorData.getVenderName());
                     deviceSensorList.setRef(7<sensor.length?sensor[7]:"");
                     deviceSensorLists.add(deviceSensorList);
                 }
@@ -790,8 +820,89 @@ public class AgentDataMysqlDAL implements IAgentData {
         return proDevCountfin;
     }
 
+    /**获取项目中各类型设备对应的数目**/
+    public List<DeviceType> getDeviceTypeCount(){
+        String sql="select modelType from firmware_data";
+        List<Record> recordList=Db.find(sql);
+        List<DeviceType> deviceTypes=new ArrayList<>();
+        for(Record item:recordList){
+            String type=item.getStr("modelType");
+            String typesql="select count(*),firmwareType from agent_data a left join machine_data b on a.machineSerial=b.machineSerial where a.firmwareType='"+type+"'";
+            Record record=Db.findFirst(typesql);
+            DeviceType deviceType=new DeviceType();
+            deviceType.setCount(record.getInt("count(*)"));
+            deviceType.setType(record.getStr("firmwareType"));
+            deviceTypes.add(deviceType);
+        }
+        deviceTypes.sort((a, b) -> a.getCount()-(b.getCount()));
+        return deviceTypes;
+    }
 
+    /**获取在半年内每个月对应的新增设备数目**/
+    public List<DeviceType> getAddDeviceCount(){
+        List<DeviceType> deviceTypes=new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        Date date=new Date();
+        calendar.add(Calendar.MONTH,-6);
+        Date today = calendar.getTime();
+        SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+        String now=format2.format(date);
+        for(int i=0;i<=6;i++){
+            DeviceType deviceType=new DeviceType();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+            String start = format.format(today);
+            calendar.add(Calendar.MONTH,+1);
+            today = calendar.getTime();
+            String end=format.format(today);
+            if(i==6) {
+                end = now;
+            }
+            String sql="SELECT count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.createTime BETWEEN '"+start+"' and '"+end+"'";
+            int count=Db.queryInt(sql);
+            deviceType.setCount(count);
+            deviceType.setMonth(start);
+            deviceTypes.add(deviceType);
+        }
+        return deviceTypes;
+    }
 
+    /**获取一个月内新设备前五的公司及对应的设备数**/
+    public  List<Incredevicemonth> getAddCompanyCount() {
+        List<Incredevicemonth> deviceTypes=new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+        String start = format2.format(today);
+        int month=calendar.get(Calendar.MONTH)+1;
+        int season=0;
+        while(season<4){
+            int jd=month/3+1;
+           if((month-1)%3==0){
+                today = calendar.getTime();
+                String end=format.format(today);
+               String sql="SELECT b.agentName,count(*) FROM agent_data a LEFT JOIN agent_table b ON b.agentNumber = a.agentNumber"+
+                       " where a.createTime BETWEEN '"+end+"' and '"+start+"' GROUP BY a.agentNumber  ORDER BY count(*) desc limit 5";
+               List<Record> recordList=Db.find(sql);
+               Incredevicemonth incredevicemonth=new Incredevicemonth();
+               incredevicemonth.setMonth(start+"——"+end);
+               List<DeviceType> deviceTypeList=new ArrayList<>();
+               for(Record item : recordList){
+                   DeviceType deviceType=new DeviceType();
+                   deviceType.setAgentname(item.getStr("agentName"));
+                   deviceType.setCount(item.getInt("count(*)"));
+                   deviceTypeList.add(deviceType);
+               };
+               incredevicemonth.setDevices(deviceTypeList);
+               deviceTypes.add(incredevicemonth);
+               start=format.format(today);
+               season++;
+           }
+           calendar.add(Calendar.MONTH,-1);
+           month=calendar.get(Calendar.MONTH)+1;
+        }
+        return deviceTypes;
+    }
 
     public static String getSubString(String str1, String str2) {
         StringBuffer sb = new StringBuffer(str1);

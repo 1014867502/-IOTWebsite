@@ -15,10 +15,12 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
+import com.webmonitor.admin.borrow.BorrowController;
 import com.webmonitor.admin.common.assistThread.TimerClearDiskFileThread;
 import com.webmonitor.admin.common.assistThread.TimerClearFileThread;
 import com.webmonitor.admin.common.hander.WebSocketHandler;
 import com.webmonitor.admin.common.interceptor.LoginSessionInterceptor;
+import com.webmonitor.admin.common.interceptor.RequestInterceptor;
 import com.webmonitor.admin.common.kit.APP;
 import com.webmonitor.admin.auth.AuthKit;
 import com.webmonitor.admin.company.CompanyController;
@@ -34,6 +36,7 @@ import com.webmonitor.admin.directive.TableLabelDirective;
 import com.webmonitor.admin.document.DocumentController;
 import com.webmonitor.admin.index.IndexController;
 import com.webmonitor.admin.manage.ManagerController;
+import com.webmonitor.admin.message.MessageController;
 import com.webmonitor.admin.orderlog.OrderLogController;
 import com.webmonitor.admin.overview.OverviewController;
 
@@ -91,6 +94,7 @@ public class AdminConfig extends JfinalCoreConfig {
         me.add("/manage", ManagerController.class);
         me.add("/devicelist", DeviceController.class);
         //me.add("/account", AccountController.class);
+        me.add("/borrow", BorrowController.class);
         me.add("/custom", CustomerController.class);
         me.add("/company", CompanyController.class);
         me.add("/project", ProjectController.class);
@@ -98,6 +102,7 @@ public class AdminConfig extends JfinalCoreConfig {
         me.add("/orderlog", OrderLogController.class);
         me.add("/version", VersionController.class);
         me.add("/document", DocumentController.class);
+        me.add("/message", MessageController.class);
         //me.add("/permission", PermissionController.class);
         //业务路由
     }
@@ -114,6 +119,7 @@ public class AdminConfig extends JfinalCoreConfig {
         me.addDirective("tableBadge", TableBadgeDirective.class);
         me.addDirective("tableLabel", TableLabelDirective.class);
         me.addDirective("label", LabelDirective.class);
+
         //配置业务指令
         me.addDirective("storeselect", StoreSelectDirective.class);
         //
@@ -199,6 +205,7 @@ public class AdminConfig extends JfinalCoreConfig {
         me.add(new LoginSessionInterceptor());
         //先将I18nInterceptor配置成全局拦截器
         me.add(new I18nInterceptor());
+        me.add(new RequestInterceptor());
 
     }
 

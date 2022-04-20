@@ -4,9 +4,11 @@ import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.core.model.*;
 import com.webmonitor.core.model.userbase.BaseDevicemap;
 import com.webmonitor.core.model.userbase.DeviceSensorList;
+import com.webmonitor.core.model.userbase.Incredevicemonth;
 import com.webmonitor.core.model.userbase.Templates;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**关于对agent_data数据表的接口**/
@@ -65,7 +67,7 @@ public interface IAgentData {
     /**增删改**/
     void editDevice(String sn,String machinename);
 
-    void addDevice(String sn, String comid, String state, String machinename);
+    void addDevice(String sn, String comid, String state, String machinename,String model);
 
     /**删除表中数据**/
     void deleteDevice(int id);
@@ -96,4 +98,16 @@ public interface IAgentData {
 
     /**首页上的搜索框**/
     Page<AgentData> seekDeviceByParam(StaffData currentuser, String content, String agentnum, String projectid, String state, int pageno, int limit);
+
+    /**根据类别获取传感器列表**/
+    List<SensorData>  getSensorDataListByType(String type);
+
+    /**获取一个月内新设备前五的公司及对应的设备数**/
+    public List<Incredevicemonth> getAddCompanyCount();
+
+    /**获取在半年内每个月对应的新增设备数目**/
+    public List<DeviceType> getAddDeviceCount();
+
+    /**获取项目中各类型设备对应的数目**/
+    public List<DeviceType> getDeviceTypeCount();
 }

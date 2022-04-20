@@ -1,0 +1,79 @@
+/*
+滚动条样式
+*/
+::-webkit-scrollbar{
+    width:4px;
+    background-color: #0e487c;
+}
+::-webkit-scrollbar-thumb{
+    background-color: #4facfa;
+}
+label{
+    color: #ffffff;
+}
+/**********************************************************
+/*
+去掉左边栏
+*/
+.layui-body {
+    left: 0px;
+    background-image: url(/img/main_bg.png);
+    background-size: cover;
+    overflow: hidden !important;
+}
+.layui-card-header{
+    border-bottom: 0px !important;
+    color: #ffffff;
+}
+.layui-card{
+    /*background-color: transparent;!*背景透明*!*/
+    background-color:rgba(23,77,187,0.25);
+    box-shadow: 0 0 0 rgba(0,0,0,0);/*前景无阴影*/
+    height: 100%;
+}
+.card-body-scrollbar{
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /*  新加的 */
+    background-color: transparent !important;
+}
+.card-body-scrollbar:hover{
+    overflow: auto; /*  新加的 */
+}
+.g_bar{
+    display:inline-block;
+    position:relative;
+    height:3px;
+    border:1px solid #ccc;
+    border-left:0;
+}
+.g_bar.xcor{
+    background: #00FF00;
+}
+.g_bar.ycor{
+    background: #FFD700;
+}
+.g_bar.zcor{
+    background: #FF0000;
+}
+
+.g_bar span{
+    position:absolute;
+    top:0;
+    right:-50px;
+    width:40px;
+    color: #f3ecec;
+    line-height:3px
+}
+.layui-laydate, .layui-laydate-hint {
+    background-color: rgba(35, 132, 231, 0.78) !important;
+}
+.layui-laydate-header {
+    color: #FFFFFF !important;
+}
+.layui-laydate-content .laydate-day-next, .layui-laydate-content .laydate-day-prev {
+    color: #767272 !important;
+}
+.layui-laydate-content td {
+    color: #FFFFFF !important;
+}

@@ -18,6 +18,7 @@ public class UploadThread{
     private int progress;
     private String name;
     private File file;
+    private String company;
     private boolean interrupted=false;
 
     public int getProgress() { return progress; }
@@ -26,6 +27,9 @@ public class UploadThread{
     public void setName(String name) { this.name = name; }
     public File getFile() { return file; }
     public void setFile(File file) { this.file = file; }
+
+    public String getCompany() { return company; }
+    public void setCompany(String company) { this.company = company; }
 
     public boolean isInterrupted() {
         return interrupted;
@@ -41,7 +45,7 @@ public class UploadThread{
         setName(name);
     }
 
-    /**覆盖更新**/
+    /**导入设备覆盖更新**/
     public String uploadexcute(){
         FutureTask<String> task = new FutureTask<String>(new CallableImpl());
         Thread thread = new Thread(task);
@@ -55,9 +59,24 @@ public class UploadThread{
         }
     }
 
-    /**不覆盖更新**/
+    /**导入设备不覆盖更新**/
     public String uploadexcute2() {
         FutureTask<String> task = new FutureTask<String>(new CallableImpl2());
+        Thread thread = new Thread(task);
+        thread.start();
+        try {
+            System.out.println("task.get() returns " + task.get());
+            return task.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return "文件上传失败";
+        }
+    }
+
+
+    /**导入文件迁移设备**/
+    public String movedevice(){
+        FutureTask<String> task = new FutureTask<String>(new CallableImpl3());
         Thread thread = new Thread(task);
         thread.start();
         try {
@@ -144,6 +163,9 @@ public class UploadThread{
 
                                 }
                             }
+                        }
+                        if(values[0].isEmpty()){
+                            value=value.substring(1,value.length());
                         }
                         String sql="REPLACE INTO  agent_data ("+columnvalue+"proGroupId,firmwareType)" +
                                 "VALUES("+value+ ",'0','"+firm+"')";
@@ -241,9 +263,45 @@ public class UploadThread{
                             }
                         }
                     }
+                    if(values[0].isEmpty()){
+                       value=value.substring(1,value.length());
+                    }
                     String sql="REPLACE INTO  agent_data ("+columnvalue+"proGroupId,firmwareType)" +
                             "VALUES("+value+ ",'0','"+firm+"')";
                     Db.query(sql);
+                    excutecount++;
+                    progress=excutecount*100/rowCount;
+                }
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "文件上传失败";
+            }
+            return "文件上传成功！";
+        }
+
+    }
+
+
+    /**导入文件迁移设备**/
+    class CallableImpl3 implements Callable<String> {
+        @Override
+        public String call() {
+            /**执行上传文件**/
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"GBK"));//换成你的文件名
+//                String head=reader.readLine();//第一行信息，为标题信息，不用,如果需要，注释掉
+//                String[] heads=head.split(",");
+                int excutecount=0;
+                int rowCount=0;
+                String line = null;
+                reader.mark( ( int )file.length() + 1 );
+                while(reader.readLine()!=null){
+                    rowCount++;
+                }
+                reader.reset();
+                while((line=reader.readLine())!=null&&!interrupted){
+                    Db.update("update agent_data set agentNumber=?,proGroupId=0 where machineSerial=?",company,line);
                     excutecount++;
                     progress=excutecount*100/rowCount;
                 }

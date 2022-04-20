@@ -6,6 +6,8 @@ import com.jfinal.i18n.Res;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.admin.base.BaseController;
+import com.webmonitor.admin.devicelist.DeviceController;
+import com.webmonitor.admin.devicelist.DeviceListService;
 import com.webmonitor.admin.index.IndexService;
 import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.dal.RoleType;
@@ -23,6 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class TemplateController extends BaseController {
+
+
 
     /**模板设置页面**/
     public void setting(){
@@ -299,9 +303,9 @@ public class TemplateController extends BaseController {
 //            }
             if(online){
                 TemplateService.me.excuteTemplate(userid,sList,template);
-                for(int i=0;i<sList.size();i++){
-                    socketTools.updateSocket(userid,sList.get(i).getMachineSerial());
-                }
+//                for(int i=0;i<sList.size();i++){
+//                    socketTools.updateSocket(userid,sList.get(i).getMachineSerial());
+//                }
                 result.success("success");
             }else{
                 result.success("设备不在线，修改失败");
@@ -326,9 +330,9 @@ public class TemplateController extends BaseController {
         try{
             if(online){
                 TemplateService.me.excuteTemplate(userid,sList,template);
-                for(int i=0;i<sList.size();i++){
-                    socketTools.updateSocket(userid,sList.get(i).getMachineSerial());
-                }
+//                for(int i=0;i<sList.size();i++){
+//                    socketTools.updateSocket(userid,sList.get(i).getMachineSerial());
+//                }
                 result.success("success");
             }else{
                 result.success("设备不在线，修改失败");

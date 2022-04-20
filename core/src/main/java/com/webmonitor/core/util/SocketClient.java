@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import javax.websocket.*;
 import java.util.List;
+import java.util.Random;
 
 public class SocketClient {
 
@@ -99,8 +100,8 @@ public class SocketClient {
                     /**
                      * 再建一个循环发送debug的定时线程
                      */
-                    DebugRunnable debugRunnable=new DebugRunnable(userid,machineserial);
-                    new Thread(debugRunnable).start();
+//                    DebugRunnable debugRunnable=new DebugRunnable(userid,machineserial);
+//                    new Thread(debugRunnable).start();
                     //TODO
                     onlineFlag=true;
                 }
@@ -118,9 +119,9 @@ public class SocketClient {
      */
     public void sendData(final String sendData) {
         if (null != mSocket && !mSocket.isClosed()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
                     try {
                         // 步骤1：从Socket 获得输出流对象OutputStream
                         // 该对象作用：发送数据
@@ -134,9 +135,10 @@ public class SocketClient {
                         e.printStackTrace();
                     }
                 }
-            }).start();
+//            }).start();
 
-        } else {
+        //}
+        else {
         }
     }
 
@@ -200,10 +202,28 @@ public class SocketClient {
                             mSocket.close();
                             mRecycleFlag = false;
                         }
-                    }else {
-                        //客户端断开连接
-                        mRecycleFlag = false;
+                        String  data2=new String(response.getBytes(),"utf-8");
+                        if (data2.equalsIgnoreCase("order send success")||data2.equalsIgnoreCase("order send error,machine offline")) {
+                            //当客户端发送的信息为：exit时，关闭连接
+                            if (outputStream!=null){
+                                outputStream.close();
+                            }
+                            if (is!=null){
+                                is.close();
+                            }
+                            if (isr!=null){
+                                isr.close();
+                            }
+                            if (br!=null){
+                                br.close();
+                            }
+                            mRecycleFlag = false;
+                        }
                     }
+//                    else {
+//                        //客户端断开连接
+//                        mRecycleFlag = false;
+//                    }
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     mRecycleFlag = false;
@@ -269,6 +289,8 @@ public class SocketClient {
      */
     public void closeConnect() {
         try {
+//            sendData(mClientId+"&WebCloseSocket");
+//            Thread.sleep(3000);
             // 断开 客户端发送到服务器 的连接，即关闭输出流对象OutputStream
             if (outputStream!=null){
                 outputStream.close();
@@ -286,7 +308,7 @@ public class SocketClient {
                 mSocket.close();
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
 
         }

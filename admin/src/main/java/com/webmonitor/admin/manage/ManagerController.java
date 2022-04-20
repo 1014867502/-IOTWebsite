@@ -134,10 +134,17 @@ public class ManagerController extends BaseController {
         render("helpmanage.html");
     }
 
+    public void borrowmanage(){
+        String userid = getCookie(IndexService.me.accessUserId);
+        setAttr("userid",userid);
+        render("borrowmanage.html");
+    }
+
     /**测试主页**/
     public void mainpage(){
         String userid = getCookie(IndexService.me.accessUserId);
-        setAttr("userid",userid);
+        StaffData staffData=StaffData.dao.findById(userid);
+        setAttr("userid",staffData.getUAccountNum());
         render("mainpage.html");
     }
 
@@ -146,7 +153,6 @@ public class ManagerController extends BaseController {
         try {
             String userid = getCookie(IndexService.me.accessUserId);
             StaffData currentuser = StaffService.me.getStaffById(userid);
-            setCookie(IndexService.me.accessUserId, currentuser.getId().toString(), 24 * 60 * 60, true);
             int roletype = currentuser.getIRoleType();
             RoleType role = RoleType.getIndex(roletype);
             switch (role) {
@@ -154,6 +160,10 @@ public class ManagerController extends BaseController {
                     render("menu_user.html");
                     break;
                 case superadmin:
+                    String companynum=currentuser.getAgentNumber();
+                    if(companynum.equals("1")){
+                        setAttr("comid",currentuser.getAgentNumber());
+                    }
                     render("menu_superadmin.html");
                     break;
                 case companyadmin:
@@ -171,6 +181,7 @@ public class ManagerController extends BaseController {
     public void docmenuside(){
         render("_wordmenu.html");
     }
+
 
 
 
@@ -193,15 +204,21 @@ public class ManagerController extends BaseController {
             RoleType role = RoleType.getIndex(roletype);
             switch (role) {
                 case user:
-                    String[] projects = authority.split("@");
-                    for (int i = no-1; i < projects.length; i++) {
-                        BaseProjects baseProjects = ProjectService.me.getProjectById(projects[i]);
-                        list.add(baseProjects);
+                    if(currentuser.getGroupAssemble().equals("all")){
+                        setAttr("identity", "user");
+                        result.success(ProjectService.me.getProjectByComIdPageDataO(currentuser.getAgentNumber(), no, pagesize));
+                    }else{
+                        String[] projects = authority.split("@");
+                        for (int i = no-1; i < projects.length; i++) {
+                            BaseProjects baseProjects = ProjectService.me.getProjectById(projects[i]);
+                            list.add(baseProjects);
+                        }
+                        setAttr("pagecount", projects.length);
+                        setAttr("identity", "user");
+                        Page<Object> page = new Page<Object>(Collections.singletonList(list), Integer.parseInt(pageno), pagesize, (projects.length / pagesize) + 1, projects.length);
+                        result.success(page);
                     }
-                    setAttr("pagecount", projects.length);
-                    setAttr("identity", "user");
-                    Page<Object> page = new Page<Object>(Collections.singletonList(list), Integer.parseInt(pageno), pagesize, (projects.length / pagesize) + 1, projects.length);
-                    result.success(page);
+
                     break;
                 case superadmin:
                     setAttr("identity", "admin");
@@ -356,7 +373,12 @@ public class ManagerController extends BaseController {
                 proDevCount= CompanyAdminService.me.getDevCount(staffData.getAgentNumber());
                 break;
             case "user":
-                proDevCount= ConsumerService.me.getDevCount(staffData.getGroupAssemble().split("@"),staffData.getAgentNumber());
+                if(staffData.getGroupAssemble().equals("all")){
+                    proDevCount= CompanyAdminService.me.getDevCount(staffData.getAgentNumber());
+                }else{
+                    proDevCount= ConsumerService.me.getDevCount(staffData.getGroupAssemble().split("@"),staffData.getAgentNumber());
+                }
+
                 break;
             case "admin":
                 proDevCount=CompanyService.me.getDeviceNumByAgentId(staffData.getGroupAgentNumber());

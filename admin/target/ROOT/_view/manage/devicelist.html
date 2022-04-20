@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("设备管理")
+    <script src="/assets/lib/xm-select.js"></script>
+
+    <style type="text/css">
+        .layui-form-checked span, .layui-form-checked:hover span {
+            background-color:#FF5722;
+        }
+
+        .layui-form-checked i, .layui-form-checked:hover i {
+            color:#FF5722;
+        }
+        .untreated {
+            color:  #FF5722;
+            width: 30%;
+            /*border: solid 0.5px;*/
+            height: 27px;
+            /*background-color: #FF5722;*/
+        }
+
+        .treated {
+            color:  #01AAED;
+            width: 30%;
+            /*border: solid 0.5px;*/
+            height: 27px;
+            /*background-color: #01AAED;*/
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">设备列表</div>
+                <div class="layui-card-body">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <div class="layui-input-inline">
+                                <div id="projectlist" class="xm-select-project"></div>
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="text" name="searchSN" lay-verify="searchSN"
+                                       placeholder="设备SN号" autocomplete="on" class="layui-input">
+                            </div>
+                            <div class="layui-input-inline">
+                                <button type="button" class="layui-btn layui-btn-normal" id="LAY-component-form-setval">查询</button>
+                            </div>
+                        </div>
+                    </form>
+                    <table class="layui-hide" id="table-form" lay-filter="table-form"></table>
+
+                    <script type="text/html" id="table-online-state">
+                        {{ d.onlinestate === 1 ? '<div class="treated">在线</div>'
+                        : '<div class="untreated">离线</div>' }}
+                    </script>
+                    <script type="text/html" id="table-toolbar">
+<!--                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">设备详情</a>-->
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="echarts">设备数据</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+<script>
+    var projetid = "#(projetid)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table','devicelist']);
+</script>
+</body>
+</html>
+</html>

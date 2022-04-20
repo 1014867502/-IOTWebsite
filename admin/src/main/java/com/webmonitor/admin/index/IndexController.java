@@ -50,6 +50,7 @@ public class IndexController extends BaseController {
         setAttr("userid", currentuser.getUAccountNum());
         setAttr("agentnum",currentuser.getAgentNumber());
         setAttr("writeright",currentuser.getSetPermission());
+        setAttr("messageboolen",1);
 //        String projetid = getCookie(IndexService.me.accessProjectId);
 //        if (Tools.isEmpty(projetid)){
 //            projetid = list.size()>0?list.get(0).getProjId():"";

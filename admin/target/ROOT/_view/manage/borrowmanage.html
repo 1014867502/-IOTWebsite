@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("GNSS位移统计")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/css/global.css">
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style type="text/css">
+        .layui-form-checked span, .layui-form-checked:hover span {
+            background-color: #FF5722;
+        }
+
+        .layui-form-checked i, .layui-form-checked:hover i {
+            color: #FF5722;
+        }
+
+        .indexcard {
+            display: flex;
+            width: 100%;
+            height: 121px;
+            /*background-color: #fffefe;*/
+            /*box-shadow: 0 0 6px -1px #9f9f9f;*/
+        }
+
+        .devicecard {
+            width: 50%;
+            text-align: center;
+            margin: auto;
+
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+<style>
+
+    .layui-btn:hover {
+        opacity: .8;
+        filter: alpha(opacity=80);
+        color: #ffffff;
+        background-color: #1e9fff;
+    }
+    .tableeventbtn{
+        width: 60px;
+        height: 23px;
+        border: 1px solid #01AAED;
+        border-radius: 5px;
+        font-size: 11px;
+        background-color: #FFFFFF;
+        color: #01AAED;
+    }
+    .layui-card-header .layui-icon {
+        line-height: unset;
+        position: initial;
+        right: 15px;
+        top: 29%;
+        margin-top: -4px;
+    }
+
+    .layui-laydate .layui-this {
+        background-color: #1E9FFF !important;
+        color: #fff !important;
+    }
+    .layui-laydate-content td.laydate-selected {
+        background-color: #31e6ff;
+    !important: ;
+    }
+
+    .layui-laydate-footer span:hover {
+        color:  #1E9FFF !important;
+    }
+
+    .untreated {
+        /*border: solid 0.5px;*/
+        height: 27px;
+        color: #FF5722;
+        width: 30%;
+        /*background-color: #FF5722;*/
+    }
+
+    .treated {
+        /*border: solid 0.5px;*/
+        height: 27px;
+        color: #01AAED;
+        width: 30%;
+        /*background-color: #01AAED;*/
+    }
+
+
+    .sninput{
+        border-radius: 6px 0px 0px 6px;
+    }
+
+    xm-select .xm-select-default {
+        position: absolute;
+        width: auto;
+        height: 100%;
+        border: none;
+        visibility: hidden;
+    }
+</style>
+
+<div class="site-text" style="margin: 5%; display: none" id="devicechangewindow" target="test123">
+    <div class="layui-form-item">
+        <label class="layui-form-label">迁移至</label>
+        <div class="layui-input-block">
+            <div id="companylist" class="xm-select-project" style="width: auto"></div>
+        </div>
+    </div>
+    </form>
+</div>
+
+
+<script type="text/html" id="statusdemo">
+    <button class="layui-btn layui-btn-primary layui-btn-xs" style="background-color: #f19038;color: #F1F1F1">未关联
+    </button>
+</script>
+
+<!--//添加外借设备弹窗-->
+<div class="site-text" style="margin: 5%; display: none" id="addprowindow" target="test1234">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备编号</label>
+            <div class="layui-input-block">
+                <input id="machineserial" style="width: 100%" type="text" name="machineSerial"
+                       lay-verify="required" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">外借公司</label>
+            <div class="layui-input-block">
+                <div id="companylistadd" class="xm-select-project" style="width: 100%"></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">归还时间</label>
+            <div class="layui-input-block">
+                <div style="width: 100%">
+                    <input type="text" class="layui-input" lay-verify="required" name="endTime" id="datasave" placeholder="请输入归还时间">
+                </div>
+                <span id="datetip"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">外借人</label>
+            <div class="layui-input-block">
+                <input id="lender" style="width: 100%" type="text" name="lender"
+                       lay-verify="required|confirmserial" placeholder="请输入外借人" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">联系电话</label>
+            <div class="layui-input-block">
+                <input id="phoneNumber" style="width: 100%" type="text" name="phoneNumber"
+                       lay-verify="required|phone" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">备注</label>
+            <div class="layui-input-block">
+                <textarea id="content" style="resize: none" name="content" placeholder="请输入内容（可以不填）" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item" >
+            <div class="layui-input-block formsumbitlocate" >
+                <button type="button" class="layui-btn sumbitbtn" lay-submit lay-filter="formDemo2">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--//编辑设备弹窗-->
+<div class="site-text" style="margin: 5%; display: none" id="editwindow" target="test1234">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备编号</label>
+            <div class="layui-input-block">
+                <input id="editmachineserial" style="width: 100%" type="text" name="machineSerial"
+                 disabled   lay-verify="required" placeholder="请输入设备编号" autocomplete="off" class="layui-input layui-disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">外借公司</label>
+            <div class="layui-input-block">
+                <div id="editcompanylist" class="xm-select-project" style="width: 100%"></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">借出时间</label>
+            <div class="layui-input-block">
+                <div style="width: 100%">
+                    <input type="text" class="layui-input layui-disabled" disabled lay-verify="required" name="beginTime" id="editdate" placeholder="请输入归还时间">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">借出人</label>
+            <div class="layui-input-block">
+                <div style="width: 100%">
+                    <input type="text" class="layui-input layui-disabled" disabled lay-verify="required" name="uAccountNum" id="editaccount" placeholder="请输入归还时间">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">归还时间</label>
+            <div class="layui-input-block">
+                <div style="width: 100%">
+                    <input type="text" class="layui-input" lay-verify="required" name="endTime" id="editdatasave" placeholder="请输入归还时间">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">借出状态</label>
+            <div class="layui-input-block">
+                <div style="width: 100%">
+                    <p id="returnstatus" style="padding-top: 6px;" class="untreated">借出中</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">外借人</label>
+            <div class="layui-input-block">
+                <input id="editlender" style="width: 100%" type="text" name="lender"
+                       lay-verify="required|confirmserial" placeholder="请输入外借人" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">联系电话</label>
+            <div class="layui-input-block">
+                <input id="editphoneNumber" style="width: 100%" type="text" name="phoneNumber"
+                       lay-verify="required|phone" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 84px;padding: 9px 13px;">备注</label>
+            <div class="layui-input-block">
+                <textarea id="editcontent" lay-verify="text" name="content" style="resize: none" placeholder="请输入内容（可以不填）" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item" >
+            <div class="layui-input-block formsumbitlocate" >
+                <button type="button" class="layui-btn sumbitbtn" lay-submit lay-filter="editsumbit">提交修改</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12" style="  display: flex;">
+            <!--            <div style="display: flex;max-width: 1440px;margin-left: auto;margin-right: auto;">-->
+            <div class="indexcard">
+                <div class="devicecard" style="height: 100%;margin-right: 35px;background-color: white;box-shadow: 0 0 6px -1px #9f9f9f;">
+                    <div style="display: flex;justify-content: center;margin-top: 35px;">
+                        <img width="30px" src="/assets/images/icon_devicesum.png"/>
+                        <div style="font-weight: bold;font-size: 20px">外借设备总数（台）</div>
+                    </div>
+                    <div class="devicecard" id="sumnum" style="font-size: 36px;font-weight: bold"></div>
+                </div>
+                <div class="devicecard" style="height: 100%;margin-right: 35px;background-color: white;box-shadow: 0 0 6px -1px #9f9f9f;">
+                    <div style="display: flex;justify-content: center;margin-top: 35px;">
+                        <img width="30px" src="/assets/images/icon_deviceonline.png">
+                        <div style="font-size: 20px;font-weight: bold;">未到期设备数（台）</div>
+                    </div>
+                    <div class="devicecard" id="onlinenum" style="font-size: 24px;color: #00cca3"></div>
+                </div>
+                <div class="devicecard" style="height: 100%;margin-right: 35px;background-color: white;box-shadow: 0 0 6px -1px #9f9f9f;">
+                    <div style="display: flex;justify-content: center;margin-top: 35px;">
+                        <img width="30px" src="/assets/images/icon_deviceout.png">
+                        <div style="font-size: 20px;font-weight: bold;">到期设备数（台）</div>
+                    </div>
+                    <div class="devicecard" id="outnum" style="font-size: 24px;color: #F53C3C">
+                    </div>
+                </div>
+                <div class="devicecard" id="nohostdev" style="height: 100%;margin-right: 35px;background-color: white;box-shadow: 0 0 6px -1px #9f9f9f;">
+                    <div style="display:flex;justify-content: center;margin-top: 35px;">
+                        <div style="font-size: 20px;font-weight: bold;">临近到期设备数（台）</div>
+                    </div>
+                    <div class="devicecard" id="unprojnum" style="font-size: 24px;"></div>
+                </div>
+                <div class="devicecard" id="newonlinedev" style="height: 100%;margin-right: 35px;background-color: white;box-shadow: 0 0 6px -1px #9f9f9f;">
+                    <div style="display: flex;justify-content: center;margin-top: 35px;">
+                        <div style="font-size: 20px;font-weight: bold;">最新外借设备数（台）</div>
+                    </div>
+                    <div class="devicecard" id="newonlinenum" style="font-size: 24px;"></div>
+                </div>
+            </div>
+            <!--            </div>-->
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">设备表格</div>
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                    <div class="layui-form-item" style="margin: auto;width: 100%;display: flex;justify-content: center">
+                        <div class="layui-inline" style="width: 20%;margin-top: 3px;">
+                            <div id="company" class="xm-select-demo" ></div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="margin-top: 3px;margin-right: 0px;">
+                                <input style="border-radius: 6px;" type="text" class="layui-input" id="searchdate" placeholder="请输入借出时间范围">
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="width: 10%;margin-top: 3px;">
+                            <div id="online" class="xm-select-demo" ></div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="margin-top: 3px;margin-right: 0px;">
+                                <input style="border-radius: 6px;" type="text" class="layui-input" id="searchlender" placeholder="请输入借出人">
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="width: 20%;margin-top: 3px;">
+                            <div style="display: flex">
+                                <input type="text" class="layui-input sninput" name="SN" id="SN" placeholder=" 请输入设备sn号 ">
+                                <button type="button" class="layui-btn searchbtn" lay-submit data-type="reload"
+                                        id="datasumbit" lay-filter="LAY-app-contlist-search">搜索
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin: auto;width: 100%;display: flex;justify-content: center">
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn functionbtn" id="add_device2">
+                                <i class="layui-icon layui-icon-addition" style="font-size: 30px;"></i>添加外借设备
+                            </button>
+                        </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn functionbtn" id="return_device">
+                                <i class="layui-icon layui-icon-upload-circle" style="font-size: 30px;"></i>批量收回设备
+                            </button>
+                        </div>
+                        <div class="layui-inline" >
+                            <button type="button" class="layui-btn functionbtn" id="delete_device">
+                                <i class="layui-icon layui-icon-delete" style="font-size: 30px;"></i>批量删除记录
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="table-form" lay-filter="table-from"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script type="text/html" id="table-online-state">
+    {{ d.returnStatus == 1 ? '
+    <div class="treated">已归还</div>'
+    : '
+    <div class="untreated">借出中</div>' }}
+</script>
+<script type="text/html" id="barDemo">
+    {{ d.returnStatus == 1 ? ''
+    : '
+    <a class="layui-btn tableeventbtn layui-btn-xs" lay-event="return">收回</a>' }}
+    <a class="layui-btn tableeventbtn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn tableeventbtn layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+    var userid = parent.window.document.getElementsByName("homepageiframe")[0].getAttribute('userid');
+    var agentnum=parent.window.document.getElementsByName("homepageiframe")[0].getAttribute('agentnum');
+    var writeright="#(writeright)";
+    var type = "#(type)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'borrowmanage']);
+</script>
+</body>
+</html>

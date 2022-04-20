@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  #@meta("权限管理")
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header" data-locale="web_menu_power_manage">权限管理</div>
+          <div class="layui-card-body">
+              <div class="layui-btn-group" style="margin-bottom: 10px;">
+                <button class="layui-btn  layui-btn-sm" data-type="syncPermission" data-locale="web_item_synch"><i class="layui-icon layui-icon-refresh-3"></i>一键同步</button>
+              </div>
+
+            <table class="layui-hide" id="table-form" lay-filter="table-form"></table>
+
+            <script type="text/html" id="table-toolbar">
+              <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i> </button>
+                <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i> </button>
+              </div>
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/lib/jquery-3.4.1.min.js"></script>
+  <script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+  <script src="/assets/lib/loadlanguage.js"></script>
+  <script src="/assets/layuiadmin/layui/layui.js"></script>
+  <script>
+    var currPage = #(currPage??1)
+  layui.config({
+    base: '/assets/layuiadmin/'
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'permission']);
+  </script>
+</body>
+</html>

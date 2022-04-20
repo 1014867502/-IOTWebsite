@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("普通用户管理项目详情页面")
+    <script src="/assets/lib/xm-select.js"></script>
+    <link rel="stylesheet" href="/assets/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.css"/>
+    <script src="/assets/lib/leaflet/leaflet.js"></script>
+    <script src="/assets/lib/leaflet/group/leaflet.groupedlayercontrol.js"></script>
+    <script src="/assets/lib/leaflet/leaflet.ChineseTmsProviders.js"></script>
+    <script src="/assets/lib/leaflet/leaflet-tilelayer-colorizr.js"></script>
+    <style type="text/css">
+        .layui-form-checked span, .layui-form-checked:hover span {
+            background-color: #FF5722;
+        }
+
+        .layui-form-checked i, .layui-form-checked:hover i {
+            color: #FF5722;
+        }
+
+        .layui-btn.onlinebtn {
+            background-color: #009688;
+            color: #FFFFFF;
+        }
+
+        .layui-btn.offlinebtn {
+            background-color: #ff0000;
+            color: #FFFFFF;
+        }
+
+        .layui-card-body.layui-layout-box {
+            width: 100%;
+            line-height: 1.5;
+            border-width: 4px 4px 4px 4px;
+            /*border-style: solid;*/
+            background-color: #1e9fff;
+            /*!*border-image: url(/img/bg.png) 4 4 4 4 fill round;*!*/
+            /*border-image: url(/img/bg.png) 4 4 4 4 fill stretch;*/
+            box-sizing: border-box;
+            /*height: calc(100% - 42px);*/
+            height: 130px;
+        }
+
+        .card-body-scrollbar.flex-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+        }
+
+        .right-one-row {
+            height: 100%;
+            width: 100%;
+            justify-content: left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .right-one-row .right-one-item {
+            /*height: 50%;*/
+            width: 25%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-one-item .message {
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .data {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+        }
+
+        .layadmin-carousel.history {
+            height: 400px !important;
+        }
+    </style>
+</head>
+<body>
+
+<style>
+    .header-Data {
+        width: 100%;
+        justify-content: left;
+        display: flex;
+        align-items: stretch;
+    }
+
+    .layui-btn:hover {
+        opacity: .8;
+        filter: alpha(opacity=80);
+        color: #ffffff;
+        background-color: #1e9fff;
+    }
+
+    .header-Data-content {
+        height: 300px;
+        width: 25%;
+        /*justify-content: center;*/
+        margin-right: 0.5%;
+        display: flex;
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        border: 2px solid #ffFFFF;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .header-Data-map {
+        height: 363px;
+        width: 25%;
+        /*justify-content: center;*/
+        margin-right: 0.5%;
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        border: 2px solid #ffFFFF;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .header-Data-contentEx {
+        width: 50%;
+        /*justify-content: center;*/
+        align-items: center;
+        overflow: hidden; /*  新加的 */
+        background-color: #ffFFFF;
+        border-radius: 18px;
+        box-shadow: 0 0 1px 3px #E8EAF0;
+    }
+
+    .body-content {
+        margin-bottom: 1%
+    }
+
+    #map {
+        height: 100%;
+        width: 100%;
+    }
+
+    .untreated {
+        color: #FF5722;
+        width: 30%;
+        /*border: solid 0.5px;*/
+        height: 27px;
+        /*background-color: #FF5722;*/
+    }
+
+    .treated {
+        color: #01AAED;
+        width: 30%;
+        /*border: solid 0.5px;*/
+        height: 27px;
+        /*background-color: #01AAED;*/
+    }
+
+    body {
+        min-width: 1000px;
+    }
+
+    .projectname {
+        font-size: 25px;
+        font-weight: bold;
+    }
+
+    .little {
+        text-align: center;
+        width: 200px;
+        /*margin-left: 10%;*/
+        line-height: 40px;
+        margin: auto;
+    }
+
+    .indexcard {
+        display: flex;
+        width: 297px;
+        margin-left: 4%;
+        padding-right: 21px;
+        height: 144px;
+        background-color: #fffefe;
+        box-shadow: 0 0 6px -1px #9f9f9f;
+    }
+
+    .devicecard {
+        width: 50%;
+        text-align: center;
+        margin: auto;
+    }
+
+    .layui-form-checked[lay-skin=primary] i {
+        border-color: #1e9fff !important;
+        background-color: #1e9fff;
+        color: #fff;
+    }
+
+    .layui-laypage .layui-laypage-curr .layui-laypage-em {
+        position: absolute;
+        left: -1px;
+        top: -1px;
+        padding: 1px;
+        width: 100%;
+        height: 100%;
+        background-color: #1e9fff;
+    }
+
+    .layui-breadcrumb a:hover {
+        color: #1e9fff !important;
+    }
+
+    .layui-breadcrumb > * {
+        font-size: 17px;
+    }
+
+    .layui-breadcrumb a {
+        color: #0c0c0c !important;
+    }
+    .searchbtn{
+        background-color: #FFFFFF;
+        color: #01AAED;
+        border: 1px solid #01AAED;
+        border-radius: 0px 6px 6px 0px;
+    }
+    .tableeventbtn{
+        width: 60px;
+        height: 23px;
+        border: 1px solid #01AAED;
+        border-radius: 5px;
+        font-size: 11px;
+        background-color: #FFFFFF;
+        color: #01AAED;
+    }
+    .layui-card-header .layui-icon {
+        line-height: unset;
+        position: initial;
+        right: 15px;
+        top: 50%;
+        margin-top: -7px;
+    }
+</style>
+
+<!--//关联设备弹窗-->
+<div class="site-text" style="margin: 5%; display: none" id="window" target="test123">
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+        <div class="layui-form-item" style="margin: auto">
+            <div class="layui-inline" style="width: 160px">
+                <select id="stats2" name="stats" lay-verify="" lay-filter="stats">
+                    <option value="2">全部</option>
+                    <option value="1">设备名称</option>
+                </select>
+            </div>
+            <div class="layui-inline">
+                <input type="text" class="layui-input" name="SN" id="SN2" placeholder=" 请输入设备sn号 " dis>
+            </div>
+            <div class="layui-inline">
+                <button type="button" class="layui-btn layuiadmin-btn-list" lay-submit data-type="reload"
+                        id="datasumbit2" lay-filter="LAY-app-contlist-search">
+                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="layui-card-body">
+        <table class="layui-hide" name='table3' id='table3' lay-filter='table3'></table>
+    </div>
+</div>
+
+<div id="tableContent" name="tableContent" hidden>
+    <table class="layui-table" id="showtable">
+        <colgroup>
+            <col width="200">
+            <col width="200">
+        </colgroup>
+        <tbody>
+        <tr>
+            <td name="">项目名称</td>
+            <td name="name"></td>
+        </tr>
+        <tr>
+            <td name="">设备数</td>
+            <td name="count"></td>
+        </tr>
+        <tr>
+            <td name="">所属公司</td>
+            <td name="profile"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--//添加设备弹窗-->
+<div class="site-text" style="margin: 5%; display: none" id="addprowindow" target="test1234">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备名</label>
+            <div class="layui-input-block">
+                <input id="machinname" style="width: 70%" type="text" name="machineName"
+                       lay-verify="editaccount|required" placeholder="请输入设备名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备编号</label>
+            <div class="layui-input-block">
+                <input id="machineserial" style="width: 70%" type="text" name="machineSerial" required
+                       lay-verify="required" placeholder="请输入设备编号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit lay-filter="formDemo2">添加设备</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script type="text/html" id="statusdemo">
+    <button class="layui-btn layui-btn-primary layui-btn-xs" style="background-color: #f19038;color: #F1F1F1">未关联
+    </button>
+</script>
+
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <span id="crumb" class="layui-breadcrumb" lay-separator="》">
+                        <a id="comname2"></a>
+                    </span>
+                </div>
+                <div style="height: 110px;margin: 15px;border-bottom: 1px solid #E6E6E6;">
+                    <div style="display: flex">
+                        <div style="font-size: 25px;font-weight: bold" id="comname"></div>
+                    </div>
+                    <div style="margin-top: 10px">
+                        <div style="display: flex">
+                            <img width="30px" src="/assets/images/icon_project.png"/><span
+                                style="margin-left: 10px;margin-right: 10px;">项目数量:<span style="font-size: 20px" id="projectcount" ></span></span>
+                            <img width="30px" src="/assets/images/icon_devicesum.png"/><span
+                                style="margin-left: 10px;margin-right: 10px;">设备总数:<span style="font-size: 20px" id="sumnum"></span></span>
+                        </div>
+                        <div style="display: flex">
+                            <img width="30px" src="/assets/images/icon_deviceonline.png"/><span
+                                style="margin-left: 10px;margin-right: 10px;">设备在线数量:<span
+                                style="color: #00cca3;font-size: 20px" id="onlinenum"></span></span>
+                            <img width="30px" src="/assets/images/icon_deviceout.png"/><span
+                                style="margin-left: 10px;margin-right: 10px;">设备离线数量:<span
+                                style="color: #F53C3C;font-size: 20px" id="outnum"></span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-card-body">
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    项目位置
+                </div>
+                <div class="layui-card-body">
+                    <div id='map' style="height: 500px;width: 100%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    项目表格
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                        <div class="layui-form-item" style="margin: auto">
+                            <div class="layui-inline">
+                                <div style="display: flex">
+                                    <input type="text" class="layui-input" name="SN" id="SN" placeholder=" 请输入项目名称 ">
+                                    <button class="layui-btn searchbtn" lay-submit data-type="reload"
+                                            id="datasumbit" lay-filter="LAY-app-contlist-search">
+                                        查询
+                                    </button>
+                                </div>
+                            </div>
+<!--                            <div class="layui-inline">-->
+<!--                                <button type="button" class="layui-btn" id="add_device2"><img-->
+<!--                                        src="/assets/images/icon_add_device_28.png"/>添加设备-->
+<!--                                </button>-->
+<!--                            </div>-->
+                            <div class="layui-inline" >
+                                <button type="button" class="layui-btn" id="delete_project">
+                                    <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #FFFFFF;"></i>批量删除项目
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="layui-hide" id="table-form" lay-filter="table-from"></table>
+                    <script type="text/html" id="barDemo">
+                        <a class="layui-btn layui-btn-xs tableeventbtn" lay-event="edit">详情</a>
+                        <a class="layui-btn tableeventbtn layui-btn-xs" lay-event="del">删除</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    var progroupid="#(progroupid)";
+    var userid="#(userid)";
+    var agentnum = "#(agentnum)";
+    var accountname="#(accountname)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index','selectproject','drawer','projectmap']);
+</script>
+</body>
+</html>

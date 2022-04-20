@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>messageComponent</title>
+    <link rel="stylesheet" href="/assets/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/assets/css/message.css">
+    <style>
+        body {
+            width: 100%;
+            height: 1000px;
+            overflow: hidden;
+        }
+
+        .button {
+            width: 100px;
+            height: 30px;
+            border: none;
+            cursor: pointer;
+            display: block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<button id="button1" class="button" style="background-color:rgb(167, 167, 163);">消息</button>
+<div><i class="layui-icon layui-icon-light" style="font-size: 30px;color: #cc0000"></i></div>
+<button id="button2" class="button" style="background-color: rgb(12, 199, 137);">成功</button>
+<button id="button3" class="button" style="background-color: rgb(190, 188, 16);">警告</button>
+<button id="button4" class="button" style="background-color: rgb(204, 20, 20);">错误</button>
+</body>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/assets/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index','common'], function () {
+        class Message {
+            constructor() {
+                // 消息队列
+                this.messageQueue = [];
+                // 设置默认值
+                this.position = 'top';
+                this.message = '';
+                this.type = '';
+                this.duration = 3000;
+                this.body = document.getElementsByTagName('body')[0];
+                this.id = 0;
+            }
+
+            setType(messageDom, type) {
+                if (type === '') {
+                    messageDom.classList.add('ui-message-info');
+                } else if (type === 'success') {
+                    messageDom.classList.add('ui-message-success');
+                    messageDom.children[0].children[0].style.color="#67c23c";
+                } else if (type === 'warning') {
+                    messageDom.classList.add('ui-message-warning');
+                    messageDom.children[0].children[0].style.color="#e6a23c";
+                } else if (type === 'error') {
+                    messageDom.classList.add('ui-message-error');
+                    messageDom.children[0].children[0].style.color="#f56c6c";
+                } else {
+                    messageDom.classList.add('ui-message-info');// 默认值
+                }
+            }
+
+            createTextDom(messageDom, message) {
+                const p = document.createElement('div');
+                p.classList.add('notification_group');
+                const title=document.createElement('h2');
+                title.classList.add("notification_title");
+                title.textContent=message||this.message;
+                p.appendChild(title);
+                const content=document.createElement('div');
+                content.classList.add("notification_content");
+                content.innerHTML="<p>"+message+"</p>";
+                p.appendChild(content);
+                // p.textContent = message || this.message;
+                messageDom.appendChild(p);
+            }
+
+            removeMessageDom(messageDom, targetId) {
+                const startIndex = this.messageQueue.findIndex(message => message.id === targetId);
+                this.messageQueue.splice(startIndex, 1);
+                this.updateMessageDom(startIndex);
+                //增加移除动画
+                messageDom.classList.add('ui-message-leave');
+                setTimeout(() => {
+                    this.body.removeChild(messageDom);
+                }, 400);
+            }
+
+            setOption(options) {
+                if (typeof options !== "object") {
+                    options = {};
+                }
+                const messageDom = document.createElement('div');
+                messageDom.classList.add('ui-message');
+                messageDom.classList.add('ui-message-leave');
+                if (options.center === true) {
+                    messageDom.classList.add('ui-message-center');
+                }
+                const targetId = this.id;
+                this.messageQueue.push({
+                    id: targetId,
+                    messageDom,
+                });
+
+                this.createTextDom(messageDom, options.message);
+                this.setType(messageDom, options.type);
+                this.setCurrentMessageDom();
+                this.body.appendChild(messageDom);
+                //增加新增动画
+                setTimeout(() => {
+                    messageDom.classList.remove('ui-message-leave');
+                }, 100);
+                let i = null;
+                if (options.showClose === true) {
+                    i = document.createElement('i');
+                    i.classList.add("layui-icon");
+                    i.classList.add('layui-icon-close');
+                    i.classList.add('close-button');
+                    messageDom.appendChild(i);
+                }
+                const time = isNaN(Number(options.duration)) ? this.duration : Number(options.duration);
+                // 如果duration为0则不需要setTimeout
+                let timeId = -1;
+                if (time !== 0) {
+                    timeId = setTimeout(() => {
+                        this.removeMessageDom(messageDom, targetId);
+                    }, time);
+                }
+                if (options.showClose === true) {
+                    i.addEventListener('click', () => {
+                        this.removeMessageDom(messageDom, targetId);
+                        if (targetId !== -1) {
+                            clearTimeout(timeId);
+                        }
+                    });
+                }
+                this.id++;
+            }
+
+            setCurrentMessageDom() {
+                const index = this.messageQueue.length - 1;
+                const targetDom = this.messageQueue[index].messageDom;
+                targetDom.style.zIndex = `${2000 + index}`;
+                targetDom.style.top = `${100 * index + 20}px`;
+            }
+
+            updateMessageDom(startIndex) {
+                for (let i = startIndex; i < this.messageQueue.length; i++) {
+                    const messageDom = this.messageQueue[i].messageDom;
+                    messageDom.style.zIndex = `${2000 + i}`;
+                    // 暂不支持换行功能，换行后获取上一个元素的height和top来更新下一个元素的top
+                    messageDom.style.top = `${100 * i + 20}px`;
+                }
+            }
+        }
+
+        function start() {
+            const button1 = document.getElementById('button1');
+            const button2 = document.getElementById('button2');
+            const button3 = document.getElementById('button3');
+            const button4 = document.getElementById('button4');
+            const message = new Message();
+            button1.addEventListener('click', () => {
+                message.setOption();
+            });
+            button2.addEventListener('click', () => {
+                message.setOption({
+                    message: '成功',
+                    type: "success",
+                    duration: 2000,
+                });
+            });
+            button3.addEventListener('click', () => {
+                message.setOption({
+                    message: '警告',
+                    type: "warning",
+                    center: true,
+                    duration: 3000,
+                });
+            });
+            button4.addEventListener('click', () => {
+                message.setOption({
+                    message: '错误',
+                    showClose: true,
+                    type: "error",
+                    duration: 0,
+                });
+            });
+        }
+
+        start();
+    });
+
+
+</script>
+</html>

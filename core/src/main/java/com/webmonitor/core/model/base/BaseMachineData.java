@@ -1089,4 +1089,164 @@ public abstract class BaseMachineData<M extends BaseMachineData<M>> extends Mode
 		return getStr("expireDate");
 	}
 
+	public void setGkCloudEnabled(java.lang.String gkCloudEnabled) {
+		set("gkCloudEnabled", gkCloudEnabled);
+	}
+	
+	public java.lang.String getGkCloudEnabled() {
+		return getStr("gkCloudEnabled");
+	}
+
+	public void setGkCloudIp(java.lang.String gkCloudIp) {
+		set("gkCloudIp", gkCloudIp);
+	}
+	
+	public java.lang.String getGkCloudIp() {
+		return getStr("gkCloudIp");
+	}
+
+	public void setGkCloudPort(java.lang.String gkCloudPort) {
+		set("gkCloudPort", gkCloudPort);
+	}
+	
+	public java.lang.String getGkCloudPort() {
+		return getStr("gkCloudPort");
+	}
+
+	public void setGkCloudId(java.lang.String gkCloudId) {
+		set("gkCloudId", gkCloudId);
+	}
+	
+	public java.lang.String getGkCloudId() {
+		return getStr("gkCloudId");
+	}
+
+	public void setGkCloudChannel(java.lang.String gkCloudChannel) {
+		set("gkCloudChannel", gkCloudChannel);
+	}
+	
+	public java.lang.String getGkCloudChannel() {
+		return getStr("gkCloudChannel");
+	}
+
+	public void setLianZhiEnabled(java.lang.String lianZhiEnabled) {
+		set("lianZhiEnabled", lianZhiEnabled);
+	}
+	
+	public java.lang.String getLianZhiEnabled() {
+		return getStr("lianZhiEnabled");
+	}
+
+	public void setLianZhiIp(java.lang.String lianZhiIp) {
+		set("lianZhiIp", lianZhiIp);
+	}
+	
+	public java.lang.String getLianZhiIp() {
+		return getStr("lianZhiIp");
+	}
+
+	public void setLianZhiPort(java.lang.String lianZhiPort) {
+		set("lianZhiPort", lianZhiPort);
+	}
+	
+	public java.lang.String getLianZhiPort() {
+		return getStr("lianZhiPort");
+	}
+
+	public void setLianZhiId(java.lang.String lianZhiId) {
+		set("lianZhiId", lianZhiId);
+	}
+	
+	public java.lang.String getLianZhiId() {
+		return getStr("lianZhiId");
+	}
+
+	public void setLianZhiPhoneNum(java.lang.String lianZhiPhoneNum) {
+		set("lianZhiPhoneNum", lianZhiPhoneNum);
+	}
+	
+	public java.lang.String getLianZhiPhoneNum() {
+		return getStr("lianZhiPhoneNum");
+	}
+
+	public void setLianZhiGnssData(java.lang.String lianZhiGnssData) {
+		set("lianZhiGnssData", lianZhiGnssData);
+	}
+	
+	public java.lang.String getLianZhiGnssData() {
+		return getStr("lianZhiGnssData");
+	}
+
+	public void setWuLingEnabled(java.lang.String wuLingEnabled) {
+		set("wuLingEnabled", wuLingEnabled);
+	}
+	
+	public java.lang.String getWuLingEnabled() {
+		return getStr("wuLingEnabled");
+	}
+
+	public void setWuLingId(java.lang.String wuLingId) {
+		set("wuLingId", wuLingId);
+	}
+	
+	public java.lang.String getWuLingId() {
+		return getStr("wuLingId");
+	}
+
+	public void setWuLingUser(java.lang.String wuLingUser) {
+		set("wuLingUser", wuLingUser);
+	}
+	
+	public java.lang.String getWuLingUser() {
+		return getStr("wuLingUser");
+	}
+
+	public void setWuLingKey(java.lang.String wuLingKey) {
+		set("wuLingKey", wuLingKey);
+	}
+	
+	public java.lang.String getWuLingKey() {
+		return getStr("wuLingKey");
+	}
+
+	public void setWuLingInterval(java.lang.String wuLingInterval) {
+		set("wuLingInterval", wuLingInterval);
+	}
+	
+	public java.lang.String getWuLingInterval() {
+		return getStr("wuLingInterval");
+	}
+
+	public void setTgyEnabled(java.lang.String tgyEnabled) {
+		set("tgyEnabled", tgyEnabled);
+	}
+	
+	public java.lang.String getTgyEnabled() {
+		return getStr("tgyEnabled");
+	}
+
+	public void setTgyIp(java.lang.String tgyIp) {
+		set("tgyIp", tgyIp);
+	}
+	
+	public java.lang.String getTgyIp() {
+		return getStr("tgyIp");
+	}
+
+	public void setTgyPort(java.lang.String tgyPort) {
+		set("tgyPort", tgyPort);
+	}
+	
+	public java.lang.String getTgyPort() {
+		return getStr("tgyPort");
+	}
+
+	public void setTgyId(java.lang.String tgyId) {
+		set("tgyId", tgyId);
+	}
+	
+	public java.lang.String getTgyId() {
+		return getStr("tgyId");
+	}
+
 }

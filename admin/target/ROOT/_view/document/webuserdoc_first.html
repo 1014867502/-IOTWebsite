@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow-y: auto;background-color: #FFFF;">
+<head>
+    #@meta("设备管理页面")
+    <script src="/assets/lib/xm-select.js"></script>
+</head>
+<body class="layui-layout-body">
+<style>
+    .site-h1 {
+        margin-bottom: 20px;
+        line-height: 60px;
+        padding-bottom: 10px;
+        color: #393D49;
+        border-bottom: 1px solid #eee;
+        font-size: 28px;
+        font-weight: 300;
+    }
+
+    .site-title {
+        margin: 30px 0 20px;
+    }
+
+    .site-title fieldset {
+        border: none;
+        padding: 0;
+        border-top: 1px solid #eee;
+    }
+
+    .layui-layer-title {
+        padding: 0 80px 0 20px;
+        height: 50px;
+        line-height: 50px;
+        border-bottom: 1px solid #F0F0F0;
+        font-size: 14px;
+        color: #333;
+        overflow: hidden;
+        border-radius: 2px 2px 0 0;
+    }
+
+    body .layui-layer-dir .layui-layer-content {
+        padding: 10px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        position: relative;
+        overflow: auto;
+    }
+
+    .picture{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .enlarge {
+        cursor: pointer;
+    }
+
+    .site-title fieldset legend {
+        margin-left: 20px;
+        padding: 0 10px;
+        font-size: 22px;
+        font-weight: 300;
+    }
+
+
+</style>
+
+
+<div class="layui-fluid">
+    <div class="layui-col-md9 site-content">
+        <h1 class="site-h1">设备管理平台介绍</h1>
+        <blockquote class="site-text layui-elem-quote">
+            设备管理平台主要管理的是普适型监测设备，分为网页版和APP版。此文主要说明网页版设备管理平台的使用方法。
+        </blockquote>
+        <div class="site-title">
+            <fieldset>
+                <legend><a name="use">用法</a></legend>
+            </fieldset>
+        </div>
+        <div >
+            <p>设备管理平台网址：http://8.134.94.147:8080/
+                在浏览器输入http://8.134.94.147:8080/进入图1-1登录界面，输入用户名、密码，点击【登入】进入设备管理平台界面。</p>
+            <div class="picture"> <img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser1-1.png">
+                <div>图1-1</div>
+            </div>
+            <p>设备管理平台如图1-2所示，分为左右两部分，左侧导航，右侧根据导航显示内容，右上角是用户信息，可以重置密码、退出当前登录账号。</p>
+            <div class="picture"> <img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser1-2.png">
+                <div>图1-2</div>
+            </div>
+            <blockquote class="site-text layui-elem-quote">
+                注意：不同的浏览器显示的效果可能会有稍许差别，建议使用谷歌浏览器或是IE8以上版本。当信息显示不全时，请定期清空浏览器缓存。
+            </blockquote>
+        </div>
+    </div>
+</div>
+</div>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+
+    //var projectid = window.location.hash.substr(1);
+    var projectid = "#(projetid)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table','document_global']);
+</script>
+</body>
+</html>

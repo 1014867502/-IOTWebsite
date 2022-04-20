@@ -54,7 +54,7 @@ public class LoginSessionInterceptor implements Interceptor {
         String accessToken = c.getCookie(IndexService.accessTokenName);
         if (accessToken != null) {
             loginAccount = IndexService.me.getLoginAccountWithAccessToken(accessToken);
-            if (loginAccount == null) {
+            if (loginAccount != null) {
                 String loginIp = IpKit.getRealIp(c.getRequest());
                 loginAccount = IndexService.me.loginWithAccessToken(accessToken, loginIp);
             }
@@ -71,7 +71,7 @@ public class LoginSessionInterceptor implements Interceptor {
         }
 
         threadLocal.set(loginAccount);
-
+        System.gc();
         inv.invoke();
         c.setAttr(IndexService.loginAccountCacheName, loginAccount);
 

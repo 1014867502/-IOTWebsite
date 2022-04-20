@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<head>
+    #@meta("主页")
+    <style>
+        .layadmin-shortcut li .layui-icon{
+            color: #FFFFFF;
+            background-color:#1E9FFF;
+        }
+        .layadmin-shortcut li:hover .layui-icon{
+            background-color: #93D1FF;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header" data-locale="web_dashboard_lnk">快捷方式</div>
+                <div class="layui-card-body">
+
+                    <div class="layui-carousel layadmin-carousel layadmin-shortcut">
+                        <div carousel-item>
+                            <ul class="layui-row layui-col-space10">
+                                <li class="layui-col-xs3">
+                                    <a lay-href="/systemstate">
+                                        <i class="layui-icon layui-icon-tips"></i>
+                                        <cite data-locale="web_menu_setting_systemstate">System State</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="/LBS">
+                                        <i class="layui-icon layui-icon-location"></i>
+                                        <cite data-locale="web_menu_LBS_map">LBS Map</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="/LBS/roverdatalist">
+                                        <i class="layui-icon layui-icon-list"></i>
+                                        <cite data-locale="web_menu_LBS_datalist">LBS Data</cite>
+                                    </a>
+                                </li>
+
+                                <li class="layui-col-xs3">
+                                    <a lay-href="/ntrip">
+                                        <i class="layui-icon layui-icon-more"></i>
+                                        <cite data-locale="web_menu_ntrip_mountpoint">Mountpoint</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="/ntrip/account">
+                                        <i class="layui-icon layui-icon-user"></i>
+                                        <cite data-locale="web_menu_ntrip_account">NtripAccount</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="/setting">
+                                        <i class="layui-icon layui-icon-website"></i>
+                                        <cite data-locale="web_menu_setting_system">系统设置</cite>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index','dashboard']);
+</script>
+</body>
+</html>

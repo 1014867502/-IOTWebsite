@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow-y: auto;background-color: #FFFF;">
+<head>
+    #@meta("设备管理页面")
+    <script src="/assets/lib/xm-select.js"></script>
+</head>
+<body class="layui-layout-body">
+<style>
+    .site-h1 {
+        margin-bottom: 20px;
+        line-height: 60px;
+        padding-bottom: 10px;
+        color: #393D49;
+        border-bottom: 1px solid #eee;
+        font-size: 28px;
+        font-weight: 300;
+    }
+
+    .site-title fieldset legend {
+        margin-left: 20px;
+        padding: 0 10px;
+        font-size: 22px;
+        font-weight: 300;
+    }
+
+    .site-title {
+        margin: 30px 0 20px;
+    }
+
+    .site-title fieldset {
+        border: none;
+        padding: 0;
+        border-top: 1px solid #eee;
+    }
+
+    .layui-layer-title {
+        padding: 0 80px 0 20px;
+        height: 50px;
+        line-height: 50px;
+        border-bottom: 1px solid #F0F0F0;
+        font-size: 14px;
+        color: #333;
+        overflow: hidden;
+        border-radius: 2px 2px 0 0;
+    }
+
+    body .layui-layer-dir .layui-layer-content {
+        padding: 10px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        position: relative;
+        overflow: auto;
+    }
+
+    .picture{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .enlarge {
+        cursor: pointer;
+    }
+
+</style>
+
+
+<div class="layui-fluid">
+    <div class="layui-col-md9 site-content">
+        <h1 class="site-h1">下载帮助</h1>
+        <blockquote class="site-text layui-elem-quote">
+            下载方式有本地下载和扫码下载两种。
+        </blockquote>
+        <div class="site-title">
+            <fieldset>
+                <legend><a name="use">用法</a></legend>
+            </fieldset>
+        </div>
+        <div >
+            <p>下载帮助如图5-1所示，列表中显示的是可供下载的内容。下载方式有本地下载和扫码下载两种。</p>
+            <div class="picture"> <img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser5-1.png">
+                <div>图5-1</div>
+            </div>
+            <p>点击“本地下载”，通过浏览器将文件直接下载到本地。点击“扫码下载”后，会弹出二维码，如图5-2所示。</p>
+            <div class="picture"> <img class="enlarge" height="265" width="600" src="/assets/images/webuser/webuser5-2.png">
+                <div>图5-2</div>
+            </div>
+            <blockquote class="site-text layui-elem-quote">
+                注意：一旦关闭二维码窗口、关闭网页或者跳转到其他页面后，二维码将会失效，无法下载文件，需再次点击“扫码下载”才能扫码下载
+            </blockquote>
+        </div>
+    </div>
+</div>
+</div>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+
+    //var projectid = window.location.hash.substr(1);
+    var projectid = "#(projetid)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table','document_global']);
+</script>
+</body>
+</html>

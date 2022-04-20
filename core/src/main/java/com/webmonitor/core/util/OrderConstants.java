@@ -314,4 +314,12 @@ public class OrderConstants  {
 
     public static String WULING_INTERVAL="SET,DEVICE.WULING.INTERVAL,";
 
+    public static String TGY_ENABLED="SET,DEVICE.TGY.ENABLED,";
+
+    public static String TGY_ID="SET,DEVICE.TGY.ID,";
+
+    public static String TGY_IP="SET,DEVICE.TGY.IP,";
+
+    public static String TGY_PORT="SET,DEVICE.TGY.PORT,";
+
 }

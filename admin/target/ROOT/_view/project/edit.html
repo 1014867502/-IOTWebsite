@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #@meta("项目编辑")
+    <style TYPE="text/css">
+        .layui-form .layui-form-label {
+            width: 180px !important;
+        }
+        .layui-form .layui-input-block {
+            margin-left: 180px !important;
+        }
+        .layui-form .layui-form-item .layui-input-inline {
+            margin-left: 0px !important;
+        }
+        .layui-form-pane .layui-form-label {
+            width: 180px !important;
+        }
+        .layui-form-pane .layui-input-block {
+            margin-left: 180px !important;
+        }
+        .layui-form-pane .layui-form-item[pane] .layui-input-inline {
+            margin-left: 180px !important;
+        }
+    </style>
+    <script type="text/javascript" src="/assets/lib/jquery-3.4.1.min.js">
+        // $("#selectEllipse").on("change",function(){
+        //     alert("当前选项是:"+this.value);
+        // });
+    </script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        #if(isAdd)
+        <div class="layui-card-header" data-locale="web_item_add">账户管理 / #(isAdd ? "创建" : "修改")</div>
+        #else
+        <div class="layui-card-header" data-locale="web_item_edit">账户管理 / #(isAdd ? "创建" : "修改")</div>
+        #end
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form layui-form-pane" lay-filter="myForm">
+
+                <input type="hidden" name="project.projId" value="#(project.projId)" />
+                <input type="hidden" name="config.projid" value="#(config.projid)" />
+
+                <div class="layui-row layui-col-space12">
+                    <div class="layui-collapse" lay-accordion="">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">基本信息</h2>
+                            <div class="layui-colla-content layui-show">
+                                <table class="layui-table" lay-size="sm">
+                                    <tbody>
+                                       <tr>
+                                          <td>项目名称</td>
+                                          <td> <input type="text" name="project.name"  lay-verify="required" class="layui-input" value="#(project.name)"></td>
+                                       </tr>
+                                       <tr>
+                                           <td>结果回传端口</td>
+                                           <td> <input type="text" name="config.resultCallbackport" class="layui-input" value="#(config.resultCallbackport)"></td>
+                                       </tr>
+                                       <tr>
+                                           <td>纬度</td>
+                                           <td> <input type="text" name="project.lat" class="layui-input" value="#(project.lat)"></td>
+                                       </tr>
+                                       <tr>
+                                           <td>经度</td>
+                                           <td> <input type="text" name="project.lon" class="layui-input" value="#(project.lon)"></td>
+                                       </tr>
+                                       <tr>
+                                           <td>负责人</td>
+                                           <td> <input type="text" name="project.incharge" class="layui-input" value="#(project.incharge)"></td>
+                                       </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-collapse" lay-accordion="">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">基站中转</h2>
+                            <div class="layui-colla-content layui-show">
+                                <table class="layui-table" lay-size="sm">
+                                    <tbody>
+                                    <tr>
+                                        <td>基站回传端口</td>
+                                        <td> <input type="text" name="config.basecallbackport" class="layui-input" value="#(config.basecallbackport)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>测站调用端口</td>
+                                        <td> <input type="text" name="config.stationcallbackport" class="layui-input" value="#(config.stationcallbackport)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>时间时区</td>
+                                        <td>
+                                            <select name="config.timezone"  lay-filter="timezone" id="timezone">
+                                                <option value="8.0">+8</option>
+                                            </select>
+                                            <script type="text/javascript">
+                                                $("#timezone option[value='#(config.timezone)']").attr("selected",true);
+                                            </script>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>自动清理基站数据</td>
+                                        <td>
+                                        <input type="checkbox"
+                                               lay-skin="switch"
+                                               id="autoclearbasedata"
+                                               name="config.autoclearbasedata"
+                                               value="true"
+                                               lay-text="ON|OFF">
+                                        </td>
+                                        <script type="text/javascript">
+                                            if ("#(config.autoclearbasedata)"=="true")
+                                            {
+                                                $('#autoclearbasedata').attr('checked',true);
+                                            }
+                                            else
+                                            {
+                                                $('#autoclearbasedata').attr('checked',false);
+                                            }
+                                        </script>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-collapse" lay-accordion="">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">基线解算</h2>
+                            <div class="layui-colla-content layui-show">
+                                <table class="layui-table" lay-size="sm">
+                                    <tbody>
+                                    <tr>
+                                        <td>解算间隔</td>
+                                        <td>
+                                        <select name="config.solutioninterval"  lay-filter="solutioninterval" id="solutioninterval">
+                                            <option value="1">1分钟</option>
+                                            <option value="15">15分钟</option>
+                                            <option value="30">30分钟</option>
+                                            <option value="60">1小时</option>
+                                            <option value="120">2小时</option>
+                                            <option value="240">4小时</option>
+                                            <option value="360">6小时</option>
+                                            <option value="480">8小时</option>
+                                            <option value="720">12小时</option>
+                                        </select>
+                                            <script type="text/javascript">
+                                                $("#solutioninterval option[value='#(config.solutioninterval)']").attr("selected",true);
+                                            </script>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>自动清理原始数据</td>
+                                        <td>
+                                        <input type="checkbox"
+                                               name="config.autoclearraw"
+                                               id="autoclearraw"
+                                               lay-skin="switch"
+                                               value="true"
+                                               lay-text="ON|OFF">
+                                            <script type="text/javascript">
+                                                if ("#(config.autoclearraw)"=="true")
+                                                {
+                                                    $('#autoclearraw').attr('checked',true);
+                                                }
+                                                else
+                                                {
+                                                    $('#autoclearraw').attr('checked',false);
+                                                }
+                                            </script>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-collapse" lay-accordion="">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">结果转发</h2>
+                            <div class="layui-colla-content layui-show">
+                                <table class="layui-table" lay-size="sm">
+                                    <tbody>
+                                    <tr>
+                                        <td>转发方式</td>
+                                        <td>
+                                        <select name="config.relaytype"  lay-filter="" id="relaytype" >
+                                            <option value="0">TCP客户端</option>
+                                            <option value="1">北斗短报文</option>
+                                        </select>
+                                            <script type="text/javascript">
+                                                $("#relaytype option[value='#(config.relaytype)']").attr("selected",true);
+                                            </script>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>目标IP</td>
+                                        <td> <input type="text" name="config.targetIP"  class="layui-input" value="#(config.targetIP)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>目标端口</td>
+                                        <td> <input type="text" name="config.targetPort" class="layui-input" value="#(config.targetPort)"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="submitBtn" data-locale="web_item_sumbit">立即提交</button>
+                            <button class="layui-btn layui-btn-primary" id="returnBtn" lay-filter="returnBtn" data-locale="web_item_return">返回</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script>
+    console.log("#(isAdd)");
+    layui.config({
+        base: '/assets/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index','laydate','form'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,layer = layui.layer
+            ,laydate = layui.laydate
+            ,form = layui.form;
+
+        //日期
+        laydate.render({
+            elem: '#date'
+            ,lang: $.i18n.prop('web_date_lang')
+        });
+
+        //自定义验证
+        form.verify({
+            userName: function(value, item){ //value：表单的值、item：表单的DOM对象
+                if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)){
+                    //return '用户名不能有特殊字符';
+                    return $.i18n.prop('web_reg_username_special_char_tip');
+                }
+                if(/(^\_)|(\__)|(\_+$)/.test(value)){
+                    //return '用户名首尾不能出现下划线\'_\'';
+                    return $.i18n.prop('web_reg_username_underlined_tip');
+                }
+                if(/^\d+\d+\d$/.test(value)){
+                    //return '用户名不能全为数字';
+                    return $.i18n.prop('web_reg_username_tip');
+                }
+            }
+            ,number: function(value, item){ //value：表单的值、item：表单的DOM对象
+                if(/[^\d]/.test(value)){//替换非数字字符
+                    return $.i18n.prop('web_tip_only_enter_numbers');
+                }
+            }
+            //我们既支持上述函数式的方式，也支持下述数组的形式
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+            ,pass: [
+                /^[\S]{6,16}$/
+                ,$.i18n.prop('web_reg_psw_length_tip')//'密码必须6到16位，且不能出现空格'
+            ]
+
+            //确认密码
+            ,repass: function(value){
+                if(value !== $('#LAY_password').val()){
+                    //return '两次密码输入不一致';
+                    var msg = $.i18n.prop('web_reg_inconsistent_passwords');
+                    return layer.msg(msg);
+                }
+            }
+        });
+
+        /* 监听提交 */
+        form.on('submit(submitBtn)', function(obj){
+            admin.req({
+                url:'/project/#(isAdd ? "save" : "update")',
+                data:obj.field,
+                done:function (res) {
+                    layer.msg($.i18n.prop('web_item_completed'), {
+                        offset: '15px'
+                        ,icon: 1
+                        ,time: 1000
+                    }, function(){
+                        location.href = "/project";
+                    });
+                }
+            })
+            return false;
+        });
+        $('#returnBtn').on('click', function () {
+            location.href = "/project";
+            return false;
+        })
+    });
+</script>
+</body>
+</html>

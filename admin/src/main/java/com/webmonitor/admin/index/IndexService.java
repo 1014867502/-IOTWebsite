@@ -10,6 +10,7 @@ import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.model.Account;
 import com.webmonitor.core.model.Session;
 import com.webmonitor.core.model.StaffData;
+import com.webmonitor.core.util.IpKit;
 import com.webmonitor.core.util.MD5Utils;
 import com.webmonitor.core.util.Tools;
 import com.webmonitor.core.util.exception.BusinessException;
@@ -19,6 +20,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
 //这里是登录方法的服务层
 public class IndexService {
     public static final IndexService me = new IndexService();
@@ -38,6 +41,16 @@ public class IndexService {
         userName = userName.trim();
         password = password.trim();
         Account loginAccount = getGeoAccount(userName);
+        long expire = System.currentTimeMillis() - (120*60*1000);
+        String oldsessionsql="select * from sys_session where userId='"+userName+"' and expireAt>"+expire;
+//        if (Session.dao.find(oldsessionsql)!=null) {
+//            List<Session> oldsession=Session.dao.find(oldsessionsql);
+//            for(int i=0;i<oldsession.size();i++){
+//                long oldexpire=oldsession.get(i).getExpireAt();
+//                oldsession.get(i).setExpireAt(oldexpire-120*60*1000);
+//                oldsession.get(i).update();
+//            }
+//        }只允许一个账号登录
         if(loginAccount==null){
             String tip = I18nKit.getI18nStr("error_account_account");
             throw new BusinessException(tip);

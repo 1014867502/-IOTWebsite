@@ -51,6 +51,10 @@ public class ProjectMysqlDAL implements IProject {
             }
             sql="select count(*) from agent_data where proGroupId='"+item.getStr("proGroupId")+"'";
             Record  record1=Db.findFirst(sql);
+            int count=record1.getInt("count(*)");
+            if(count==0){
+                continue;
+            }
             baseProjects.setDevicenum(record1.getInt("count(*)"));
             list.add(baseProjects);
         }
@@ -131,6 +135,10 @@ public class ProjectMysqlDAL implements IProject {
             }
             sql="select count(*) from agent_data  where proGroupId="+item.getStr("proGroupId");
             Record  record1=Db.findFirst(sql);
+            int count=record1.getInt("count(*)");
+            if(count==0){
+                continue;
+            }
             baseProjects.setDevicenum(record1.getInt("count(*)"));
             list.add(baseProjects);
         }
@@ -175,6 +183,10 @@ public class ProjectMysqlDAL implements IProject {
             baseProjects.setProgroupname(item.getStr("proGroupName"));
             sql="select count(*) from agent_data a,machine_data b where a.machineSerial=b.machineSerial and a.proGroupId="+item.getStr("proGroupId");
             Record  record1=Db.findFirst(sql);
+            int count=record1.getInt("count(*)");
+            if(count==0){
+                continue;
+            }
             baseProjects.setDevicenum(record1.getInt("count(*)"));
             list.add(baseProjects);
         }
@@ -197,6 +209,10 @@ public class ProjectMysqlDAL implements IProject {
             baseProjects.setProgroupname(item.getStr("proGroupName"));
             sql="select count(*) from agent_data a,machine_data b where a.machineSerial=b.machineSerial and a.proGroupId="+item.getStr("proGroupId");
             Record  record1=Db.findFirst(sql);
+            int count=record1.getInt("count(*)");
+            if(count==0){
+                continue;
+            }
             baseProjects.setDevicenum(record1.getInt("count(*)"));
             list.add(baseProjects);
         }
@@ -369,6 +385,10 @@ public class ProjectMysqlDAL implements IProject {
                 map.setAgentname(record.getStr("agentName"));
                 sql="select count(*) from agent_data where proGroupId="+record.getStr("proGroupId");
                 record=Db.findFirst(sql);
+                int count=record.getInt("count(*)");
+                if(count==0){
+                    continue;
+                }
                 map.setDevicenum(record.getInt("count(*)"));
                 rslist.add(map);
             }
@@ -395,16 +415,20 @@ public class ProjectMysqlDAL implements IProject {
     @Override
     public Page<ProjectPage> getProjectPageByNum(String agentnum,int pageno,int limit) {
         List<ProjectPage> list=new ArrayList<>();
-        String sql=" from projects_data where agentNumber='"+agentnum+"'";
+        String sql=" from projects_data d where d.agentNumber='"+agentnum+"' and (select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.proGroupId=d.proGroupId)>0";
         Page<Record> page=Db.paginate(pageno,limit,"select * ",sql);
         List<Record> record= page.getList();
         for(Record item:record){
             ProjectPage baseProjects=new ProjectPage();
             baseProjects.setProjectid(item.getStr("proGroupId"));
-            baseProjects.setCreatetime(item.getStr("createTime"));
+            baseProjects.setCreatetime(item.getStr("proCreateTime"));
             baseProjects.setProjectname(item.getStr("proGroupName"));
             sql="select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.proGroupId='"+item.getStr("proGroupId")+"'";
             Record  record1=Db.findFirst(sql);
+            int count=record1.getInt("count(*)");
+            if(count==0){
+                continue;
+            }
             baseProjects.setDevicenum(record1.getInt("count(*)"));
             list.add(baseProjects);
         }
@@ -427,6 +451,10 @@ public class ProjectMysqlDAL implements IProject {
             baseProjects.setProjectname(item.getStr("proGroupName"));
             sql="select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.proGroupId='"+item.getStr("proGroupId")+"'";
             Record  record1=Db.findFirst(sql);
+            int count=record1.getInt("count(*)");
+            if(count==0){
+                continue;
+            }
             baseProjects.setDevicenum(record1.getInt("count(*)"));
             list.add(baseProjects);
         }
@@ -451,7 +479,12 @@ public class ProjectMysqlDAL implements IProject {
             baseProjects.setProjectname(item.getStr("proGroupName"));
             sql="select count(*) from agent_data a left join machine_data b on a.machineSerial=b.machineSerial LEFT JOIN agent_table c on a.agentNumber=c.agentNumber where a.proGroupId='"+item.getStr("proGroupId")+"'";
             Record  record1=Db.findFirst(sql);
+            int count=record1.getInt("count(*)");
+            if(count==0){
+                continue;
+            }
             baseProjects.setDevicenum(record1.getInt("count(*)"));
+
             list.add(baseProjects);
         }
         return new Page<ProjectPage>(list,page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());

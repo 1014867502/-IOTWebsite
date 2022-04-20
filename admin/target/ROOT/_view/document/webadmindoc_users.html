@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow-y: auto;background-color: #FFFF;">
+<head>
+    #@meta("用户管理页面")
+    <script src="/assets/lib/xm-select.js"></script>
+</head>
+<body class="layui-layout-body">
+<style>
+    .site-h1 {
+        margin-bottom: 20px;
+        line-height: 60px;
+        padding-bottom: 10px;
+        color: #393D49;
+        border-bottom: 1px solid #eee;
+        font-size: 28px;
+        font-weight: 300;
+    }
+
+    .site-title fieldset legend {
+        margin-left: 20px;
+        padding: 0 10px;
+        font-size: 22px;
+        font-weight: 300;
+    }
+
+    .site-title {
+        margin: 30px 0 20px;
+    }
+
+    .site-title fieldset {
+        border: none;
+        padding: 0;
+        border-top: 1px solid #eee;
+    }
+
+    .layui-layer-title {
+        padding: 0 80px 0 20px;
+        height: 50px;
+        line-height: 50px;
+        border-bottom: 1px solid #F0F0F0;
+        font-size: 14px;
+        color: #333;
+        overflow: hidden;
+        border-radius: 2px 2px 0 0;
+    }
+
+    body .layui-layer-dir .layui-layer-content {
+        padding: 10px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        position: relative;
+        overflow: auto;
+    }
+
+    .picture{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .enlarge {
+        cursor: pointer;
+    }
+
+</style>
+
+
+<div class="layui-fluid">
+    <div class="layui-col-md9 site-content">
+        <h1 class="site-h1">用户管理</h1>
+        <blockquote class="site-text layui-elem-quote">
+            用户管理页面可对账号进行管理
+        </blockquote>
+        <div class="site-title">
+            <fieldset>
+                <legend><a name="use">用法</a></legend>
+            </fieldset>
+        </div>
+        <div >
+            <p>用户管理如图5-1所示，在用户列表中可以看到管理员账号所属公司下的所有用户信息。</p>
+            <p>可对表格中的设备进行搜索、批量删除、批量重置密码操作。搜索设备的关键词是设备SN号。</p>
+            <div class="picture"> <img class="enlarge" height="265" width="600" src="/assets/images/webuser/webadmin5-1.png">
+                <div>图5-1</div>
+            </div>
+            <p>点击【添加用户】如图5-2所示，需要填写用户基础信息和用户权限。基础信息包括账号名（唯一且不可改变）、昵称、登录密码、所属部门。用户权限用户类型（有普通用户、供销商管理员、安装测试人员）、可查看项目、网页功能权限、APP功能权限、账号时限、修改设备功能权限和安装功能权限。</p>
+            <div class="picture"> <img class="enlarge" height="265" width="600" src="/assets/images/webuser/webadmin5-2.png">
+                <div>图5-2</div>
+            </div>
+            <p>选择一条用户信息，点击【编辑】如图5-3所示，可以修改用户基础信息和用户权限。基础信息包括昵称、登录密码、所属部门。用户权限角色类型（有普通用户、供销商管理员、安装测试人员）、网页功能权限、APP功能权限、修改设备功能权限和安装功能权限。</p>
+            <div class="picture"> <img class="enlarge" height="265" width="600" src="/assets/images/webuser/webadmin5-3.png">
+                <div>图5-3</div>
+            </div>
+           <p>选择一条用户信息，点击【删除】可以删除该用户；点击【重置密码】可以将用户密码改为123456。</p>
+        </div>
+    </div>
+</div>
+</div>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+
+<script>
+
+    //var projectid = window.location.hash.substr(1);
+    var projectid = "#(projetid)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table','document_global']);
+</script>
+</body>
+</html>

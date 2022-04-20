@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--设备配置日志页面-->
+    #@meta("主页")
+    <script src="/assets/lib/xm-select.js"></script>
+</head>
+<body class="layui-layout-body">
+<style>
+    xm-select > .xm-body .xm-toolbar .toolbar-tag {
+        color: #00F7DE;
+    }
+
+    .untreated {
+        background-color: #FF5722;
+        color: #FFFF;
+        border: 0;
+        width: 70px;
+        height: 30px;
+    }
+
+    .treated {
+        background-color: #01AAED;
+        color: #FFFF;
+        border: 0;
+        width: 70px;
+        height: 30px;
+    }
+
+    .normalnotice {
+        text-align: center;
+        font-size: 20px;
+        display: inline-block;
+        float: right;
+        height: 50px;
+        width: 200px;
+        background-color: #C9E7FB;
+        color: #0C0C0C;
+        border-color: #87CDFB;
+        border-style: solid;
+        border-width: 2px;
+    }
+
+    .layui-card-header.layuiadmin-card-header-auto {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        height: 42px;
+    }
+
+    .layui-form-checked[lay-skin=primary] i {
+        border-color: #1E9FFF !important;
+        background-color: #1E9FFF !important;
+        color: #fff !important;
+        font-weight: bold;
+    }
+
+    .layui-form-radio > i:hover, .layui-form-radioed > i {
+        color: #597FC0 !important;
+    }
+
+    .layui-form-checkbox[lay-skin=primary]:hover i {
+        color: #597FC0 !important;
+        border-color: #1E9FFF !important;
+        color: #fff;
+    }
+
+    .layui-form-select dl dd.layui-this {
+        background-color: #1E9FFF !important;
+        color: #fff;
+    }
+
+    .layui-laydate .layui-this {
+        background-color: #1E9FFF !important;
+        color: #fff !important;
+    }
+
+    .layui-laydate-content td.laydate-selected {
+        background-color: #31e6ff;
+    !important;
+    }
+
+    .little {
+        text-align: center;
+        width: 200px;
+        margin-left: 10%;
+        line-height: 40px;
+    }
+
+    .layui-btn:hover {
+        opacity: .8;
+        filter: alpha(opacity=80);
+        color: #ffffff;
+        background-color: #1e9fff;
+    }
+
+    .layui-laypage .layui-laypage-curr .layui-laypage-em {
+        position: absolute;
+        left: -1px;
+        top: -1px;
+        padding: 1px;
+        width: 100%;
+        height: 100%;
+        background-color: #1e9fff;
+    }
+
+    .searchbtn {
+        background-color: #FFFFFF;
+        color: #01AAED;
+        border: 1px solid #01AAED;
+        border-radius: 0px 6px 6px 0px;
+    }
+
+    .tableeventbtn {
+        width: 60px;
+        height: 23px;
+        border: 1px solid #01AAED;
+        border-radius: 5px;
+        font-size: 11px;
+        background-color: #FFFFFF;
+        color: #01AAED;
+    }
+
+    .layui-card-header .layui-icon {
+        line-height: unset;
+        position: initial;
+        right: 15px;
+        top: 50%;
+        margin-top: -7px;
+    }
+</style>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">配置日志列表</div>
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: flex">
+                    <div class="layui-form-item" style="margin: auto">
+                        <div class="layui-inline">
+                            <div style="display: flex">
+                                <input type="text" class="layui-input"  name="account" id="test1"
+                                       placeholder=" 请输入日期范围 ">
+                                <button type="button" class="layui-btn searchbtn" lay-submit data-type="reload"
+                                        id="datasumbit1" lay-filter="LAY-app-contlist-search">
+                                    <i class="layui-icon layui-icon-search layuiadmin-button-btn">查询</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card">
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="table-form" lay-filter="table-form"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="/assets/lib/jquery-3.4.1.min.js"></script>
+<script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+<script src="/assets/lib/loadlanguage.js"></script>
+<script src="/assets/layuiadmin/layui/layui.js"></script>
+<script src="/assets/layuiadmin/layui/lay/modules/laytpl.js"></script>
+<script type="text/html" id="table-online-state">
+    {{ d.type == 1 ? '
+    <button class="treated">在线</button>'
+    : '
+    <button class="untreated">离线</button>' }}
+</script>
+<script>
+
+    var machinedata = parent.window.document.getElementsByName("iframe_a")[0].getAttribute('machinesn');
+    var projectid = "#(projetid)";
+    var userid = "#(userid)";
+    var agentnum = "#(agentnum)";
+    layui.config({
+        base: '/assets/layuiadmin/'
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'device_orderlog', 'drawer']);
+</script>
+</body>
+</html>

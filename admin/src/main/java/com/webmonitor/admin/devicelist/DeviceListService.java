@@ -1,10 +1,13 @@
 package com.webmonitor.admin.devicelist;
 
+
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.webmonitor.core.bll.AgentDataService;
+import com.webmonitor.core.bll.StaffService;
 import com.webmonitor.core.dal.AgentDataMysqlDAL;
 import com.webmonitor.core.dal.CacheMysqlDAL;
 import com.webmonitor.core.idal.IAgentData;
@@ -12,6 +15,7 @@ import com.webmonitor.core.idal.ICache;
 import com.webmonitor.core.model.*;
 import com.webmonitor.core.model.userbase.BaseDevicemap;
 import com.webmonitor.core.model.userbase.DeviceSensorList;
+import com.webmonitor.core.model.userbase.Incredevicemonth;
 import com.webmonitor.core.util.OrderConstants;
 import com.webmonitor.core.util.SocketTools;
 import com.webmonitor.core.util.Tools;
@@ -26,10 +30,7 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.webmonitor.core.dal.AgentDataMysqlDAL.getSubString;
 
@@ -109,6 +110,8 @@ public class DeviceListService {
             MachineData machineData=MachineData.dao.findFirst("select * from machine_data where machineSerial='"+machineserial+"'");
             MachineInfoEntity agentDataDao1= gson.fromJson(machineData.toJson(), new TypeToken<MachineInfoEntity>(){}.getType());
             List<String> ListData= Tools.getListData(agentDataDao1,object);
+            List<String> enablelist=new ArrayList<>();//专门用来存“Enabled”开关命令
+            List<String> orderdata=new ArrayList<>();
             for (Field f : object.getClass().getDeclaredFields()) {
                 f.setAccessible(true);
                 if (f.get(object) != null) {
@@ -120,26 +123,51 @@ public class DeviceListService {
                     }
                     if(ListData.contains(f.getName())){
                         String order=getOrder(f.getName());
-                        if(order.equals("SET,NETWORK.MOUNTPOINTUSERPASS,")){
-                            String path=order.substring(4,order.length()-1);
-                            String value=order+userpass;
-                            cache.add(machineserial,path,value);
-                            System.out.println(path+value);
-                            commands++;
-                        }
-                        if(!order.equals("")&&!order.equals("SET,NETWORK.MOUNTPOINTUSERPASS,")){
+                        if(order.contains("ENABLED")){
                             String path=order.substring(4,order.length()-1);
                             String value=order+f.get(object);
-                            cache.add(machineserial,path,value);
-                            System.out.println(path+value);
-                            commands++;
+                            enablelist.add(machineserial+"-"+path+"-"+value);
+
+                        }else{
+                            if(order.equals("SET,NETWORK.MOUNTPOINTUSERPASS,")){
+                                String path=order.substring(4,order.length()-1);
+                                String value=order+userpass;
+                                cache.add(machineserial,path,value);
+                                orderdata.add(value);
+                                System.out.println(path+value);
+                                commands++;
+                            }
+                            if(!order.equals("")&&!order.equals("SET,NETWORK.MOUNTPOINTUSERPASS,")){
+                                String path=order.substring(4,order.length()-1);
+                                String value=order+f.get(object);
+                                cache.add(machineserial,path,value);
+                                orderdata.add(value);
+                                System.out.println(path+value);
+                                commands++;
+                            }
                         }
+
                     }
                 }
             }
+            for(String item:enablelist){
+                String[] values=item.split("-");
+                cache.add(values[0],values[1],values[2]);
+                orderdata.add(values[2]);
+                System.out.println(values[1]+values[2]);
+                commands++;
+            }
             if(commands>0){
+                String accountname= StaffService.me.getStaffById(userid).getUAccountNum();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("accountNum",accountname);
+                jsonObject.put("module", 0);
+                jsonObject.put("orderList", orderdata);
+                jsonObject.put("receiveId",machineserial);
+                jsonObject.put("senderId", "WebClient"+userid);
+                String objectToStr = JSONObject.toJSONString(jsonObject);
                 SocketTools socketTools = new SocketTools();
-                socketTools.updateSocket(userid,machineserial);
+                socketTools.updateSocket(userid,machineserial,objectToStr);
             }
             return true;
         } catch (Exception e) {
@@ -175,7 +203,7 @@ public class DeviceListService {
         if(machineData.getFirmwareVer()!=null&&!machineData.getFirmwareVer().equals("")){
                 String devicetype= AgentDataDao.dao.findFirst("select * from agent_data where machineSerial='"+machineSerial+"'").getFirmwareType();
                 String version=machineData.getFirmwareVer().substring(4,12);
-                VersionData versionData=VersionData.dao.findFirst("select * from version_data where downloadUrl='"+devicetype+"'");
+                VersionData versionData=VersionData.dao.findFirst("select * from version_data where downloadUrl='"+devicetype+".bin'");
                 String latest=versionData.getVersionCode().toString();
                 if(Integer.parseInt(version)>=Integer.parseInt(latest)){
                     return true;
@@ -216,7 +244,7 @@ public class DeviceListService {
     /**添加新设备**/
     public void addDevice(AgentData agentData){
         String state=String.valueOf(agentData.getOnlineState());
-        dal.addDevice(agentData.getMachineSerial(),agentData.getAgentNumber(),state,agentData.getMachineName());
+        dal.addDevice(agentData.getMachineSerial(),agentData.getAgentNumber(),state,agentData.getMachineName(),agentData.getFirmwareType());
     }
 
     /**获取外接传感器列表**/
@@ -225,8 +253,9 @@ public class DeviceListService {
     }
 
     /**添加传感器**/
-    public void addSensorByData(DeviceSensorList deviceSensorList,String machineserial){
+    public void addSensorByData(String userid,DeviceSensorList deviceSensorList,String machineserial){
         String add="";
+        List<String> orderdata=new ArrayList<>();
         String sql="select extSensorCmd from machine_data where machineSerial='"+machineserial+"'";
         String str1=deviceSensorList.getInterval()+";"+deviceSensorList.getVoltage()+";8N1@"+deviceSensorList.getBruad()+";"+deviceSensorList.getCmd()+";"+deviceSensorList.getSn()+";"+deviceSensorList.getType()+";"+
                 deviceSensorList.getVender()+";"+deviceSensorList.getRef();
@@ -240,11 +269,23 @@ public class DeviceListService {
         String path=realorder.substring(4,realorder.length()-1);
         String value=realorder+add;
         cache.add(machineserial,path,value);
+        orderdata.add(path+value);
         dal.addSensorByData(deviceSensorList,machineserial);
+        String accountname= StaffService.me.getStaffById(userid).getUAccountNum();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("accountNum",accountname);
+        jsonObject.put("module", 0);
+        jsonObject.put("orderList", orderdata);
+        jsonObject.put("receiveId",machineserial);
+        jsonObject.put("senderId", "WebClient"+userid);
+        String objectToStr = JSONObject.toJSONString(jsonObject);
+        SocketTools socketTools = new SocketTools();
+        socketTools.updateSocket(userid,machineserial,objectToStr);
     }
 
     /**删除传感器**/
-    public void delSensorByData(DeviceSensorList deviceSensorList,String machineserial){
+    public void delSensorByData(String userid,DeviceSensorList deviceSensorList,String machineserial){
+        List<String> orderdata=new ArrayList<>();
         String sql="select extSensorCmd from machine_data where machineSerial='"+machineserial+"'";
         String result=Db.findFirst(sql).getStr("extSensorCmd");
         String str1=deviceSensorList.getInterval()+";"+deviceSensorList.getVoltage()+";"+deviceSensorList.getBruad()+";"+deviceSensorList.getCmd()+";"+deviceSensorList.getSn()+";"+deviceSensorList.getType()+";"+
@@ -255,6 +296,16 @@ public class DeviceListService {
         String value=realorder+afterdel;
         cache.add(machineserial,path,value);
         dal.delSensorByData(deviceSensorList,machineserial);
+        String accountname= StaffService.me.getStaffById(userid).getUAccountNum();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("accountNum",accountname);
+        jsonObject.put("module", 0);
+        jsonObject.put("orderList", orderdata);
+        jsonObject.put("receiveId",machineserial);
+        jsonObject.put("senderId", "WebClient"+userid);
+        String objectToStr = JSONObject.toJSONString(jsonObject);
+        SocketTools socketTools = new SocketTools();
+        socketTools.updateSocket(userid,machineserial,objectToStr);
     }
 
     /**获取设备的更新信息**/
@@ -293,6 +344,25 @@ public class DeviceListService {
 //        return "文件上传成功！";
 //    }
 
+    public List<SensorData> getSensorListByType(String type){
+        return dal.getSensorDataListByType(type);
+    }
+
+
+    /**获取项目中各类型设备对应的数目**/
+    public List<DeviceType> getDeviceTypeCount(){
+        return dal.getDeviceTypeCount();
+    }
+
+    /**获取在半年内每个月对应的新增设备数目**/
+    public List<DeviceType> getAddDeviceCount(){
+        return dal.getAddDeviceCount();
+    }
+
+    /**获取一个月内新设备前五的公司及对应的设备数**/
+    public  List<Incredevicemonth> getAddCompanyCount(){
+        return dal.getAddCompanyCount();
+    }
 
 
     public Map<String, Object> XYZToBLH(double SourceX, double SourceY, double SourceZ){
@@ -736,6 +806,19 @@ public class DeviceListService {
                 break;
             case "wuLingInterval":
                 realorder=OrderConstants.WULING_INTERVAL;
+                break;
+            case "tgyId":
+                realorder=OrderConstants.TGY_ID;
+                break;
+            case "tgyEnabled":
+                realorder=OrderConstants.TGY_ENABLED;
+                break;
+            case "tgyPort":
+                realorder=OrderConstants.TGY_PORT;
+                break;
+            case "tgyIp":
+                realorder=OrderConstants.TGY_IP;
+                break;
         }
         return realorder;
     }

@@ -22,7 +22,11 @@ public class VersionDataMysqlDAL implements IVersion {
             map.setVersionCode(record.getInt("versionCode"));
             map.setDownloadUrl(record.getStr("downloadUrl"));
             map.setVersionType(record.getInt("versionType"));
-            map.setVersionContent(record.getStr("versionContent"));
+            if(record.getStr("versionContent").contains("固件")){
+                map.setVersionContent(record.getStr("versionContent")+"("+record.getInt("versionCode")+")");
+            }else{
+                map.setVersionContent(record.getStr("versionContent"));
+            }
             rslist.add(map);
         }
         return new Page<VersionData>(rslist, page.getPageNumber(), page.getPageSize(), page.getTotalPage(), page.getTotalRow());

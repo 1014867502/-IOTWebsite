@@ -1,0 +1,62 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  #@meta("权限管理/修改")
+</head>
+<body>
+
+  <div class="layui-fluid">
+    <div class="layui-card">
+      <div class="layui-card-header" data-locale="web_role_manage_and_edit">权限管理 / 修改</div>
+      <div class="layui-card-body" style="padding: 15px;">
+        <form class="layui-form" lay-filter="myForm">
+
+          <input type="hidden" name="permission.id" value="#(data.id)" />
+          <div class="layui-form-item">
+            <label class="layui-form-label">actionKey</label>
+            <div class="layui-input-block">
+              <input type="text" autocomplete="off" class="layui-input" value="#(data.actionKey)" disabled="">
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">controller</label>
+            <div class="layui-input-block">
+              <input type="text" class="layui-input" value="#(data.controller)" disabled="">
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label" data-locale="web_item_remark">备注</label>
+            <div class="layui-input-block">
+              <input type="text" name="permission.remark" lay-verify="required"  class="layui-input" value="#(data.remark)">
+            </div>
+          </div>
+
+          <div class="layui-form-item layui-layout-admin">
+            <div class="layui-input-block">
+              <div class="layui-footer" style="left: 0;">
+                <button class="layui-btn" lay-submit="" lay-filter="submitBtn" data-locale="web_item_sumbit">立即提交</button>
+                <button class="layui-btn layui-btn-primary" type="button" id="returnBtn" lay-filter="returnBtn" data-locale="web_item_return">返回</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/lib/jquery-3.4.1.min.js"></script>
+  <script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+  <script src="/assets/lib/loadlanguage.js"></script>
+  <script src="/assets/layuiadmin/layui/layui.js"></script>
+  <script>
+    var currPage=#(currPage??1)
+  layui.config({
+    base: '/assets/layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'permission']);
+  </script>
+</body>
+</html>

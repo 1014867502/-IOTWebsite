@@ -233,6 +233,10 @@ public class MachineInfoEntity {
     private String wuLingUser;
     private String wuLingKey;
     private String wuLingInterval;
+    private String tgyId;
+    private String tgyPort;
+    private String tgyIp;
+    private String tgyEnabled;
     public MachineInfoEntity(Long _id, String machineSerial, String machineModel,
             String mcuVer, String firmwareVer, String puwerLever, String extVoltage,
             String insideSpace, String dataLink, String timeZone, String rtkPos,
@@ -1087,4 +1091,12 @@ public class MachineInfoEntity {
     public void setLianZhiGnssData(String lianZhiGnssData) { this.lianZhiGnssData = lianZhiGnssData; }
     public String getWuLingInterval() { return wuLingInterval; }
     public void setWuLingInterval(String wuLingInterval) { this.wuLingInterval = wuLingInterval; }
+    public String getTgyId() { return tgyId; }
+    public void setTgyId(String tgyId) { this.tgyId = tgyId; }
+    public String getTgyPort() { return tgyPort; }
+    public void setTgyPort(String tgyPort) { this.tgyPort = tgyPort; }
+    public String getTgyIp() { return tgyIp; }
+    public void setTgyIp(String tgyIp) { this.tgyIp = tgyIp; }
+    public String getTgyEnabled() { return tgyEnabled; }
+    public void setTgyEnabled(String tgyEnabled) { this.tgyEnabled = tgyEnabled; }
 }

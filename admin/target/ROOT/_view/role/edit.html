@@ -1,0 +1,70 @@
+#set(isAdd = data == null ? true : false, isEdit = !isAdd)
+
+<!DOCTYPE html>
+<html>
+<head>
+  #@meta("角色管理 / "+(isAdd ? "创建" : "修改"))
+</head>
+<body>
+
+  <div class="layui-fluid">
+    <div class="layui-card">
+      #if (isAdd)
+      <div class="layui-card-header" data-locale="web_role_add">角色管理 / #(isAdd ? "创建" : "修改")</div>
+      #else
+      <div class="layui-card-header" data-locale="web_role_edit">角色管理 / #(isAdd ? "创建" : "修改")</div>
+      #end
+      <div class="layui-card-body" style="padding: 15px;">
+        <form class="layui-form" lay-filter="myForm">
+          #if (isEdit)
+          <input type="hidden" name="role.id" value="#(data.id)" />
+          #end
+          <div class="layui-form-item">
+            <label class="layui-form-label" data-locale="web_item_name">角色名称</label>
+            <div class="layui-input-block">
+              <input type="text" name="role.name" autocomplete="off" lay-verify="required" class="layui-input" value="#(data.name??)">
+            </div>
+          </div>
+
+          <div class="layui-form-item layui-layout-admin">
+            <div class="layui-input-block">
+              <div class="layui-footer" style="left: 0;">
+                <button class="layui-btn" lay-submit="" lay-filter="submitBtn" data-locale="web_item_sumbit">立即提交</button>
+                <button class="layui-btn layui-btn-primary" id="returnBtn" lay-filter="returnBtn" data-locale="web_item_return">返回</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/lib/jquery-3.4.1.min.js"></script>
+  <script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+  <script src="/assets/lib/loadlanguage.js"></script>
+  <script src="/assets/layuiadmin/layui/layui.js"></script>
+  <script>
+  layui.config({
+    base: '/assets/layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'role'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,form = layui.form;
+
+      /* 监听提交 */
+      form.on('submit(submitBtn)', function(obj){
+          admin.req({
+              url:'/role/#(isAdd ? "save" : "update")',
+              data:obj.field,
+              done:function (res) {
+                  $('#returnBtn').click();
+              }
+          })
+          return false;
+      });
+  });
+  </script>
+</body>
+</html>

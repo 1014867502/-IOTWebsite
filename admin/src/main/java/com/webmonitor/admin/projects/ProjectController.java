@@ -53,10 +53,18 @@ public class ProjectController extends BaseController {
                     break;
                 case "user":
                     String userproject = StaffService.me.getStaffById(userid).getGroupAssemble();
-                    String[] projects = userproject.split("@");
-                    for (int i = 0; i < projects.length; i++) {
-                       BaseProjects list1 =ProjectService.me.getProjectById(projects[i]);
-                       projectsData.add(list1);
+                    if(userproject.equals("all")){
+                        String agentum = StaffService.me.getStaffById(userid).getAgentNumber();
+                        projectsData= ProjectService.me.getProjectByComId(agentum);
+                    }else{
+                        String[] projects = userproject.split("@");
+                        for (int i = 0; i < projects.length; i++) {
+                            BaseProjects list1 =ProjectService.me.getProjectById(projects[i]);
+                            if(list1.getDevicenum()==0){
+                                continue;
+                            }
+                            projectsData.add(list1);
+                        }
                     }
                     break;
                 case "admin":
@@ -79,7 +87,11 @@ public class ProjectController extends BaseController {
         int pageno=getParaToInt("page",1);
         int limit=getParaToInt("limit",50);
         try{
-            projectsData= ProjectService.me.getProjectlistById(useid);
+            if(StaffService.me.getStaffByName(useid).getGroupAssemble().equals("all")){
+                projectsData=ProjectService.me.getProjectByComId(StaffService.me.getStaffByName(useid).getAgentNumber());
+            }else{
+                projectsData= ProjectService.me.getProjectlistById(useid);
+            }
             result.success(projectsData);
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result, e);
@@ -234,8 +246,15 @@ public class ProjectController extends BaseController {
         int limit=getParaToInt("limit",50);
         Result result=Result.newOne();
         try{
-            Page<BaseProjects> baseProjects=ProjectService.me. getProjectsById(userid,pageno,limit);
-            result.success(baseProjects);
+            if(StaffService.me.getStaffByName(userid).getGroupAssemble().equals("all")){
+                Page<BaseProjects> baseProjects=ProjectService.me.getProjectByComIdPageData(StaffService.me.getStaffByName(userid).getAgentNumber(),pageno,limit);
+                result.success(baseProjects);
+            }else{
+                Page<BaseProjects> baseProjects=ProjectService.me.getProjectsById(userid,pageno,limit);
+                result.success(baseProjects);
+            }
+
+
         }catch (Throwable e){
             ExceptionUtil.handleThrowable(result,e);
             result.error(ERROR_EXECUTE.getReport());

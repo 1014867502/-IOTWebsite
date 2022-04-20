@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  #@meta("角色管理/分配权限")
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-card">
+      <!--<div class="layui-card-header" data-locale="web_permission_assignment">角色管理 / 分配权限<div style="float: right">正在为<span style="color:red;">#(role.name)</span>分配权限，点亮左侧开关分配权限给当前角色</div></div>-->
+      <div class="layui-card-header" data-locale="web_permission_assignment">角色管理 / 分配权限</div>
+      <div class="layui-card-body" style="padding: 15px;">
+        <div class="layui-fluid layui-form" lay-filter="myForm">
+          <div class="layui-row layui-col-space10">
+
+            #for(mapItem : permissionMap)
+            <div class="layui-col-md6">
+              <div class="layui-collapse" lay-accordion="">
+                <div class="layui-colla-item">
+                  <h2 class="layui-colla-title">#(mapItem.key)</h2>
+                  <div class="layui-colla-content layui-show">
+                    <table class="layui-table" lay-size="sm">
+                      <tbody>
+                      #for(x : mapItem.value)
+                        <tr>
+                          <td><input type="checkbox"
+                                     data-role-id="#(role.id)"
+                                     data-permission-id="#(x.id)"
+                                     lay-skin="switch" lay-text="ON|OFF"
+                                     lay-filter="role-permission"
+                                     #if(x.assigned) checked #end>
+                          </td>
+                          <td>#(x.actionKey)</td>
+                          <td>#(x.remark)</td>
+                        </tr>
+                      #end
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            #end
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部按钮 -->
+    <div class="layui-form-item layui-layout-admin">
+      <div class="layui-input-block">
+        <div class="layui-footer" style="left: 0;">
+          <button class="layui-btn layui-btn-primary" id="returnBtn" lay-filter="returnBtn" data-locale="web_item_return">返回</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/lib/jquery-3.4.1.min.js"></script>
+  <script src="/assets/lib/jquery.i18n.properties-min.js"></script>
+  <script src="/assets/lib/loadlanguage.js"></script>
+  <script src="/assets/layuiadmin/layui/layui.js"></script>
+  <script>
+  layui.config({
+    base: '/assets/layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'role'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,form = layui.form;
+
+    form.on('switch(role-permission)',function (obj) {
+        var state = obj.elem.checked ? true : false;
+        var data = {
+            roleId: $(this).data('roleId'),
+            permissionId: $(this).data('permissionId')
+        };
+        var url = state ? '/role/addPermission' : '/role/deletePermission';
+        admin.req({
+            url:url,
+            data:data
+        })
+    });
+  });
+  </script>
+</body>
+</html>
